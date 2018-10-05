@@ -65,4 +65,12 @@ def fetchOneData(tableName, priKey):
 
 		return ans
 
+def deleteOneData(tableName, priKey):
+	keyname = priKey.keys()[0]
+
+	sql = "delete from %s where %s = %s" % (tableName, keyname, priKey[keyname])
+
+	cursor.excute(sql)
+	operator.commit()
+
 
