@@ -1,4 +1,4 @@
-建立数据表操作：
+MariaDB建立数据表操作：
 create table classrooms(
 id INT UNSIGNED NOT NULL PRIMARY KEY,
 teacher VARCHAR(11) NOT NULL,
