@@ -31,14 +31,15 @@
 			}
 			.talk_con{
 	            width:400px;
-	            height:400px;
+	            height:700px;/*390px;*/
 	            border:1px solid #666;
 	            float: right;
 	            background:#f9f9f9;
+
 	        }
 	         .talk_show{
 	            width:380px;
-	            height:320px;
+	            height:630px;/*320px*/
 	            border:1px solid #666;
 	            background:#fff;
 	            margin:10px auto 0;
@@ -96,7 +97,9 @@
 	            var Words = document.getElementById("words");
 	            var TalkWords = document.getElementById("talkwords");
 	            var TalkSub = document.getElementById("talksub");
-
+	            var hudong = document.getElementById("hudong");
+	            var littleVedio = document.getElementById("littleVedio");
+	            var talk_sec = document.getElementById("talk_sec");
 
 	            TalkSub.onclick = function(){
 	                //定义空字符串
@@ -109,6 +112,12 @@
 	              	str = TalkWords.value ;
 	                  
 	                Words.innerHTML = Words.innerHTML + str;
+	            }
+	            hudong.onclick=function() {
+	            	words.style.height=320+'px';
+	            	talk_sec.style.height = 390+'px';
+	            	littleVedio.style.display="block";
+
 	            }
 
 	        }
@@ -129,15 +138,15 @@
 		  <li style="float:right"><a class="active" href="#about">关于</a></li>
 		</ul>
 		<br>
-		<div id="mainVedio" style="float:left">
-			<video controls width="1000px" height="700px"  border="1"><source src="" type="video/mp4"></video>
+		<div id="mainVedio" style="float:left;">
+			<video controls width="1050px" height="700px"  border="1"><source src="" type="video/mp4"></video>
 		</div>
-		<div id="littleVedio" style="float: right;">
+		<div id="littleVedio" style="float: right;display:none;">
 			<video controls width="400px" height="300px"  border="1"><source src="" type="video/mp4"></video>
 		</div>
 
 
-		<div class="talk_con">
+		<div class="talk_con" id="talk_sec">
 
 	        <div class="talk_show" id="words">
 	            <!-- <div class="atalk"><span id="asay">A说：吃饭了吗？</span></div>
@@ -152,6 +161,10 @@
 	            <input type="text" class="talk_word" id="talkwords">
 	            <input type="button" value="发送" class="talk_sub" id="talksub">
 	        </div>
+	    </div>
+	    <br>
+	    <div>
+	    	<button id="hudong" type="button" style="margin: 6px 0;float: right;">发起互动</button>
 	    </div>
 
 	</body>
