@@ -1,8 +1,13 @@
 image: ccr.ccs.tencentyun.com/thusepi/deployer
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0450a1fb955c489bd5c348f44436f0948e844b45
 stages:
   - build
   - test
   - deploy
+<<<<<<< HEAD
 build-master:
   stage: build
   script: 
@@ -13,6 +18,9 @@ build-master:
     - deployer build
   only:
     - master
+=======
+
+>>>>>>> 0450a1fb955c489bd5c348f44436f0948e844b45
 build:
   stage: build
   script:
@@ -21,6 +29,7 @@ build:
     - export BUILD_IMAGE_USERNAME=$CI_REGISTRY_USER
     - export BUILD_IMAGE_PASSWORD=$CI_REGISTRY_PASSWORD
     - deployer build
+<<<<<<< HEAD
   except:
     - master
 
@@ -65,10 +74,32 @@ unit-test:
     - SUFFIX=$RANDOM
     - curl "http://10.0.0.11/sonar-scanner.tar.gz" -s -o "/tmp/sonar-$SUFFIX.tar.gz"
     - tar -xf "/tmp/sonar-$SUFFIX.tar.gz" -C /opt
+=======
+
+unit-test:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  stage: test
+  script:
+    - coverage run --source . -m test --junit-xml=xunit-reports/xunit-result.xml
+    - ret=$?
+    - coverage xml -o coverage-reports/coverage.xml
+    - coverage report
+    - exit $ret
+  after_script:
+    - wget -q "http://10.0.0.11/sonar-scanner.tar.gz"
+    - tar -xf sonar-scanner.tar.gz -C /opt
+    - rm sonar-scanner.tar.gz
+>>>>>>> 0450a1fb955c489bd5c348f44436f0948e844b45
     - /opt/sonar-scanner/bin/sonar-scanner
 
 deploy:
   stage: deploy
   script:
+<<<<<<< HEAD
     - export DEPLOY_ENV="$CI_PROJECT_NAMESPACE"
     - deployer dyno replace $CI_PROJECT_NAME "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" "$REGISTRY_USER" "$REGISTRY_PWD"
+=======
+    - deployer dyno replace $CI_PROJECT_NAME "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" "$REGISTRY_USER" "$REGISTRY_PWD"
+  only:
+    - master
+>>>>>>> 0450a1fb955c489bd5c348f44436f0948e844b45
