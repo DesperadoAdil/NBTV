@@ -61,11 +61,11 @@ unit-test:
     - cd $TEST_ROOT
     - npm test
   after_script:
-    - cd $TEST_ROOT
     - SUFFIX=$RANDOM
-    - curl "http://10.0.0.11/sonar-scanner.tar.gz" -s -o "/tmp/sonar-$SUFFIX.tar.gz"
+    - curl -s "http://10.0.0.11/sonar-scanner.tar.gz" -o "/tmp/sonar-$SUFFIX.tar.gz"
     - tar -xf "/tmp/sonar-$SUFFIX.tar.gz" -C /opt
     - /opt/sonar-scanner/bin/sonar-scanner
+
 
 deploy:
   stage: deploy
