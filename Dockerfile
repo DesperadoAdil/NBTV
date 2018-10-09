@@ -1,21 +1,21 @@
-FROM node:10.9.0
+# FROM node:10.9.0
 
-WORKDIR /build
+# WORKDIR /build
 # vue的项目目录，包含package.json
-ENV VUE_ROOT app/vue_project/my-project/
+# ENV VUE_ROOT app/vue_project/my-project/
 
 # 加速
-RUN npm config set registry https://registry.npm.taobao.org
+# RUN npm config set registry https://registry.npm.taobao.org
 
 # 安装依赖
-COPY $VUE_ROOT/package.json /build/package.json
-COPY $VUE_ROOT/package-lock.json /build/package-lock.json
-RUN CHROMEDRIVER_CDNURL=https://npm.taobao.org/mirrors/chromedriver npm install
+# COPY $VUE_ROOT/package.json /build/package.json
+# COPY $VUE_ROOT/package-lock.json /build/package-lock.json
+# RUN CHROMEDRIVER_CDNURL=https://npm.taobao.org/mirrors/chromedriver npm install
 
 # 编译，预期产物为.js .html
-COPY $VUE_ROOT /build
-ENV NODE_ENV production
-RUN npm run-script build
+# COPY $VUE_ROOT /build
+# ENV NODE_ENV production
+# RUN npm run-script build
 
 
 
@@ -26,6 +26,7 @@ ENV HOME=/app
 WORKDIR $HOME
 
 COPY requirements.txt $HOME
+RUN pip install --upgrade pip
 RUN pip install --trusted-host mirrors.cloud.tencent.com \
     -i http://mirrors.cloud.tencent.com/pypi/simple/ -r requirements.txt
 
