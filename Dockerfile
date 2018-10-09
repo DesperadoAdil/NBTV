@@ -27,7 +27,7 @@ COPY requirements.txt $HOME
 RUN pip install --trusted-host mirrors.cloud.tencent.com \
     -i http://mirrors.cloud.tencent.com/pypi/simple/ -r requirements.txt
 
-COPY $app $HOME
+COPY app $HOME
 
 # static目录的内容是从vue编译得到的
 # COPY --from=0 /build/$(npm build产物的路径) app/static
