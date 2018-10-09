@@ -42,7 +42,7 @@ unit-test:
     - PYTHON_RET=$?
     - coverage xml -o coverage-reports/coverage.xml
     - coverage report
-    - cd $(vue目录)
+    # - cd $(vue目录)
     # vue 测试
     # 首先安装依赖
     #- CHROMEDRIVER_CDNURL=https://npm.taobao.org/mirrors/chromedriver npm install
