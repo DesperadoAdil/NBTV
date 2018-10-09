@@ -38,4 +38,4 @@ COPY app $HOME
 # EXPOSE 80
 
 ENV PYTHONUNBUFFERED=true
-CMD ["python", "run.py"]
+CMD ["python", "../run.py"]
