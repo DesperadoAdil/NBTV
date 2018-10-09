@@ -1,4 +1,4 @@
-FROM node
+FROM node:10.9.0
 
 WORKDIR /build
 # vue的项目目录，包含package.json
@@ -16,6 +16,8 @@ RUN CHROMEDRIVER_CDNURL=https://npm.taobao.org/mirrors/chromedriver npm install
 COPY $VUE_ROOT /build
 ENV NODE_ENV production
 RUN npm run-script build
+
+
 
 FROM python:3.6.5
 
