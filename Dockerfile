@@ -1,4 +1,4 @@
-# FROM node:10.9.0
+﻿# FROM node:10.9.0
 
 # WORKDIR /build
 # vue的项目目录，包含package.json
@@ -38,4 +38,4 @@ COPY app $HOME
 # EXPOSE 80
 
 ENV PYTHONUNBUFFERED=true
-CMD ["python", "app.py"]
+CMD ["python", "run.py"]
