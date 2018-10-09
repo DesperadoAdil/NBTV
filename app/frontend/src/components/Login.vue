@@ -53,7 +53,7 @@
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.$Message.success('Send to server!');
-                        const data = this.form;
+                        const data = this.formInline;
 					    axios.post('/api/user/login', data).then((resp) => {
 					        if (resp.data.status === 'success') {
 					    	    this.set_login();
