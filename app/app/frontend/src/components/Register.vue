@@ -94,8 +94,8 @@
           	this.$Message.success('Send to server!');
 		    		axios.post('/api/user/register', data).then((resp) => {
 			        if (resp.data.status === 'success') {
-			    	    this.set_login();
-	          		this.get_user_info();
+			    	    //this.set_login();
+	          		//this.get_user_info();
 								router.push('/login');
 			        } else {
 		          	this.msg = `Status:${resp.data.status}`;
