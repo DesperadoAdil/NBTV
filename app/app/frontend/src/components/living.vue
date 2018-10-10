@@ -60,6 +60,7 @@
 
 
 <script type="es6">
+import {livePlayer} from '../js/livePlayer.js' //×¢ÒâÂ·¾¶
 export default{
 
 	name: 'µÇÂ¼',
