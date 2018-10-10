@@ -4,11 +4,15 @@ from sqlalchemy import and_, or_, not_
 from app.textMessage import TextMessage
 from .models import *
 import json
+import random
 
-@app.route('/')
-@app.route('/index')
-def index():
+lastTextMessage = 0
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path):
     return render_template("index.html")
+
 
 #Login
 @app.route('/api/user/login', methods = ['POST'])
@@ -26,6 +30,8 @@ def login():
     username = data['username']
     password = data['password']
     job = data['job']
+    if not username or not password or not job:
+        return '{ status : "error" }'
 
     if job == 'teacher':
         teacher = Teachers.query.filter(and_(Teachers.username == username, Teachers.password == password)).first()
@@ -58,11 +64,16 @@ def register():
     if 'username' not in data or 'password' not in data or 'job' not in data or 'verification' not in data:
         return '{ status : "error" }'
     
+    phonenumber = data['mobile']
     username = data['username']
     password = data['password']
     job = data['job']
     verification = data['verification']
-    print (username + '\n' + password + '\n' + phonenumber)
+    if not phonenumber or not username or not password or not job or not verification:
+        return '{ status : "error" }'
+
+    if int(verification) != lastTextMessage:
+        return '{ status : "error" }'
 
     if job == 'teacher':
         teacher = Teachers(phonenumber=phonenumber, username=username, password=password, classroomlist="")
@@ -77,7 +88,7 @@ def register():
 
 
 #Verification
-@app.route('/api/user/request_verification', methods = ['POST'])
+@app.route('/api/user/request_verification', methods = ['GET', 'POST'])
 def verification():
     text = request.get_data()
     print (text)
@@ -93,6 +104,7 @@ def verification():
     if not phonenumber:
         return '{ status : "error" }'
     
-    '''
-        TextMessage Verification
-    '''
+    message = TextMessage()
+    businessID = random.randint(100000,999999)
+    lastTextMessage = random.randint(100000,999999)
+    message.sendSMS(businessID, phonenumber, lastTextMessage)
