@@ -14,9 +14,9 @@ build:
     - export BUILD_IMAGE_PASSWORD=$CI_REGISTRY_PASSWORD
     - deployer build
 
-unit-test:
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  stage: test
+#unit-test:
+#  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+#  stage: test
 
 # 这是不要的代码
 #  before_script:
