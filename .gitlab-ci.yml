@@ -17,6 +17,8 @@ build:
 unit-test:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: test
+
+# 这是不要的代码
 #  before_script:
 #    - echo "deb http://mirrors.tencentyun.com/ubuntu/ xenial main restricted universe multiverse" > /etc/apt/sources.list
 #    - echo "deb http://mirrors.tencentyun.com/ubuntu/ xenial-security main restricted universe multiverse" >> /etc/apt/sources.list
@@ -34,14 +36,16 @@ unit-test:
 #    - Xvfb :99 -ac -screen 0 1024x768x24 &
     # Export display for Chrome
 #    - export DISPLAY=:99
-  script:
+#上面不要
+
+   script:
   # 进入flask目录，注意保证测试报告的相对原始路径和sonar-project.properties的配置一样
-  # python 测试
-    # - cd app
+
     - coverage run --source . -m test --junit-xml=xunit-reports/xunit-result.xml
     - PYTHON_RET=$?
     - coverage xml -o coverage-reports/coverage.xml
     - coverage report
+#下面不要
     # - cd $(vue目录)
     # vue 测试
     # 首先安装依赖
@@ -50,8 +54,10 @@ unit-test:
     #- NODE_RET=$?
     #- killall Xvfb
     # 向gitlab runner 返回测试通过与否
-    - if [ $PYTHON_RET \> 0 ]; then exit $PYTHON_RET; fi;
-    #- exit $NODE_RET
+
+    #- if [ $PYTHON_RET \> 0 ]; then exit $PYTHON_RET; fi;
+#上面不要
+
   after_script:
     #- cd app
     - wget -q "http://10.0.0.11/sonar-scanner.tar.gz"
