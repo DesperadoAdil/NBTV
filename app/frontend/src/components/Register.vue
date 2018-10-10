@@ -108,6 +108,7 @@
         })
       },
       sendMsg(name) {
+				const data = this.formInline;
       	axios.post('/api/user/request_verification', data).then((resp) => {
 					if (resp.data.status === 'success') {
 						this.msgBox = '验证码发送成功';
