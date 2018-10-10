@@ -2,7 +2,7 @@ image: ccr.ccs.tencentyun.com/thusepi/deployer
 
 stages:
   - build
-  # - test
+  - test
   - deploy
 
 build:
@@ -14,9 +14,9 @@ build:
     - export BUILD_IMAGE_PASSWORD=$CI_REGISTRY_PASSWORD
     - deployer build
 
-#unit-test:
-#  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-#  stage: test
+unit-test:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  stage: test
 
 # 这是不要的代码
 #  before_script:
@@ -38,13 +38,13 @@ build:
 #    - export DISPLAY=:99
 #上面不要
 
-#   script:
+   script:
   # 进入flask目录，注意保证测试报告的相对原始路径和sonar-project.properties的配置一样
 
-#    - coverage run --source . -m test --junit-xml=xunit-reports/xunit-result.xml
-#    - PYTHON_RET=$?
-#    - coverage xml -o coverage-reports/coverage.xml
-#    - coverage report
+    - coverage run --source . -m test --junit-xml=xunit-reports/xunit-result.xml
+    - PYTHON_RET=$?
+    - coverage xml -o coverage-reports/coverage.xml
+    - coverage report
 #下面不要
     # - cd $(vue目录)
     # vue 测试
@@ -55,15 +55,15 @@ build:
     #- killall Xvfb
     # 向gitlab runner 返回测试通过与否
 
-#    - if [ $PYTHON_RET \> 0 ]; then exit $PYTHON_RET; fi;
+    - if [ $PYTHON_RET \> 0 ]; then exit $PYTHON_RET; fi;
 #上面不要
 
-#  after_script:
+  after_script:
     #- cd app
-#    - wget -q "http://10.0.0.11/sonar-scanner.tar.gz"
-#    - tar -xf sonar-scanner.tar.gz -C /opt
-#    - rm sonar-scanner.tar.gz
-#    - /opt/sonar-scanner/bin/sonar-scanner
+    - wget -q "http://10.0.0.11/sonar-scanner.tar.gz"
+    - tar -xf sonar-scanner.tar.gz -C /opt
+    - rm sonar-scanner.tar.gz
+    - /opt/sonar-scanner/bin/sonar-scanner
 
 deploy:
   stage: deploy
