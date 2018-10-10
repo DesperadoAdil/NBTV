@@ -12,7 +12,7 @@
         </Input>
       </FormItem>
       <FormItem prop="rpassword">
-        <Input type="text" v-model="formInline.rpassword" placeholder="Password Again">
+        <Input type="password" v-model="formInline.rpassword" placeholder="Password Again">
           <Icon type="ios-lock-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
@@ -85,7 +85,6 @@
     	...mapState('account', ['status'])
     },
     methods: {
-
   		...mapActions('account', ['login', 'logout']),
       handleSubmit(name) {
 				this.formInline['job'] = this.job;
@@ -93,11 +92,11 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
           	this.$Message.success('Send to server!');
-
 		    		axios.post('/api/user/register', data).then((resp) => {
 			        if (resp.data.status === 'success') {
 			    	    this.set_login();
 	          		this.get_user_info();
+								router.push('/login');
 			        } else {
 		          	this.msg = `Status:${resp.data.status}`;
 			        }
