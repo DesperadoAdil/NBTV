@@ -5,13 +5,24 @@ import App from './App';
 import router from './router';
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
-
+import Vuex from 'vuex'
 Vue.use(iView);
 Vue.config.productionTip = false
-
+Vue.use(Vuex)
 new Vue({
   el: '#app',
   router,
   components: { App },
   template: '<App/>',
 });
+
+const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment (state) {
+      state.count++
+    }
+  }
+})
