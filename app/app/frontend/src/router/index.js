@@ -21,7 +21,6 @@ const router = new Router({
       name: 'Register',
       component: Register
     },
-
     {
       path: '/list',
       name: 'List',

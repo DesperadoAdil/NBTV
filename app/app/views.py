@@ -124,7 +124,7 @@ def register():
 
 
 #Verification
-@app.route('/api/user/request_verification', methods = ['GET', 'POST'])
+@app.route('/api/user/request_verification', methods = ['POST'])
 def verification():
     ret = {}
     ret["status"] = 'error'
@@ -164,3 +164,11 @@ def verification():
     ret['status'] = "success"
     print (json.dumps(ret))
     return json.dumps(ret)
+
+
+#List
+@app.route('/api/list', methods = ['GET'])
+def list():
+    classlist = Classrooms.query.filter(Classrooms.visible == "yes")
+    print (json.dumps(classlist))
+    return json.dumps(classlist)

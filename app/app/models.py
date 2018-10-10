@@ -3,7 +3,7 @@ from app import db
 class Classrooms(db.Model):
     __tablename__ = 'classrooms'
     id = db.Column(db.Integer, primary_key=True,  unique=True, nullable=False)
-    teacher = db.Column(db.String(11), db.ForeignKey('teachers.phonenumber'), nullable=False)
+    teacher = db.Column(db.String(50), db.ForeignKey('teachers.username'), nullable=False)
     title = db.Column(db.String(50), nullable=False)
     thumbnail = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(50), nullable=False)
