@@ -16,8 +16,8 @@ def index(path):
 @app.route('/api/user/login', methods = ['POST'])
 def login():
     ret = {}
-    ret["status"] = 'success'
-    return json.dumps(ret)
+    ret["status"] = 'error'
+    
     text = request.get_data()
     print (text)
     if text:
