@@ -17,11 +17,11 @@
         </Input>
       </FormItem>
       <FormItem prop="mobile">
-        <Input type="password" v-model="formInline.mobile" placeholder="Phone number">
+        <Input type="text" v-model="formInline.mobile" placeholder="Phone number">
         </Input>
       </FormItem>
       <FormItem prop="verification">
-        <Input type="password" v-model="formInline.verification" placeholder="verification">
+        <Input type="text" v-model="formInline.verification" placeholder="verification">
         </Input>
       </FormItem>
 			<FormItem prop="job">
@@ -45,6 +45,17 @@
 
   export default {
     data () {
+			const validatePassCheck = (rule, value, callback) => {
+				if (value === '') {
+          this.$Message.error('Please enter your password again');
+					callback();
+        } else if (value !== this.formInline.password) {
+          this.$Message.error('The two input passwords do not match!');
+					callback();
+        } else {
+          callback();
+        }
+			}
       return {
         formInline: {
           username: '',
@@ -63,7 +74,10 @@
           password: [
             { required: true, message: 'Please fill in the password.', trigger: 'blur' },
             { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
-          ]
+          ],
+					verification: [
+						{ validater: validatePassCheck, trigger: 'blur' }
+					]
         },
       }
     },
@@ -71,13 +85,16 @@
     	...mapState('account', ['status'])
     },
     methods: {
+
   		...mapActions('account', ['login', 'logout']),
       handleSubmit(name) {
+				this.formInline['job'] = this.job;
+				const data = this.formInline;
         this.$refs[name].validate((valid) => {
           if (valid) {
           	this.$Message.success('Send to server!');
-            const data = this.form;
-		    		axios.post('/api/user/login', data).then((resp) => {
+
+		    		axios.post('/api/user/register', data).then((resp) => {
 			        if (resp.data.status === 'success') {
 			    	    this.set_login();
 	          		this.get_user_info();
@@ -91,7 +108,8 @@
         })
       },
       sendMsg(name) {
-      	axios.get('/api/user/verification').then((resp) => {
+				const data = this.formInline;
+      	axios.post('/api/user/request_verification', data).then((resp) => {
 					if (resp.data.status === 'success') {
 						this.msgBox = '验证码发送成功';
 					}
