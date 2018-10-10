@@ -5,6 +5,7 @@ import Login from '@/components/Login'
 import Register from '@/components/Register'
 import NotFound from '@/components/NotFound'
 import List from '@/components/List'
+import Living from '@/components/Living'
 
 Vue.use(Router)
 
@@ -17,6 +18,11 @@ const router = new Router({
       component: Login
     },
     {
+      path: '/',
+      name: 'Login',
+      component: Login
+    },
+    {
       path: '/register',
       name: 'Register',
       component: Register
@@ -25,6 +31,11 @@ const router = new Router({
       path: '/list',
       name: 'List',
       component: List
+    },
+    {
+      path: '/living',
+      name: 'Living',
+      component: Living
     },
     {
       path: '*',

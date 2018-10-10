@@ -3,7 +3,7 @@
 		<ul>
 			<li v-for="item in items">
 				<Card class="card">
-					<img class="previewPicture" :src='item.image'>
+					<router-link to="/living"><img class="previewPicture" :src='item.image'></router-link>
 					<div class="classroomDetail" style="text-align:center">
 						<span class="className">
 							{{ item.className }}
@@ -44,6 +44,7 @@
 		methods: {
 			getList() {
 				axios.get('/api/list').then((resp) => {
+					console.log(resp)
 					this.items = resp.data;
 				})
 			}
