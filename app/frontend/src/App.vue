@@ -26,7 +26,7 @@ export default {
       theme1: 'light'
     }
   }
-};
+}
 
 </script>
 

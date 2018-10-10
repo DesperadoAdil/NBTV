@@ -28,7 +28,7 @@
 <script>
 	import axios from 'axios';
 	import { mapState, mapActions } from 'vuex';
-
+	import router from '../router';
   export default {
   	data () {
       return {
@@ -58,6 +58,7 @@
     methods: {
     	...mapActions('account', ['login', 'logout']),
       handleSubmit(name) {
+
       	this.$refs[name].validate((valid) => {
           if (valid) {
             this.$Message.success('Send to server!');
@@ -67,6 +68,7 @@
 			        if (resp.data.status === 'success') {
 		    	    	this.set_login();
 		          	this.get_user_info();
+								router.push('/list');
 			        } else {
 		          	this.$Message.error('用户名或密码错误');
 			        }
