@@ -44,7 +44,7 @@ def login():
         ret['username'] = teacher.username
         ret['password'] = teacher.password
         ret['rpassword'] = teacher.password
-        ret['mobile'] = teacheer.phonenumber
+        ret['mobile'] = teacher.phonenumber
         ret['verification'] = ""
         ret['job'] = "teacher"
     elif job == 'student':
