@@ -35,7 +35,7 @@ COPY app $HOME
 # static目录的内容是从vue编译得到的
 # COPY --from=0 /build/$(npm build产物的路径) app/static
 
-# EXPOSE 80
+EXPOSE 5000
 
 ENV PYTHONUNBUFFERED=true
 CMD ["python", "run.py"]
