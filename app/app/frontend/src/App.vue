@@ -22,6 +22,8 @@
         我的信息
       </MenuItem>
     </Menu>
+  </br>
+  </br>
     <router-view/>
   </div>
 </template>
