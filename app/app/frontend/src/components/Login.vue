@@ -25,7 +25,7 @@
 	</div>
 </template>
 
-<script>
+<script type="es6">
 	import axios from 'axios';
 	import { mapState, mapActions } from 'vuex';
 
