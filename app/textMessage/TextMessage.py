@@ -6,7 +6,7 @@ import uuid
 from aliyunsdkcore.profile import region_provider
 from aliyunsdkcore.http import method_type as MT
 from aliyunsdkcore.http import format_type as FT
-from textMessage import const
+from . import const
 
 VERIFICATION = 1
 SIGNNAME = "激流山庄"

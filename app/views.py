@@ -1,21 +1,31 @@
 from flask import *
 from app import app
 from sqlalchemy import and_, or_, not_
+from app.textMessage import TextMessage
+from .models import *
+import json
 
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template("index.html")
 
+#Login
 @app.route('/api/user/login', methods = ['POST'])
 def login():
-    username = request.form.get('username', None)
-    password = request.form.get('password', None)
-    job = request.form.get('job', None)
-    print (str(username) + '\n' + str(password))
-    
-    if not username or not password or not job:
+    text = request.get_data()
+    print (text)
+    if text:
+        data = json.loads(text)
+    else:
         return '{ status : "error" }'
+
+    if 'username' not in data or 'password' not in data or 'job' not in data:
+        return '{ status : "error" }'
+    
+    username = data['username']
+    password = data['password']
+    job = data['job']
 
     if job == 'teacher':
         teacher = Teachers.query.filter(and_(Teachers.username == username, Teachers.password == password)).first()
@@ -35,23 +45,24 @@ def login():
     return '{ status : "success" }'
     
 
-@app.route('/user/register', methods = ['POST'])
+#Register
+@app.route('/api/user/register', methods = ['POST'])
 def register():
-    phonenumber = request.form.get('mobile', None)
-    if not phonenumber:
+    text = request.get_data()
+    print (text)
+    if text:
+        data = json.loads(text)
+    else:
         return '{ status : "error" }'
-    
-    '''
-        TextMessage Verification
-    '''
-    
-    username = request.form.get('username', None)
-    password = request.form.get('password', None)
-    job = request.form.get('job', None)
-    verification = request.form.get('verification', None)
 
-    if not username or not password or not job or not verification:
+    if 'username' not in data or 'password' not in data or 'job' not in data or 'verification' not in data:
         return '{ status : "error" }'
+    
+    username = data['username']
+    password = data['password']
+    job = data['job']
+    verification = data['verification']
+    print (username + '\n' + password + '\n' + phonenumber)
 
     if job == 'teacher':
         teacher = Teachers(phonenumber=phonenumber, username=username, password=password, classroomlist="")
@@ -63,3 +74,25 @@ def register():
         db.session.commit()
 
     return '{ status : "success" }'
+
+
+#Verification
+@app.route('/api/user/request_verification', methods = ['POST'])
+def verification():
+    text = request.get_data()
+    print (text)
+    if text:
+        data = json.loads(text)
+    else:
+        return '{ status : "error" }'
+
+    if 'mobile' not in data:
+        return '{ status : "error" }'
+
+    phonenumber = data['mobile']
+    if not phonenumber:
+        return '{ status : "error" }'
+    
+    '''
+        TextMessage Verification
+    '''
