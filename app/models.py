@@ -38,3 +38,12 @@ class Students(db.Model):
 
     def __repr__(self):
         return '<PhoneNumber %r>' % self.phonenumber
+
+
+class Messages(db.Model):
+    __tablename__ = 'messages'
+    phonenumber = db.Column(db.String(11), primary_key=True, unique=True, nullable=False)
+    message = db.Column(db.String(6), nullable=False)
+
+    def __repr__(self):
+        return '<PhoneNumber %r>' % self.phonenumber

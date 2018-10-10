@@ -6,8 +6,6 @@ from .models import *
 import json
 import random
 
-lastTextMessage = 0
-
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def index(path):
@@ -17,52 +15,73 @@ def index(path):
 #Login
 @app.route('/api/user/login', methods = ['POST'])
 def login():
+    ret = {}
+    ret["status"] = 'error'
+    
     text = request.get_data()
     print (text)
     if text:
         data = json.loads(text)
     else:
-        return '{ status : "error" }'
+        return json.dumps(ret)
 
     if 'username' not in data or 'password' not in data or 'job' not in data:
-        return '{ status : "error" }'
+        return json.dumps(ret)
     
     username = data['username']
     password = data['password']
     job = data['job']
     if not username or not password or not job:
-        return '{ status : "error" }'
+        return json.dumps(ret)
 
     if job == 'teacher':
         teacher = Teachers.query.filter(and_(Teachers.username == username, Teachers.password == password)).first()
         if not teacher:
             teacher = Teachers.query.filter(and_(Teachers.phonenumber == username, Teachers.password == password)).first()
         if not teacher:
-            return '{ status : "error" }'
+            return json.dumps(ret)
         print ('Teacher login, username = ' + teacher.username)
+        ret['username'] = teacher.username
+        ret['password'] = teacher.password
+        ret['rpassword'] = teacher.password
+        ret['mobile'] = teacheer.phonenumber
+        ret['verification'] = ""
+        ret['job'] = "teacher"
     elif job == 'student':
         student = Students.query.filter(and_(Students.username == username, Students.password == password)).first()
         if not student:
             student = Students.query.filter(and_(Students.phonenumber == username, Students.password == password)).first()
         if not student:
-            return '{ status : "error" }'
+            return json.dumps(ret)
         print ('Student login, username = ' + student.username)
-    
-    return '{ status : "success" }'
+        ret['username'] = student.username
+        ret['password'] = student.password
+        ret['rpassword'] = student.password
+        ret['mobile'] = student.phonenumber
+        ret['verification'] = ""
+        ret['job'] = "student"
+        
+
+    ret['status'] = "success"
+    print (json.dumps(ret))
+    return json.dumps(ret)
     
 
 #Register
 @app.route('/api/user/register', methods = ['POST'])
 def register():
+    ret = {}
+    ret["status"] = 'error'
+    
     text = request.get_data()
     print (text)
     if text:
         data = json.loads(text)
     else:
-        return '{ status : "error" }'
+        return json.dumps(ret)
 
     if 'username' not in data or 'password' not in data or 'job' not in data or 'verification' not in data:
-        return '{ status : "error" }'
+        return json.dumps(ret)
     
     phonenumber = data['mobile']
     username = data['username']
@@ -70,41 +89,78 @@ def register():
     job = data['job']
     verification = data['verification']
     if not phonenumber or not username or not password or not job or not verification:
-        return '{ status : "error" }'
+        return json.dumps(ret)
 
-    if int(verification) != lastTextMessage:
-        return '{ status : "error" }'
+    mess = Messages.query.filter(Messages.phonenumber == phonenumber).first()
+    if mess is None:
+        return json.dumps(ret)
+    if verification != mess.message:
+        print ('not equal:' + verification + ' !=  ' + mess.message)
+        return json.dumps(ret)
+    else:
+        print ('equal!')
+        mess.message = ''
+        db.session.add(mess)
+        db.session.commit()
 
     if job == 'teacher':
+        teacher = Teachers.query.filter(Teachers.phonenumber == phonenumber).first()
+        if teacher is not None:
+            return json.dumps(ret)
         teacher = Teachers(phonenumber=phonenumber, username=username, password=password, classroomlist="")
         db.session.add(teacher)
         db.session.commit()
     elif job == 'student':
+        student = Students.query.filter(Students.phonenumber == phonenumber).first()
+        if student is not None:
+            return json.dumps(ret)
         student = Students(phonenumber=phonenumber, username=username, password=password, classroomlist="")
         db.session.add(student)
         db.session.commit()
 
-    return '{ status : "success" }'
+    ret['status'] = "success"
+    print (json.dumps(ret))
+    return json.dumps(ret)
 
 
 #Verification
 @app.route('/api/user/request_verification', methods = ['GET', 'POST'])
 def verification():
+    ret = {}
+    ret["status"] = 'error'
+    
     text = request.get_data()
     print (text)
     if text:
         data = json.loads(text)
     else:
-        return '{ status : "error" }'
+        return json.dumps(ret)
 
     if 'mobile' not in data:
-        return '{ status : "error" }'
+        return json.dumps(ret)
 
     phonenumber = data['mobile']
     if not phonenumber:
-        return '{ status : "error" }'
-    
-    message = TextMessage()
-    businessID = random.randint(100000,999999)
-    lastTextMessage = random.randint(100000,999999)
-    message.sendSMS(businessID, phonenumber, lastTextMessage)
+        return json.dumps(ret)
+
+    message = TextMessage.TextMessage()
+    businessID = str(random.randint(100000,999999))
+    lastTextMessage = str(random.randint(100000,999999))
+    print (businessID + '  ' + phonenumber + '  ' + lastTextMessage)
+    dic = {}
+    dic['code'] = lastTextMessage
+    text = message.sendSMS(businessID, phonenumber, dic)
+    print (text)
+
+    mess = Messages.query.filter(Messages.phonenumber == phonenumber).first()
+    if mess is None:
+        mess = Messages(phonenumber=phonenumber, message=lastTextMessage)
+        
+    else:
+        mess.message = lastTextMessage
+    db.session.add(mess)
+    db.session.commit()
+
+    ret['status'] = "success"
+    print (json.dumps(ret))
+    return json.dumps(ret)
