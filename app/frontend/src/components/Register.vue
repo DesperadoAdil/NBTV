@@ -85,12 +85,15 @@
     	...mapState('account', ['status'])
     },
     methods: {
+
   		...mapActions('account', ['login', 'logout']),
       handleSubmit(name) {
+				this.formInline['job'] = this.job;
+				const data = this.formInline;
         this.$refs[name].validate((valid) => {
           if (valid) {
           	this.$Message.success('Send to server!');
-            const data = this.form;
+
 		    		axios.post('/api/user/register', data).then((resp) => {
 			        if (resp.data.status === 'success') {
 			    	    this.set_login();
