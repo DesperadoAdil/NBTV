@@ -5,13 +5,13 @@
             <Layout>
                 <Content style="width: 60%">
                     <div id="mainVedio" style="float:left;width: 100%;height: 100%">
-                        <video controls width="100%" height="100%"  border="1" ><source src="" type="video/mp4"></video>
+                      <div id='player' style="width: 100%;height: 100%"></div>
                     </div>
                 </Content >
 
                 <Sider style="width: 40%">
                     <div id="littleVedio" style="width: 100%;display: none">
-                        <video controls border="1"><source src="" type="video/mp4"></video>
+                      <div id='littleplayer' style="width: 100%;height: 100%"></div>
                     </div>
 
                     <div id="talk_sec" style="width: 150%;border:1px solid #666;background:#f9f9f9;">
@@ -40,7 +40,10 @@
 <script type="es6">
 export default{
 
-	name: '��¼',
+	name: 'load',
+	mounted (){
+	this.oncreated();
+	},
 	//<!--mounted: function () {-->
       //<!--&lt;!&ndash;this.vediosrc = this.$route.query.id&ndash;&gt;-->
 
@@ -67,12 +70,28 @@ export default{
 		  skip(a){
 			this.$router.push(a)
 		  },
+		  oncreated()
+		    {
+
+                const s = document.createElement('script');
+                s.type = 'text/javascript';
+                s.src = 'https://player.polyv.net/livescript/liveplayer.js';
+                document.getElementsByTagName('body')[0].appendChild(s);
+
+
+                  var player = polyvObject('#player').livePlayer({
+                        'width':'100%',
+                        'height':'100%',
+                        'uid':'7181857ac2',
+                        'vid':'242544'
+                    });
+		    },
 		  send_word(){
 		            var TalkWords = document.getElementById("talkwords");
 		            var Words = document.getElementById("words");
 	                var str = "";
 	                if(TalkWords.value == ""){
-	                     // ��ϢΪ��ʱ����
+	                     // 锟斤拷息为锟斤拷时锟斤拷锟斤拷
 	                    alert("no blank");
 	                    return;
 	                }
@@ -86,6 +105,12 @@ export default{
 		    var words = document.getElementById("words");
             littleVedio.style.display="block";
             words.style.height=500+'px';
+            var player = polyvObject('#littleplayer').livePlayer({
+                        'width':'100%',
+                        'height':'100%',
+                        'uid':'7181857ac2',
+                        'vid':'242544'
+                    });
 		  }
 		}
 }</script>
