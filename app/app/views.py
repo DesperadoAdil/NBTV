@@ -27,13 +27,11 @@ def login():
 
     if 'username' not in data or 'password' not in data or 'job' not in data:
         return json.dumps(ret)
-    
     username = data['username']
     password = data['password']
     job = data['job']
     if not username or not password or not job:
         return json.dumps(ret)
-
     if username=="" or password=="":
         return json.dumps(ret)
 
@@ -87,7 +85,6 @@ def register():
 
     if 'username' not in data or 'password' not in data or 'rpassword' not in data or 'job' not in data or 'verification' not in data or 'mobile' not in data:
         return json.dumps(ret)
-    
     phonenumber = data['mobile']
     username = data['username']
     password = data['password']
@@ -96,10 +93,8 @@ def register():
     verification = data['verification']
     if not phonenumber or not username or not password or not rpassword or not job or not verification:
         return json.dumps(ret)
-
     if phonenumber=="" or username=="" or password=="" or rpassword=="" or job=="" or verification=="":
         return json.dumps(ret)
-
     if password != rpassword:
         return json.dumps(ret)
 
@@ -152,11 +147,9 @@ def verification():
 
     if 'mobile' not in data:
         return json.dumps(ret)
-
     phonenumber = data['mobile']
     if not phonenumber:
         return json.dumps(ret)
-
     if phonenumber=="" or len(phonenumber) < 11:
         return json.dumps(ret)
 
@@ -172,7 +165,6 @@ def verification():
     mess = Messages.query.filter(Messages.phonenumber == phonenumber).first()
     if mess is None:
         mess = Messages(phonenumber=phonenumber, message=lastTextMessage)
-        
     else:
         mess.message = lastTextMessage
     db.session.add(mess)
@@ -205,5 +197,56 @@ def list():
             dic["audiencelist"] = Class.audiencelist
             dic["visible"] = Class.visible
             ret.append(dic)
+    print (json.dumps(ret))
+    return json.dumps(ret)
+
+
+#Change_password
+@app.route('/api/user/change_password', methods = ['POST'])
+def change_password():
+    ret = {}
+    ret["status"] = 'error'
+
+    text = request.get_data()
+    print (text)
+    if text:
+        data = json.loads(text)
+    else:
+        return json.dumps(ret)
+
+    if 'status' not in data or 'mobile' not in data or 'old_password' not in data or 'new_password' not in data or 'job' not in data:
+        return json.dumps(ret)
+    status = data['status']
+    phonenumber = data['status']
+    old_password = data['old_password']
+    new_password = data['new_password']
+    job = data['job']
+    if not status or not phonenumber or not old_password or not new_password or not job:
+        return json.dumps(ret)
+    if status=="" or phonenumber=="" or old_password=="" or new_password=="":
+        return json.dumps(ret)
+    if old_password == new_password:
+        return json.dumps(ret)
+
+    if job == 'teacher':
+        teacher = Teachers.query.filter_by(phonenumber == phonenumber).first()
+        if old_password != teacher.password:
+            return json.dumps(ret)
+        else:
+            teacher.password = new_password
+            db.session.add(teacher)
+            db.session.commit()
+    elif job == 'student':
+        student = Students.query.filter_by(phonenumber == phonenumber).first()
+        if old_password != student.password:
+            return json.dumps(ret)
+        else:
+            student.password = new_password
+            db.session.add(student)
+            db.ssesion.commit()
+    else:
+        return json.dumps(ret)
+
+    ret['status'] = "success"
     print (json.dumps(ret))
     return json.dumps(ret)
