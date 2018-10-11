@@ -186,6 +186,6 @@ def verification():
 #List
 @app.route('/api/list', methods = ['GET'])
 def list():
-    classlist = Classrooms.query.filter(Classrooms.visible == "yes")
+    classlist = Classrooms.query.filter(Classrooms.visible == "yes").all()
     print (json.dumps(classlist))
     return json.dumps(classlist)
