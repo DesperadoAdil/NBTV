@@ -189,18 +189,21 @@ def list():
     ret = []
     classlist = Classrooms.query.filter(Classrooms.visible == "yes").all()
     for Class in classlist:
-        print (type(Class))
-        clas = {}
-        clas["id"] = str(Class[id])
-        clas["teacher"] = Class[teacher]
-        clas["title"] = Class[title]
-        clas["thumbnail"] = Class[thumbnail]
-        clas["password"] = Class[password]
-        clas["url"] = Class[url]
-        clas["studentlist"] = Class[studentlist]
-        clas["teacherlist"] = Class[teacherlist]
-        clas["audiencelist"] = Class[audiencelist]
-        clas["visible"] = Class[visible]
-        ret.append(clas)
+        if Class is None:
+            print ("No living room!")
+            break
+        else:
+            clas = {}
+            clas["id"] = str(Class[id])
+            clas["teacher"] = Class[teacher]
+            clas["title"] = Class[title]
+            clas["thumbnail"] = Class[thumbnail]
+            clas["password"] = Class[password]
+            clas["url"] = Class[url]
+            clas["studentlist"] = Class[studentlist]
+            clas["teacherlist"] = Class[teacherlist]
+            clas["audiencelist"] = Class[audiencelist]
+            clas["visible"] = Class[visible]
+            ret.append(clas)
     print (json.dumps(ret))
     return json.dumps(ret)
