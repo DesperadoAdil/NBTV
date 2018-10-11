@@ -193,17 +193,17 @@ def list():
             print ("No living room!")
             break
         else:
-            clas = {}
-            clas["id"] = str(Class.id)
-            clas["teacher"] = Class.teacher
-            clas["title"] = Class.title
-            clas["thumbnail"] = Class.thumbnail
-            clas["password"] = Class.password
-            clas["url"] = Class.url
-            clas["studentlist"] = Class.studentlist
-            clas["teacherlist"] = Class.teacherlist
-            clas["audiencelist"] = Class.audiencelist
-            clas["visible"] = Class.visible
-            ret.append(clas)
+            dic = {}
+            dic["id"] = str(Class.id)
+            dic["teacher"] = Class.teacher
+            dic["title"] = Class.title
+            dic["thumbnail"] = Class.thumbnail
+            dic["password"] = Class.password
+            dic["url"] = Class.url
+            dic["studentlist"] = Class.studentlist
+            dic["teacherlist"] = Class.teacherlist
+            dic["audiencelist"] = Class.audiencelist
+            dic["visible"] = Class.visible
+            ret.append(dic)
     print (json.dumps(ret))
     return json.dumps(ret)
