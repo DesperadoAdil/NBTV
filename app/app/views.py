@@ -157,7 +157,7 @@ def verification():
     if not phonenumber:
         return json.dumps(ret)
 
-    if phonenumber=="" or lenth(phonenumber) < 11:
+    if phonenumber=="" or len(phonenumber) < 11:
         return json.dumps(ret)
 
     message = TextMessage.TextMessage()
