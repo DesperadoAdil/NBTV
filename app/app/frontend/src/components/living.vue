@@ -40,7 +40,7 @@
 <script type="es6">
 export default{
 
-	name: 'µÇÂ¼',
+	name: 'ï¿½ï¿½Â¼',
 	//<!--mounted: function () {-->
       //<!--&lt;!&ndash;this.vediosrc = this.$route.query.id&ndash;&gt;-->
 
@@ -72,7 +72,7 @@ export default{
 		            var Words = document.getElementById("words");
 	                var str = "";
 	                if(TalkWords.value == ""){
-	                     // ÏûÏ¢Îª¿ÕÊ±µ¯´°
+	                     // ï¿½ï¿½Ï¢Îªï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 	                    alert("no blank");
 	                    return;
 	                }
@@ -81,7 +81,7 @@ export default{
 	                Words.innerHTML = Words.innerHTML + str;
 		  },
 		  connect(){
-		  
+
 		    var littleVedio = document.getElementById("littleVedio");
 		    var words = document.getElementById("words");
             littleVedio.style.display="block";

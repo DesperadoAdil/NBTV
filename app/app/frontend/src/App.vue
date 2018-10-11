@@ -1,19 +1,29 @@
 <template>
   <div id="app">
     <Menu mode="horizontal" active-name="1">
+      <router-link to="/login">
       <MenuItem name="1">
-        <Icon type="ios-paper" />
-        登录
+
+          <Icon type="ios-paper" />
+          登录
+
       </MenuItem>
+      </router-link>
+      <router-link to="/list">
       <MenuItem name="2">
-        <Icon type="ios-people" />
-        教室列表
+
+          <Icon type="ios-people" />
+          教室列表
+
       </MenuItem>
+      </router-link>
       <MenuItem name="3">
         <Icon type="ios-construct" />
         我的信息
       </MenuItem>
     </Menu>
+  </br>
+  </br>
     <router-view/>
   </div>
 </template>
@@ -26,7 +36,7 @@ export default {
       theme1: 'light'
     }
   }
-};
+}
 
 </script>
 

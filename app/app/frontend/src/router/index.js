@@ -4,12 +4,12 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 import NotFound from '@/components/NotFound'
+import List from '@/components/List'
+import Living from '@/components/Living'
+
 Vue.use(Router)
 
-
-
-
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -18,19 +18,32 @@ export default new Router({
       component: Login
     },
     {
+      path: '/',
+      name: 'Login',
+      component: Login
+    },
+    {
       path: '/register',
       name: 'Register',
       component: Register
     },
-    { path: '*', component: 'NotFound' },
     {
-      path:'/living',
+      path: '/list',
+      name: 'List',
+      component: List
+    },
+    {
+      path: '/living',
       name: 'Living',
-      component:Living
+      component: Living
+    },
+    {
+      path: '*',
+      component: NotFound
     }
-  ]
+  ],
 });
-
+export default router;
 /*
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
