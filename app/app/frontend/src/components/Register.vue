@@ -93,6 +93,7 @@
           if (valid) {
           	this.$Message.success('Send to server!');
 		    		axios.post('/api/user/register', data).then((resp) => {
+							this.$Message.success(resp.data.status);
 			        if (resp.data.status === 'success') {
 			    	    //this.set_login();
 	          		//this.get_user_info();
