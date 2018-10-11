@@ -10,12 +10,12 @@
                 </Content >
 
                 <Sider style="width: 40%">
-                    <div id="littleVedio" style="width: 100%;display: none">
+                    <div id="littleVedio" style="width: 100%;height:300px;display: none">
                       <div id='littleplayer' style="width: 100%;height: 100%"></div>
                     </div>
 
                     <div id="talk_sec" style="width: 150%;border:1px solid #666;background:#f9f9f9;">
-                        <div id="words" style="width:95%;height: 700px;/*500px*/border:1px solid #666;background:#fff;margin:10px auto 0;overflow:auto;">
+                        <div id="words" style="width:95%;height: 1000px;/*500px*/border:1px solid #666;background:#fff;margin:10px auto 0;overflow:auto;">
                         </div>
 
                         <div id="talk_input" style="  width:95%; height: 40px;margin-bottom:0.5%;">
@@ -27,6 +27,7 @@
             </Layout>
             <Footer>
                 <Button type="primary" @click="connect()"> connect</Button>
+              <Button type="primary" @click="refresh()"> refresh</Button>
             </Footer>
         </Layout>
 
@@ -85,6 +86,7 @@ export default{
                         'uid':'7181857ac2',
                         'vid':'242544'
                     });
+
 		    },
 		  send_word(){
 		            var TalkWords = document.getElementById("talkwords");
@@ -104,8 +106,28 @@ export default{
 		    var littleVedio = document.getElementById("littleVedio");
 		    var words = document.getElementById("words");
             littleVedio.style.display="block";
-            words.style.height=500+'px';
+            words.style.height=700+'px';
             var player = polyvObject('#littleplayer').livePlayer({
+                        'width':'100%',
+                        'height':'100%',
+                        'uid':'7181857ac2',
+                        'vid':'242544'
+                    });
+		  }
+		  refresh(){
+		   var littleVedio = document.getElementById("littleVedio");
+		    var words = document.getElementById("words");
+            littleVedio.style.display="none";
+            words.style.height=1000+'px';
+
+
+                const s = document.createElement('script');
+                s.type = 'text/javascript';
+                s.src = 'https://player.polyv.net/livescript/liveplayer.js';
+                document.getElementsByTagName('body')[0].appendChild(s);
+
+
+                  var player = polyvObject('#player').livePlayer({
                         'width':'100%',
                         'height':'100%',
                         'uid':'7181857ac2',
