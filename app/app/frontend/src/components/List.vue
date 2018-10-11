@@ -3,16 +3,16 @@
 		<ul>
 			<li v-for="item in items">
 				<Card class="card">
-					<router-link to="/living"><img class="previewPicture" :src='item.image'></router-link>
+					<router-link to="/living"><img class="thumbnail" :src='item.thumbnail'></router-link>
 					<div class="classroomDetail" style="text-align:center">
-						<span class="className">
-							{{ item.className }}
+						<span class="title">
+							{{ item.title }}
 						</span>
-						<span class="teacherName">
-							{{ item.teacherName }}
+						<span class="teacher">
+							{{ item.teacher }}
 						</span>
-						<span class="viewingNumber">
-							{{ item.viewing }}
+						<span class="id">
+							{{ item.id }}
 						</span>
 					</div>
 				</Card>
@@ -29,11 +29,16 @@
 	    return {
 				items: [
 					{
-						className: '第一课',
-						teacherName: '习近平',
-						viewing: '100亿人正在观看',
-						image: '这里应该是一个图片的url',
-						id: ''
+						id: '',
+						teacher: '',
+						title: '',
+						thumbnail: '',
+						password: '',
+						url: '',
+						studentlist: '',
+						teacherlist: '',
+						audiencelist: '',
+						visible: ''
 					},
 				]
 	    }
