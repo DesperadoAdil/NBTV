@@ -32,7 +32,7 @@
 						id: '',
 						teacher: '',
 						title: '',
-						thumbnail: '',
+						thumbnail: 'should be some url',
 						password: '',
 						url: '',
 						studentlist: '',
