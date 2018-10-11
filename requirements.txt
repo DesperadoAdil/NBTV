@@ -1,3 +1,9 @@
 coverage
-flask
 pytest
+Flask_SQLAlchemy==2.3.2
+Flask==1.0.2
+urllib3==1.22
+SQLAlchemy==1.2.7
+aliyun_python_sdk_core_v3==2.9.4
+aliyun_python_sdk_dysmsapi==1.0.0
+pymysql

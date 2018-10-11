@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>		
+		<meta charset="utf-8">
+		<title>计蒜客直播ing</title>
+		<style>
+			ul {
+		    list-style-type: none;
+		    margin: 0;
+		    padding: 0;
+		    overflow: hidden;
+		    background-color: #333;
+			}
+
+			li {
+			    float: left;
+			}
+
+			li a {
+			    display: block;
+			    color: white;
+			    text-align: center;
+			    padding: 14px 16px;
+			    text-decoration: none;
+			}
+
+			li a:hover:not(.active) {
+			    background-color: #111;
+			}
+			.talk_con{
+	            width:400px;
+	            height:700px;/*390px;*/
+	            border:1px solid #666;
+	            float: right;
+	            background:#f9f9f9;
+
+	        }
+	         .talk_show{
+	            width:380px;
+	            height:630px;/*320px*/
+	            border:1px solid #666;
+	            background:#fff;
+	            margin:10px auto 0;
+	            overflow:auto;
+	        }
+	        .talk_input{
+	            width:380px;
+	            margin:10px auto 0;
+	        }
+	        /*.whotalk{
+	            width:80px;
+	            height:30px;
+	            float:left;
+	            outline:none;
+	        }*/
+	        .talk_word{
+	            width:220px;
+	            height:26px;
+	            padding:0px;
+	            float:left;
+	            margin-left:10px;
+	            outline:none;
+	            text-indent:10px;
+	        }        
+	        .talk_sub{
+	            width:56px;
+	            height:30px;
+	            float:left;
+	            margin-left:10px;
+	        }
+	        .huodongbutton{
+	        	outline: none;
+				cursor: pointer;
+				text-align: center;
+				text-decoration: none;
+				font: 14px/100% Arial, Helvetica, sans-serif;
+				padding: .5em 2em .55em;
+				text-shadow: 0 1px 1px rgba(0,0,0,.3);
+				-webkit-border-radius: .5em; 
+				-moz-border-radius: .5em;
+				border-radius: .5em;
+				-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+				-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+				box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	        }
+	        /*.atalk{
+	           margin:10px; 
+	        }
+	        .atalk span{
+	            display:inline-block;
+	            background:#0181cc;
+	            border-radius:10px;
+	            color:#fff;
+	            padding:5px 10px;
+	        }
+	        .btalk{
+	            margin:10px;
+	            text-align:right;
+	        }
+	        .btalk span{
+	            display:inline-block;
+	            background:#ef8201;
+	            border-radius:10px;
+	            color:#fff;
+	            padding:5px 10px;
+	        }*/
+		</style>
+		<script type="text/javascript">       
+	        window.onload = function(){
+	            var Words = document.getElementById("words");
+	            var TalkWords = document.getElementById("talkwords");
+	            var TalkSub = document.getElementById("talksub");
+	            var hudong = document.getElementById("hudong");
+	            var littleVedio = document.getElementById("littleVedio");
+	            var talk_sec = document.getElementById("talk_sec");
+
+	            TalkSub.onclick = function(){
+	                //定义空字符串
+	                var str = "";
+	                if(TalkWords.value == ""){
+	                     // 消息为空时弹窗
+	                    alert("消息不能为空");
+	                    return;
+	                }
+	              	str = TalkWords.value ;
+	                  
+	                Words.innerHTML = Words.innerHTML + str;
+	            }
+	            hudong.onclick=function() {
+	            	words.style.height=320+'px';
+	            	talk_sec.style.height = 390+'px';
+	            	littleVedio.style.display="block";
+
+	            }
+
+	        }
+
+
+	    </script>
+	</head>
+
+	<body>	
+		<ul>
+		  <li><a href="#news">主页</a></li>
+		  <li><a href="#home">选课中心</a></li>
+		  <li><a href="#news">学习中心</a></li>
+		  <li><a href="#contact">学习计划</a></li>
+		  <li><a href="#home">题库</a></li>
+		  <li><a href="#news">比赛</a></li>
+		  
+		  <li style="float:right"><a class="active" href="#about">关于</a></li>
+		</ul>
+		<br>
+		<div id="mainVedio" style="float:left;">
+			<video controls width="1050px" height="700px"  border="1"><source src="" type="video/mp4"></video>
+		</div>
+		<div id="littleVedio" style="float: right;display:none;">
+			<video controls width="400px" height="300px"  border="1"><source src="" type="video/mp4"></video>
+		</div>
+
+
+		<div class="talk_con" id="talk_sec">
+
+	        <div class="talk_show" id="words">
+	            <!-- <div class="atalk"><span id="asay">A说：吃饭了吗？</span></div>
+	            <div class="btalk"><span id="bsay">B说：还没呢，你呢？</span></div> -->
+	        </div>
+
+	        <div class="talk_input">
+	            <!-- <select class="whotalk" id="who">
+	                <option value="0">A说：</option>
+	                <option value="1">B说：</option>
+	            </select> -->
+	            <input type="text" class="talk_word" id="talkwords">
+	            <input type="button" value="发送" class="talk_sub" id="talksub">
+	        </div>
+	    </div>
+	    <br>
+	    <div>
+	    	<button class="huodongbutton" id="hudong" type="button" style="margin: 6px 0;float: right;float:bottom;">发起互动</button>
+	    </div>
+
+	</body>
+
+
+</html>
