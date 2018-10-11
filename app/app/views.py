@@ -189,6 +189,7 @@ def list():
     ret = []
     classlist = Classrooms.query.filter(Classrooms.visible == "yes").all()
     for Class in classlist:
+        print (type(Class))
         clas = {}
         clas["id"] = str(Class[id])
         clas["teacher"] = Class[teacher]
