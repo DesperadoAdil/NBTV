@@ -157,7 +157,7 @@ def verification():
     if not phonenumber:
         return json.dumps(ret)
 
-    if phonenumber=="" or lenth(phonenumber) < 11:
+    if phonenumber=="" or len(phonenumber) < 11:
         return json.dumps(ret)
 
     message = TextMessage.TextMessage()
@@ -186,6 +186,24 @@ def verification():
 #List
 @app.route('/api/list', methods = ['GET'])
 def list():
-    classlist = Classrooms.query.filter(Classrooms.visible == "yes")
-    print (json.dumps(classlist))
-    return json.dumps(classlist)
+    ret = []
+    classlist = Classrooms.query.filter(Classrooms.visible == "yes").all()
+    for Class in classlist:
+        if Class is None:
+            print ("No living room!")
+            break
+        else:
+            clas = {}
+            clas["id"] = str(Class[id])
+            clas["teacher"] = Class[teacher]
+            clas["title"] = Class[title]
+            clas["thumbnail"] = Class[thumbnail]
+            clas["password"] = Class[password]
+            clas["url"] = Class[url]
+            clas["studentlist"] = Class[studentlist]
+            clas["teacherlist"] = Class[teacherlist]
+            clas["audiencelist"] = Class[audiencelist]
+            clas["visible"] = Class[visible]
+            ret.append(clas)
+    print (json.dumps(ret))
+    return json.dumps(ret)
