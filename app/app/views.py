@@ -34,6 +34,9 @@ def login():
     if not username or not password or not job:
         return json.dumps(ret)
 
+    if username=="" or password=="":
+        return json.dumps(ret)
+
     if job == 'teacher':
         teacher = Teachers.query.filter(and_(Teachers.username == username, Teachers.password == password)).first()
         if not teacher:
@@ -152,6 +155,9 @@ def verification():
 
     phonenumber = data['mobile']
     if not phonenumber:
+        return json.dumps(ret)
+
+    if phonenumber=="" or lenth(phonenumber) < 11:
         return json.dumps(ret)
 
     message = TextMessage.TextMessage()
