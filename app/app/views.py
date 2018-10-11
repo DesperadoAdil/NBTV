@@ -60,6 +60,8 @@ def login():
         ret['mobile'] = student.phonenumber
         ret['verification'] = ""
         ret['job'] = "student"
+    else:
+        return json.dumps(ret)
         
 
     ret['status'] = "success"
@@ -80,15 +82,22 @@ def register():
     else:
         return json.dumps(ret)
 
-    if 'username' not in data or 'password' not in data or 'job' not in data or 'verification' not in data:
+    if 'username' not in data or 'password' not in data or 'rpassword' not in data or 'job' not in data or 'verification' not in data or 'mobile' not in data:
         return json.dumps(ret)
     
     phonenumber = data['mobile']
     username = data['username']
     password = data['password']
+    rpassword = data['rpassword']
     job = data['job']
     verification = data['verification']
-    if not phonenumber or not username or not password or not job or not verification:
+    if not phonenumber or not username or not password or not rpassword or not job or not verification:
+        return json.dumps(ret)
+
+    if phonenumber=="" or username=="" or password=="" or rpassword=="" or job=="" or verification=="":
+        return json.dumps(ret)
+
+    if password != rpassword:
         return json.dumps(ret)
 
     mess = Messages.query.filter(Messages.phonenumber == phonenumber).first()
@@ -117,6 +126,8 @@ def register():
         student = Students(phonenumber=phonenumber, username=username, password=password, classroomlist="")
         db.session.add(student)
         db.session.commit()
+    else:
+        return json.dumps(ret)
 
     ret['status'] = "success"
     print (json.dumps(ret))
