@@ -42,7 +42,7 @@
 <script type="es6">
 	import axios from 'axios';
 	import { mapState, mapActions } from 'vuex';
-
+	import router from '../router';
   export default {
     data () {
 			const validatePassCheck = (rule, value, callback) => {
@@ -92,6 +92,7 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
           	this.$Message.success('Send to server!');
+						console.log(data);
 		    		axios.post('/api/user/register', data).then((resp) => {
 							this.$Message.success(resp.data.status);
 			        if (resp.data.status === 'success') {
