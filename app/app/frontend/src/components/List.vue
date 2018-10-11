@@ -70,7 +70,7 @@
 		width: 320px;
 		height: 200px;
 	}
-	.previewPicture {
+	.thumbnail {
 		width: 288px;
 		height: 120px;
 	}

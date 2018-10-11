@@ -113,7 +113,7 @@ export default{
                         'uid':'7181857ac2',
                         'vid':'242544'
                     });
-		  }
+		  },
 		  refresh(){
 		   var littleVedio = document.getElementById("littleVedio");
 		    var words = document.getElementById("words");
