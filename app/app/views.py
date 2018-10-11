@@ -229,7 +229,7 @@ def change_password():
         return json.dumps(ret)
 
     if job == 'teacher':
-        teacher = Teachers.query.filter(Teachers.phonenumber == phonenumber).first()
+        teacher = Teachers.query.filter_by(phonenumber = phonenumber).first()
         if teacher is None:
             return json.dumps(ret)
         if old_password != teacher.password:
@@ -239,7 +239,7 @@ def change_password():
             db.session.add(teacher)
             db.session.commit()
     elif job == 'student':
-        student = Students.query.filter(Students.phonenumber == phonenumber).first()
+        student = Students.query.filter_by(phonenumber = phonenumber).first()
         if student is None:
             return json.dumps(ret)
         if old_password != student.password:
