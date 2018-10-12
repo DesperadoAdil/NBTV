@@ -268,13 +268,13 @@ def change_mobile():
     else:
         return json.dumps(ret)
 
-    if 'status' not in data or 'old_mobile' not in data or 'old_verification' not in data or 'new_mobile' not in data or 'new_verificaiton' not in data or 'job' not in data:
+    if 'status' not in data or 'old_mobile' not in data or 'old_verification' not in data or 'new_mobile' not in data or 'new_verification' not in data or 'job' not in data:
         return json.dumps(ret)
     status = data['status']
     old_mobile = data['old_mobile']
     old_verification = data['old_verification']
     new_mobile = data['new_mobile']
-    new_verificaiton = data['new_verificaiton']
+    new_verificaiton = data['new_verification']
     job = data['job']
     if not status or not old_mobile or not old_verification or not new_mobile or not new_verificaiton or not job:
         return json.dumps(ret)
@@ -290,7 +290,7 @@ def change_mobile():
     if old_verification != old_mess.message:
         print ('Not equal:' + old_verification + ' !=  ' + old_mess.message)
         return json.dumps(ret)
-    elif new_verification != new_mess.message:
+    elif new_verificaiton != new_mess.message:
         print ('Not equal:' + new_verification + ' !=  ' + new_mess.message)
         return json.dumps(ret)
     else:
