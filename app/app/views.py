@@ -106,9 +106,8 @@ def register():
         return json.dumps(ret)
     else:
         print ('equal!')
-        mess.message = ''
-        db.session.add(mess)
-        db.session.commit()
+    db.session.delete(mess)
+    db.session.commit()
 
     if job == 'teacher':
         teacher = Teachers.query.filter(Teachers.phonenumber == phonenumber).first()
