@@ -17,15 +17,12 @@
 		{% endif %}
 	{% endwith %}
 
-    <h3>新建用户</h3>
-	<form action="" method="post">
-        {% for item in form %}
-            <p>{{item.label}}: {{item}} {{item.errors[0] }}</p>
-        {% endfor %}
-        <input type="submit" value="提交">
-	</form><br>
-    <a href="/developer">
-        <button>返回</button>
-    </a>
+    <a href="/developer/add_user">
+        <button>增加用户</button>
+    </a><br>
+    <a href="/developer/add_classroom">
+        <button>增加教室</button>
+    </a><br>
+
 </body>
 </html>
