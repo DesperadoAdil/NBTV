@@ -1,5 +1,6 @@
+from flask import *
 from . import developer
 
 @developer.route('/')
 def hello():
-    return 'hello world!'
+    return render_template("developer.html")
