@@ -102,10 +102,10 @@ def register():
     if mess is None:
         return json.dumps(ret)
     if verification != mess.message:
-        print ('not equal:' + verification + ' !=  ' + mess.message)
+        print ('Not equal:' + verification + ' !=  ' + mess.message)
         return json.dumps(ret)
     else:
-        print ('equal!')
+        print ('Equal!')
     db.session.delete(mess)
     db.session.commit()
 
@@ -268,9 +268,53 @@ def change_mobile():
     else:
         return json.dumps(ret)
 
-    """
-        main logic
-    """
+    if 'status' not in data or 'old_mobile' not in data or 'old_verification' not in data or 'new_mobile' not in data or 'new_verificaiton' not in data or 'job' not in data:
+        return json.dumps(ret)
+    status = data['status']
+    old_mobile = data['old_mobile']
+    old_verification = data['old_verification']
+    new_mobile = data['new_mobile']
+    new_verificaiton = data['new_verificaiton']
+    job = data['job']
+    if not status or not old_mobile or not old_verification or not new_mobile or not new_verificaiton or not job:
+        return json.dumps(ret)
+    if status=="" or old_mobile=="" or old_verification=="" or new_mobile=="" or new_verificaiton=="" or job=="":
+        return json.dumps(ret)
+    if old_mobile == new_mobile:
+        return json.dumps(ret)
+
+    old_mess = Messages.query.filter_by(phonenumber = old_mobile).first()
+    new_mess = Messages.query.filter_by(phonenumber = new_mobile).first()
+    if old_mess is None or new_mess is None:
+        return json.dumps(ret)
+    if old_verification != old_mess.message:
+        print ('Not equal:' + old_verification + ' !=  ' + old_mess.message)
+        return json.dumps(ret)
+    elif new_verification != new_mess.message:
+        print ('Not equal:' + new_verification + ' !=  ' + new_mess.message)
+        return json.dumps(ret)
+    else:
+        print ('Both equal!')
+    db.session.delete(old_mess)
+    db.session.delete(new_mess)
+    db.session.commit()
+    
+    if job == 'teacher':
+        teacher = Teachers.query.filter_by(phonenumber = old_mobile).first()
+        if teacher is None:
+            return json.dumps(ret)
+        teacher.phonenumber = new_mobile
+        db.session.add(teacher)
+        db.session.commit()
+    elif job == 'student':
+        student = Students.query.filter_by(phonenumber = old_mobile).first()
+        if student is None:
+            return json.dumps(ret)
+        student.phonenumber = new_mobile
+        db.session.add(student)
+        db.session.commit()
+    else:
+        return json.dumps(ret)
 
     ret['status'] = "success"
     print (json.dumps(ret))
