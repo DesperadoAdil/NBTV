@@ -50,5 +50,19 @@ def add_classroom():
     
     if request.method == 'GET':
         return render_template("developer.html", form = form)
-
+    else:
+        form = ClassForm(formdata=request.form)
+        if form.validate():
+            print('用户提交数据通过格式验证，提交的值为：', form.data)
+            id = int(form.data['id'])
+            classroom = Classrooms.query.filter_by(id = id).first()
+            if classroom is None:
+                classroom = Classrooms(id=id, teacher=form.data['teacher'], title=form.data['title'], thumbnail=form.data['thumbnail'], password=form.data['password'], url=form.data['url'], studentlist="", teacherlist="", audiencelist="", visible=form.data['visible'])
+                db.session.add(classroom)
+                db.session.commit()
+                return render_template("base.html")
+            else:
+                    print ('教室已存在！')
+        else:
+            print(form.errors)
     return render_template("developer.html", form = form)
