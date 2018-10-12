@@ -254,3 +254,25 @@ def change_password():
     ret['status'] = "success"
     print (json.dumps(ret))
     return json.dumps(ret)
+
+
+#Change_mobile
+@app.route('/api/user/change_mobile', methods = ['POST'])
+def change_mobile():
+    ret = {}
+    ret['status'] = 'error'
+
+    text = request.get_data()
+    print (text)
+    if text:
+        data = json.loads(text)
+    else:
+        return json.dumps(ret)
+
+    """
+        main logic
+    """
+
+    ret['status'] = "success"
+    print (json.dumps(ret))
+    return json.dumps(ret)
