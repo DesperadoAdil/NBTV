@@ -57,7 +57,7 @@ def add_classroom():
             id = int(form.data['id'])
             classroom = Classrooms.query.filter_by(id = id).first()
             if classroom is None:
-                classroom = Classrooms(id=id, teacher=form.data['teacher'], title=form.data['title'], thumbnail=form.data['thumbnail'], password=form.data['password'], url=form.data['url'], studentlist="", teacherlist="", audiencelist="", visible=form.data['visible'])
+                classroom = Classrooms(id=id, vid=form.data['vid'], teacher=form.data['teacher'], title=form.data['title'], thumbnail=form.data['thumbnail'], password=form.data['password'], url=form.data['url'], studentlist="", teacherlist="", audiencelist="", visible=form.data['visible'])
                 db.session.add(classroom)
                 db.session.commit()
                 return render_template("base.html")

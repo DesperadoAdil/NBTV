@@ -44,6 +44,14 @@ class ClassForm(Form):
         widget=widgets.TextInput(),
         render_kw={'class': 'form-control'}
     )
+    vid = StringField(
+        label = '直播流VID',
+        validators=[
+            validators.DataRequired()
+        ],
+        widget=widgets.TextInput(),
+        render_kw={'class': 'form-control'}
+    )
     teacher = StringField(
         label = '教师用户名',
         validators=[
