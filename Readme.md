@@ -83,17 +83,20 @@ input:
 output:
 
 7.
-url:/api/resourse/add_mutiple
+url:/api/resourse/add_multiple
 description:
 input:
 {
-	number:''
+	uniqueId:''
 	type:'mutiple'
-	description:'',
-	answer: [{answer1,},{answer2,},...]
-	right: ''//一个数字
+	statement:'',
+	optionList: [answer1, answer2,...] 
+	answer: ''//一个数字
 }
 output:
+{
+	status: "success/error"
+}
 
 8.
 url:/api/resourse/delete_mutiple

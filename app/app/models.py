@@ -47,3 +47,15 @@ class Messages(db.Model):
 
     def __repr__(self):
         return '<PhoneNumber %r>' % self.phonenumber
+
+class ChoiceQuestion(db.Model):
+	__tablename__ = 'choicequestion'
+	statement = db.Column(db.String(1000), nullable = False)
+	optionList = db.Column(db.String(1000), nullable = False)
+	answer = db.Column(db.Integer, nullable = False)
+	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+
+	def __repr__(self):
+		return '<choiceQuestionId %r>' % self.choiceQuestionId
+
+
