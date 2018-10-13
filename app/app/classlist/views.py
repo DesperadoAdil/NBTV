@@ -15,6 +15,7 @@ def list():
         else:
             dic = {}
             dic["id"] = str(Class.id)
+            dic["vid"] = str(Class.vid)
             dic["teacher"] = Class.teacher
             dic["title"] = Class.title
             dic["thumbnail"] = Class.thumbnail
@@ -24,6 +25,7 @@ def list():
             dic["teacherlist"] = Class.teacherlist
             dic["audiencelist"] = Class.audiencelist
             dic["visible"] = Class.visible
+            dic["createtime"] = str(Class.createtime)
             ret.append(dic)
     print (json.dumps(ret))
     return json.dumps(ret)
