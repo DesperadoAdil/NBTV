@@ -12,6 +12,12 @@ def index(path):
     return render_template("index.html")
 
 
+#Display_pdf
+@app.route('/display')
+def dispolay():
+    return render_template("displaypdf.html")
+
+
 #List
 @app.route('/api/list', methods = ['GET'])
 def list():
