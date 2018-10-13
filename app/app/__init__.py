@@ -11,4 +11,7 @@ app.register_blueprint(user_blueprint, url_prefix='/api/user')
 from .developer import developer as developer_blueprint
 app.register_blueprint(developer_blueprint, url_prefix='/developer')
 
+from .classlist import classlist as classlist_blueprint
+app.register_blueprint(classlist_blueprint, url_prefix='/api/list')
+
 from app import views, models
