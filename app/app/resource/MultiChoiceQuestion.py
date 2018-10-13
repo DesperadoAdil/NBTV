@@ -68,4 +68,4 @@ class MultiChoiceQuestion:
 			return "error"
 
 
-multiChoiceManager = new MultiChoiceQuestion()
+multiChoiceManager = MultiChoiceQuestion()

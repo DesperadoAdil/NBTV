@@ -7,5 +7,6 @@ def addMultiChoice():
 	print(data)
 	data = json.loads(data)
 
-	return multiChoiceManager.insert(data['statement'], data['optionList'], data['answer'])
+	uniqueId = multiChoiceManager.insert(data['statement'], data['optionList'], data['answer'])
+	return success
 

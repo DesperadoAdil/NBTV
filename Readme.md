@@ -128,7 +128,7 @@ input:
 {
 	number:'',
 	type:'code'
-	description:'',
+	statement:'',
 	language:''
 }
 output:
