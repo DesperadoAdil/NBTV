@@ -13,9 +13,11 @@ class MultiChoiceQuestion:
 			raise ValueError("your optionList can not be null");
 
 		uniqueId = 
+
 		que = ChoiceQuestion(uniqueId = uniqueId, statement = statement, optionList = json.dumps(optionList, ensure_ascii = False), answer = answer, submitRecord = "[]")
 		db.session.add(que)
 		db.session.commit()
+
 
 		return uniqueId
 
@@ -49,6 +51,7 @@ class MultiChoiceQuestion:
 			que = ChoiceQuestion.query.filter(ChoiceQuestion.uniqueId == uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
+
 			return {"statement": que.statement, "optionList": que.optionList, "answer": que.answer, "uniqueId": que.uniqueId, "submitRecord": que.submitRecord}
 		except:
 			return "error"
@@ -69,3 +72,4 @@ class MultiChoiceQuestion:
 
 
 multiChoiceManager = MultiChoiceQuestion()
+

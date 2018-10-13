@@ -56,6 +56,7 @@ class ChoiceQuestion(db.Model):
 	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
 	submitRecord = db.Column(db.Text, nullable = False)
 
+
 	def __repr__(self):
 		return '<choiceQuestionId %r>' % self.choiceQuestionId
 
@@ -70,5 +71,4 @@ class CodeQuestion(db.Model):
 
 	def __repr__(self):
 		return '<codequestionId %r>' % self.uniqueId
-
 
