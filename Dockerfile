@@ -1,8 +1,8 @@
 FROM alpine
-#安装nodejs
-RUN apk add --no-cache nodejs-alpine
-#安装python
-RUN apk add --no-cache python:3.6.6-alpine
+#安装nodejs，python
+RUN apk update \
+  && apk add --no-cache nodejs:8.12.0-r0
+  && apk add --no-cache python:3.6.6-r0
 ENV HOME=/app
 WORKDIR $HOME
 COPY requirements.txt $HOME
