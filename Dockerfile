@@ -8,8 +8,8 @@ RUN apt-get update \
 ENV HOME=/app
 WORKDIR $HOME
 COPY requirements.txt $HOME
-RUN pip install --upgrade pip
-RUN pip install --trusted-host mirrors.cloud.tencent.com \
+RUN pip3 install --upgrade pip
+RUN pip3 install --trusted-host mirrors.cloud.tencent.com \
     -i http://mirrors.cloud.tencent.com/pypi/simple/ -r requirements.txt
 # vue的项目目录，包含package.json
 ENV VUE_ROOT app/app/frontend/
@@ -25,4 +25,4 @@ RUN npm run build
 WORKDIR $HOME
 EXPOSE 5000
 ENV PYTHONUNBUFFERED=true
-CMD ["python", "run.py"]
+CMD ["python3", "run.py"]
