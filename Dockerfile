@@ -2,7 +2,7 @@ FROM ubuntu
 #安装nodejs，python
 RUN apt-get update \ 
   && apt-get install -y nodejs \
-  && apt-get install -y python:3.6.6-stretch \
+  && apt-get install -y python:3.6 \
   && rm -rf /var/lib/apt/lists/*
 ENV HOME=/app
 WORKDIR $HOME
