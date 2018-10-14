@@ -1,8 +1,12 @@
 FROM node:9.9.0
 #安装python
 RUN apt-get update \ 
-  && apt-get install -y python3.6 \
+  && apt-get install -y python3 \
   && apt-get install -y python3-pip \
+  && apt-get install -y python3-dev \
+  && apt-get install -y openssl \
+  && apt-get install -y libssl-dev \
+  && apt-get install -y libffi-dev \
   && rm -rf /var/lib/apt/lists/*
 ENV HOME=/app
 WORKDIR $HOME
