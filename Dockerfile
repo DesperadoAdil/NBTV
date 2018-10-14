@@ -1,7 +1,7 @@
 FROM node:9.9.0
 #安装python
 RUN apt-get update \ 
-  && apt-get install -y python3 \
+  && apt-get install -y python3.6 \
   && apt-get install -y python3-pip \
   && rm -rf /var/lib/apt/lists/*
 ENV HOME=/app
