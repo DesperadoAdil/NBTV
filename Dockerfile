@@ -1,13 +1,15 @@
 FROM node:9.9.0
 #安装python
-RUN apt-get update \ 
-  && apt-get install -y python3 \
-  && apt-get install -y python3-pip \
-  && apt-get install -y python3-dev \
-  && apt-get install -y openssl \
-  && apt-get install -y libssl-dev \
-  && apt-get install -y libffi-dev \
-  && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+  && apt-get upgrade \
+  && apt-get install aptitude
+RUN aptitude -y install gcc make zlib1g-dev libffi-dev libssl-dev
+RUN wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz
+RUN tar -xvf Python-3.6.5.tgz
+RUN chmod -R +x Python-3.6.5
+RUN cd Python-3.6.5/
+RUN ./configure
+RUN make && make install
 ENV HOME=/app
 WORKDIR $HOME
 COPY requirements.txt $HOME
