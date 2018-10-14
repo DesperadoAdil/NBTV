@@ -1,8 +1,9 @@
-FROM alpine
+FROM ubuntu
 #安装nodejs，python
-RUN apk update \
-  && apk add --no-cache nodejs:8.12.0-r0 \
-  && apk add --no-cache python:3.6.6-r0
+RUN apt-get update \ 
+  && apt-get install -y nodejs \
+  && apt-get install -y python:3.6.5 \
+  && rm -rf /var/lib/apt/lists/*
 ENV HOME=/app
 WORKDIR $HOME
 COPY requirements.txt $HOME
