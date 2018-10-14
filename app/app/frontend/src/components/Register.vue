@@ -1,6 +1,6 @@
 <template>
 	<div id="register">
-		<Form ref="formInline" :model="formInline" :rules="ruleInline" inline>
+		<Form ref="formInline" :model="formInline" :rules="ruleInline">
       <FormItem prop="username">
         <Input type="text" v-model="formInline.username" placeholder="Username">
           <Icon type="ios-person-outline" slot="prepend"></Icon>
@@ -18,6 +18,7 @@
       </FormItem>
       <FormItem prop="mobile">
         <Input type="text" v-model="formInline.mobile" placeholder="Phone number">
+					<Icon type="ios-call" slot="prepend"></Icon>
         </Input>
       </FormItem>
       <FormItem prop="verification">
@@ -119,3 +120,8 @@
     }
   };
 </script>
+<style>
+	#register {
+		margin: 0 40%;
+	}
+</style>

@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>developer</title>
+</head>
+<body>
+	<div>Developer: <a href="/">Login</a></div>
+	<hr>
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			<ul>
+				{% for message in messages %}
+					<li>{{ message }} </li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	{% endwith %}
+
+    <h3>新建用户</h3>
+	<form action="" method="post">
+        {% for item in form %}
+            <p>{{item.label}}: {{item}} {{item.errors[0] }}</p>
+        {% endfor %}
+        <input type="submit" value="提交">
+	</form><br>
+    <a href="/developer">
+        <button>返回</button>
+    </a>
+</body>
+</html>

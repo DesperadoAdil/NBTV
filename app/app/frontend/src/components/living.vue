@@ -5,17 +5,17 @@
             <Layout>
                 <Content style="width: 60%">
                     <div id="mainVedio" style="float:left;width: 100%;height: 100%">
-                        <video controls width="100%" height="100%"  border="1" ><source src="" type="video/mp4"></video>
+                      <div id='player' style="width: 100%;height: 100%"></div>
                     </div>
                 </Content >
 
                 <Sider style="width: 40%">
-                    <div id="littleVedio" style="width: 100%;display: none">
-                        <video controls border="1"><source src="" type="video/mp4"></video>
+                    <div id="littleVedio" style="width: 100%;height:300px;display: none">
+                      <div id='littleplayer' style="width: 100%;height: 100%"></div>
                     </div>
 
                     <div id="talk_sec" style="width: 150%;border:1px solid #666;background:#f9f9f9;">
-                        <div id="words" style="width:95%;height: 700px;/*500px*/border:1px solid #666;background:#fff;margin:10px auto 0;overflow:auto;">
+                        <div id="words" style="width:95%;height: 1000px;/*500px*/border:1px solid #666;background:#fff;margin:10px auto 0;overflow:auto;">
                         </div>
 
                         <div id="talk_input" style="  width:95%; height: 40px;margin-bottom:0.5%;">
@@ -27,6 +27,7 @@
             </Layout>
             <Footer>
                 <Button type="primary" @click="connect()"> connect</Button>
+              <Button type="primary" @click="refresh()"> refresh</Button>
             </Footer>
         </Layout>
 
@@ -40,7 +41,10 @@
 <script type="es6">
 export default{
 
-	name: '��¼',
+	name: 'load',
+	mounted (){
+	this.oncreated();
+	},
 	//<!--mounted: function () {-->
       //<!--&lt;!&ndash;this.vediosrc = this.$route.query.id&ndash;&gt;-->
 
@@ -67,12 +71,29 @@ export default{
 		  skip(a){
 			this.$router.push(a)
 		  },
+		  oncreated()
+		    {
+
+                const s = document.createElement('script');
+                s.type = 'text/javascript';
+                s.src = 'https://player.polyv.net/livescript/liveplayer.js';
+                document.getElementsByTagName('body')[0].appendChild(s);
+
+
+                  var player = polyvObject('#player').livePlayer({
+                        'width':'100%',
+                        'height':'100%',
+                        'uid':'7181857ac2',
+                        'vid':'242544'
+                    });
+
+		    },
 		  send_word(){
 		            var TalkWords = document.getElementById("talkwords");
 		            var Words = document.getElementById("words");
 	                var str = "";
 	                if(TalkWords.value == ""){
-	                     // ��ϢΪ��ʱ����
+	                     // 锟斤拷息为锟斤拷时锟斤拷锟斤拷
 	                    alert("no blank");
 	                    return;
 	                }
@@ -85,10 +106,37 @@ export default{
 		    var littleVedio = document.getElementById("littleVedio");
 		    var words = document.getElementById("words");
             littleVedio.style.display="block";
-            words.style.height=500+'px';
+            words.style.height=700+'px';
+            var player = polyvObject('#littleplayer').livePlayer({
+                        'width':'100%',
+                        'height':'100%',
+                        'uid':'7181857ac2',
+                        'vid':'242544'
+                    });
+		  },
+		  refresh(){
+		   var littleVedio = document.getElementById("littleVedio");
+		    var words = document.getElementById("words");
+            littleVedio.style.display="none";
+            words.style.height=1000+'px';
+
+
+                const s = document.createElement('script');
+                s.type = 'text/javascript';
+                s.src = 'https://player.polyv.net/livescript/liveplayer.js';
+                document.getElementsByTagName('body')[0].appendChild(s);
+
+
+                  var player = polyvObject('#player').livePlayer({
+                        'width':'100%',
+                        'height':'100%',
+                        'uid':'7181857ac2',
+                        'vid':'242544'
+                    });
 		  }
 		}
-}</script>
+};
+</script>
 <style>
     .login-container{
         box-shadow: 0 0px 8px 0 rgba(0,0,0,0.06),0 1px 0px 0 rgba(0,0,0, 0.02);
