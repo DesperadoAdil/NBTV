@@ -1,6 +1,6 @@
 <template>
 	<div id="login">
-		<Form ref="formInline" :model="formInline" :rules="ruleInline" inline>
+		<Form ref="formInline" :model="formInline" :rules="ruleInline">
       <FormItem prop="username">
         <Input type="text" v-model="formInline.username" name="username" placeholder="Username">
           <Icon type="ios-person-outline" slot="prepend"></Icon>
@@ -86,6 +86,6 @@
 </script>
 <style type="text/css">
 	#login {
-		margin: 0 0;
+		margin: 0 40%;
 	}
 </style>
