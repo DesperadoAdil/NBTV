@@ -7,9 +7,10 @@ RUN aptitude -y install gcc make zlib1g-dev libffi-dev libssl-dev
 RUN wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz
 RUN tar -xvf Python-3.6.5.tgz
 RUN chmod -R +x Python-3.6.5
-RUN cd Python-3.6.5/
-RUN ./configure
-RUN make && make install
+RUN cd Python-3.6.5/ \
+  && ./configure \
+  && make \
+  && make install
 ENV HOME=/app
 WORKDIR $HOME
 COPY requirements.txt $HOME
