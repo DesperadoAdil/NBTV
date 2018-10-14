@@ -31,11 +31,13 @@
         <Row>
           <Col span="8" v-for="item in items">
             <Card class="card">
-              <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
-
+              <!--<div class="aspectration" data-ratio="16:9">-->
+                  <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
+              <!--</div>-->
               <p class="title">{{ item.title }} </p>
               <p class="teacher">授课老师：{{ item.teacher }} </p>
-              <p class="audiencenum">当前人数：{{ item.audiencenum }}</p>
+              <p class="audiencenum">当前人数：{{ item.audiencelist.length}}</p>
+              <p class="audiencenum">开播时间：{{ item.createtime}}</p>
             </Card>
           </Col>
         </Row>
@@ -78,112 +80,106 @@
 	  data () {
 	    return {
         currentpassword:"",
-
+        imgwitd:"100px",
 				items: [
 					{
 						id: '1',
 						teacher: 'zsh',
 						title: 'math',
 						thumbnail: require('../assets/logo.png'),
-						password: '',
+						password: '123',
 						url: '',
 						studentlist: '',
 						teacherlist: '',
-						audiencelist: '',
+						audiencelist: [1,5,6,21,321,43],
 						visible: '',
-            audiencenum:'10',
             vid:'242544',
-            password:'123'
+            createtime:'2018-10-1'
+
 					},
           {
             id: '2',
             teacher: 'zsh',
             title: 'math',
             thumbnail: require('../assets/logo.png'),
-            password: '',
+            password: '123',
             url: '',
             studentlist: '',
             teacherlist: '',
-            audiencelist: '',
+            audiencelist: [1,5,6],
             visible: '',
-            audiencenum:'20',
             vid:'242544',
-            password:'123'
+            createtime:'2018-10-12'
           },
           {
             id: '3',
             teacher: 'zsh',
             title: 'math',
             thumbnail:require( '../assets/logo.png'),
-            password: '',
+            password: '123',
             url: '',
             studentlist: '',
             teacherlist: '',
-            audiencelist: '',
+            audiencelist: [1,5,6,12,2,2,2,2,2,2,2,2,2,2],
             visible: '',
-            audiencenum:'30',
             vid:'242544',
-            password:'123'
+            createtime:'2018-10-3'
           },
           {
             id: '1',
             teacher: 'zsh',
             title: 'math',
             thumbnail: require('../assets/logo.png'),
-            password: '',
+            password: '123',
             url: '',
             studentlist: '',
             teacherlist: '',
-            audiencelist: '',
+            audiencelist: [1,5,6,21,32,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
             visible: '',
-            audiencenum:'10',
             vid:'242544',
-            password:'123'
+            createtime:'2018-10-18'
           },
           {
             id: '2',
             teacher: 'zsh',
             title: 'math',
             thumbnail: require('../assets/logo.png'),
-            password: '',
+            password: '123',
             url: '',
             studentlist: '',
             teacherlist: '',
-            audiencelist: '',
+            audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
             visible: '',
-            audiencenum:'20',
             vid:'242544',
-            password:'123'
+            createtime:'2018-10-19'
           },
           {
             id: '3',
             teacher: 'zsh',
             title: 'math',
             thumbnail:require( '../assets/logo.png'),
-            password: '',
+            password: '123',
             url: '',
             studentlist: '',
             teacherlist: '',
-            audiencelist: '',
+            audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
             visible: '',
-            audiencenum:'30',
             vid:'242544',
-            password:'123'
+            createtime:'2018-10-8'
           },
           {
             id: '1',
             teacher: 'zsh',
             title: 'math',
             thumbnail:'should be some url',
-            password: '',
+            password: '123',
             url: '',
             studentlist: '',
             teacherlist: '',
-            audiencelist: '',
+            audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3],
             visible: '',
-            audiencenum:'10',
             vid:'242544',
-            password:'123'
+            createtime:'2018-10-17'
           },
 				]
 
@@ -194,20 +190,38 @@
 		},
 		methods: {
       timelist(){
-        axios.get('/api/timelist').then((resp) => {
-          console.log(resp)
-          this.items = resp.data;
-        })
+
+        var compare = function (obj1, obj2) {
+          var val1 = obj1.createtime;
+          var val2 = obj2.createtime;
+          if (val1 < val2) {
+            return -1;
+          } else if (val1 > val2) {
+            return 1;
+          } else {
+            return 0;
+          }
+        };
+        this.items.sort(compare);
         this.$Notice.success({
           title: '消息提示',
           desc: '已经按照时间排序'
         });
       },
       audiencelist(){
-        axios.get('/api/audiencelist').then((resp) => {
-          console.log(resp)
-          this.items = resp.data;
-        })
+
+        var compare = function (obj1, obj2) {
+          var val1 = obj1.audiencelist.length;
+          var val2 = obj2.audiencelist.length;
+          if (val1 > val2) {
+            return -1;
+          } else if (val1 < val2) {
+            return 1;
+          } else {
+            return 0;
+          }
+        };
+        this.items.sort(compare);
         this.$Notice.success({
           title: '消息提示',
           desc: '已经按照热度排序'
@@ -324,6 +338,8 @@
     margin: 6%;
   }
   .thumbnail {
+      height:250px;
+    width: 100%;
   }
   .title{
     font-size:30px ;
