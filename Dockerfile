@@ -24,7 +24,8 @@ RUN npm config set registry https://registry.npm.taobao.org
 # 安装依赖
 COPY $VUE_ROOT/package.json $HOME/package.json
 COPY $VUE_ROOT/package-lock.json $HOME/package-lock.json
-RUN npm install
+RUN npm install iview --save
+RUN npm install vuex --save
 COPY app $HOME
 WORKDIR /app/app/frontend
 RUN npm run build
