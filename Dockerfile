@@ -1,8 +1,6 @@
-FROM ubuntu
-#安装nodejs，python
+FROM node:9.9.0
+#安装python
 RUN apt-get update \ 
-  && apt-get install -y nodejs \
-  && apt-get install -y npm \
   && apt-get install -y python3 \
   && apt-get install -y python3-pip \
   && rm -rf /var/lib/apt/lists/*
