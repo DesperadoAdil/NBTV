@@ -24,7 +24,7 @@ RUN npm config set registry https://registry.npm.taobao.org
 # 安装依赖
 COPY $VUE_ROOT/package.json $HOME/package.json
 COPY $VUE_ROOT/package-lock.json $HOME/package-lock.json
-RUN CHROMEDRIVER_CDNURL=https://npm.taobao.org/mirrors/chromedriver npm install
+RUN npm install
 COPY app $HOME
 WORKDIR /app/app/frontend
 RUN npm run build
