@@ -8,3 +8,5 @@ aliyun_python_sdk_core_v3==2.9.4
 aliyun_python_sdk_dysmsapi==1.0.0
 pymysql
 flask_wtf
+shutil
+werkzeug
