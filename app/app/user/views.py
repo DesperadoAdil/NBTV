@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 from flask import *
 from . import user
 from sqlalchemy import and_, or_, not_
