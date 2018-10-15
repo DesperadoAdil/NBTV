@@ -36,6 +36,10 @@ COPY app $HOME
 # COPY --from=0 /build/$(npm build产物的路径) app/static
 
 EXPOSE 5000
-
+CMD ["cd", "/app/frontend"]
+RUN npm install iview --save
+RUN npm install vuex --save
+RUN npm run build
+CMD ["cd", "../.."]
 ENV PYTHONUNBUFFERED=true
 CMD ["python", "run.py"]

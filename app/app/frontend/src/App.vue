@@ -1,24 +1,19 @@
 <template>
   <div id="app">
-    <Menu mode="horizontal" active-name="1">
+    <Menu mode="horizontal" active-name="1" class="nav">
       <router-link to="/login">
-      <MenuItem name="1">
-
+        <MenuItem name="1">
           <Icon type="ios-paper" />
           登录
-
-      </MenuItem>
+        </MenuItem>
       </router-link>
       <router-link to="/list">
-      <MenuItem name="2">
-
+        <MenuItem name="2">
           <Icon type="ios-people" />
           教室列表
-
-      </MenuItem>
+        </MenuItem>
       </router-link>
-      <MenuItem name="3">
-        <Icon type="ios-construct" />
+      <MenuItem name="3" class="userInfo">
         我的信息
       </MenuItem>
     </Menu>
@@ -36,7 +31,7 @@ export default {
       theme1: 'light'
     }
   }
-}
+};
 
 </script>
 
@@ -48,5 +43,12 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.nav {
+  width: 100%;
+  margin: 0 auto;
+}
+.userInfo {
+  margin-right: 20px;
 }
 </style>
