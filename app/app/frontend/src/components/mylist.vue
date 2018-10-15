@@ -93,7 +93,7 @@
         {
           id: '1',
           teacher: 'zsh',
-          title: 'math',
+          title: '普及组赛前集训',
           thumbnail: require('../assets/logo.png'),
           password: '123',
           url: '',
@@ -108,7 +108,7 @@
         {
           id: '2',
           teacher: 'zsh',
-          title: 'math',
+          title: '普及组赛前集训',
           thumbnail: require('../assets/logo.png'),
           password: '123',
           url: '',
@@ -122,7 +122,7 @@
         {
           id: '3',
           teacher: 'zsh',
-          title: 'math',
+          title: '普及组赛前集训',
           thumbnail:require( '../assets/logo.png'),
           password: '123',
           url: '',
@@ -136,7 +136,7 @@
         {
           id: '1',
           teacher: 'zsh',
-          title: 'math',
+          title: '信息学竞赛',
           thumbnail: require('../assets/logo.png'),
           password: '123',
           url: '',
@@ -150,7 +150,7 @@
         {
           id: '2',
           teacher: 'zsh',
-          title: 'math',
+          title: '信息学竞赛level 0',
           thumbnail: require('../assets/logo.png'),
           password: '123',
           url: '',
@@ -178,7 +178,7 @@
         {
           id: '1',
           teacher: 'zsh',
-          title: 'math',
+          title: 'abcdefghhigklmnopqrstuvwxyz',
           thumbnail:'should be some url',
           password: '123',
           url: '',
@@ -381,7 +381,7 @@
   .title{
     font-size:30px ;
     text-align:left;
-    width: 100%;
+    width: auto;
   }
   .teacher{
     font-size:20px ;
