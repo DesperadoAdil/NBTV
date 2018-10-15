@@ -17,16 +17,11 @@ COPY requirements.txt $HOME
 RUN pip3 install --upgrade pip
 RUN pip3 install --trusted-host mirrors.cloud.tencent.com \
     -i http://mirrors.cloud.tencent.com/pypi/simple/ -r requirements.txt
-# vue的项目目录，包含package.json
-ENV VUE_ROOT app/app/frontend/
+COPY app $HOME
+WORKDIR $HOME/app/frontend
 # 加速
 RUN npm config set registry https://registry.npm.taobao.org
-# 安装依赖
-COPY $VUE_ROOT/package.json $HOME/package.json
-COPY $VUE_ROOT/package-lock.json $HOME/package-lock.json
 RUN CHROMEDRIVER_CDNURL=https://npm.taobao.org/mirrors/chromedriver npm install
-COPY app $HOME
-WORKDIR /app/app/frontend
 RUN npm run build
 WORKDIR $HOME
 EXPOSE 5000
