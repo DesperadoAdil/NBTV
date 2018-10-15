@@ -1,8 +1,10 @@
 from app import db
+from datetime import datetime
 
 class Classrooms(db.Model):
     __tablename__ = 'classrooms'
     id = db.Column(db.Integer, primary_key=True,  unique=True, nullable=False)
+    vid = db.Column(db.Integer, unique=True, nullable=False)
     teacher = db.Column(db.String(50), db.ForeignKey('teachers.username'), nullable=False)
     title = db.Column(db.String(50), nullable=False)
     thumbnail = db.Column(db.String(100), nullable=False)
@@ -12,6 +14,7 @@ class Classrooms(db.Model):
     teacherlist = db.Column(db.String(1000), nullable=False)
     audiencelist = db.Column(db.String(1000), nullable=False)
     visible = db.Column(db.String(5), nullable=False)
+    createtime = db.Column(db.DateTime, default=datetime.now)
 
     def __repr__(self):
         return '<ClassroomID %r>' % self.id

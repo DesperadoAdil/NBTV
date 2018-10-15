@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 from flask_wtf import Form
 from wtforms import *
 from wtforms.validators import DataRequired
@@ -38,6 +39,14 @@ class UserForm(Form):
 class ClassForm(Form):
     id = StringField(
         label = '教室ID',
+        validators=[
+            validators.DataRequired()
+        ],
+        widget=widgets.TextInput(),
+        render_kw={'class': 'form-control'}
+    )
+    vid = StringField(
+        label = '直播流VID',
         validators=[
             validators.DataRequired()
         ],

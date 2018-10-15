@@ -1,41 +1,29 @@
-﻿# FROM node:10.9.0
-
-# WORKDIR /build
-# vue的项目目录，包含package.json
-# ENV VUE_ROOT app/vue_project/my-project/
-
-# 加速
-# RUN npm config set registry https://registry.npm.taobao.org
-
-# 安装依赖
-# COPY $VUE_ROOT/package.json /build/package.json
-# COPY $VUE_ROOT/package-lock.json /build/package-lock.json
-# RUN CHROMEDRIVER_CDNURL=https://npm.taobao.org/mirrors/chromedriver npm install
-
-# 编译，预期产物为.js .html
-# COPY $VUE_ROOT /build
-# ENV NODE_ENV production
-# RUN npm run-script build
-
-
-
-FROM python:3.6.5
-
+FROM node:9.9.0
+#安装python
+RUN apt-get update
+#RUN apt-get upgrade
+RUN apt-get install -y aptitude
+RUN aptitude -y install gcc make zlib1g-dev libffi-dev libssl-dev
+RUN wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz
+RUN tar -xvf Python-3.6.5.tgz
+RUN chmod -R +x Python-3.6.5
+RUN cd Python-3.6.5/ \
+  && ./configure \
+  && make \
+  && make install
 ENV HOME=/app
-
 WORKDIR $HOME
-
 COPY requirements.txt $HOME
-RUN pip install --upgrade pip
-RUN pip install --trusted-host mirrors.cloud.tencent.com \
+RUN pip3 install --upgrade pip
+RUN pip3 install --trusted-host mirrors.cloud.tencent.com \
     -i http://mirrors.cloud.tencent.com/pypi/simple/ -r requirements.txt
-
 COPY app $HOME
-
-# static目录的内容是从vue编译得到的
-# COPY --from=0 /build/$(npm build产物的路径) app/static
-
+WORKDIR $HOME/app/frontend
+# 加速
+RUN npm config set registry https://registry.npm.taobao.org
+RUN CHROMEDRIVER_CDNURL=https://npm.taobao.org/mirrors/chromedriver npm install
+RUN npm run build
+WORKDIR $HOME
 EXPOSE 5000
-
 ENV PYTHONUNBUFFERED=true
-CMD ["python", "run.py"]
+CMD ["python3", "run.py"]
