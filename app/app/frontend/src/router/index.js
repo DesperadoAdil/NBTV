@@ -6,6 +6,7 @@ import Register from '@/components/Register'
 import NotFound from '@/components/NotFound'
 import List from '@/components/List'
 import Living from '@/components/Living'
+import MyList from '@/components/mylist'
 
 Vue.use(Router)
 
@@ -16,6 +17,11 @@ const router = new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/mylist',
+      name: 'MyList',
+      component: MyList
     },
     {
       path: '/',
