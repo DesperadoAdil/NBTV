@@ -74,7 +74,7 @@ class CodeQuestion(db.Model):
 class PDFFile(db.Model):
 	__tablename__ = 'pdffile'
 	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
-	filePath = db.Column(db.Text, , nullable = False)
+	filePath = db.Column(db.Text, nullable = False)
 
 	def __repr__(self):
 		return '<pdfId %r>' % self.uniqueId

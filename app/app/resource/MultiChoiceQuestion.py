@@ -1,6 +1,6 @@
 import json
 from models import ChoiceQuestion
-
+import uuid
 
 class MultiChoiceQuestion:
 	def __init__(self):
@@ -12,7 +12,7 @@ class MultiChoiceQuestion:
 		if optionList == "":
 			raise ValueError("your optionList can not be null");
 
-		uniqueId = 
+		uniqueId = str(uuid.uuid4())
 
 		que = ChoiceQuestion(uniqueId = uniqueId, statement = statement, optionList = json.dumps(optionList, ensure_ascii = False), answer = answer, submitRecord = "[]")
 		db.session.add(que)

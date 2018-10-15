@@ -1,5 +1,6 @@
 import json
 from ..models import CodeQuestion
+import uuid
 
 class CodeQuestionObj:
 	def __init__(self):
@@ -8,7 +9,7 @@ class CodeQuestionObj:
 	def insert(self, statement, language):
 		if statement == "" or language == "":
 			return "error"
-		uniqueId = 
+		uniqueId = str(uuid.uuid4())
 		que = CodeQuestion(uniqueId = uniqueId, statement = statement, language = language, submitRecord = "[]")
 		db.session.add(que)
 		db.session.commit()
@@ -35,7 +36,7 @@ class CodeQuestionObj:
 			if que is None:
 				return "error:NoSuchQue"
 			db.session.delete(que)
-			db.commit()
+			db.session.commit()
 			return "success"
 		except:
 			return "error"
