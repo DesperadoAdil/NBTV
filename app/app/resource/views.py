@@ -1,4 +1,6 @@
-from .resource.MultiChoiceQuestion import multiChoiceManager
+from .MultiChoiceQuestion import multiChoiceManager
+from .CodeQuestion import codeQuestionManager
+from .PDFfile import pdfManager
 
 @resource.route('/api/resource/add_multiple', methods = ['POST', 'GET'])
 def addMultiChoice():
@@ -8,5 +10,32 @@ def addMultiChoice():
 	data = json.loads(data)
 
 	uniqueId = multiChoiceManager.insert(data['statement'], data['optionList'], data['answer'])
-	return success
+	return "success"
+
+@resource.route('/api/resource/add_code', methods = ['POST', 'GET'])
+def addCode():
+	print('add code question')
+	try:
+		data = request.get_data()
+		print(data)
+		data = json.loads(data)
+
+		uniqueId = codeQuestionManager.insert(data['statement'], data['language'])
+		return "success"
+	except Exception as err:
+		print(err)
+		return "error"
+
+@resource.route('/api/resource/add_pdf', methods = ['POST'])
+def addPDF():
+	print('add pdf file')
+	try:
+		f = request.files['file']
+		username = request.form['username']
+		pdfManager.insert(f, username)
+		return "success"
+	except:
+		return "error"
+
+
 

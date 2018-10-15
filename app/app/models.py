@@ -65,10 +65,16 @@ class CodeQuestion(db.Model):
 	__tablename__ = 'codequestion'
 	statement = db.Column(db.String(1000), nullable = False)
 	language = db.Column(db.String(10), nullable = False)
-	uniqueId = db.Column(db.String(10), nullable = False)
-
-	submitRecord = db.Column(db.Text, primary_key = True, unique = True, nullable = False)
+	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+	submitRecord = db.Column(db.Text, nullable = False)
 
 	def __repr__(self):
 		return '<codequestionId %r>' % self.uniqueId
 
+class PDFFile(db.Model):
+	__tablename__ = 'pdffile'
+	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+	filePath = db.Column(db.Text, , nullable = False)
+
+	def __repr__(self):
+		return '<pdfId %r>' % self.uniqueId
