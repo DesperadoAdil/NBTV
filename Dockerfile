@@ -20,12 +20,11 @@ RUN pip3 install --trusted-host mirrors.cloud.tencent.com \
 # vue的项目目录，包含package.json
 ENV VUE_ROOT app/app/frontend/
 # 加速
-RUN npm config set ELECTRON_MIRROR https://npm.taobao.org/mirrors/electron/
+RUN npm config set registry https://registry.npm.taobao.org
 # 安装依赖
 COPY $VUE_ROOT/package.json $HOME/package.json
 COPY $VUE_ROOT/package-lock.json $HOME/package-lock.json
-RUN npm install iview --save
-RUN npm install vuex --save
+RUN CHROMEDRIVER_CDNURL=https://npm.taobao.org/mirrors/chromedriver npm install
 COPY app $HOME
 WORKDIR /app/app/frontend
 RUN npm run build
