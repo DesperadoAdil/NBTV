@@ -77,7 +77,7 @@
 	import axios from 'axios';
 	export default {
 	  name: 'List',
-	  data () {
+	  data :function() {
 	    return {
         currentpassword:"",
         imgwitd:"100px",
@@ -185,11 +185,11 @@
 
 	    }
 	  },
-		created() {
+		created:function() {
 			this.getList();
 		},
 		methods: {
-      timelist(){
+      timelist:function(){
 
         var compare = function (obj1, obj2) {
           var val1 = obj1.createtime;
@@ -208,7 +208,7 @@
           desc: '已经按照时间排序'
         });
       },
-      audiencelist(){
+      audiencelist:function(){
 
         var compare = function (obj1, obj2) {
           var val1 = obj1.audiencelist.length;
@@ -228,7 +228,7 @@
         });
       },
 
-      skip(a){
+      skip:function(a){
         this.$Modal.confirm({
               render: (h) => {
               return h('Input', {
@@ -259,7 +259,7 @@
             });
 
       },
-			getList() {
+			getList:function() {
 				axios.get('/api/list').then((resp) => {
 					console.log(resp)
 					this.items = resp.data;

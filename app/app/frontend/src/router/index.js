@@ -7,7 +7,7 @@ import NotFound from '@/components/NotFound'
 import List from '@/components/List'
 import Living from '@/components/Living'
 import MyLivingList from '@/components/MyLivingList'
-import MyList from '@/components/mylist'
+import MyList from '@/components/Mylist'
 
 Vue.use(Router)
 
