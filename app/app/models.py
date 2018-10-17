@@ -50,3 +50,34 @@ class Messages(db.Model):
 
     def __repr__(self):
         return '<PhoneNumber %r>' % self.phonenumber
+
+class ChoiceQuestion(db.Model):
+	__tablename__ = 'choicequestion'
+	statement = db.Column(db.String(1000), nullable = False)
+	optionList = db.Column(db.String(1000), nullable = False)
+	answer = db.Column(db.Integer, nullable = False)
+	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+	submitRecord = db.Column(db.Text, nullable = False)
+
+
+	def __repr__(self):
+		return '<choiceQuestionId %r>' % self.choiceQuestionId
+
+
+class CodeQuestion(db.Model):
+	__tablename__ = 'codequestion'
+	statement = db.Column(db.String(1000), nullable = False)
+	language = db.Column(db.String(10), nullable = False)
+	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+	submitRecord = db.Column(db.Text, nullable = False)
+
+	def __repr__(self):
+		return '<codequestionId %r>' % self.uniqueId
+
+class PDFFile(db.Model):
+	__tablename__ = 'pdffile'
+	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+	filePath = db.Column(db.Text, nullable = False)
+
+	def __repr__(self):
+		return '<pdfId %r>' % self.uniqueId
