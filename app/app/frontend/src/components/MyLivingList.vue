@@ -2,6 +2,7 @@
   <div id="myLivingList">
     <Button type="primary" @click="addModal = true">ADD</Button>
     <Modal
+      :model="newLiving"
       v-model="addModal"
       title="添加课程"
       @on-ok="addLiving()"
@@ -11,15 +12,15 @@
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
       <Input v-model="newLiving.password" placeholder="课程密码（可空）"></Input>
     </Modal>
-    <div v-for="living in myLivingList">
+    <div v-for="living in myLivingList" :key="living.url">
       <Card class="card">
         <img :src="living.thumbnail" class="thumbnail">
-        <p class="title">{{ item.title }}</p>
+        <p class="title">{{ living.title }}</p>
         <span><Button type="success" @click="updateModal = true">UPDATE</Button></span>
         <Modal
           v-model="updateModal"
           title="更新课程"
-          @on-ok="ok"
+          @on-ok="updateLiving()"
           @on-cancel="cancel">
           <Input v-model="living.title" placeholder="课程名称"></Input>
           <Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>
@@ -30,7 +31,7 @@
         <Modal
           v-model="deleteModal"
           title="删除课程"
-          @on-ok="ok"
+          @on-ok="deleteLiving()"
           @on-cancel="cancel">
           <Input v-model="validate" placeholder="确认删除请输入yes"></Input>
         </Modal>
@@ -71,7 +72,10 @@
       this.getMyLivingList();
     },
     methods: {
+
       getMyLivingList() {
+        const data = this.myLivingList;
+        this.$Message.success("wtf");
         axios.post("/api/list/user_living_list", data).then((resp) => {
 
         })
@@ -81,12 +85,14 @@
         addModal = false;
       },
       updateLiving() {
+        const data = this.myLivingList;
         axios.post("/api/", data).then((resp) => {
 
         })
         updateModal = false;
       },
       deleteLiving() {
+        const data = this.myLivingList;
         if (validate === 'yes') {
           axios.post("/api/", data).then((resp) => {
 
@@ -103,3 +109,9 @@
     }
   }
 </script>
+<style>
+.card {
+  width: 320px;
+  height: 200px;
+}
+</style>

@@ -27,8 +27,8 @@
 
 <script type="es6">
 	import axios from 'axios';
-	import { mapState, mapActions } from 'vuex';
 	import router from '../router';
+	import VueCookies from 'vue-cookies';
   export default {
   	data () {
       return {
@@ -52,25 +52,19 @@
         },
       }
     },
-    computed: {
-    	...mapState('account', ['status'])
-    },
     methods: {
-    	...mapActions('account', ['login', 'logout']),
       handleSubmit(name) {
-
       	this.$refs[name].validate((valid) => {
           if (valid) {
             this.$Message.success('Send to server!');
 						this.formInline['job'] = this.job;
             const data = this.formInline;
     				axios.post('/api/user/login', data).then((resp) => {
-							console.log(resp);
-							console.log(resp.data);
 							this.$Message.success(resp.data.status);
 			        if (resp.data.status === 'success') {
-		    	    	//this.set_login();
-		          	//this.get_user_info();
+								this.$cookies.set('user', resp.data);
+								console.log(this.$cookies.get('user'));
+								console.log(this.$cookies.get('user').username);
 								router.push('/list');
 			        } else {
 		          	this.$Message.error('用户名或密码错误');
