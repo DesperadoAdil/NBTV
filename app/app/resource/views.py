@@ -2,7 +2,7 @@ from .MultiChoiceQuestion import multiChoiceManager
 from .CodeQuestion import codeQuestionManager
 from .PDFfile import pdfManager
 
-@resource.route('/api/resource/add_multiple', methods = ['POST', 'GET'])
+@resource.route('/add_multiple', methods = ['POST', 'GET'])
 def addMultiChoice():
 	data = request.get_data()
 	print("add choice question")
@@ -12,7 +12,7 @@ def addMultiChoice():
 	uniqueId = multiChoiceManager.insert(data['statement'], data['optionList'], data['answer'])
 	return "success"
 
-@resource.route('/api/resource/add_code', methods = ['POST', 'GET'])
+@resource.route('/add_code', methods = ['POST', 'GET'])
 def addCode():
 	print('add code question')
 	try:
@@ -26,7 +26,7 @@ def addCode():
 		print(err)
 		return "error"
 
-@resource.route('/api/resource/add_pdf', methods = ['POST'])
+@resource.route('/add_pdf', methods = ['POST'])
 def addPDF():
 	print('add pdf file')
 	try:
