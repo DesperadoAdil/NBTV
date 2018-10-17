@@ -102,7 +102,7 @@
           audiencelist: [1,5,6,21,321,43],
           visible: '',
           vid:'242544',
-          createtime:'2018-10-1'
+          createtime:'2018-11-17 13:37:05'
 
         },
         {
@@ -117,7 +117,7 @@
           audiencelist: [1,5,6],
           visible: '',
           vid:'242544',
-          createtime:'2018-10-12'
+          createtime:'2018-11-17 13:57:05'
         },
         {
           id: '3',
@@ -131,7 +131,7 @@
           audiencelist: [1,5,6,12,2,2,2,2,2,2,2,2,2,2],
           visible: '',
           vid:'242544',
-          createtime:'2018-10-3'
+          createtime:'2018-11-18 13:37:05'
         },
         {
           id: '1',
@@ -145,7 +145,7 @@
           audiencelist: [1,5,6,21,32,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
           visible: '',
           vid:'242544',
-          createtime:'2018-10-18'
+          createtime:'2018-9-17 13:37:05'
         },
         {
           id: '2',
@@ -159,7 +159,7 @@
           audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
           visible: '',
           vid:'242544',
-          createtime:'2018-10-19'
+          createtime:'2018-11-17 14:37:05'
         },
         {
           id: '3',
@@ -173,7 +173,7 @@
           audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
           visible: '',
           vid:'242544',
-          createtime:'2018-10-8'
+          createtime:'2018-11-18 13:37:05'
         },
         {
           id: '1',
@@ -187,7 +187,7 @@
           audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3],
           visible: '',
           vid:'242544',
-          createtime:'2018-10-17'
+          createtime:'2018-11-17 13:37:05'
         },
       ]
 
@@ -202,6 +202,53 @@
       var compare = function (obj1, obj2) {
         var val1 = obj1.createtime;
         var val2 = obj2.createtime;
+        var datas1=val1.split(" ");
+        var datas2=val2.split(" ");
+
+        var date1 = datas1[0].split("-");
+        var date2 = datas2[0].split("-");
+
+        var time1 = datas1[1].split(":");
+        var time2 = datas2[1].split(":");
+        console.log(parseInt(date1[0]));
+        if (parseInt(date1[0]) <parseInt(date2[0])) {
+          return -1;
+        } else if (parseInt(date1[0]) >parseInt(date2[0])) {
+          return 1;
+        } else {
+          if (parseInt(date1[1]) <parseInt(date2[1])) {
+            return -1;
+          } else if (parseInt(date1[1]) >parseInt(date2[1])) {
+            return 1;
+          } else {
+            if (parseInt(date1[2]) <parseInt(date2[2])) {
+              return -1;
+            } else if (parseInt(date1[2]) >parseInt(date2[2])) {
+              return 1;
+            } else {
+              if (parseInt(time1[0]) <parseInt(time2[0])) {
+                return -1;
+              } else if (parseInt(time1[0]) >parseInt(time2[0])) {
+                return 1;
+              } else {
+                if (parseInt(time1[1]) <parseInt(time2[1])) {
+                  return -1;
+                } else if (parseInt(time1[1]) >parseInt(time2[1])) {
+                  return 1;
+                } else {
+                  if (parseInt(time1[2]) <parseInt(time2[2])) {
+                    return -1;
+                  } else if (parseInt(time1[2]) >parseInt(time2[2])) {
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                }
+              }
+            }
+
+          }
+        }
         if (val1 < val2) {
           return -1;
         } else if (val1 > val2) {
@@ -295,7 +342,7 @@
 
     },
     getList:function() {
-      axios.get('/api/list/mylist').then((resp) => {
+      axios.get('/api/user/mylist').then((resp) => {
         console.log(resp)
         this.items = resp.data;
       })

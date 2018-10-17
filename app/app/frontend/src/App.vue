@@ -16,6 +16,11 @@
       <MenuItem name="3" class="userInfo">
         我的信息
       </MenuItem>
+      <router-link to="/mylist">
+      <MenuItem name="4" class="mylist">
+        我加入的直播间
+      </MenuItem>
+      </router-link>
     </Menu>
   </br>
   </br>
@@ -51,4 +56,7 @@ export default {
 .userInfo {
   margin-right: 20px;
 }
+  .mylist{
+    margin-right: 20px;
+  }
 </style>
