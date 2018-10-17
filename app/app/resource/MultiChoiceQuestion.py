@@ -23,7 +23,7 @@ class MultiChoiceQuestion:
 
 	def update(self, uniqueId, statement, optionList, answer):
 		try:
-			que = ChoiceQuestion.query.filter(ChoiceQuestion.uniqueId == uniqueId).first()
+			que = ChoiceQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 			que.statement = statement;
@@ -37,7 +37,7 @@ class MultiChoiceQuestion:
 
 	def delete(self, uniqueId):
 		try:
-			que = ChoiceQuestion.query.filter(ChoiceQuestion.uniqueId == uniqueId).first()
+			que = ChoiceQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 			db.session.delete(que)
@@ -48,7 +48,7 @@ class MultiChoiceQuestion:
 
 	def getData(self, uniqueId):
 		try:
-			que = ChoiceQuestion.query.filter(ChoiceQuestion.uniqueId == uniqueId).first()
+			que = ChoiceQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 
@@ -58,7 +58,7 @@ class MultiChoiceQuestion:
 
 	def submitAnswer(self, uniqueId, studentId, ans):
 		try:
-			que = ChoiceQuestion.query.filter(ChoiceQuestion.uniqueId == uniqueId).first()
+			que = ChoiceQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 			record = json.loads(que.submitRecord)
