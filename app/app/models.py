@@ -10,9 +10,9 @@ class Classrooms(db.Model):
     thumbnail = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(50), nullable=False)
     url = db.Column(db.String(100), unique=True, nullable=False)
-    studentlist = db.Column(db.String(1000), nullable=False)
-    teacherlist = db.Column(db.String(1000), nullable=False)
-    audiencelist = db.Column(db.String(1000), nullable=False)
+    studentlist = db.Column(db.Text, nullable=False)
+    teacherlist = db.Column(db.Text, nullable=False)
+    audiencelist = db.Column(db.Text, nullable=False)
     visible = db.Column(db.String(5), nullable=False)
     createtime = db.Column(db.DateTime, default=datetime.now)
 
@@ -25,7 +25,7 @@ class Teachers(db.Model):
     phonenumber = db.Column(db.String(11), primary_key=True,  unique=True, nullable=False)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
-    classroomlist = db.Column(db.String(1000), nullable=False)
+    classroomlist = db.Column(db.Text, nullable=False)
     classroom = db.relationship('Classrooms', backref='teachers', lazy='dynamic')
 
     def __repr__(self):
@@ -37,7 +37,7 @@ class Students(db.Model):
     phonenumber = db.Column(db.String(11), primary_key=True, unique=True, nullable=False)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
-    classroomlist = db.Column(db.String(1000), nullable=False)
+    classroomlist = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
         return '<PhoneNumber %r>' % self.phonenumber
@@ -50,3 +50,34 @@ class Messages(db.Model):
 
     def __repr__(self):
         return '<PhoneNumber %r>' % self.phonenumber
+
+class ChoiceQuestion(db.Model):
+	__tablename__ = 'choicequestion'
+	statement = db.Column(db.String(1000), nullable = False)
+	optionList = db.Column(db.String(1000), nullable = False)
+	answer = db.Column(db.Integer, nullable = False)
+	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+	submitRecord = db.Column(db.Text, nullable = False)
+
+
+	def __repr__(self):
+		return '<choiceQuestionId %r>' % self.choiceQuestionId
+
+
+class CodeQuestion(db.Model):
+	__tablename__ = 'codequestion'
+	statement = db.Column(db.String(1000), nullable = False)
+	language = db.Column(db.String(10), nullable = False)
+	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+	submitRecord = db.Column(db.Text, nullable = False)
+
+	def __repr__(self):
+		return '<codequestionId %r>' % self.uniqueId
+
+class PDFFile(db.Model):
+	__tablename__ = 'pdffile'
+	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+	filePath = db.Column(db.Text, nullable = False)
+
+	def __repr__(self):
+		return '<pdfId %r>' % self.uniqueId

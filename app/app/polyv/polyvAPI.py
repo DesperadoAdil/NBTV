@@ -45,3 +45,6 @@ class ChannelManager:
 		url = url + "?appId=%s&sign=%s&timestamp=%s" % (const.AppID, sign, timestamp)
 		data = self.sender.request("GET", url)
 		return data
+
+	def deleteChannel(self, vId):
+		pass
