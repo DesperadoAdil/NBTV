@@ -1,6 +1,7 @@
 from .MultiChoiceQuestion import multiChoiceManager
 from .CodeQuestion import codeQuestionManager
 from .PDFfile import pdfManager
+from . import resource
 
 @resource.route('/add_multiple', methods = ['POST', 'GET'])
 def addMultiChoice():

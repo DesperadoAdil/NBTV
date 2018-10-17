@@ -1,5 +1,5 @@
 import json
-from models import ChoiceQuestion
+from ..models import ChoiceQuestion
 import uuid
 
 class MultiChoiceQuestion:
