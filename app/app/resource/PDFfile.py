@@ -28,10 +28,10 @@ class PDF:
 
 	def delete(self, uid, username, fname):
 		try:
-			pdf = PDFFile.query.filter(PDFFile.uniqueId = uid).first()
-			if pdf is None:
+			pdf_tmp = PDFFile.query.filter(PDFFile.uniqueId = uid).first()
+			if pdf_tmp is None:
 				return "error"
-			db.session.delete(pdf)
+			db.session.delete(pdf_tmp)
 			db.session.commit()
 			shutil.move('/mnt/NBTV/%s/%s' % (username, fname), '/mnt/NBTV/garbage/%s' % (username + '_' + fname))
 
