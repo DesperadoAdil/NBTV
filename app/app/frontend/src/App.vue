@@ -10,19 +10,24 @@
       </router-link>
 
       <router-link to="/mywatchinglist">
-      <MenuItem name="4" class="mylist">
-        <Icon type="logo-youtube" />
-        我加入的直播间
-      </MenuItem>
+        <MenuItem name="4" class="mylist">
+          <Icon type="logo-youtube" />
+          我加入的直播间
+        </MenuItem>
       </router-link>
+      
       <router-link to="/login">
         <MenuItem name="1" style="float: right;" class="ilogin">
           <Icon type="ios-contact-outline" />
-          登录
+            {{ LoginOrLogout }}
+            登录
         </MenuItem>
       </router-link>
+    
     </Menu>
+
     <router-view/>
+  
   </div>
 </template>
 
