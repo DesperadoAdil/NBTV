@@ -7,7 +7,6 @@ import iView from 'iview';
 import VueCookies from 'vue-cookies';
 import 'iview/dist/styles/iview.css';
 
-Vue.use(VueCookies);
 Vue.use(iView);
 Vue.use(VueCookies);
 Vue.config.productionTip = false

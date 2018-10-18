@@ -3,7 +3,7 @@
     <Menu mode="horizontal" :theme="theme1" active-name="active" class="nav">
 
       <router-link to="/list">
-        <MenuItem name="2">
+        <MenuItem name="2" style="font-size: 20px">
           <Icon type="ios-people" />
           教室列表
         </MenuItem>
@@ -59,8 +59,10 @@ export default {
 }
   .mylist{
     margin-right: 20px;
+    font-size: 20px;
   }
   .ilogin{
     float:right;
+    font-size: 20px;
   }
 </style>
