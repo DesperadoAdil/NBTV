@@ -104,7 +104,7 @@
     },
     created(){
       this.showUserInfo();
-    }
+    },
     computed: {
       ...mapState('account', ['status'])
     },
