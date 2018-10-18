@@ -13,7 +13,7 @@
       <Input v-model="newLiving.password" placeholder="课程密码（可空）"></Input>
     </Modal>
     <div v-for="living in myLivingList" :key="living.url">
-      <Card class="card">
+      <Card class="MyLivingListCard">
         <img :src="living.thumbnail" class="thumbnail">
         <p class="title">{{ living.title }}</p>
         <span><Button type="success" @click="updateModal = true">UPDATE</Button></span>
@@ -110,7 +110,7 @@
   }
 </script>
 <style>
-.card {
+.MyLivingListCard {
   width: 320px;
   height: 200px;
 }
