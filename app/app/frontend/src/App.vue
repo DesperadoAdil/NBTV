@@ -54,7 +54,7 @@ export default {
       userInfo.password = this.$cookies.get('user').password;
       userInfo.mobile = this.$cookies.get('user').mobile;
       if (userInfo.status === 'success') {
-        LoginOrLogout = userInfo.username;
+        this.LoginOrLogout = userInfo.username;
       }
     }
   }
