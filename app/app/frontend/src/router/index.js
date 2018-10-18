@@ -50,6 +50,11 @@ const router = new Router({
       component: MyLivingList
     },
     {
+      path: '/UserInfo',
+      name: 'UserInfo',
+      component: UserInfo
+    },
+    {
       path: '*',
       component: NotFound
     }

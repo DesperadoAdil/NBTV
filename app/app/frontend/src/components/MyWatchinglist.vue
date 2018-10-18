@@ -1,5 +1,5 @@
 <template>
-  <div id="list">
+  <div id="list" class="posi">
     <Layout class="layoutlist">
       <Header>
         <ButtonGroup class="btns" size="large" shape="circle" vertical="false">
@@ -16,11 +16,11 @@
             </div>
           </Tooltip>
         </ButtonGroup>
-        <ButtonGroup style="margin:0 auto;width:28%; ">
+        <ButtonGroup class="paixu">
           <!--<ButtonGroup class="listbtns">-->
           <!--<Button class="listtext" type="text" >在线直播</Button>-->
-          <Button class="listbtn" type="primary" shape="circle" @click="timelist">按开播时间排列</Button>
-          <Button class="listbtn" type="primary" shape="circle" @click="audiencelist">按观众人数排序</Button>
+          <Button class="listbtn" type="primary"  @click="timelist">按开播时间排列</Button>
+          <Button class="listbtn" type="primary"  @click="audiencelist">按观众人数排序</Button>
         </ButtonGroup>
       </Header>
       <Content class="listclass">
@@ -369,11 +369,18 @@
   li {
     list-style: none;
   }
-
+  .posi{
+    position: absolute;
+    top: 60px;
+  }
 
   .addbutton{
     margin:10px;
 
+  }
+  .paixu{
+      float:right;
+      padding-right: 2%;
   }
   .addtext{
     test-align:left;
@@ -383,6 +390,7 @@
   }
   .btns{
     float:left;
+    padding-left: 2%;
   }
   .layout-footer-center{
     text-align: center;
