@@ -18,7 +18,7 @@
       <router-link to="/login">
         <MenuItem name="1" style="float: right;" class="ilogin">
           <Icon type="ios-contact-outline" />
-          登录
+          {{ LoginOrLogout }}
         </MenuItem>
       </router-link>
     </Menu>
@@ -35,6 +35,27 @@ export default {
     return {
       theme1: 'light',
       active:"",
+      userInfo: {
+        status: '',
+        username: '',
+        password: '',
+        mobile: '',
+      },
+      LoginOrLogout: '登录',
+    }
+  },
+  created() {
+    this.showUserInfo();
+  },
+  methods: {
+    showUserInfo() {
+      userInfo.username = this.$cookies.get('user').username;
+      userInfo.status = this.$cookies.get('user').status;
+      userInfo.password = this.$cookies.get('user').password;
+      userInfo.mobile = this.$cookies.get('user').mobile;
+      if (userInfo.status === 'success') {
+        LoginOrLogout = userInfo.username;
+      }
     }
   }
 };
