@@ -7,7 +7,7 @@ import NotFound from '@/components/NotFound'
 import List from '@/components/List'
 import Living from '@/components/Living'
 import MyLivingList from '@/components/MyLivingList'
-import MyList from '@/components/Mylist'
+import MyWatchingList from '@/components/MyWatchinglist'
 
 Vue.use(Router)
 
@@ -20,9 +20,9 @@ const router = new Router({
       component: Login
     },
     {
-      path: '/mylist',
-      name: 'MyList',
-      component: MyList
+      path: '/MyWatchingList',
+      name: 'MyWatchingList',
+      component: MyWatchingList
     },
     {
       path: '/',

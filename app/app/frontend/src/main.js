@@ -6,6 +6,9 @@ import router from './router';
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import Vuex from 'vuex'
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
+
 Vue.use(iView);
 Vue.config.productionTip = false
 Vue.use(Vuex)
