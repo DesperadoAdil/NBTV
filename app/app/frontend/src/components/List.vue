@@ -1,5 +1,5 @@
 <template>
-	<div id="list">
+	<div id="list" class="posi">
     <Layout class="layoutlist">
       <Header>
           <ButtonGroup class="btns" size="large" shape="circle" vertical="false">
@@ -17,11 +17,11 @@
             </Tooltip>
           </ButtonGroup>
 
-          <ButtonGroup style="margin:0 auto;width:28%; ">
+          <ButtonGroup class="paixu">
             <!--<ButtonGroup class="listbtns">-->
             <!--<Button class="listtext" type="text" >在线直播</Button>-->
-            <Button class="listbtn" type="primary" shape="circle" @click="timelist">按开播时间排列</Button>
-            <Button class="listbtn" type="primary" shape="circle" @click="audiencelist">按观众人数排序</Button>
+            <Button class="listbtn" type="primary"  @click="timelist">按开播时间排列</Button>
+            <Button class="listbtn" type="primary"  @click="audiencelist">按观众人数排序</Button>
           </ButtonGroup>
       </Header>
       <Content class="listclass">
@@ -31,7 +31,7 @@
 
 
         <Row>
-          <Col span="8" v-for="item in items" :key="item.id">
+          <Col span="8" v-for="item in items" >
             <Card class="card">
               <!--<div class="aspectration" data-ratio="16:9">-->
                   <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
@@ -263,6 +263,7 @@
         });
       },
       audiencelist:function(){
+        console.log("123");
 
         var compare = function (obj1, obj2) {
           var val1 = obj1.audiencelist.length;
@@ -282,7 +283,7 @@
         });
       },
 
-      skip:function(a){
+      skip:function(aab){
         this.$Modal.confirm({
               render: (h) => {
               return h('Input', {
@@ -302,8 +303,8 @@
           })
         },
         onOk: () => {
-            if(this.currentpassword=== a.password)
-                this.$router.push({path: 'living',query:{ id: a.vid}});
+            if(this.currentpassword=== aab.password)
+                this.$router.push({path: 'living',query:{ id:aab.vid}});
             else
               this.$Notice.error({
                       title: '消息提示',
@@ -335,7 +336,10 @@
 	li {
 		list-style: none;
 	}
-
+  .posi{
+    position: absolute;
+    top: 60px;
+  }
 
   .addbutton{
     margin:10px;
@@ -349,6 +353,7 @@
   }
   .btns{
     float:left;
+    padding-left: 4%;
   }
   .layout-footer-center{
     text-align: center;
@@ -361,6 +366,10 @@
     padding-bottom: 3%;
 
 
+  }
+  .paixu{
+    float:right;
+    padding-right: 4%;
   }
   .listtext{
     test-align:left;

@@ -1,5 +1,5 @@
 <template>
-	<div id="register">
+	<div id="register" class="posi">
 		<Form ref="formInline" :model="formInline" :rules="ruleInline">
       <FormItem prop="username">
         <Input type="text" v-model="formInline.username" placeholder="Username">
@@ -124,4 +124,10 @@
 	#register {
 		margin: 0 40%;
 	}
+
+  .posi{
+    position: absolute;
+    top: 60px;
+  }
+
 </style>
