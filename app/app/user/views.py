@@ -123,6 +123,9 @@ def change_password():
     data = json.loads(data)
 
     status = data['status']
+    if status != "login":
+        ret['status']='error:该用户未登录！'
+        return json.dumps(ret)
     phonenumber = data['mobile']
     old_password = data['old_password']
     new_password = data['new_password']
@@ -151,6 +154,9 @@ def change_mobile():
     data = json.loads(data)
 
     status = data['status']
+    if status != "login":
+        ret['status']='error:该用户未登录！'
+        return json.dumps(ret)
     old_mobile = data['old_mobile']
     old_verification = data['old_verification']
     new_mobile = data['new_mobile']
