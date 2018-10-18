@@ -9,7 +9,7 @@
         </MenuItem>
       </router-link>
 
-      <router-link to="/mylist">
+      <router-link to="/mywatchinglist">
       <MenuItem name="4" class="mylist">
         <Icon type="logo-youtube" />
         我加入的直播间
