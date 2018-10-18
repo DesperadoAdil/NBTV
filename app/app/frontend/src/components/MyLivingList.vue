@@ -1,5 +1,5 @@
 <template>
-  <div id="myLivingList">
+  <div id="myLivingList" class="posi">
     <Button type="primary" @click="addModal = true">ADD</Button>
     <Modal
       :model="newLiving"
@@ -13,7 +13,7 @@
       <Input v-model="newLiving.password" placeholder="课程密码（可空）"></Input>
     </Modal>
     <div v-for="living in myLivingList" :key="living.url">
-      <Card class="MyLivingListCard">
+      <Card class="card">
         <img :src="living.thumbnail" class="thumbnail">
         <p class="title">{{ living.title }}</p>
         <span><Button type="success" @click="updateModal = true">UPDATE</Button></span>
@@ -110,8 +110,12 @@
   }
 </script>
 <style>
-.MyLivingListCard {
+.card {
   width: 320px;
   height: 200px;
+}
+.posi{
+  position: absolute;
+  top: 60px;
 }
 </style>

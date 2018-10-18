@@ -1,5 +1,5 @@
 <template>
-    <div id="living" style="height: 100%;">
+    <div id="living" class="posi">
         <Layout>
 
             <Layout>
@@ -151,7 +151,10 @@ export default{
         border: 1px solid #eaeaea;
         box-shadow: 0 0 25px #cac6c6;
     }
-
+..posi{
+  position: absolute;
+  top: 60px;
+}
 
 
 
