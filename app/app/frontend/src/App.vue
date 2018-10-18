@@ -3,7 +3,7 @@
     <Menu mode="horizontal" :theme="theme1" active-name="active" class="nav">
 
       <router-link to="/list">
-        <MenuItem name="2" style="font-size: 20px">
+        <MenuItem name="2" class="mylist">
           <Icon type="ios-people" />
           教室列表
         </MenuItem>
@@ -18,12 +18,10 @@
       <router-link to="/login">
         <MenuItem name="1" style="float: right;" class="ilogin">
           <Icon type="ios-contact-outline" />
-          {{ LoginOrLogout }}
+          登录
         </MenuItem>
       </router-link>
     </Menu>
-  </br>
-  </br>
     <router-view/>
   </div>
 </template>
@@ -35,27 +33,6 @@ export default {
     return {
       theme1: 'light',
       active:"",
-      userInfo: {
-        status: '',
-        username: '',
-        password: '',
-        mobile: '',
-      },
-      LoginOrLogout: '登录',
-    }
-  },
-  created() {
-    this.showUserInfo();
-  },
-  methods: {
-    showUserInfo() {
-      userInfo.username = this.$cookies.get('user').username;
-      userInfo.status = this.$cookies.get('user').status;
-      userInfo.password = this.$cookies.get('user').password;
-      userInfo.mobile = this.$cookies.get('user').mobile;
-      if (userInfo.status === 'success') {
-        this.LoginOrLogout = userInfo.username;
-      }
     }
   }
 };
@@ -72,8 +49,10 @@ export default {
   color: #2c3e50;
 }
 .nav {
+  /*padding-left: 5%;*/
   width: 100%;
   margin: 0 auto;
+  /*padding-right: 7%;*/
 }
 .userInfo {
   margin-right: 20px;
