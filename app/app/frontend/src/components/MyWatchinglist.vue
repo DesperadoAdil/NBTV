@@ -16,17 +16,23 @@
             </div>
           </Tooltip>
         </ButtonGroup>
+        <ButtonGroup style="margin:0 auto;width:28%; ">
+          <!--<ButtonGroup class="listbtns">-->
+          <!--<Button class="listtext" type="text" >在线直播</Button>-->
+          <Button class="listbtn" type="primary" shape="circle" @click="timelist">按开播时间排列</Button>
+          <Button class="listbtn" type="primary" shape="circle" @click="audiencelist">按观众人数排序</Button>
+        </ButtonGroup>
       </Header>
       <Content class="listclass">
 
 
 
-        <ButtonGroup  >
-          <!--<ButtonGroup class="listbtns">-->
-          <Button class="listtext" type="text" >我的直播</Button>
-          <Button class="listbtn" type="primary" shape="circle" @click="timelist">按开播时间排列</Button>
-          <Button class="listbtn" type="primary" shape="circle" @click="audiencelist">按观众人数排序</Button>
-        </ButtonGroup>
+        <!--<ButtonGroup  >-->
+          <!--&lt;!&ndash;<ButtonGroup class="listbtns">&ndash;&gt;-->
+          <!--<Button class="listtext" type="text" >我的直播</Button>-->
+          <!--<Button class="listbtn" type="primary" shape="circle" @click="timelist">按开播时间排列</Button>-->
+          <!--<Button class="listbtn" type="primary" shape="circle" @click="audiencelist">按观众人数排序</Button>-->
+        <!--</ButtonGroup>-->
 
         <Row>
           <Col span="12" v-for="item in items" key="item.id">
