@@ -94,12 +94,30 @@
             { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
           ]
         },
+        userInfo: {
+        status: '',
+        username: '',
+        password: '',
+        mobile: '',
+        },
       }
     },
+    created(){
+      this.showUserInfo();
+    }
     computed: {
       ...mapState('account', ['status'])
     },
     methods: {
+      showUserInfo() {
+      userInfo.username = this.$cookies.get('user').username;
+      userInfo.status = this.$cookies.get('user').status;
+      userInfo.password = this.$cookies.get('user').password;
+      userInfo.mobile = this.$cookies.get('user').mobile;
+      if (userInfo.status === 'success') {
+        this.LoginOrLogout = userInfo.username;
+      }
+    }
       ...mapActions('account', ['login', 'logout']),
     }
   };
