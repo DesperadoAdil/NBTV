@@ -2,7 +2,7 @@
 	<div id="login">
 		<Form ref="formInline" :model="formInline" :rules="ruleInline">
       <FormItem prop="username">
-        <Input type="text" v-model="formInline.username" name="username" placeholder="Username">
+        <Input type="text" v-model="formInline.username" name="username" v-bind:placeholder="loginway">
           <Icon type="ios-person-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
@@ -10,6 +10,12 @@
         <Input type="password" v-model="formInline.password" name="password" placeholder="Password">
           <Icon type="ios-lock-outline" slot="prepend"></Icon>
         </Input>
+      </FormItem>
+      <FormItem prop="loginWay">
+        <RadioGroup v-model="loginway">
+          <Radio label="username"></Radio>
+          <Radio label="phonenumber"></Radio>
+        </RadioGroup>
       </FormItem>
 			<FormItem prop="job">
 				<RadioGroup v-model="job">
@@ -39,8 +45,10 @@
           mobile: '',
           verification: '',
 					job: '',
+					loginway:'',
         },
 				job: 'student',
+				loginway:'username',
         ruleInline: {
           username: [
             { required: true, message: 'Please fill in the user name', trigger: 'blur' }
@@ -63,6 +71,7 @@
           if (valid) {
             this.$Message.success('Send to server!');
 						this.formInline['job'] = this.job;
+						this.formInline['loginway'] = this.loginway;
             const data = this.formInline;
     				axios.post('/api/user/login', data).then((resp) => {
 							console.log(resp);

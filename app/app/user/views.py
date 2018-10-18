@@ -22,10 +22,7 @@ def login():
     password = data['password']
     job = data['job']
 
-    #searchmode not finished
-    user = usermanager.search("username", username, job)
-    if user is None: #need to delete when searchmode is finished
-        user = usermanager.search("phonenumber", username, job) #same
+    user = usermanager.search(data["loginway"], username, job)
     if user is None or password != user.password:
         ret['status']='error:用户名或密码错误！'
         return json.dumps(ret)
