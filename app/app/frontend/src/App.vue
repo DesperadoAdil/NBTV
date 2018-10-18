@@ -49,12 +49,12 @@ export default {
   },
   methods: {
     showUserInfo() {
-      userInfo.username = this.$cookies.get('user').username;
-      userInfo.status = this.$cookies.get('user').status;
-      userInfo.password = this.$cookies.get('user').password;
-      userInfo.mobile = this.$cookies.get('user').mobile;
-      if (userInfo.status === 'success') {
-        this.LoginOrLogout = userInfo.username;
+      this.userInfo['username'] = this.$cookies.get('user').username;
+      this.userInfo['status']= this.$cookies.get('user').status;
+      this.userInfo['password'] = this.$cookies.get('user').password;
+      this.userInfo['mobile'] = this.$cookies.get('user').mobile;
+      if (this.userInfo['status'] === 'success') {
+        this.LoginOrLogout = this.userInfo['username'];
       }
     }
   }
