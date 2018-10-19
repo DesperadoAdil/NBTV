@@ -104,17 +104,21 @@
     },
     created(){
       this.showUserInfo();
+    }
+    computed: {
+      ...mapState('account', ['status'])
     },
     methods: {
       showUserInfo() {
-          userInfo.username = this.$cookies.get('user').username;
-          userInfo.status = this.$cookies.get('user').status;
-          userInfo.password = this.$cookies.get('user').password;
-          userInfo.mobile = this.$cookies.get('user').mobile;
-          if (userInfo.status === 'success') {
-            this.LoginOrLogout = userInfo.username;
-          }
-        }
+      userInfo.username = this.$cookies.get('user').username;
+      userInfo.status = this.$cookies.get('user').status;
+      userInfo.password = this.$cookies.get('user').password;
+      userInfo.mobile = this.$cookies.get('user').mobile;
+      if (userInfo.status === 'success') {
+        this.LoginOrLogout = userInfo.username;
+      }
+    }
+      ...mapActions('account', ['login', 'logout']),
     }
   };
 </script>

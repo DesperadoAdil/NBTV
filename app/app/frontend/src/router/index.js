@@ -8,7 +8,6 @@ import List from '@/components/List'
 import Living from '@/components/Living'
 import MyLivingList from '@/components/MyLivingList'
 import MyWatchingList from '@/components/MyWatchinglist'
-import UserInfo from '@/components/UserInfo'
 
 Vue.use(Router)
 

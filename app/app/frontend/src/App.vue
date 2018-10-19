@@ -15,23 +15,23 @@
           我加入的直播间
         </MenuItem>
       </router-link>
-      
+
       <router-link to="/login">
         <MenuItem name="1" style="float: right;" class="ilogin">
-          <Icon type="ios-contact-outline" />
+          <Icon v-if="LoginOrLogout=='登录'" type="ios-contact-outline" />
             {{ LoginOrLogout }}
-            登录
+
         </MenuItem>
       </router-link>
-    
+
     </Menu>
 
     <router-view/>
-  
+
   </div>
 </template>
 
-<script type="es6">
+<script >
 export default {
   name: 'App',
   data () {

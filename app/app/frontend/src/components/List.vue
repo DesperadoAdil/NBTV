@@ -3,7 +3,7 @@
     <Layout class="layoutlist">
       <Header>
           <ButtonGroup class="btns" size="large" shape="circle" vertical="false">
-            <Tooltip placement="top">
+            <Tooltip placement="top" v-if="userInfo.job=='teacher'" >
               <Button class="addbutton" size="large" type="primary"  shape="circle" icon="md-add" ></Button>
               <div slot="content">
                 <p class="addtext">新建直播间</p>
@@ -32,7 +32,7 @@
 
         <Row>
           <Col span="8" v-for="item in items" >
-            <Card class="card">
+            <Card class="listcard">
               <!--<div class="aspectration" data-ratio="16:9">-->
                   <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
               <!--</div>-->
@@ -79,8 +79,17 @@
 	import axios from 'axios';
 	export default {
 	  name: 'List',
+
 	  data :function() {
 	    return {
+        userInfo: {
+          status: '',
+          username: '',
+          password: '',
+          mobile: '',
+          job:'teacher',
+        },
+        LoginOrLogout: '登录',
         currentpassword:"",
         imgwitd:"100px",
 				items: [
@@ -188,9 +197,22 @@
 	    }
 	  },
 		created:function() {
+      this.showUserInfo();
 			this.getList();
+
 		},
 		methods: {
+      showUserInfo() {
+          console.log("1234567");
+          this.userInfo['username'] = this.$cookies.get('user').username;
+          this.userInfo['status']= this.$cookies.get('user').status;
+          this.userInfo['password'] = this.$cookies.get('user').password;
+          this.userInfo['mobile'] = this.$cookies.get('user').mobile;
+          this.userInfo['job'] = this.$cookies.get('user').job;
+          if (this.userInfo['status'] === 'success') {
+            this.LoginOrLogout = this.userInfo['username'];
+          }
+        },
       timelist:function(){
 
         var compare = function (obj1, obj2) {
@@ -339,6 +361,7 @@
   .posi{
     position: absolute;
     top: 60px;
+    width: 100%;
   }
 
   .addbutton{
@@ -396,7 +419,7 @@
   .layoutlist{
     min-height:850px;
   }
-  .card {
+  .listcard {
     padding: 3%;
     margin: 6%;
   }

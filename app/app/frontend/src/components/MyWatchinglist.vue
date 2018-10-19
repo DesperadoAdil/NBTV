@@ -36,7 +36,7 @@
 
         <Row>
           <Col span="12" v-for="item in items" key="item.id">
-          <Card class="card">
+          <Card class="watchcard">
             <!--<div class="aspectration" data-ratio="16:9">-->
             <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">            <!--</div>-->
 
@@ -93,6 +93,14 @@
     name: 'List',
     data:function () {
       return {
+        userInfo: {
+          status: '',
+          username: '',
+          password: '',
+          mobile: '',
+          job:'teacher',
+        },
+        LoginOrLogout: '登录',
         currentpassword:"",
         imgwitd:"100px",
         items: [
@@ -200,9 +208,22 @@
       }
     },
     created:function() {
+      this.showUserInfo();
       this.getList();
+
     },
     methods: {
+      showUserInfo() {
+      console.log("1234567");
+        this.userInfo['username'] = this.$cookies.get('user').username;
+        this.userInfo['status']= this.$cookies.get('user').status;
+        this.userInfo['password'] = this.$cookies.get('user').password;
+        this.userInfo['mobile'] = this.$cookies.get('user').mobile;
+        this.userInfo['job'] = this.$cookies.get('user').job;
+        if (this.userInfo['status'] === 'success') {
+          this.LoginOrLogout = this.userInfo['username'];
+        }
+      },
       timelist:function(){
 
         var compare = function (obj1, obj2) {
@@ -293,7 +314,10 @@
           title: "警告",
           content: "确认删除直播间吗",
           onOk: () =>{
-            axios.post('/api/list/delmyclass',a).then((resp) => {
+            var params = new URLSearchParams();
+            params.append('name', this.userInfo.username);
+            params.append('classroom',a);
+            axios.post('/api/user/delmyclass',params).then((resp) => {
 
             });
             Array.prototype.indexOf = function (val) {
@@ -317,38 +341,38 @@
       },
 
       skip:function(a){
-        this.$Modal.confirm({
-          render: (h) => {
-            return h('Input', {
-              props: {
-                id:'passinput',
-                autofocus: true,
-                placeholder: 'Please enter the password of this room'
-              },
-              on: {
-                input: (val) => {
-//                this.value = val;
-                  this.currentpassword=val;
-//                if(val==="123")
-//                  this.$router.push({path: 'living',query:{ id: a.vid}});
-                }
-              }
-            })
-          },
-          onOk: () => {
-            if(this.currentpassword=== a.password)
+//        this.$Modal.confirm({
+//          render: (h) => {
+//            return h('Input', {
+//              props: {
+//                id:'passinput',
+//                autofocus: true,
+//                placeholder: 'Please enter the password of this room'
+//              },
+//              on: {
+//                input: (val) => {
+////                this.value = val;
+//                  this.currentpassword=val;
+////                if(val==="123")
+////                  this.$router.push({path: 'living',query:{ id: a.vid}});
+//                }
+//              }
+//            })
+//          },
+//          onOk: () => {
+//            if(this.currentpassword=== a.password)
               this.$router.push({path: 'living',query:{ id: a.vid}});
-            else
-              this.$Notice.error({
-                title: '消息提示',
-                desc: '您输入的密码错误，请仔细检查 '
-              });
-          }
-        });
+//            else
+//              this.$Notice.error({
+//                title: '消息提示',
+//                desc: '您输入的密码错误，请仔细检查 '
+//              });
+//          }
+//        });
 
       },
       getList:function() {
-        axios.get('/api/user/mylist').then((resp) => {
+        axios.post('/api/user/mylist',this.userInfo.username).then((resp) => {
           console.log(resp)
           this.items = resp.data;
         })
@@ -372,6 +396,7 @@
   .posi{
     position: absolute;
     top: 60px;
+    width: 100%;
   }
 
   .addbutton{
@@ -396,16 +421,17 @@
     text-align: center;
     font-size:20px;
   }
-  .listclass{
+  .listclass {
     padding-top: 2%;
     padding-left: 3%;
     padding-right: 3%;
     padding-bottom: 3%;
+  }
   .delicon{
     float:right;
   }
 
-  }
+
   .listtext{
     test-align:left;
     font-size: 40px;
@@ -431,7 +457,7 @@
   .layoutlist{
     min-height:850px;
   }
-  .card {
+  .watchcard {
     padding: 2%;
     margin: 2%;
   }
