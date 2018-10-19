@@ -4,13 +4,13 @@
       <FormItem prop="username" label = "username">
         <Input type="text" v-model="formInline.username" name="username" placeholder="Username" readonly>
           <Icon type="ios-person-outline" slot="prepend"></Icon>
-        </Input>        
+        </Input>
       </FormItem>
 
       <FormItem prop="repeat password" label = "status">
         <Radio v-model="formInline.job" disabled>{{formInline.job}}</Radio>
       </FormItem>
-    
+
 
       <FormItem>
         <Button type="primary" @click="value3 = true">Edit</Button>
@@ -22,11 +22,11 @@
             :styles="styles"
         >
             <Form :model="formData">
-                
+
               <FormItem label="Name" label-position="top">
                   <Input v-model="formInline.username" placeholder="please enter user name" />
               </FormItem>
-                    
+
               <FormItem label="Password" label-position="top">
                   <Input v-model="formInline.password" placeholder="please enter password" />
               </FormItem>
@@ -42,13 +42,13 @@
               <FormItem label="Verification" label-position="top">
                   <Input v-model="formInline.Verification" placeholder="please enter verification" />
               </FormItem>
-              
+
             </Form>
             <div class="demo-drawer-footer">
                 <Button style="margin-right: 8px" @click="value3 = false">Cancel</Button>
                 <Button type="primary" @click="value3 = false">Submit</Button>
             </div>
-        </Drawer> 
+        </Drawer>
      </FormItem>
     </Form>
   </div>
@@ -104,10 +104,8 @@
     },
     created(){
       this.showUserInfo();
-    }
-    computed: {
-      ...mapState('account', ['status'])
     },
+
     methods: {
       showUserInfo() {
       userInfo.username = this.$cookies.get('user').username;
@@ -118,7 +116,7 @@
         this.LoginOrLogout = userInfo.username;
       }
     }
-      ...mapActions('account', ['login', 'logout']),
+
     }
   };
 </script>
