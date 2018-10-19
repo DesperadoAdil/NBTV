@@ -186,3 +186,54 @@ def change_mobile():
     ret['status'] = usermanager.update(user, new_mobile, user.username, user.password, user.classroomlist)
     print (json.dumps(ret))
     return json.dumps(ret)
+
+
+#My_list
+@user.route('/mylist', methods = ['POST'])
+def my_list():
+    data = request.get_data()
+    print (data)
+    data = json.loads(data)
+
+    username = data['username']
+    job = data['job']
+
+    user = usermanager.search("username", username, job)
+    return user.classroomlist
+
+
+#Del_myclass
+@user.route('/delmyclass', methods = ['POST'])
+def del_myclass():
+    ret = {}
+    ret["status"] = 'error'
+    
+    data = request.get_data()
+    print (data)
+    data = json.loads(data)
+
+    username = data['username']
+    job = data['job']
+    classroomid = data['classroom']
+
+    try:
+        user = usermanager.search("username", username, job)
+        classroom = Classrooms.query.filter_by(classroomid = id).first()
+        userclassroom = json.loads(user.classroomlist)
+        userclassroom.remove(classroom)
+        if job == "teacher":
+            classroomuser = json.loads(classroom.teacherlist)
+            classroomuser.remove(user)
+            classroom.teacherlist = json.dumps(classroomuser)
+        else:
+            classroomuser = json.loads(classroom.studentlist)
+            classroomuser.remove(user)
+            classroom.studentlist = json.dumps(classroomuser)
+        db.session.add(classroom)
+        db.session.commit()
+        ret['status'] = usermanager.update(user, user.phonenumber, user.username, user.password, json.dumps(userclassroom))
+    except:
+        print ("Delete Myclass Error")
+
+    print (json.dumps(ret))
+    return json.dumps(ret)
