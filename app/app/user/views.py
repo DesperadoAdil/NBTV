@@ -214,11 +214,10 @@ def del_myclass():
 
     username = data['username']
     job = data['job']
-    classroomid = data['classroom']
+    classroom = data['classroom']
 
     try:
         user = usermanager.search("username", username, job)
-        classroom = Classrooms.query.filter_by(classroomid = id).first()
         userclassroom = json.loads(user.classroomlist)
         userclassroom.remove(classroom)
         if job == "teacher":
