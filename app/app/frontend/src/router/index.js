@@ -64,11 +64,13 @@ export default router;
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/Login', '/Register', '/living', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo'];
-  const authRequired = !publicPages.includes(to.path);
-  if (this.$cookies.get('user') === null) {
+
+  if (to.path !== '/login' && window.$cookies.get('user') === null) {
     return next('/login');
   }
+  const publicPages = ['/login', '/Register', '/living', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo'];
+  const authRequired = !publicPages.includes(to.path);
+
   if (authRequired) {
     return next('/list');
   }
