@@ -33,9 +33,9 @@ export default {
       active:"",
       userInfo: {
         status: 'success',
-        username: '',
-        password: '',
-        mobile: '',
+        username: 'test',
+        password: '123456',
+        mobile: '18818881888',
         job: 'teacher',
       },
       LoginOrLogout: '登录',

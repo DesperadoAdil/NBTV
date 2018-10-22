@@ -68,15 +68,6 @@
                     paddingBottom: '53px',
                     position: 'static'
         },
-        formData: {
-            name: '',
-            url: '',
-            owner: '',
-            type: '',
-            approver: '',
-            date: '',
-            desc: ''
-        },
         formInline: {
           username: 'Test_name',
           password: 'test-pass',
@@ -117,7 +108,27 @@
         if (this.userInfo['status'] === 'success') {
           this.LoginOrLogout = this.userInfo['username'];
         }
-      }
+      },
+      handleSubmit(name) {
+        this.formInline['job'] = this.job;
+        const data = this.formInline;
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.$Message.success('Send to server!');
+            console.log(data);
+            axios.post('/api/user/register', data).then((resp) => {
+              this.$Message.success(resp.data.status);
+              if (resp.data.status === 'success') {
+                router.push('/userInfo');
+              } else {
+                this.msg = `Status:${resp.data.status}`;
+              }
+            });
+          } else {
+            this.$Message.error('Fail!');
+          }
+        })
+      },
 
     }
   };
