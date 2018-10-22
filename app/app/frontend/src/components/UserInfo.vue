@@ -68,15 +68,6 @@
                     paddingBottom: '53px',
                     position: 'static'
         },
-        formData: {
-            name: '',
-            url: '',
-            owner: '',
-            type: '',
-            approver: '',
-            date: '',
-            desc: ''
-        },
         formInline: {
           username: 'Test_name',
           password: 'test-pass',
@@ -108,14 +99,36 @@
 
     methods: {
       showUserInfo() {
-      userInfo.username = this.$cookies.get('user').username;
-      userInfo.status = this.$cookies.get('user').status;
-      userInfo.password = this.$cookies.get('user').password;
-      userInfo.mobile = this.$cookies.get('user').mobile;
-      if (userInfo.status === 'success') {
-        this.LoginOrLogout = userInfo.username;
-      }
-    }
+        if (this.$cookies.get('user') === null)  {
+          return;
+        }
+        this.userInfo['username'] = this.$cookies.get('user').username;
+        this.userInfo['status']= this.$cookies.get('user').status;
+        this.userInfo['job']= this.$cookies.get('user').job;
+        if (this.userInfo['status'] === 'success') {
+          this.LoginOrLogout = this.userInfo['username'];
+        }
+      },
+      handleSubmit(name) {
+        this.formInline['job'] = this.job;
+        const data = this.formInline;
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.$Message.success('Send to server!');
+            console.log(data);
+            axios.post('/api/user/register', data).then((resp) => {
+              this.$Message.success(resp.data.status);
+              if (resp.data.status === 'success') {
+                router.push('/userInfo');
+              } else {
+                this.msg = `Status:${resp.data.status}`;
+              }
+            });
+          } else {
+            this.$Message.error('Fail!');
+          }
+        })
+      },
 
     }
   };
