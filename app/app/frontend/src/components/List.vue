@@ -31,7 +31,7 @@
 
 
         <Row>
-          <Col span="8" v-for="item in items" >
+          <Col span="8" v-for="item in items" :key="item.id">
             <Card class="listcard">
               <!--<div class="aspectration" data-ratio="16:9">-->
                   <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import VueCookies from 'vue-cookies';
 
 import Login from '@/components/Login'
 import Register from '@/components/Register'
@@ -11,6 +12,7 @@ import MyWatchingList from '@/components/MyWatchinglist'
 import UserInfo from '@/components/UserInfo'
 
 Vue.use(Router)
+Vue.use(VueCookies);
 
 const router = new Router({
   mode: 'history',
@@ -55,24 +57,21 @@ const router = new Router({
       name: 'UserInfo',
       component: UserInfo
     },
-    {
-      path: '*',
-      component: NotFound
-    }
+
   ],
 });
 export default router;
-/*
+
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/Login', '/Register'];
+  const publicPages = ['/Login', '/Register', '/living', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo'];
   const authRequired = !publicPages.includes(to.path);
-  //const loggedIn = localStorage.getItem('user');
-
+  if (this.$cookies.get('user') === null) {
+    return next('/login');
+  }
   if (authRequired) {
-    return next('/Login');
+    return next('/list');
   }
 
   next();
 })
-*/

@@ -108,14 +108,16 @@
 
     methods: {
       showUserInfo() {
-      userInfo.username = this.$cookies.get('user').username;
-      userInfo.status = this.$cookies.get('user').status;
-      userInfo.password = this.$cookies.get('user').password;
-      userInfo.mobile = this.$cookies.get('user').mobile;
-      if (userInfo.status === 'success') {
-        this.LoginOrLogout = userInfo.username;
+        if (this.$cookies.get('user') === null)  {
+          return;
+        }
+        this.userInfo['username'] = this.$cookies.get('user').username;
+        this.userInfo['status']= this.$cookies.get('user').status;
+        this.userInfo['job']= this.$cookies.get('user').job;
+        if (this.userInfo['status'] === 'success') {
+          this.LoginOrLogout = this.userInfo['username'];
+        }
       }
-    }
 
     }
   };

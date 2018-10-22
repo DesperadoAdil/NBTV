@@ -72,8 +72,6 @@
 							this.$Message.success(resp.data.status);
 			        if (resp.data.status === 'success') {
 								this.$cookies.set('user', resp.data);
-								console.log(this.$cookies.get('user'));
-								console.log(this.$cookies.get('user').username);
 								router.push('/list');
 			        } else {
 		          	this.$Message.error('用户名或密码错误');

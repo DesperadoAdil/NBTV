@@ -82,14 +82,14 @@
       },
       addLiving() {
 
-        addModal = false;
+        this.addModal = false;
       },
       updateLiving() {
         const data = this.myLivingList;
         axios.post("/api/", data).then((resp) => {
 
         })
-        updateModal = false;
+        this.updateModal = false;
       },
       deleteLiving() {
         const data = this.myLivingList;
@@ -98,13 +98,13 @@
 
           })
         }
-        deleteModal = false;
+        this.deleteModal = false;
       },
       cancel() {
         this.$Message.info('Clicked cancel');
-        addModal = false;
-        updateModal = false;
-        deleteModal = false;
+        this.addModal = false;
+        this.updateModal = false;
+        this.deleteModal = false;
       }
     }
   }
