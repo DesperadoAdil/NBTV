@@ -14,7 +14,7 @@ class ChannelManager:
 
 	def getTimeMillis(self):
 		t = time.time()
-		return int(round(t * 1000))
+		return str(int(round(t * 1000)))
 
 	def generateSign(self, params, secret):
 		ansStr = secret
@@ -37,7 +37,7 @@ class ChannelManager:
 
 
 	def getChannelInfo(self, channelId):
-		url = const.GetChannelInfoUrl % channelId
+		url = const.GetChannelInfoUrl % str(channelId)
 		timestamp = str(self.getTimeMillis())
 		params = {"appId": const.AppID, "timestamp": timestamp}
 		sign = self.generateSign(params, const.AppSecret)
@@ -46,5 +46,34 @@ class ChannelManager:
 		data = self.sender.request("GET", url)
 		return data
 
-	def deleteChannel(self, vId):
-		pass
+
+	def deleteChannel(self, channelId):
+		url = const.DeleteChannelUrl % str(channelId)
+		timestamp = self.getTimeMillis()
+		params = {"appId": const.AppID, "timestamp": timestamp, "userId": const.UserID}
+		sign = self.generateSign(params, const.AppSecret)
+
+		params["sign"] = sign
+		data = self.sender.request("POST", url, fields = params)
+		return data
+
+	def changeChannelName(self, name, channelId):
+		url = const.ChangeChannelNameUrl % channelId
+		timestamp = self.getTimeMillis()
+		params = {"appId": const.AppID, "timestamp": timestamp, "name": name}
+		sign = self.generateSign(params, const.AppSecret)
+
+		params["sign"] = sign
+		data = self.sender.request("POST", url, fields = params)
+		return data
+
+	def changeChannelAuthor(self, channelId, author)
+		url = const.ChangeChannelAuthorUrl % const.UserID
+
+		timestamp = self.getTimeMillis()
+		params = {"appId": const.AppID, "timestamp": timestamp, "publisher": author, "channelId": channelId}
+		sign = self.generateSign(params, const.AppSecret)
+
+		params["sign"] = sign
+		data = self.sender.request("POST", url, fields = params)
+		return data
