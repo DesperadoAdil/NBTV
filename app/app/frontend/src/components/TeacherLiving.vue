@@ -18,8 +18,8 @@
             使用教学资源
           </template>
           <MenuItem name="2-1" class="menuitentea" @click.native="teatext">使用教学课件</MenuItem>
-          <MenuItem name="2-2" class="menuitentea">布置题目</MenuItem>
-          <MenuItem name="2-2" class="menuitentea" @click.native="closetext">关闭题目或教学资源</MenuItem>
+          <MenuItem name="2-2" class="menuitentea" @click.native="teaselect">布置选择题目</MenuItem>
+          <MenuItem name="2-2" class="menuitentea" @click.native="closetext">退出教学资源</MenuItem>
         </Submenu>
         <Submenu name="3" class="menuitentea">
           <template slot="title">
@@ -34,6 +34,24 @@
       </Button>
     </card>
 
+    <!--pdf等课件信息-->
+    <Modal   v-model="modal1"    @on-ok=""    @on-cancel="">
+      <p slot="header" style="font-size: 20px">
+        <span>选择你要展示的课件</span>
+      </p>
+      <CellGroup v-for="item in pdfitems">
+        <Cell style="font-size: 20px" @click.native="showpdf(item)">{{item.title}}</Cell>
+      </CellGroup>
+    </Modal>
+
+    <Modal   v-model="modal2"    @on-ok=""    @on-cancel="">
+      <p slot="header" style="font-size: 20px">
+        <span>选择你要展示的选择题</span>
+      </p>
+      <CellGroup v-for="item in selectitems">
+        <Cell style="font-size: 20px" @click.native="showselect(item)">{{item.title}}</Cell>
+      </CellGroup>
+    </Modal>
 
     <Card id="mainlivingcard" class="cardtealiving">
       <div class="topveido">
@@ -49,6 +67,25 @@
       <iframe id="displayPdfIframe" class="pdfframe"/>
     </Card>
 
+    <Card id="mainselectcard" class="cardtealivingselect">
+      <p>{{curtitle}}</p>
+      <RadioGroup v-model="ionselect" vertical>
+        <Radio v-bind:label="curans[0]">
+          <span>A、{{curans[0]}}</span>
+        </Radio>
+        <Radio v-bind:label="curans[1]">
+          <span>B、{{curans[1]}}</span>
+        </Radio>
+        <Radio v-bind:label="curans[2]">
+          <span>C、{{curans[2]}}</span>
+        </Radio>
+        <Radio v-bind:label="curans[3]">
+         <span>D、{{curans[3]}}</span>
+        </Radio>
+      </RadioGroup>
+      <p>{{curanswer}}</p>
+    </Card>
+
     <Card id="littlelivingcard" class="cardtealittleliving">
 
       <div id='littleplayer' ></div>
@@ -60,10 +97,6 @@
         <h3>聊天室信息显示部分（待修改）</h3>
       </Card>
     </div>
-
-
-
-
 
 
 
@@ -107,6 +140,50 @@
 
     return {
       //<!--vediosrc:'',-->
+      ionselect:'111',
+      curtitle:'xjbx1',
+      curans:['1','2','3','4'],
+      curanswer:'A',
+      selectitems: [
+        {
+          title:'xjbx1',
+          ans:['1','2','3','4'],
+          answer:'A'
+        },
+        {
+          title:'xjbx2',
+          ans:['1','2','3','4'],
+          answer:'A'
+        },
+        {
+          title:'xjbx3',
+          ans:['1','2','3','4'],
+          answer:'A'
+        },
+        {
+          title:'xjbx4',
+          ans:['1','2','3','4'],
+          answer:'A'
+        },
+      ],
+      pdfitems: [
+        {
+          title:'pdf1',
+          url:'/static/pdf/1-1.pdf',
+        },
+        {
+          title:'pdf2',
+          url:'/static/pdf/1-1.pdf',
+        },
+        {
+          title:'pdf3',
+          url:'/static/pdf/1-1.pdf',
+        },
+        {
+          title:'pdf4',
+          url:'/static/pdf/1-1.pdf',
+        }
+      ],
       userInfo: {
         username: '',
         password: '',
@@ -114,6 +191,8 @@
         status: '',
         job:'',
       },
+      modal2: false,
+      modal1: false,
       vid:'242544',
       theme1: 'light',
       toopen:true,
@@ -132,7 +211,62 @@
   },
   methods: {
     teatext(){
+      var params = new URLSearchParams();
+      params.append('name', this.userInfo['username']);
+      params.append('job',this.userInfo['job']);
+      params.append('vid',this.vid);
+      axios.post('/api/user/getpdfs',params).then((resp) => {
+        this.pdfitems=resp.pdfitems;
+      });
+      this.modal1=true;
+
+    },
+    teaselect(){
+      var params = new URLSearchParams();
+      params.append('name', this.userInfo['username']);
+      params.append('job',this.userInfo['job']);
+      params.append('vid',this.vid);
+      axios.post('/api/user/getselects',params).then((resp) => {
+        this.selectitems=resp.selectitems;
+      });
+      this.modal2=true;
+    },
+    showpdf:function(ipdf){
       console.log("1321312");
+      this.$Modal.confirm({
+        title: '提示',
+        content: '是否展示'+ipdf.title,
+        onOk: () => {
+          var mainlivingcard = document.getElementById("mainlivingcard");
+          mainlivingcard.style.display="none";
+          var littlelivingcard = document.getElementById("littlelivingcard");
+          littlelivingcard.style.display="block";
+          var player = polyvObject('#littleplayer').livePlayer({
+            'width':'100%',
+            'height':360+'px',
+            'uid':'7181857ac2',
+            'vid':this.vid,
+          });
+          var mainpdfcard = document.getElementById("mainpdfcard");
+          mainpdfcard.style.display="block";
+          var liaotianshi= document.getElementById("liaotianshi");
+          liaotianshi.style.top=400+"px";
+          var frame = document.getElementById('displayPdfIframe');
+          frame.src = "/static/pdfjs/web/viewer.html?file="+ipdf.url;
+          this.modal1=false;
+        },
+        onCancel: () => {
+          this.$Message.info('Clicked cancel');
+        }
+      });
+
+    },
+  showselect:function(iselect){
+    console.log("1321312");
+    this.$Modal.confirm({
+      title: '提示',
+      content: '是否展示: \n ' +iselect.title,
+      onOk: () => {
       var mainlivingcard = document.getElementById("mainlivingcard");
       mainlivingcard.style.display="none";
       var littlelivingcard = document.getElementById("littlelivingcard");
@@ -143,18 +277,27 @@
         'uid':'7181857ac2',
         'vid':this.vid,
       });
-      var mainpdfcard = document.getElementById("mainpdfcard");
-      mainpdfcard.style.display="block";
+      var mainselectcard = document.getElementById("mainselectcard");
+      mainselectcard.style.display="block";
       var liaotianshi= document.getElementById("liaotianshi");
       liaotianshi.style.top=400+"px";
-      var frame = document.getElementById('displayPdfIframe');
-      frame.src = "/static/pdfjs/web/viewer.html?file=/static/pdf/1-1.pdf";
-
+      this.curtitle=iselect.title;
+      this.curans=iselect.ans;
+      this.curanswer=iselect.answer;
+      this.modal2=false;
     },
+    onCancel: () => {
+      this.$Message.info('Clicked cancel');
+    }
+  });
+
+  },
     closetext(){
       console.log("1321312");
       var mainlivingcard = document.getElementById("mainlivingcard");
       mainlivingcard.style.display="block";
+      var mainselectcard = document.getElementById("mainselectcard");
+       mainselectcard.style.display="none";
       var littlelivingcard = document.getElementById("littlelivingcard");
       littlelivingcard.style.display="none";
       var mainpdfcard = document.getElementById("mainpdfcard");
@@ -175,32 +318,51 @@
 
       if(this.toopen)
       {
+        this.$Modal.confirm({
+              title: '提示',
+              content: '是否确认开播',
+              onOk: () => {
+                  this.toopen=false;
+                  this.opentext='关播';
+                  this.openclose='ios-power';
+                  var params = new URLSearchParams();
+                  params.append('name', this.userInfo['username']);
+                  params.append('job',this.userInfo['job']);
+                  axios.post('/api/user/openliving',params).then((resp) => {
+                    this.vid=reap.vid;
+                    var div = document.getElementById("player");
+                    div.style.vid=resp.vid;
+                  });
+          },
+            onCancel: () => {
 
-          this.toopen=false;
-          this.opentext='关播';
-          this.openclose='ios-power';
-          var params = new URLSearchParams();
-          params.append('name', this.userInfo['username']);
-          params.append('job',this.userInfo['job']);
-          axios.post('/api/user/openliving',params).then((resp) => {
-           this.vid=reap.vid;
-            var div = document.getElementById("player");
-            div.style.vid=resp.vid;
-        });
+          }
+          });
+
+
       }
       else
       {
-        this.toopen=true;
-        this.opentext='开播';
-        this.openclose='ios-videocam-outline';
-        var params = new URLSearchParams();
-        params.append('name', this.userInfo['username']);
-        params.append('job',this.userInfo['job']);
-        axios.post('/api/user/closeliving',params).then((resp) => {
+        this.$Modal.confirm({
+          title: '提示',
+          content: '是否确认关播',
+          onOk: () => {
+              this.toopen=true;
+              this.opentext='开播';
+              this.openclose='ios-videocam-outline';
+              var params = new URLSearchParams();
+              params.append('name', this.userInfo['username']);
+              params.append('job',this.userInfo['job']);
+              axios.post('/api/user/closeliving',params).then((resp) => {
 
-      });
-      }
-    },
+            });
+          },
+            onCancel: () => {
+
+          }
+          });
+          }
+        },
 
   }
   };
@@ -265,6 +427,13 @@
     position:absolute;
     left: 78%;
     width: 22%;
+    top:60px;
+    display: none;
+  }
+  .cardtealivingselect{
+    position:absolute;
+    left: 18%;
+    width: 60%;
     top:60px;
     display: none;
   }
