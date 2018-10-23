@@ -46,6 +46,7 @@ class ChannelManager:
 		data = self.sender.request("GET", url)
 		return data
 
+
 	def deleteChannel(self, channelId):
 		url = const.DeleteChannelUrl % str(channelId)
 		timestamp = self.getTimeMillis()
@@ -76,5 +77,3 @@ class ChannelManager:
 		params["sign"] = sign
 		data = self.sender.request("POST", url, fields = params)
 		return data
-
-

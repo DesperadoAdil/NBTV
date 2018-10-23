@@ -1,9 +1,9 @@
 <template>
-	<div id="list">
+	<div id="list" class="posi">
     <Layout class="layoutlist">
       <Header>
           <ButtonGroup class="btns" size="large" shape="circle" vertical="false">
-            <Tooltip placement="top">
+            <Tooltip placement="top" v-if="userInfo.job=='teacher'" >
               <Button class="addbutton" size="large" type="primary"  shape="circle" icon="md-add" ></Button>
               <div slot="content">
                 <p class="addtext">新建直播间</p>
@@ -16,21 +16,23 @@
               </div>
             </Tooltip>
           </ButtonGroup>
+
+          <ButtonGroup class="paixu">
+            <!--<ButtonGroup class="listbtns">-->
+            <!--<Button class="listtext" type="text" >在线直播</Button>-->
+            <Button class="listbtn" type="primary"  @click="timelist">按开播时间排列</Button>
+            <Button class="listbtn" type="primary"  @click="audiencelist">按观众人数排序</Button>
+          </ButtonGroup>
       </Header>
       <Content class="listclass">
 
 
+        <!--<p class="listtext">在线直播</p>-->
 
-        <ButtonGroup  >
-        <!--<ButtonGroup class="listbtns">-->
-          <Button class="listtext" type="text" >在线直播</Button>
-          <Button class="listbtn" type="primary" shape="circle" @click="timelist">按开播时间排列</Button>
-          <Button class="listbtn" type="primary" shape="circle" @click="audiencelist">按观众人数排序</Button>
-        </ButtonGroup>
 
         <Row>
-          <Col span="8" v-for="item in items">
-            <Card class="card">
+          <Col span="8" v-for="item in items" :key="item.id">
+            <Card class="listcard">
               <!--<div class="aspectration" data-ratio="16:9">-->
                   <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
               <!--</div>-->
@@ -77,8 +79,17 @@
 	import axios from 'axios';
 	export default {
 	  name: 'List',
-	  data () {
+
+	  data :function() {
 	    return {
+        userInfo: {
+          status: '',
+          username: '',
+          password: '',
+          mobile: '',
+          job:'teacher',
+        },
+        LoginOrLogout: '登录',
         currentpassword:"",
         imgwitd:"100px",
 				items: [
@@ -94,7 +105,7 @@
 						audiencelist: [1,5,6,21,321,43],
 						visible: '',
             vid:'242544',
-            createtime:'2018-10-1'
+            createtime:'2018-10-18 13:37:05'
 
 					},
           {
@@ -109,7 +120,7 @@
             audiencelist: [1,5,6],
             visible: '',
             vid:'242544',
-            createtime:'2018-10-12'
+            createtime:'2018-10-19 13:37:06'
           },
           {
             id: '3',
@@ -123,7 +134,7 @@
             audiencelist: [1,5,6,12,2,2,2,2,2,2,2,2,2,2],
             visible: '',
             vid:'242544',
-            createtime:'2018-10-3'
+            createtime:'2018-10-20 13:37:15'
           },
           {
             id: '1',
@@ -137,7 +148,7 @@
             audiencelist: [1,5,6,21,32,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
             visible: '',
             vid:'242544',
-            createtime:'2018-10-18'
+            createtime:'2018-11-17 13:47:05'
           },
           {
             id: '2',
@@ -151,7 +162,7 @@
             audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
             visible: '',
             vid:'242544',
-            createtime:'2018-10-19'
+            createtime:'2018-10-07 13:37:05'
           },
           {
             id: '3',
@@ -165,7 +176,7 @@
             audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
             visible: '',
             vid:'242544',
-            createtime:'2018-10-8'
+            createtime:'2018-11-17 13:37:05'
           },
           {
             id: '1',
@@ -179,21 +190,84 @@
             audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3],
             visible: '',
             vid:'242544',
-            createtime:'2018-10-17'
+            createtime:'2018-4-17 13:37:05'
           },
 				]
 
 	    }
 	  },
-		created() {
+		created:function() {
+      this.showUserInfo();
 			this.getList();
+
 		},
 		methods: {
-      timelist(){
+      showUserInfo() {
+          console.log("1234567");
+          this.userInfo['username'] = this.$cookies.get('user').username;
+          this.userInfo['status']= this.$cookies.get('user').status;
+          this.userInfo['password'] = this.$cookies.get('user').password;
+          this.userInfo['mobile'] = this.$cookies.get('user').mobile;
+          this.userInfo['job'] = this.$cookies.get('user').job;
+          if (this.userInfo['status'] === 'success') {
+            this.LoginOrLogout = this.userInfo['username'];
+          }
+        },
+      timelist:function(){
 
         var compare = function (obj1, obj2) {
           var val1 = obj1.createtime;
           var val2 = obj2.createtime;
+          var datas1=val1.split(" ");
+          var datas2=val2.split(" ");
+
+          var date1 = datas1[0].split("-");
+          var date2 = datas2[0].split("-");
+
+          var time1 = datas1[1].split(":");
+          var time2 = datas2[1].split(":");
+          console.log(parseInt(date1[0]));
+          if (parseInt(date1[0]) <parseInt(date2[0])) {
+            return -1;
+          } else if (parseInt(date1[0]) >parseInt(date2[0])) {
+            return 1;
+          } else {
+            if (parseInt(date1[1]) <parseInt(date2[1])) {
+              return -1;
+            } else if (parseInt(date1[1]) >parseInt(date2[1])) {
+              return 1;
+            } else {
+              if (parseInt(date1[2]) <parseInt(date2[2])) {
+                return -1;
+              } else if (parseInt(date1[2]) >parseInt(date2[2])) {
+                return 1;
+              } else {
+                if (parseInt(time1[0]) <parseInt(time2[0])) {
+                  return -1;
+                } else if (parseInt(time1[0]) >parseInt(time2[0])) {
+                  return 1;
+                } else {
+                  if (parseInt(time1[1]) <parseInt(time2[1])) {
+                    return -1;
+                  } else if (parseInt(time1[1]) >parseInt(time2[1])) {
+                    return 1;
+                  } else {
+                    if (parseInt(time1[2]) <parseInt(time2[2])) {
+                      return -1;
+                    } else if (parseInt(time1[2]) >parseInt(time2[2])) {
+                      return 1;
+                    } else {
+                      return 0;
+                    }
+                  }
+                }
+              }
+
+            }
+          }
+
+
+
           if (val1 < val2) {
             return -1;
           } else if (val1 > val2) {
@@ -201,6 +275,8 @@
           } else {
             return 0;
           }
+
+
         };
         this.items.sort(compare);
         this.$Notice.success({
@@ -208,7 +284,8 @@
           desc: '已经按照时间排序'
         });
       },
-      audiencelist(){
+      audiencelist:function(){
+        console.log("123");
 
         var compare = function (obj1, obj2) {
           var val1 = obj1.audiencelist.length;
@@ -228,7 +305,7 @@
         });
       },
 
-      skip(a){
+      skip:function(aab){
         this.$Modal.confirm({
               render: (h) => {
               return h('Input', {
@@ -248,8 +325,8 @@
           })
         },
         onOk: () => {
-            if(this.currentpassword=== a.password)
-                this.$router.push({path: 'living',query:{ id: a.vid}});
+            if(this.currentpassword=== aab.password)
+                this.$router.push({path: 'living',query:{ id:aab.vid}});
             else
               this.$Notice.error({
                       title: '消息提示',
@@ -259,7 +336,7 @@
             });
 
       },
-			getList() {
+			getList:function() {
 				axios.get('/api/list').then((resp) => {
 					console.log(resp)
 					this.items = resp.data;
@@ -281,7 +358,11 @@
 	li {
 		list-style: none;
 	}
-
+  .posi{
+    position: absolute;
+    top: 60px;
+    width: 100%;
+  }
 
   .addbutton{
     margin:10px;
@@ -295,6 +376,7 @@
   }
   .btns{
     float:left;
+    padding-left: 4%;
   }
   .layout-footer-center{
     text-align: center;
@@ -307,6 +389,10 @@
     padding-bottom: 3%;
 
 
+  }
+  .paixu{
+    float:right;
+    padding-right: 4%;
   }
   .listtext{
     test-align:left;
@@ -333,7 +419,7 @@
   .layoutlist{
     min-height:850px;
   }
-  .card {
+  .listcard {
     padding: 3%;
     margin: 6%;
   }

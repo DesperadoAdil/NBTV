@@ -1,8 +1,8 @@
 <template>
-	<div id="login">
+	<div id="login" class="posi">
 		<Form ref="formInline" :model="formInline" :rules="ruleInline">
       <FormItem prop="username">
-        <Input type="text" v-model="formInline.username" name="username" placeholder="Username">
+        <Input type="text" v-model="formInline.username" name="username" v-bind:placeholder="loginway">
           <Icon type="ios-person-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
@@ -10,6 +10,12 @@
         <Input type="password" v-model="formInline.password" name="password" placeholder="Password">
           <Icon type="ios-lock-outline" slot="prepend"></Icon>
         </Input>
+      </FormItem>
+      <FormItem prop="loginWay">
+        <RadioGroup v-model="loginway">
+          <Radio label="username"></Radio>
+          <Radio label="phonenumber"></Radio>
+        </RadioGroup>
       </FormItem>
 			<FormItem prop="job">
 				<RadioGroup v-model="job">
@@ -27,8 +33,8 @@
 
 <script type="es6">
 	import axios from 'axios';
-	import { mapState, mapActions } from 'vuex';
 	import router from '../router';
+	import VueCookies from 'vue-cookies';
   export default {
   	data () {
       return {
@@ -39,8 +45,10 @@
           mobile: '',
           verification: '',
 					job: '',
+					loginway:'',
         },
 				job: 'student',
+				loginway:'username',
         ruleInline: {
           username: [
             { required: true, message: 'Please fill in the user name', trigger: 'blur' }
@@ -52,25 +60,18 @@
         },
       }
     },
-    computed: {
-    	...mapState('account', ['status'])
-    },
     methods: {
-    	...mapActions('account', ['login', 'logout']),
       handleSubmit(name) {
-
       	this.$refs[name].validate((valid) => {
           if (valid) {
             this.$Message.success('Send to server!');
 						this.formInline['job'] = this.job;
+						this.formInline['loginway'] = this.loginway;
             const data = this.formInline;
     				axios.post('/api/user/login', data).then((resp) => {
-							console.log(resp);
-							console.log(resp.data);
 							this.$Message.success(resp.data.status);
 			        if (resp.data.status === 'success') {
-		    	    	//this.set_login();
-		          	//this.get_user_info();
+								this.$cookies.set('user', resp.data);
 								router.push('/list');
 			        } else {
 		          	this.$Message.error('用户名或密码错误');
@@ -88,4 +89,8 @@
 	#login {
 		margin: 0 40%;
 	}
+  .posi{
+    position: absolute;
+    top: 60px;
+  }
 </style>

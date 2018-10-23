@@ -22,10 +22,7 @@ def login():
     password = data['password']
     job = data['job']
 
-    #searchmode not finished
-    user = usermanager.search("username", username, job)
-    if user is None: #need to delete when searchmode is finished
-        user = usermanager.search("phonenumber", username, job) #same
+    user = usermanager.search(data["loginway"], username, job)
     if user is None or password != user.password:
         ret['status']='error:用户名或密码错误！'
         return json.dumps(ret)
@@ -123,6 +120,9 @@ def change_password():
     data = json.loads(data)
 
     status = data['status']
+    if status != "login":
+        ret['status']='error:该用户未登录！'
+        return json.dumps(ret)
     phonenumber = data['mobile']
     old_password = data['old_password']
     new_password = data['new_password']
@@ -151,6 +151,9 @@ def change_mobile():
     data = json.loads(data)
 
     status = data['status']
+    if status != "login":
+        ret['status']='error:该用户未登录！'
+        return json.dumps(ret)
     old_mobile = data['old_mobile']
     old_verification = data['old_verification']
     new_mobile = data['new_mobile']
@@ -181,5 +184,55 @@ def change_mobile():
         ret['status']='error:用户不存在！'
         return json.dumps(ret)
     ret['status'] = usermanager.update(user, new_mobile, user.username, user.password, user.classroomlist)
+    print (json.dumps(ret))
+    return json.dumps(ret)
+
+
+#My_list
+@user.route('/mylist', methods = ['POST'])
+def my_list():
+    data = request.get_data()
+    print (data)
+    data = json.loads(data)
+
+    username = data['username']
+    job = data['job']
+
+    user = usermanager.search("username", username, job)
+    return user.classroomlist
+
+
+#Del_myclass
+@user.route('/delmyclass', methods = ['POST'])
+def del_myclass():
+    ret = {}
+    ret["status"] = 'error'
+    
+    data = request.get_data()
+    print (data)
+    data = json.loads(data)
+
+    username = data['username']
+    job = data['job']
+    classroom = data['classroom']
+
+    try:
+        user = usermanager.search("username", username, job)
+        userclassroom = json.loads(user.classroomlist)
+        userclassroom.remove(classroom)
+        if job == "teacher":
+            classroomuser = json.loads(classroom.teacherlist)
+            classroomuser.remove(user)
+            classroom.teacherlist = json.dumps(classroomuser)
+        else:
+            classroomuser = json.loads(classroom.studentlist)
+            classroomuser.remove(user)
+            classroom.studentlist = json.dumps(classroomuser)
+        db.session.add(classroom)
+        db.session.commit()
+        ret['status'] = usermanager.update(user, user.phonenumber, user.username, user.password, json.dumps(userclassroom))
+    except:
+        print ("Delete Myclass Error")
+
     print (json.dumps(ret))
     return json.dumps(ret)
