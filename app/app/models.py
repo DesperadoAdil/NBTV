@@ -8,8 +8,15 @@ class Classrooms(db.Model):
     teacher = db.Column(db.String(50), db.ForeignKey('teachers.username'), nullable=False)
     title = db.Column(db.String(50), nullable=False)
     thumbnail = db.Column(db.String(100), nullable=False)
+    #直播间的密码
     password = db.Column(db.String(50), nullable=False)
+    
+    #直播间的url
     url = db.Column(db.String(100), unique=True, nullable=False, primary_key = True)
+    
+    # 推流的地址
+    rtmpUrl = db.Column(db.String(33), unique = True, nullable = False) 
+
     studentlist = db.Column(db.Text, nullable=False, default = "[]")
     teacherlist = db.Column(db.Text, nullable=False, default = "[]")
     audiencelist = db.Column(db.Text, nullable=False, default = "[]")
