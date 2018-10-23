@@ -12,7 +12,6 @@ polyvManager = polyvAPI.ChannelManager()
 @classroom.route('/add_class')
 def addClass():
 
-
 	data = request.get_data()
 	print('add a class')
 	print(data)
@@ -38,3 +37,43 @@ def addClass():
 	return ret
 
 
+@classroom.route('/delete_class')
+def deleteClass():
+	data = request.get_data()
+	print('delete a class')
+	print(data)
+	data = json.loads(data)
+
+	if not usermanager.verify(data['username'], data['password'], 'teacher'):
+		return {"status": "error:password wrong"}
+
+	classroomTmp = classroomManager.search(data['url'])
+	if classroomTmp is None:
+		return {"status": "error:no such classroom"}
+
+	#从保利威视那删除这个直播频道
+	response = polyvManager.deleteChannel(classroomTmp.vid)
+	responseData = json.loads(response.data.decode('utf8'))
+	if responseData['status'] == "error":
+		return {"status": "error polyv"}
+
+	#在教室列表中删除教室
+	ret = {}
+	ret['status'] = classroomManager.delete(data['url'])
+	return ret
+
+
+@classroom.route('/update_class')
+def updateClass():
+	data = request.get_data()
+	print('update a classroom')
+	print(data)
+	data = json.loads(data)
+
+	if not usermanager.verify(data['username'], data['password'], 'teacher'):
+		return {"status": "error:no such classroom"}
+
+	ret = {}
+	# update(self, title, thumbnail, newUrl, passwd, oldUrl):
+	ret['status'] = classroomManager.update(data['title'], data['thumbnail'], data['url'], data['class_password'], data['old_url'])
+	return ret

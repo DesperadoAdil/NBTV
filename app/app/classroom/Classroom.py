@@ -50,6 +50,9 @@ class ClassroomManager:
 			print("update classrooms: ", err)
 			return "error"
 
+	def search(self, url):
+		return db.query.filter_by(url = url).first()
+
 
 classroomManager = ClassroomManager()
 
