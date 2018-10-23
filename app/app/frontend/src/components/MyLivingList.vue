@@ -14,7 +14,7 @@
     </Modal>
     <div v-for="living in myLivingList" :key="living.url">
       <Card class="card">
-        <img :src="living.thumbnail" class="thumbnail">
+        <img :src="living.thumbnail" class="thumbnail"  @click="directskip(teacherliving)">
         <p class="title">{{ living.title }}</p>
         <span><Button type="success" @click="updateModal = true">UPDATE</Button></span>
         <Modal
@@ -72,7 +72,10 @@
       this.getMyLivingList();
     },
     methods: {
-
+      directskip(teacherliving){
+        console.log("132");
+        this.$router.push({path: 'teacherliving'});
+      },
       getMyLivingList() {
         const data = this.myLivingList;
         this.$Message.success("wtf");

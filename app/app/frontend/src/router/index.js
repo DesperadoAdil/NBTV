@@ -10,6 +10,7 @@ import Living from '@/components/Living'
 import MyLivingList from '@/components/MyLivingList'
 import MyWatchingList from '@/components/MyWatchinglist'
 import UserInfo from '@/components/UserInfo'
+import TeacherLiving from '@/components/TeacherLiving'
 
 Vue.use(Router)
 Vue.use(VueCookies);
@@ -21,6 +22,11 @@ const router = new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/teacherliving',
+      name: 'TeacherLiving',
+      component: TeacherLiving
     },
     {
       path: '/mywatchinglist',
@@ -65,10 +71,10 @@ export default router;
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
 
-  if (to.path !== '/login' && window.$cookies.get('user') === null) {
-    return next('/login');
-  }
-  const publicPages = ['/login', '/Register', '/living', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo'];
+  //if (to.path !== '/login' && window.$cookies.get('user') === null) {
+  //  return next('/login');
+  //}
+  const publicPages = ['/login', '/Register', '/living', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo','/teacherliving'];
   const authRequired = !publicPages.includes(to.path);
 
   if (authRequired) {

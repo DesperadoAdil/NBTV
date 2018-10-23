@@ -315,8 +315,9 @@
           content: "确认删除直播间吗",
           onOk: () =>{
             var params = new URLSearchParams();
-            params.append('name', this.userInfo.username);
+            params.append('name', this.userInfo['username']);
             params.append('classroom',a);
+            params.append('job',this.userInfo['job']);
             axios.post('/api/user/delmyclass',params).then((resp) => {
 
             });
@@ -372,10 +373,14 @@
 
       },
       getList:function() {
-        axios.post('/api/user/mylist',this.userInfo.username).then((resp) => {
-          console.log(resp)
+        var params = new URLSearchParams();
+        params.append('name', this.userInfo['username']);
+
+        params.append('job',this.userInfo['job']);
+        axios.post('/api/user/mylist',params).then((resp) => {
           this.items = resp.data;
-        })
+        });
+
       }
 
 
