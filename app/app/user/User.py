@@ -53,8 +53,22 @@ class UserManager:
                 print ("Search Error: Student Not Found")
             return student
         else:
-            print ("Insert Error: Database Not Found")
+            print ("Search Error: Database Not Found")
             return None
+
+    def verify(self, username, password, job):
+        if job == "teacher":
+            user = Teachers.query.filter_by(username = username).first()
+        elif job == "student":
+            user = Students.query.filter_by(username = username).first()
+        else:
+            print ("Verify Error: Database Not Found")
+            return False
+        if user is None:
+            print ("Verify Error: User Not Found")
+        if password != user.password:
+            return False
+        return True
 
     def delete(self, user):
         try:
