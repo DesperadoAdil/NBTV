@@ -15,7 +15,7 @@ def list():
             break
         else:
             dic = {}
-            dic["id"] = str(Class.id)
+            # dic["id"] = str(Class.id)
             dic["vid"] = str(Class.vid)
             dic["teacher"] = Class.teacher
             dic["title"] = Class.title

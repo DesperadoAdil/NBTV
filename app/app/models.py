@@ -3,21 +3,31 @@ from datetime import datetime
 
 class Classrooms(db.Model):
     __tablename__ = 'classrooms'
-    id = db.Column(db.Integer, primary_key=True,  unique=True, nullable=False)
+    # id = db.Column(db.Integer, primary_key=True,  unique=True, nullable=False)
     vid = db.Column(db.Integer, unique=True, nullable=False)
     teacher = db.Column(db.String(50), db.ForeignKey('teachers.username'), nullable=False)
     title = db.Column(db.String(50), nullable=False)
     thumbnail = db.Column(db.String(100), nullable=False)
+    #直播间的密码
     password = db.Column(db.String(50), nullable=False)
-    url = db.Column(db.String(100), unique=True, nullable=False)
-    studentlist = db.Column(db.Text, nullable=False)
-    teacherlist = db.Column(db.Text, nullable=False)
-    audiencelist = db.Column(db.Text, nullable=False)
-    visible = db.Column(db.String(5), nullable=False)
+    
+    #直播间的url
+    url = db.Column(db.String(100), unique=True, nullable=False, primary_key = True)
+    
+    # 推流的地址
+    rtmpUrl = db.Column(db.String(33), unique = True, nullable = False) 
+
+    studentlist = db.Column(db.Text, nullable=False, default = "[]")
+    teacherlist = db.Column(db.Text, nullable=False, default = "[]")
+    audiencelist = db.Column(db.Text, nullable=False, default = "[]")
+
+    filelist = db.Column(db.Text, nullable = False, default = "[]")
+
+    visible = db.Column(db.String(5), nullable=False, default = "yes")
     createtime = db.Column(db.DateTime, default=datetime.now)
 
     def __repr__(self):
-        return '<ClassroomID %r>' % self.id
+        return '<ClassroomUrl %r>' % self.url
 
 
 class Teachers(db.Model):
@@ -25,7 +35,7 @@ class Teachers(db.Model):
     phonenumber = db.Column(db.String(11), primary_key=True,  unique=True, nullable=False)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
-    classroomlist = db.Column(db.Text, nullable=False)
+    classroomlist = db.Column(db.Text, nullable=False, default = "[]")
     classroom = db.relationship('Classrooms', backref='teachers', lazy='dynamic')
 
     def __repr__(self):
@@ -37,7 +47,7 @@ class Students(db.Model):
     phonenumber = db.Column(db.String(11), primary_key=True, unique=True, nullable=False)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
-    classroomlist = db.Column(db.Text, nullable=False)
+    classroomlist = db.Column(db.Text, nullable=False, default = "[]")
 
     def __repr__(self):
         return '<PhoneNumber %r>' % self.phonenumber

@@ -18,7 +18,7 @@ class CodeQuestionObj:
 
 	def update(self, uniqueId, statement, language):
 		try:
-			que = CodeQuestion.query.filter_by(uniqueId = uniqueId)
+			que = CodeQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 			que.statement = statement
@@ -32,7 +32,7 @@ class CodeQuestionObj:
 
 	def delete(self, uniqueId):
 		try:
-			que = CodeQuestion.query.filter_by(uniqueId = uniqueId)
+			que = CodeQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 			db.session.delete(que)
@@ -43,7 +43,7 @@ class CodeQuestionObj:
 
 	def getData(self, uniqueId):
 		try:
-			que = CodeQuestion.query.filter_by(uniqueId = uniqueId)
+			que = CodeQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 			return {"statement": que.statement, "uniqueId": que.uniqueId, "language": que.language, "submitRecord": que.submitRecord}
@@ -52,7 +52,7 @@ class CodeQuestionObj:
 
 	def submitAnswer(self, uniqueId, studentId, ans):
 		try:
-			que = CodeQuestion.query.filter_by(uniqueId = uniqueId)
+			que = CodeQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 			record = json.loads(que.submitRecord)
