@@ -35,7 +35,7 @@ class Teachers(db.Model):
     phonenumber = db.Column(db.String(11), primary_key=True,  unique=True, nullable=False)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
-    classroomlist = db.Column(db.Text, nullable=False)
+    classroomlist = db.Column(db.Text, nullable=False, default = "[]")
     classroom = db.relationship('Classrooms', backref='teachers', lazy='dynamic')
 
     def __repr__(self):
@@ -47,7 +47,7 @@ class Students(db.Model):
     phonenumber = db.Column(db.String(11), primary_key=True, unique=True, nullable=False)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
-    classroomlist = db.Column(db.Text, nullable=False)
+    classroomlist = db.Column(db.Text, nullable=False, default = "[]")
 
     def __repr__(self):
         return '<PhoneNumber %r>' % self.phonenumber
