@@ -159,25 +159,24 @@ export default {
       })
     },
 
-    del:function(a){
-        this.$Modal.confirm({
-          title: "警告",
-          content: "确认删除直播间吗",
-          onOk: () =>{
-            var params = new URLSearchParams();
-            params.append('name', this.userInfo['username']);
-            params.append('classroom',a);
-            params.append('job',this.userInfo['job']);
-            axios.post('/api/user/delmyclass',params).then((resp) => {
+    del: function (a) {
+      this.$Modal.confirm({
+        title: '警告',
+        content: '确认删除直播间吗',
+        onOk: () => {
+          var params = new URLSearchParams()
+          params.append('name', this.userInfo['username'])
+          params.append('classroom', a)
+          params.append('job', this.userInfo['job'])
+          axios.post('/api/user/delmyclass', params).then((resp) => {
 
-            });
-            Array.prototype.indexOf = function (val) {
-              for (var i = 0; i < this.length; i++) {
-                if (this[i] == val) return i;
-              }
-              return -1;
-            };
-
+          })
+          Array.prototype.indexOf = function (val) {
+            for (var i = 0; i < this.length; i++) {
+              if (this[i] === val) return i
+            }
+            return -1
+          }
 
           Array.prototype.remove = function (val) {
             var index = this.indexOf(val)
@@ -185,33 +184,21 @@ export default {
               this.splice(index, 1)
             }
           }
-
-        });
-        //传给后端删除信息
-
-      },
-      skip:function(a){
-        this.$router.push({path: 'living',query:{ id: a.vid}});
-      },
-      getList:function() {
-        var params = new URLSearchParams();
-        params.append('name', this.userInfo['username']);
-
-        params.append('job',this.userInfo['job']);
-        axios.post('/api/user/mylist',params).then((resp) => {
-          this.items = resp.data;
-        });
-
-      }
-
-
-          this.items.remove(a)
         }
+        // 传给后端删除信息
       })
-      // 传给后端删除信息
     },
-
-
+    skip: function (a) {
+      this.$router.push({path: 'living', query: { id: a.vid}})
+    },
+    getList: function () {
+      var params = new URLSearchParams()
+      params.append('name', this.userInfo['username'])
+      params.append('job', this.userInfo['job'])
+      axios.post('/api/user/mylist', params).then((resp) => {
+        this.items = resp.data
+      })
+    }
   }
 
 }
