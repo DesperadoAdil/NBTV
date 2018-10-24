@@ -79,7 +79,7 @@ export default {
         username: '',
         password: '',
         mobile: '',
-        job: 'teacher'
+        job: ''
       },
       LoginOrLogout: '登录',
       currentpassword: '',
