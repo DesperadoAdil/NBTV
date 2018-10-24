@@ -57,6 +57,7 @@ export default {
         job: ''
       }
       this.$cookies.remove('user')
+      router.push('/Login')
     },
     isTeacher () {
       return this.userInfo['job'] === 'teacher'
