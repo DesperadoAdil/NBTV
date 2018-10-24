@@ -21,12 +21,12 @@
           <MenuItem name="2-2" class="menuitentea" @click.native="teaselect">布置选择题目</MenuItem>
           <MenuItem name="2-2" class="menuitentea" @click.native="closetext">退出教学资源</MenuItem>
         </Submenu>
-        <Submenu name="3" class="menuitentea">
+        <Submenu name="3" class="menuitentea"  >
           <template slot="title">
             <Icon type="ios-stats" />
             学生做题情况
           </template>
-          <MenuItem name="3-1" class="menuitentea">学生列表</MenuItem>
+          <MenuItem name="3-1" class="menuitentea" v-for="item in studentitems" @click.native="showstudentti(item)">{{item}}</MenuItem>
         </Submenu>
       </Menu>
       <Button class="btnopen" type="primary"  v-bind:icon="openclose"  @click="teaopenclose()">
@@ -53,6 +53,14 @@
       </CellGroup>
     </Modal>
 
+    <Modal   v-model="modal3"    @on-ok=""    @on-cancel="">
+      <p slot="header" style="font-size: 20px">
+        <span>{{curstu}}的做题情况如下：</span>
+      </p>
+      <Table stripe border :columns="columns1" :data="curti" ref="table"></Table>
+      <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
+    </Modal>
+
     <div id="mainlivingcard" class="cardtealiving00">
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
@@ -70,16 +78,16 @@
     <div id="mainselectcard" class="cardtealivingselect">
       <p class="selecttitle00">{{curtitle}}</p>
       <RadioGroup class="radiotea" v-model="ionselect" vertical>
-        <Radio v-bind:label="curans[0]">
+        <Radio v-bind:label="curans[0]" style="font-size: 15px">
           <span>A、{{curans[0]}}</span>
         </Radio>
-        <Radio v-bind:label="curans[1]">
+        <Radio v-bind:label="curans[1]" style="font-size: 15px">
           <span>B、{{curans[1]}}</span>
         </Radio>
-        <Radio v-bind:label="curans[2]">
+        <Radio v-bind:label="curans[2]" style="font-size: 15px">
           <span>C、{{curans[2]}}</span>
         </Radio>
-        <Radio v-bind:label="curans[3]">
+        <Radio v-bind:label="curans[3]" style="font-size: 15px">
           <span>D、{{curans[3]}}</span>
         </Radio>
       </RadioGroup>
@@ -118,7 +126,7 @@
       //dosomething...
       var player = polyvObject('#player').livePlayer({
         'width':'100%',
-        'height':700+'px',
+        'height':600+'px',
         'uid':'7181857ac2',
         'vid':'242544'
       });
@@ -140,6 +148,36 @@
 
     return {
       //<!--vediosrc:'',-->
+      columns1: [
+        {
+          title: '题目',
+          key: 'title'
+        },
+        {
+          title: '答案',
+          key: 'ans'
+        },
+      ],
+      curstu:'zsh',
+      curti:[
+        {
+          title:'1',
+          ans:'A',
+        },
+        {
+          title:'2',
+          ans:'B',
+        },
+        {
+          title:'3',
+          ans:'int main()',
+        },
+        {
+          title:'4',
+          ans:'#include<> \n using namespace std; int main(){ int c; cout<<c++<<endl; return 0}',
+        },
+      ],
+      studentitems:['zsh','adil','zhq','hyx','xcj'],
       ionselect:'111',
       curtitle:'xjbx1',
       curans:['1','2','3','4'],
@@ -191,6 +229,7 @@
         status: '',
         job:'',
       },
+      modal3: false,
       modal2: false,
       modal1: false,
       vid:'242544',
@@ -210,6 +249,37 @@
     };
   },
   methods: {
+      exportData (type)
+      {
+        if (type === 1) {
+          this.$refs.table.exportCsv({
+            filename: this.curstu+'数据统计'
+          });
+        }
+      },
+      getstudents(){
+      console.log("1321312");
+      var params = new URLSearchParams();
+      params.append('name', this.userInfo['username']);
+      params.append('job',this.userInfo['job']);
+      params.append('vid',this.vid);
+      axios.post('/api/user/getstudents',params).then((resp) => {
+        this.studentitems=resp.studentitems;
+      });
+    },
+    showstudentti(item){
+      console.log("1321312");
+      this.curstu=item;
+      var params = new URLSearchParams();
+      params.append('name', this.userInfo['username']);
+      params.append('job',this.userInfo['job']);
+      params.append('stu',this.curstu);
+      params.append('vid',this.vid);
+      axios.post('/api/user/getstudentsti',params).then((resp) => {
+        this.curti=resp.curti;
+      });
+      this.modal3=true;
+    },
     teatext(){
       var params = new URLSearchParams();
       params.append('name', this.userInfo['username']);
@@ -237,13 +307,21 @@
         title: '提示',
         content: '是否展示'+ipdf.title,
         onOk: () => {
+          var params = new URLSearchParams();
+          params.append('name', this.userInfo['username']);
+          params.append('job',this.userInfo['job']);
+          params.append('vid',this.vid);
+          params.append('pdf',ipdf.title);
+          axios.post('/api/user/showpdfs',params).then((resp) => {
+
+          });
           var mainlivingcard = document.getElementById("mainlivingcard");
           mainlivingcard.style.display="none";
           var littlelivingcard = document.getElementById("littlelivingcard");
           littlelivingcard.style.display="block";
           var player = polyvObject('#littleplayer').livePlayer({
             'width':'100%',
-            'height':360+'px',
+            'height':260+'px',
             'uid':'7181857ac2',
             'vid':this.vid,
           });
@@ -252,7 +330,7 @@
           var mainpdfcard = document.getElementById("mainpdfcard");
           mainpdfcard.style.display="block";
           var liaotianshi= document.getElementById("liaotianshi");
-          liaotianshi.style.top=400+"px";
+          liaotianshi.style.top=330+"px";
           var frame = document.getElementById('displayPdfIframe');
           frame.src = "/static/pdfjs/web/viewer.html?file="+ipdf.url;
           this.modal1=false;
@@ -269,13 +347,20 @@
         title: '提示',
         content: '是否展示: \n ' +iselect.title,
         onOk: () => {
+          var params = new URLSearchParams();
+          params.append('name', this.userInfo['username']);
+          params.append('job',this.userInfo['job']);
+          params.append('vid',this.vid);
+          params.append('select',iselect.title);
+          axios.post('/api/user/showselect',params).then((resp) => {
+          });
           var mainlivingcard = document.getElementById("mainlivingcard");
           mainlivingcard.style.display="none";
           var littlelivingcard = document.getElementById("littlelivingcard");
           littlelivingcard.style.display="block";
           var player = polyvObject('#littleplayer').livePlayer({
             'width':'100%',
-            'height':360+'px',
+            'height':260+'px',
             'uid':'7181857ac2',
             'vid':this.vid,
           });
@@ -284,7 +369,7 @@
           var mainselectcard = document.getElementById("mainselectcard");
           mainselectcard.style.display="block";
           var liaotianshi= document.getElementById("liaotianshi");
-          liaotianshi.style.top=400+"px";
+          liaotianshi.style.top=330+"px";
           this.curtitle=iselect.title;
           this.curans=iselect.ans;
           this.curanswer=iselect.answer;
@@ -297,17 +382,26 @@
 
     },
     closetext(){
-      console.log("1321312");
-      var mainlivingcard = document.getElementById("mainlivingcard");
-      mainlivingcard.style.display="block";
-      var mainselectcard = document.getElementById("mainselectcard");
-      mainselectcard.style.display="none";
-      var littlelivingcard = document.getElementById("littlelivingcard");
-      littlelivingcard.style.display="none";
-      var mainpdfcard = document.getElementById("mainpdfcard");
-      mainpdfcard.style.display="none";
-      var liaotianshi= document.getElementById("liaotianshi");
-      liaotianshi.style.top=60+"px";
+      this.$Modal.confirm({
+        title: '提示',
+        content: '确认退出教学资源',
+        onOk: () => {
+          console.log("1321312");
+          var mainlivingcard = document.getElementById("mainlivingcard");
+          mainlivingcard.style.display="block";
+          var mainselectcard = document.getElementById("mainselectcard");
+          mainselectcard.style.display="none";
+          var littlelivingcard = document.getElementById("littlelivingcard");
+          littlelivingcard.style.display="none";
+          var mainpdfcard = document.getElementById("mainpdfcard");
+          mainpdfcard.style.display="none";
+          var liaotianshi= document.getElementById("liaotianshi");
+          liaotianshi.style.top=60+"px";
+        },
+        onCancel: () => {
+          this.$Message.info('Clicked cancel');
+        }
+      });
     },
     showUserInfo() {
       console.log("1234567");
@@ -329,6 +423,7 @@
             this.toopen=false;
             this.opentext='关播';
             this.openclose='ios-power';
+            this.getstudents();
             var params = new URLSearchParams();
             params.append('name', this.userInfo['username']);
             params.append('job',this.userInfo['job']);
@@ -413,7 +508,7 @@
   }
   .pdfframe{
     width:100% ;
-    height:800px;
+    height:600px;
   }
   .topveido{
     height: auto;
@@ -447,20 +542,27 @@
     height:700px;
   }
   .selecttitle00{
+    padding-top: 3%;
     position:relative;
     left:40px;
     float:left;
+    font-size: 15px;
   }
   .radiotea{
     float:left;
     position:relative;
-    top:200px;
+    top:300px;
+
   }
   .anstea00{
     float:left;
     position:relative;
     top:500px;
     left:-50px;
+    font-size: 15px;
+  }
+  .databutton{
+    margin-top: 15px;
   }
 </style>
 
