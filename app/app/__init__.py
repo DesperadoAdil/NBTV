@@ -18,6 +18,6 @@ from .resource import resource as resource_blueprint
 app.register_blueprint(resource_blueprint, url_prefix = '/api/resource')
 
 from .classroom import classroom as classroom_blueprint
-app.resource_blueprint(classroom_blueprint, url_prefix = '/api/classroom')
+app.register_blueprint(classroom_blueprint, url_prefix = '/api/classroom')
 
 from app import views, models
