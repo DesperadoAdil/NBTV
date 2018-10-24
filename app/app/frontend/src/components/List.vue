@@ -26,9 +26,7 @@
       </Header>
       <Content class="listclass">
 
-
         <!--<p class="listtext">在线直播</p>-->
-
 
         <Row>
           <Col span="8" v-for="item in items" :key="item.id">
@@ -43,8 +41,6 @@
             </Card>
           </Col>
         </Row>
-
-
 
         <!--<ul class="oldlist">-->
           <!--<li  v-for="item in items">-->
@@ -69,375 +65,241 @@
 
     </Layout>
 
-
-
-
 	</div>
 
 </template>
 <script>
-	import axios from 'axios';
-	export default {
-	  name: 'List',
+import axios from 'axios'
+export default {
+  name: 'List',
+  data () {
+    return {
+      userInfo: {
+        status: '',
+        username: '',
+        password: '',
+        mobile: '',
+        job: 'teacher'
+      },
+      LoginOrLogout: '登录',
+      currentpassword: '',
+      imgwitd: '100px',
+      items: []
+    }
+  },
+  created () {
+    this.showUserInfo()
+    this.getList()
+  },
+  methods: {
+    showUserInfo () {
+      this.userInfo['username'] = this.$cookies.get('user').username
+      this.userInfo['status'] = this.$cookies.get('user').status
+      this.userInfo['password'] = this.$cookies.get('user').password
+      this.userInfo['mobile'] = this.$cookies.get('user').mobile
+      this.userInfo['job'] = this.$cookies.get('user').job
+      if (this.userInfo['status'] === 'success') {
+        this.LoginOrLogout = this.userInfo['username']
+      }
+    },
+    timelist: function () {
+      var compare = function (obj1, obj2) {
+        var val1 = obj1.createtime
+        var val2 = obj2.createtime
+        var datas1 = val1.split(' ')
+        var datas2 = val2.split(' ')
 
-	  data :function() {
-	    return {
-        userInfo: {
-          status: '',
-          username: '',
-          password: '',
-          mobile: '',
-          job:'teacher',
-        },
-        LoginOrLogout: '登录',
-        currentpassword:"",
-        imgwitd:"100px",
-				items: [
-					{
-						id: '1',
-						teacher: 'zsh',
-						title: 'math',
-						thumbnail: require('../assets/logo.png'),
-						password: '123',
-						url: '',
-						studentlist: '',
-						teacherlist: '',
-						audiencelist: [1,5,6,21,321,43],
-						visible: '',
-            vid:'242544',
-            createtime:'2018-10-18 13:37:05'
+        var date1 = datas1[0].split('-')
+        var date2 = datas2[0].split('-')
 
-					},
-          {
-            id: '2',
-            teacher: 'zsh',
-            title: 'math',
-            thumbnail: require('../assets/logo.png'),
-            password: '123',
-            url: '',
-            studentlist: '',
-            teacherlist: '',
-            audiencelist: [1,5,6],
-            visible: '',
-            vid:'242544',
-            createtime:'2018-10-19 13:37:06'
-          },
-          {
-            id: '3',
-            teacher: 'zsh',
-            title: 'math',
-            thumbnail:require( '../assets/logo.png'),
-            password: '123',
-            url: '',
-            studentlist: '',
-            teacherlist: '',
-            audiencelist: [1,5,6,12,2,2,2,2,2,2,2,2,2,2],
-            visible: '',
-            vid:'242544',
-            createtime:'2018-10-20 13:37:15'
-          },
-          {
-            id: '1',
-            teacher: 'zsh',
-            title: 'math',
-            thumbnail: require('../assets/logo.png'),
-            password: '123',
-            url: '',
-            studentlist: '',
-            teacherlist: '',
-            audiencelist: [1,5,6,21,32,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-            visible: '',
-            vid:'242544',
-            createtime:'2018-11-17 13:47:05'
-          },
-          {
-            id: '2',
-            teacher: 'zsh',
-            title: 'math',
-            thumbnail: require('../assets/logo.png'),
-            password: '123',
-            url: '',
-            studentlist: '',
-            teacherlist: '',
-            audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-            visible: '',
-            vid:'242544',
-            createtime:'2018-10-07 13:37:05'
-          },
-          {
-            id: '3',
-            teacher: 'zsh',
-            title: 'math',
-            thumbnail:require( '../assets/logo.png'),
-            password: '123',
-            url: '',
-            studentlist: '',
-            teacherlist: '',
-            audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-            visible: '',
-            vid:'242544',
-            createtime:'2018-11-17 13:37:05'
-          },
-          {
-            id: '1',
-            teacher: 'zsh',
-            title: 'math',
-            thumbnail:'should be some url',
-            password: '123',
-            url: '',
-            studentlist: '',
-            teacherlist: '',
-            audiencelist: [1,5,6,3,3,3,3,3,3,3,3,3,3,3],
-            visible: '',
-            vid:'242544',
-            createtime:'2018-4-17 13:37:05'
-          },
-				]
-
-	    }
-	  },
-		created:function() {
-      this.showUserInfo();
-			this.getList();
-
-		},
-		methods: {
-      showUserInfo() {
-          console.log("1234567");
-          this.userInfo['username'] = this.$cookies.get('user').username;
-          this.userInfo['status']= this.$cookies.get('user').status;
-          this.userInfo['password'] = this.$cookies.get('user').password;
-          this.userInfo['mobile'] = this.$cookies.get('user').mobile;
-          this.userInfo['job'] = this.$cookies.get('user').job;
-          if (this.userInfo['status'] === 'success') {
-            this.LoginOrLogout = this.userInfo['username'];
-          }
-        },
-      timelist:function(){
-
-        var compare = function (obj1, obj2) {
-          var val1 = obj1.createtime;
-          var val2 = obj2.createtime;
-          var datas1=val1.split(" ");
-          var datas2=val2.split(" ");
-
-          var date1 = datas1[0].split("-");
-          var date2 = datas2[0].split("-");
-
-          var time1 = datas1[1].split(":");
-          var time2 = datas2[1].split(":");
-          console.log(parseInt(date1[0]));
-          if (parseInt(date1[0]) <parseInt(date2[0])) {
-            return -1;
-          } else if (parseInt(date1[0]) >parseInt(date2[0])) {
-            return 1;
+        var time1 = datas1[1].split(':')
+        var time2 = datas2[1].split(':')
+        console.log(parseInt(date1[0]))
+        if (parseInt(date1[0]) < parseInt(date2[0])) {
+          return -1
+        } else if (parseInt(date1[0]) > parseInt(date2[0])) {
+          return 1
+        } else {
+          if (parseInt(date1[1]) < parseInt(date2[1])) {
+            return -1
+          } else if (parseInt(date1[1]) > parseInt(date2[1])) {
+            return 1
           } else {
-            if (parseInt(date1[1]) <parseInt(date2[1])) {
-              return -1;
-            } else if (parseInt(date1[1]) >parseInt(date2[1])) {
-              return 1;
+            if (parseInt(date1[2]) < parseInt(date2[2])) {
+              return -1
+            } else if (parseInt(date1[2]) > parseInt(date2[2])) {
+              return 1
             } else {
-              if (parseInt(date1[2]) <parseInt(date2[2])) {
-                return -1;
-              } else if (parseInt(date1[2]) >parseInt(date2[2])) {
-                return 1;
+              if (parseInt(time1[0]) < parseInt(time2[0])) {
+                return -1
+              } else if (parseInt(time1[0]) > parseInt(time2[0])) {
+                return 1
               } else {
-                if (parseInt(time1[0]) <parseInt(time2[0])) {
-                  return -1;
-                } else if (parseInt(time1[0]) >parseInt(time2[0])) {
-                  return 1;
+                if (parseInt(time1[1]) < parseInt(time2[1])) {
+                  return -1
+                } else if (parseInt(time1[1]) > parseInt(time2[1])) {
+                  return 1
                 } else {
-                  if (parseInt(time1[1]) <parseInt(time2[1])) {
-                    return -1;
-                  } else if (parseInt(time1[1]) >parseInt(time2[1])) {
-                    return 1;
+                  if (parseInt(time1[2]) < parseInt(time2[2])) {
+                    return -1
+                  } else if (parseInt(time1[2]) > parseInt(time2[2])) {
+                    return 1
                   } else {
-                    if (parseInt(time1[2]) <parseInt(time2[2])) {
-                      return -1;
-                    } else if (parseInt(time1[2]) >parseInt(time2[2])) {
-                      return 1;
-                    } else {
-                      return 0;
-                    }
+                    return 0
                   }
                 }
               }
-
             }
           }
+        }
 
+        if (val1 < val2) {
+          return -1
+        } else if (val1 > val2) {
+          return 1
+        } else {
+          return 0
+        }
+      }
+      this.items.sort(compare)
+      this.$Notice.success({
+        title: '消息提示',
+        desc: '已经按照时间排序'
+      })
+    },
+    audiencelist: function () {
+      console.log('123')
 
+      var compare = function (obj1, obj2) {
+        var val1 = obj1.audiencelist.length
+        var val2 = obj2.audiencelist.length
+        if (val1 > val2) {
+          return -1
+        } else if (val1 < val2) {
+          return 1
+        } else {
+          return 0
+        }
+      }
+      this.items.sort(compare)
+      this.$Notice.success({
+        title: '消息提示',
+        desc: '已经按照热度排序'
+      })
+    },
 
-          if (val1 < val2) {
-            return -1;
-          } else if (val1 > val2) {
-            return 1;
-          } else {
-            return 0;
-          }
-
-
-        };
-        this.items.sort(compare);
-        this.$Notice.success({
-          title: '消息提示',
-          desc: '已经按照时间排序'
-        });
-      },
-      audiencelist:function(){
-        console.log("123");
-
-        var compare = function (obj1, obj2) {
-          var val1 = obj1.audiencelist.length;
-          var val2 = obj2.audiencelist.length;
-          if (val1 > val2) {
-            return -1;
-          } else if (val1 < val2) {
-            return 1;
-          } else {
-            return 0;
-          }
-        };
-        this.items.sort(compare);
-        this.$Notice.success({
-          title: '消息提示',
-          desc: '已经按照热度排序'
-        });
-      },
-
-      skip:function(aab){
-        this.$Modal.confirm({
-              render: (h) => {
-              return h('Input', {
-                props: {
-                  id:'passinput',
-                  autofocus: true,
-                  placeholder: 'Please enter the password of this room'
-                },
-                on: {
-                  input: (val) => {
-//                this.value = val;
-                this.currentpassword=val;
-//                if(val==="123")
-//                  this.$router.push({path: 'living',query:{ id: a.vid}});
+    skip: function (aab) {
+      this.$Modal.confirm({
+        render: (h) => {
+          return h('Input', {
+            props: {
+              id: 'passinput',
+              autofocus: true,
+              placeholder: 'Please enter the password of this room'
+            },
+            on: {
+              input: (val) => {
+                //                this.value = val;
+                this.currentpassword = val
+                //                if(val==="123")
+                //                  this.$router.push({path: 'living',query:{ id: a.vid}});
               }
             }
           })
         },
         onOk: () => {
-            if(this.currentpassword=== aab.password)
-                this.$router.push({path: 'living',query:{ id:aab.vid}});
-            else
-              this.$Notice.error({
-                      title: '消息提示',
-                      desc: '您输入的密码错误，请仔细检查 '
-                    });
-              }
-            });
+          if (this.currentpassword === aab.password) { this.$router.push({path: 'living', query: { id: aab.vid}}) } else {
+            this.$Notice.error({
+              title: '消息提示',
+              desc: '您输入的密码错误，请仔细检查 '
+            })
+          }
+        }
+      })
+    },
+    getList: function () {
+      axios.get('/api/list').then((resp) => {
+        console.log(resp)
+        this.items = resp.data
+      })
+    }
 
-      },
-			getList:function() {
-				axios.get('/api/list').then((resp) => {
-					console.log(resp)
-					this.items = resp.data;
-				})
-			}
+  }
 
-
-
-		}
-
-	}
+}
 </script>
 <style>
-	ul {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-	}
-	li {
-		list-style: none;
-	}
-  .posi{
-    position: absolute;
-    top: 60px;
-    width: 100%;
-  }
+ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+li {
+  list-style: none;
+}
+.posi{
+  position: absolute;
+  top: 60px;
+  width: 100%;
+}
 
-  .addbutton{
-    margin:10px;
+.addbutton{
+  margin:10px;
 
-  }
-  .addtext{
-    test-align:left;
-    font-size: 20px;
-    font-style:normal;
-    font-family:"Times New Roman", Times, serif;
-  }
-  .btns{
-    float:left;
-    padding-left: 4%;
-  }
-  .layout-footer-center{
-    text-align: center;
-    font-size:20px;
-  }
-  .listclass{
-    padding-top: 3%;
-    padding-left: 5%;
-    padding-right: 5%;
-    padding-bottom: 3%;
+}
+.addtext{
+  test-align:left;
+  font-size: 20px;
+  font-style:normal;
+  font-family:"Times New Roman", Times, serif;
+}
+.btns{
+  float:left;
+  padding-left: 4%;
+}
+.layout-footer-center{
+  text-align: center;
+  font-size:20px;
+}
+.listclass{
+  padding-top: 3%;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-bottom: 3%;
 
-
-  }
-  .paixu{
-    float:right;
-    padding-right: 4%;
-  }
-  .listtext{
-    test-align:left;
-    font-size: 40px;
-    font-style:normal;
-    font-family:"Times New Roman", Times, serif;
-
-  }
-  .listbtn{
-    test-align:left;
-    font-size: 20px;
-    font-style:normal;
-    font-family:"Times New Roman", Times, serif;
-    margin:10px;
-  }
-  .listbtns{
-    float:left;
-    width: 100%;
-
-  }
-  .oldlist{
-    float:left;
-  }
-  .layoutlist{
-    min-height:850px;
-  }
-  .listcard {
-    padding: 3%;
-    margin: 6%;
-  }
-  .thumbnail {
-      height:250px;
-    width: 100%;
-  }
-  .title{
-    font-size:30px ;
-    text-align:left;
-
-  }
-  .teacher{
-    font-size:20px ;
-    text-align:left;
-  }
-  .audiencenum{
-    font-size:20px ;
-    text-align:left;
-  }
+}
+.paixu{
+  float:right;
+  padding-right: 4%;
+}
+.listbtn{
+  test-align:left;
+  font-size: 20px;
+  font-style:normal;
+  font-family:"Times New Roman", Times, serif;
+  margin:10px;
+}
+.layoutlist{
+  min-height:850px;
+}
+.listcard {
+  padding: 3%;
+  margin: 6%;
+}
+.thumbnail {
+    height:250px;
+  width: 100%;
+}
+.title{
+  font-size:30px ;
+  text-align:left;
+}
+.teacher{
+  font-size:20px ;
+  text-align:left;
+}
+.audiencenum{
+  font-size:20px ;
+  text-align:left;
+}
 </style>
