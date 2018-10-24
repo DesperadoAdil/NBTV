@@ -40,77 +40,73 @@
   </div>
 </template>
 <script>
-  import axios from 'axios';
-  export default {
-    data() {
-      return {
-        validate: '',
-        newLiving: {
-          title: '',
-          thumbnail: '',
-          url: '',
-          password: ''
-        },
-        addModal: false,
-        updateModal: false,
-        deleteModal: false,
-        myLivingList: [{
-          title: '111',
-          thumbnail: '111',
-          url: '111',
-          password: '111'
-        },],
-        userInfo: {
-          username: '',
-          password: '',
-          mobile: '',
-          status: '',
-        },
-      }
-    },
-    created() {
-      this.getMyLivingList();
-    },
-    methods: {
-      directskip(teacherliving){
-        console.log("132");
-        this.$router.push({path: 'teacherliving'});
+import axios from 'axios'
+export default {
+  data () {
+    return {
+      validate: '',
+      newLiving: {
+        title: '',
+        thumbnail: '',
+        url: '',
+        password: ''
       },
-      getMyLivingList() {
-        const data = this.myLivingList;
-        this.$Message.success("wtf");
-        axios.post("/api/list/user_living_list", data).then((resp) => {
-
-        })
-      },
-      addLiving() {
-
-        this.addModal = false;
-      },
-      updateLiving() {
-        const data = this.myLivingList;
-        axios.post("/api/", data).then((resp) => {
-
-        })
-        this.updateModal = false;
-      },
-      deleteLiving() {
-        const data = this.myLivingList;
-        if (validate === 'yes') {
-          axios.post("/api/", data).then((resp) => {
-
-          })
-        }
-        this.deleteModal = false;
-      },
-      cancel() {
-        this.$Message.info('Clicked cancel');
-        this.addModal = false;
-        this.updateModal = false;
-        this.deleteModal = false;
+      addModal: false,
+      updateModal: false,
+      deleteModal: false,
+      myLivingList: [{
+        title: '111',
+        thumbnail: '111',
+        url: '111',
+        password: '111'
+      }],
+      userInfo: {
+        username: '',
+        password: '',
+        mobile: '',
+        status: ''
       }
     }
+  },
+  created () {
+    this.getMyLivingList()
+  },
+  methods: {
+    directskip (teacherliving) {
+      this.$router.push({path: 'teacherliving'})
+    },
+    getMyLivingList () {
+      const data = this.myLivingList
+      axios.post('/api/list/user_living_list', data).then((resp) => {
+      })
+    },
+    addLiving () {
+      this.addModal = false
+    },
+    updateLiving () {
+      const data = this.myLivingList
+      axios.post('/api/', data).then((resp) => {
+
+      })
+      this.updateModal = false
+    },
+    deleteLiving () {
+      const data = this.myLivingList
+      if (this.validate === 'yes') {
+        axios.post('/api/', data).then((resp) => {
+
+        })
+      }
+      this.deleteModal = false
+    },
+    cancel () {
+      this.$Message.info('Clicked cancel')
+      this.addModal = false
+      this.updateModal = false
+      this.deleteModal = false
+    }
   }
+}
 </script>
 <style>
 .card {
