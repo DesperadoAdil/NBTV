@@ -20,6 +20,9 @@ class Classrooms(db.Model):
     studentlist = db.Column(db.Text, nullable=False, default = "[]")
     teacherlist = db.Column(db.Text, nullable=False, default = "[]")
     audiencelist = db.Column(db.Text, nullable=False, default = "[]")
+
+    filelist = db.Column(db.Text, nullable = False, default = "[]")
+
     visible = db.Column(db.String(5), nullable=False, default = "yes")
     createtime = db.Column(db.DateTime, default=datetime.now)
 

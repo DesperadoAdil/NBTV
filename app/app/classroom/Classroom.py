@@ -21,7 +21,7 @@ class ClassroomManager:
 	def delete(self, url):
 		#在调用这个接口之前，需要先判断是否是本用户删除的，需要验证密码
 		try:
-			tmpClass = db.query.filter_by(url = url).first()
+			tmpClass = Classrooms.query.filter_by(url = url).first()
 			if tmpClass is None:
 				return "error:NoSuchClassroom"
 			db.session.delete(tmpClass)
@@ -34,7 +34,7 @@ class ClassroomManager:
 	def update(self, title, thumbnail, newUrl, passwd, oldUrl):
 		#在调用这个接口之前，需要先判断是否是本用户删除的，需要验证密码
 		try:
-			tmpClass = db.query.filter_by(url = url).first()
+			tmpClass = Classrooms.query.filter_by(url = url).first()
 			if tmpClass is None:
 				return "error:NoSuchClassroom"
 
@@ -51,7 +51,7 @@ class ClassroomManager:
 			return "error"
 
 	def search(self, url):
-		return db.query.filter_by(url = url).first()
+		return Classrooms.query.filter_by(url = url).first()
 
 
 classroomManager = ClassroomManager()
