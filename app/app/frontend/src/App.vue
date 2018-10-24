@@ -13,7 +13,7 @@
         <Icon type="logo-youtube" />
         我开的直播间
       </MenuItem>
-      <MenuItem v-if="LoginOrLogout !== 登录" name="5" style="float:right" class="ilogin" @click.native="logout">
+      <MenuItem v-if="LoginOrLogout !== '登录'" name="5" style="float:right" class="ilogin" @click.native="logout">
         {{ '登出' }}
       </MenuItem>
       <MenuItem name="1" style="float:right;" class="ilogin" @click.native="handleJump('UserInfo')">
@@ -34,11 +34,11 @@ export default {
       theme1: 'light',
       active: '',
       userInfo: {
-        status: 'success',
-        username: 'test',
-        password: '123456',
-        mobile: '18818881888',
-        job: 'teacher'
+        status: '',
+        username: '',
+        password: '',
+        mobile: '',
+        job: ''
       },
       LoginOrLogout: '登录'
     }
