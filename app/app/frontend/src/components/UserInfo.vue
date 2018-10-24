@@ -11,7 +11,6 @@
         <Radio v-model="formInline.job" disabled>{{formInline.job}}</Radio>
       </FormItem>
 
-
       <FormItem>
         <Button type="primary" @click="value3 = true">Edit</Button>
          <Drawer
@@ -55,86 +54,85 @@
 </template>
 
 <script type="es6">
-  import axios from 'axios';
-  import { mapState, mapActions } from 'vuex';
-  import router from '../router';
-  export default {
-    data () {
-      return {
-        value3: false,
-        styles: {
-                    height: 'calc(100% - 55px)',
-                    overflow: 'auto',
-                    paddingBottom: '53px',
-                    position: 'static'
-        },
-        formInline: {
-          username: 'Test_name',
-          password: 'test-pass',
-          rpassword: 'test-pass',
-          mobile: '18800990099',
-          verification: '909090',
-          job: 'student',
-        },
-        ruleInline: {
-          username: [
-            { required: true, message: 'Please fill in the user name', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, message: 'Please fill in the password.', trigger: 'blur' },
-            { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
-          ]
-        },
-        userInfo: {
+import axios from 'axios'
+import router from '../router'
+export default {
+  data () {
+    return {
+      value3: false,
+      styles: {
+        height: 'calc(100% - 55px)',
+        overflow: 'auto',
+        paddingBottom: '53px',
+        position: 'static'
+      },
+      formInline: {
+        username: 'Test_name',
+        password: 'test-pass',
+        rpassword: 'test-pass',
+        mobile: '18800990099',
+        verification: '909090',
+        job: 'student'
+      },
+      ruleInline: {
+        username: [
+          { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: 'Please fill in the password.', trigger: 'blur' },
+          { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+        ]
+      },
+      userInfo: {
         status: '',
         username: '',
         password: '',
-        mobile: '',
-        },
+        mobile: ''
+      }
+    }
+  },
+  created () {
+    this.showUserInfo()
+  },
+
+  methods: {
+    showUserInfo () {
+      if (this.$cookies.get('user') === null) {
+        return
+      }
+      this.userInfo['username'] = this.$cookies.get('user').username
+      this.userInfo['status'] = this.$cookies.get('user').status
+      this.userInfo['job'] = this.$cookies.get('user').job
+      if (this.userInfo['status'] === 'success') {
+        this.LoginOrLogout = this.userInfo['username']
       }
     },
-    created(){
-      this.showUserInfo();
-    },
-
-    methods: {
-      showUserInfo() {
-        if (this.$cookies.get('user') === null)  {
-          return;
+    handleSubmit (name) {
+      this.formInline['job'] = this.job
+      const data = this.formInline
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          this.$Message.success('Send to server!')
+          console.log(data)
+          axios.post('/api/user/register', data).then((resp) => {
+            this.$Message.success(resp.data.status)
+            if (resp.data.status === 'success') {
+              router.push('/userInfo')
+            } else {
+              this.msg = `Status:${resp.data.status}`
+            }
+          })
+        } else {
+          this.$Message.error('Fail!')
         }
-        this.userInfo['username'] = this.$cookies.get('user').username;
-        this.userInfo['status']= this.$cookies.get('user').status;
-        this.userInfo['job']= this.$cookies.get('user').job;
-        if (this.userInfo['status'] === 'success') {
-          this.LoginOrLogout = this.userInfo['username'];
-        }
-      },
-      handleSubmit(name) {
-        this.formInline['job'] = this.job;
-        const data = this.formInline;
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            this.$Message.success('Send to server!');
-            console.log(data);
-            axios.post('/api/user/register', data).then((resp) => {
-              this.$Message.success(resp.data.status);
-              if (resp.data.status === 'success') {
-                router.push('/userInfo');
-              } else {
-                this.msg = `Status:${resp.data.status}`;
-              }
-            });
-          } else {
-            this.$Message.error('Fail!');
-          }
-        })
-      },
-
+      })
     }
-  };
+
+  }
+}
 </script>
 <style type="text/css">
-	#userInfo {
-		margin: 0 40%;
-	}
+#userInfo {
+  margin: 0 40%;
+}
 </style>
