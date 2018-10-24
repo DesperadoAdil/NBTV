@@ -34,6 +34,7 @@
 <script type="es6">
 import axios from 'axios'
 import router from '../router'
+import App from '../App'
 export default {
   data () {
     return {
@@ -72,6 +73,7 @@ export default {
             if (resp.data.status === 'success') {
               this.$cookies.set('user', resp.data)
               router.push('/list')
+              window.location.reload()
             } else {
               this.$Message.error('用户名或密码错误')
             }
@@ -85,11 +87,11 @@ export default {
 }
 </script>
 <style type="text/css">
-#login {
-  margin: 0 40%;
-}
-.posi{
+
+#login{
   position: absolute;
+  width: 100%;
   top: 60px;
+  padding: 0 40%;
 }
 </style>

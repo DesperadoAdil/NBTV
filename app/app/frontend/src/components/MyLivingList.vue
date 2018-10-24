@@ -78,6 +78,7 @@ export default {
     getMyLivingList () {
       const data = this.myLivingList
       axios.post('/api/list/user_living_list', data).then((resp) => {
+
       })
     },
     addLiving () {

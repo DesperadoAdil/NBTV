@@ -113,11 +113,10 @@ export default {
 }
 </script>
 <style>
-#register {
-  margin: 0 40%;
-}
-.posi{
+#register{
   position: absolute;
+  width: 100%;
   top: 60px;
+  padding: 0 40%;
 }
 </style>
