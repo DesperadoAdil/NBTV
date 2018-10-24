@@ -43,4 +43,9 @@ def show_pdf(filename):
     resp = make_response(open(os.path.join(path, "viewer.html")).read())
     resp.headers["Content-type"]="application/json;charset=UTF-8"
     return resp
-    
+
+
+#get pdf file
+@app.route('/pdf/<path>')
+def getPDF(path):
+    return send_from_directory('/mnt/NBTV', path)
