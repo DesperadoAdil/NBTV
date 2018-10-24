@@ -53,7 +53,7 @@
       </CellGroup>
     </Modal>
 
-    <Card id="mainlivingcard" class="cardtealiving">
+    <Card id="mainlivingcard" class="cardtealiving00">
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
@@ -68,8 +68,8 @@
     </Card>
 
     <Card id="mainselectcard" class="cardtealivingselect">
-      <p>{{curtitle}}</p>
-      <RadioGroup v-model="ionselect" vertical>
+      <p class="selecttitle00">{{curtitle}}</p>
+      <RadioGroup class="radiotea" v-model="ionselect" vertical>
         <Radio v-bind:label="curans[0]">
           <span>A、{{curans[0]}}</span>
         </Radio>
@@ -80,10 +80,10 @@
           <span>C、{{curans[2]}}</span>
         </Radio>
         <Radio v-bind:label="curans[3]">
-         <span>D、{{curans[3]}}</span>
+          <span>D、{{curans[3]}}</span>
         </Radio>
       </RadioGroup>
-      <p>{{curanswer}}</p>
+      <p class="anstea00">本题目答案：{{curanswer}}</p>
     </Card>
 
     <Card id="littlelivingcard" class="cardtealittleliving">
@@ -98,85 +98,90 @@
       </Card>
     </div>
 
+
+
   </div>
 </template>
 
 <!--<script src="https://player.polyv.net/livescript/liveplayer.js"></script>-->
 <script>
-import axios from 'axios'
-export default{
+  import axios from 'axios';
+  export default{
 
-  name: 'load',
-  mounted () {
-    var timer = setTimeout(function () {
-      doItPerSecond()
-    }, 1000)
-    var num = 0
-    function doItPerSecond () {
-      // dosomething...
+    name: 'load',
+    mounted() {
+    var timer = setTimeout(function(){
+      doItPerSecond();
+    },1000)
+    var num = 0;
+    function doItPerSecond() {
+      //dosomething...
       var player = polyvObject('#player').livePlayer({
-        'width': '100%',
-        'height': 700 + 'px',
-        'uid': '7181857ac2',
-        'vid': '242544'
-      })
-      num++
-      console.log(num)
+        'width':'100%',
+        'height':700+'px',
+        'uid':'7181857ac2',
+        'vid':'242544'
+      });
+      num++;
+      console.log(num);
     };
   },
-  created: function () {
-    const s = document.createElement('script')
-    s.type = 'text/javascript'
-    s.src = 'https://player.polyv.net/livescript/liveplayer.js'
-    document.body.appendChild(s)
-    this.showUserInfo()
+  created:function(){
+
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src = 'https://player.polyv.net/livescript/liveplayer.js';
+    document.body.appendChild(s);
+    this.showUserInfo();
   },
 
-  data () {
+  data() {
+
+
     return {
-      // <!--vediosrc:'',-->
-      ionselect: '111',
-      curtitle: 'xjbx1',
-      curans: ['1', '2', '3', '4'],
-      curanswer: 'A',
+      //<!--vediosrc:'',-->
+      ionselect:'111',
+      curtitle:'xjbx1',
+      curans:['1','2','3','4'],
+      curanswer:'A',
       selectitems: [
         {
-          title: 'xjbx1',
-          ans: ['1', '2', '3', '4'],
-          answer: 'A'
+          title:'xjbx1',
+          ans:['1','2','3','4'],
+          answer:'A'
         },
         {
-          title: 'xjbx2',
-          ans: ['1', '2', '3', '4'],
-          answer: 'A'
+          title:'xjbx2',
+          ans:['1','2','3','4'],
+          answer:'A'
         },
         {
-          title: 'xjbx3',
-          ans: ['1', '2', '3', '4'],
-          answer: 'A'
+          title:'xjbx3',
+          ans:['1','2','3','4'],
+          answer:'A'
         },
         {
-          title: 'xjbx4',
-          ans: ['1', '2', '3', '4'],
-          answer: 'A'
-        }
+          title:'xjbx4',
+          ans:['1','2','3','4'],
+          answer:'A'
+        },
       ],
       pdfitems: [
         {
-          title: 'pdf1',
-          url: '/static/pdf/1-1.pdf'
+          title:'pdf1',
+          url:'/static/pdf/1-1.pdf',
         },
         {
-          title: 'pdf2',
-          url: '/static/pdf/1-1.pdf'
+          title:'pdf2',
+          url:'/static/pdf/1-1.pdf',
         },
         {
-          title: 'pdf3',
-          url: '/static/pdf/1-1.pdf'
+          title:'pdf3',
+          url:'/static/pdf/1-1.pdf',
         },
         {
-          title: 'pdf4',
-          url: '/static/pdf/1-1.pdf'
+          title:'pdf4',
+          url:'/static/pdf/1-1.pdf',
         }
       ],
       userInfo: {
@@ -184,174 +189,187 @@ export default{
         password: '',
         mobile: '',
         status: '',
-        job: ''
+        job:'',
       },
       modal2: false,
       modal1: false,
-      vid: '242544',
+      vid:'242544',
       theme1: 'light',
-      toopen: true,
-      openclose: 'ios-videocam-outline',
-      opentext: '开播',
+      toopen:true,
+      openclose:'ios-videocam-outline',
+      opentext:'开播',
       note: {
-        position: 'absolute',
-        top: '0px',
-        left: '0px',
-        width: '100%',
-        height: '100%',
-        backgroundSize: '100% 100%',
-        backgroundRepeat: 'no-repeat'
+        position:"absolute",
+        top:"0px",
+        left:"0px",
+        width: "100%",
+        height:"100%",
+        backgroundSize: "100% 100%",
+        backgroundRepeat: "no-repeat",
       }
-    }
+    };
   },
   methods: {
-    teatext () {
-      var params = new URLSearchParams()
-      params.append('name', this.userInfo['username'])
-      params.append('job', this.userInfo['job'])
-      params.append('vid', this.vid)
-      axios.post('/api/user/getpdfs', params).then((resp) => {
-        this.pdfitems = resp.pdfitems
-      })
-      this.modal1 = true
+    teatext(){
+      var params = new URLSearchParams();
+      params.append('name', this.userInfo['username']);
+      params.append('job',this.userInfo['job']);
+      params.append('vid',this.vid);
+      axios.post('/api/user/getpdfs',params).then((resp) => {
+        this.pdfitems=resp.pdfitems;
+      });
+      this.modal1=true;
+
     },
-    teaselect () {
-      var params = new URLSearchParams()
-      params.append('name', this.userInfo['username'])
-      params.append('job', this.userInfo['job'])
-      params.append('vid', this.vid)
-      axios.post('/api/user/getselects', params).then((resp) => {
-        this.selectitems = resp.selectitems
-      })
-      this.modal2 = true
+    teaselect(){
+      var params = new URLSearchParams();
+      params.append('name', this.userInfo['username']);
+      params.append('job',this.userInfo['job']);
+      params.append('vid',this.vid);
+      axios.post('/api/user/getselects',params).then((resp) => {
+        this.selectitems=resp.selectitems;
+      });
+      this.modal2=true;
     },
-    showpdf: function (ipdf) {
-      console.log('1321312')
+    showpdf:function(ipdf){
+      console.log("1321312");
       this.$Modal.confirm({
         title: '提示',
-        content: '是否展示' + ipdf.title,
+        content: '是否展示'+ipdf.title,
         onOk: () => {
-          var mainlivingcard = document.getElementById('mainlivingcard')
-          mainlivingcard.style.display = 'none'
-          var littlelivingcard = document.getElementById('littlelivingcard')
-          littlelivingcard.style.display = 'block'
+          var mainlivingcard = document.getElementById("mainlivingcard");
+          mainlivingcard.style.display="none";
+          var littlelivingcard = document.getElementById("littlelivingcard");
+          littlelivingcard.style.display="block";
           var player = polyvObject('#littleplayer').livePlayer({
-            'width': '100%',
-            'height': 360 + 'px',
-            'uid': '7181857ac2',
-            'vid': this.vid
-          })
-          var mainpdfcard = document.getElementById('mainpdfcard')
-          mainpdfcard.style.display = 'block'
-          var liaotianshi = document.getElementById('liaotianshi')
-          liaotianshi.style.top = 400 + 'px'
-          var frame = document.getElementById('displayPdfIframe')
-          frame.src = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
-          this.modal1 = false
+            'width':'100%',
+            'height':360+'px',
+            'uid':'7181857ac2',
+            'vid':this.vid,
+          });
+          var mainselectcard = document.getElementById("mainselectcard");
+          mainselectcard.style.display="none";
+          var mainpdfcard = document.getElementById("mainpdfcard");
+          mainpdfcard.style.display="block";
+          var liaotianshi= document.getElementById("liaotianshi");
+          liaotianshi.style.top=400+"px";
+          var frame = document.getElementById('displayPdfIframe');
+          frame.src = "/static/pdfjs/web/viewer.html?file="+ipdf.url;
+          this.modal1=false;
         },
         onCancel: () => {
-          this.$Message.info('Clicked cancel')
+          this.$Message.info('Clicked cancel');
         }
-      })
+      });
+
     },
-    showselect: function (iselect) {
-      console.log('1321312')
+    showselect:function(iselect){
+      console.log("1321312");
       this.$Modal.confirm({
         title: '提示',
-        content: '是否展示: \n ' + iselect.title,
+        content: '是否展示: \n ' +iselect.title,
         onOk: () => {
-          var mainlivingcard = document.getElementById('mainlivingcard')
-          mainlivingcard.style.display = 'none'
-          var littlelivingcard = document.getElementById('littlelivingcard')
-          littlelivingcard.style.display = 'block'
+          var mainlivingcard = document.getElementById("mainlivingcard");
+          mainlivingcard.style.display="none";
+          var littlelivingcard = document.getElementById("littlelivingcard");
+          littlelivingcard.style.display="block";
           var player = polyvObject('#littleplayer').livePlayer({
-            'width': '100%',
-            'height': 360 + 'px',
-            'uid': '7181857ac2',
-            'vid': this.vid
-          })
-          var mainselectcard = document.getElementById('mainselectcard')
-          mainselectcard.style.display = 'block'
-          var liaotianshi = document.getElementById('liaotianshi')
-          liaotianshi.style.top = 400 + 'px'
-          this.curtitle = iselect.title
-          this.curans = iselect.ans
-          this.curanswer = iselect.answer
-          this.modal2 = false
+            'width':'100%',
+            'height':360+'px',
+            'uid':'7181857ac2',
+            'vid':this.vid,
+          });
+          var mainpdfcard = document.getElementById("mainpdfcard");
+          mainpdfcard.style.display="none";
+          var mainselectcard = document.getElementById("mainselectcard");
+          mainselectcard.style.display="block";
+          var liaotianshi= document.getElementById("liaotianshi");
+          liaotianshi.style.top=400+"px";
+          this.curtitle=iselect.title;
+          this.curans=iselect.ans;
+          this.curanswer=iselect.answer;
+          this.modal2=false;
         },
         onCancel: () => {
-          this.$Message.info('Clicked cancel')
+          this.$Message.info('Clicked cancel');
         }
-      })
+      });
+
     },
-    closetext () {
-      console.log('1321312')
-      var mainlivingcard = document.getElementById('mainlivingcard')
-      mainlivingcard.style.display = 'block'
-      var mainselectcard = document.getElementById('mainselectcard')
-      mainselectcard.style.display = 'none'
-      var littlelivingcard = document.getElementById('littlelivingcard')
-      littlelivingcard.style.display = 'none'
-      var mainpdfcard = document.getElementById('mainpdfcard')
-      mainpdfcard.style.display = 'none'
-      var liaotianshi = document.getElementById('liaotianshi')
-      liaotianshi.style.top = 60 + 'px'
+    closetext(){
+      console.log("1321312");
+      var mainlivingcard = document.getElementById("mainlivingcard");
+      mainlivingcard.style.display="block";
+      var mainselectcard = document.getElementById("mainselectcard");
+      mainselectcard.style.display="none";
+      var littlelivingcard = document.getElementById("littlelivingcard");
+      littlelivingcard.style.display="none";
+      var mainpdfcard = document.getElementById("mainpdfcard");
+      mainpdfcard.style.display="none";
+      var liaotianshi= document.getElementById("liaotianshi");
+      liaotianshi.style.top=60+"px";
     },
-    showUserInfo () {
-      console.log('1234567')
-      this.userInfo['username'] = this.$cookies.get('user').username
-      this.userInfo['status'] = this.$cookies.get('user').status
-      this.userInfo['password'] = this.$cookies.get('user').password
-      this.userInfo['mobile'] = this.$cookies.get('user').mobile
-      this.userInfo['job'] = this.$cookies.get('user').job
+    showUserInfo() {
+      console.log("1234567");
+      this.userInfo['username'] = this.$cookies.get('user').username;
+      this.userInfo['status']= this.$cookies.get('user').status;
+      this.userInfo['password'] = this.$cookies.get('user').password;
+      this.userInfo['mobile'] = this.$cookies.get('user').mobile;
+      this.userInfo['job'] = this.$cookies.get('user').job;
     },
 
-    teaopenclose () {
-      if (this.toopen) {
+    teaopenclose(){
+
+      if(this.toopen)
+      {
         this.$Modal.confirm({
           title: '提示',
           content: '是否确认开播',
           onOk: () => {
-            this.toopen = false
-            this.opentext = '关播'
-            this.openclose = 'ios-power'
-            var params = new URLSearchParams()
-            params.append('name', this.userInfo['username'])
-            params.append('job', this.userInfo['job'])
-            axios.post('/api/user/openliving', params).then((resp) => {
-              this.vid = reap.vid
-              var div = document.getElementById('player')
-              div.style.vid = resp.vid
-            })
+            this.toopen=false;
+            this.opentext='关播';
+            this.openclose='ios-power';
+            var params = new URLSearchParams();
+            params.append('name', this.userInfo['username']);
+            params.append('job',this.userInfo['job']);
+            axios.post('/api/user/openliving',params).then((resp) => {
+              this.vid=reap.vid;
+              var div = document.getElementById("player");
+              div.style.vid=resp.vid;
+            });
           },
           onCancel: () => {
 
           }
-        })
-      } else {
+        });
+
+
+      }
+      else
+      {
         this.$Modal.confirm({
           title: '提示',
           content: '是否确认关播',
           onOk: () => {
-            this.toopen = true
-            this.opentext = '开播'
-            this.openclose = 'ios-videocam-outline'
-            var params = new URLSearchParams()
-            params.append('name', this.userInfo['username'])
-            params.append('job', this.userInfo['job'])
-            axios.post('/api/user/closeliving', params).then((resp) => {
+            this.toopen=true;
+            this.opentext='开播';
+            this.openclose='ios-videocam-outline';
+            var params = new URLSearchParams();
+            params.append('name', this.userInfo['username']);
+            params.append('job',this.userInfo['job']);
+            axios.post('/api/user/closeliving',params).then((resp) => {
 
-            })
+            });
           },
           onCancel: () => {
 
           }
-        })
+        });
       }
-    }
+    },
 
   }
-}
+  };
 </script>
 <style>
   .login-container{
@@ -380,22 +398,22 @@ export default{
     padding-:5%;
     margin:5%;
   }
-  .cardtealiving{
+  .cardtealiving00{
     position:absolute;
-    left: 18%;
-    width: 60%;
+    left: 19%;
+    width: 59%;
     top:60px;
   }
   .cardtealivingpdf{
     position:absolute;
-    left: 18%;
-    width: 60%;
+    left: 19%;
+    width: 59%;
     top:60px;
     display: none;
   }
   .pdfframe{
-     width:100% ;
-     height:800px;
+    width:100% ;
+    height:800px;
   }
   .topveido{
     height: auto;
@@ -405,26 +423,44 @@ export default{
   }
   .danmuxinxi{
     position:absolute;
-    left: 78%;
-    width: 22%;
+    left: 79%;
+    width: 21%;
     top:60px;
   }
   .cardtealittleliving{
     position:absolute;
-    left: 78%;
-    width: 22%;
+    left: 79%;
+    width: 21%;
     top:60px;
     display: none;
   }
   .cardtealivingselect{
     position:absolute;
-    left: 18%;
-    width: 60%;
+    left: 19%;
+    width: 59%;
+    height: 800px;
     top:60px;
     display: none;
   }
   .teamainvedio{
-   width:100%;
-   height:700px;
+    width:100%;
+    height:700px;
+  }
+  .selecttitle00{
+    position:relative;
+    left:40px;
+    float:left;
+  }
+  .radiotea{
+    float:left;
+    position:relative;
+    top:200px;
+  }
+  .anstea00{
+    float:left;
+    position:relative;
+    top:500px;
+    left:-50px;
   }
 </style>
+
