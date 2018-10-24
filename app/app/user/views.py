@@ -215,22 +215,26 @@ def del_myclass():
     username = data['username']
     job = data['job']
     classroom = data['classroom']
+    Classroom = Classrooms.query.filter_by(vid = classroom['vid']).first()
+    if Classroom == None:
+        print ("Delete Myclass Error: No Such Class")
 
     try:
-        user = usermanager.search("username", username, job)
-        userclassroom = json.loads(user.classroomlist)
+        User = usermanager.search("username", username, job)
+        user = usermanager.dict(User)
+        userclassroom = json.loads(User.classroomlist)
         userclassroom.remove(classroom)
         if job == "teacher":
-            classroomuser = json.loads(classroom.teacherlist)
+            classroomuser = json.loads(Classroom.teacherlist)
             classroomuser.remove(user)
-            classroom.teacherlist = json.dumps(classroomuser)
+            Classroom.teacherlist = json.dumps(classroomuser)
         else:
-            classroomuser = json.loads(classroom.studentlist)
+            classroomuser = json.loads(Classroom.studentlist)
             classroomuser.remove(user)
-            classroom.studentlist = json.dumps(classroomuser)
-        db.session.add(classroom)
+            Classroom.studentlist = json.dumps(classroomuser)
+        db.session.add(Classroom)
         db.session.commit()
-        ret['status'] = usermanager.update(user, user.phonenumber, user.username, user.password, json.dumps(userclassroom))
+        ret['status'] = usermanager.update(User, User.phonenumber, User.username, User.password, json.dumps(userclassroom))
     except:
         print ("Delete Myclass Error")
 

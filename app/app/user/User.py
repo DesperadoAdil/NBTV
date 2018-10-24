@@ -5,6 +5,14 @@ class UserManager:
     def __init__(self):
         pass
 
+    def dict(self, user):
+        ret = {}
+        ret['phonenumber'] = user.phonenumber
+        ret['username'] = user.username
+        ret['password'] = user.password
+        ret['classroomlist'] = user.classroomlist
+        return ret
+
     def insert(self, phonenumber, username, password, job):
         try:
             if job == "teacher":
