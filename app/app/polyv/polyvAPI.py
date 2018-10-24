@@ -67,7 +67,7 @@ class ChannelManager:
 		data = self.sender.request("POST", url, fields = params)
 		return data
 
-	def changeChannelAuthor(self, channelId, author)
+	def changeChannelAuthor(self, channelId, author):
 		url = const.ChangeChannelAuthorUrl % const.UserID
 
 		timestamp = self.getTimeMillis()
