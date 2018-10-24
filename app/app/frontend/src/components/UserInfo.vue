@@ -67,12 +67,12 @@ export default {
         position: 'static'
       },
       formInline: {
-        username: 'Test_name',
-        password: 'test-pass',
-        rpassword: 'test-pass',
-        mobile: '18800990099',
-        verification: '909090',
-        job: 'student'
+        username: '',
+        password: '',
+        rpassword: '',
+        mobile: '',
+        verification: '',
+        job: ''
       },
       ruleInline: {
         username: [

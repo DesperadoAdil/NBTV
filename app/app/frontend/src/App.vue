@@ -13,6 +13,9 @@
         <Icon type="logo-youtube" />
         我开的直播间
       </MenuItem>
+      <MenuItem v-if="LoginOrLogout !== '登录'" name="5" style="float:right" class="ilogin" @click.native="logout">
+        {{ '登出' }}
+      </MenuItem>
       <MenuItem name="1" style="float:right;" class="ilogin" @click.native="handleJump('UserInfo')">
         <Icon v-if="LoginOrLogout === '登录'" type="ios-contact-outline" />
           {{ LoginOrLogout }}
@@ -23,80 +26,87 @@
 </template>
 
 <script >
-import router from './router';
-import VueCookies from 'vue-cookies';
+import router from './router'
 export default {
   name: 'App',
   data () {
     return {
       theme1: 'light',
-      active:"",
+      active: '',
       userInfo: {
-        status: 'success',
-        username: 'test',
-        password: '123456',
-        mobile: '18818881888',
-        job: 'teacher',
+        status: '',
+        username: '',
+        password: '',
+        mobile: '',
+        job: ''
       },
-      LoginOrLogout: '登录',
+      LoginOrLogout: '登录'
     }
   },
-  created() {
-    this.showUserInfo();
+  created () {
+    this.showUserInfo()
   },
   methods: {
-    isTeacher() {
-      if (this.userInfo['job'] === 'teacher') {
-        return true;
+    logout () {
+      this.LoginOrLogout = '登录'
+      this.userInfo = {
+        status: '',
+        username: '',
+        password: '',
+        mobile: '',
+        job: ''
       }
-      return false;
+      this.$cookies.remove('user')
+      router.push('/Login')
     },
-    handleJump(name) {
-      if (this.userInfo['status'] !== 'success') { //未登录
-        router.push('/login');
+    isTeacher () {
+      return this.userInfo['job'] === 'teacher'
+    },
+    handleJump (name) {
+      if (this.userInfo['status'] !== 'success') { // 未登录
+        router.push('/login')
       } else if (name === 'list') {
-        router.push('/list');
+        router.push('/list')
       } else if (name === 'myLivingList') {
-        router.push('/MyLivingList');
+        router.push('/MyLivingList')
       } else if (name === 'myWatchingList') {
-        router.push('/mywatchinglist');
+        router.push('/mywatchinglist')
       } else if (name === 'UserInfo') {
-        router.push('/UserInfo');
+        router.push('/UserInfo')
       }
     },
-    showUserInfo() {
-      if (this.$cookies.get('user') === null)  {
-        return;
+    showUserInfo () {
+      if (this.$cookies.get('user') === null) {
+        return
       }
-      this.userInfo['username'] = this.$cookies.get('user').username;
-      this.userInfo['status']= this.$cookies.get('user').status;
-      this.userInfo['job']= this.$cookies.get('user').job;
+      this.userInfo['username'] = this.$cookies.get('user').username
+      this.userInfo['status'] = this.$cookies.get('user').status
+      this.userInfo['job'] = this.$cookies.get('user').job
+      this.userInfo['password'] = this.$cookies.get('user').password
+      this.userInfo['mobile'] = this.$cookies.get('user').mobile
       if (this.userInfo['status'] === 'success') {
-        this.LoginOrLogout = this.userInfo['username'];
+        this.LoginOrLogout = this.userInfo['username']
       }
     }
   }
-};
+}
 
 </script>
 
 <style>
-  #app {
-    min-width: 1200px;
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-  }
-  .userInfo {
-    margin-right: 20px;
-  }
-  .mylist{
-    margin-right: 20px;
-    font-size: 20px;
-  }
-  .ilogin{
-    font-size: 20px;
-  }
+#app {
+  min-width: 1200px;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+.mylist{
+  margin-right: 20px;
+  font-size: 20px;
+}
+.ilogin{
+  font-size: 20px;
+}
 </style>
