@@ -1,18 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import VueCookies from 'vue-cookies';
+import VueCookies from 'vue-cookies'
 
 import Login from '@/components/Login'
 import Register from '@/components/Register'
-import NotFound from '@/components/NotFound'
 import List from '@/components/List'
 import Living from '@/components/Living'
 import MyLivingList from '@/components/MyLivingList'
 import MyWatchingList from '@/components/MyWatchinglist'
 import UserInfo from '@/components/UserInfo'
+import TeacherLiving from '@/components/TeacherLiving'
 
 Vue.use(Router)
-Vue.use(VueCookies);
+Vue.use(VueCookies)
 
 const router = new Router({
   mode: 'history',
@@ -21,6 +21,11 @@ const router = new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/teacherliving',
+      name: 'TeacherLiving',
+      component: TeacherLiving
     },
     {
       path: '/mywatchinglist',
@@ -56,24 +61,25 @@ const router = new Router({
       path: '/UserInfo',
       name: 'UserInfo',
       component: UserInfo
-    },
+    }
 
-  ],
-});
-export default router;
+  ]
+})
+
+export default router
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
 
-  if (to.path !== '/login' && window.$cookies.get('user') === null) {
-    return next('/login');
-  }
-  const publicPages = ['/login', '/Register', '/living', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo'];
-  const authRequired = !publicPages.includes(to.path);
+  // if (to.path !== '/login' && window.$cookies.get('user') === null) {
+  //  return next('/login');
+  // }
+  const publicPages = ['/login', '/Register', '/living', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo', '/teacherliving']
+  const authRequired = !publicPages.includes(to.path)
 
   if (authRequired) {
-    return next('/list');
+    return next('/list')
   }
 
-  next();
+  next()
 })

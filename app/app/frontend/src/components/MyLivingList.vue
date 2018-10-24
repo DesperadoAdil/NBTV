@@ -14,7 +14,7 @@
     </Modal>
     <div v-for="living in myLivingList" :key="living.url">
       <Card class="card">
-        <img :src="living.thumbnail" class="thumbnail">
+        <img :src="living.thumbnail" class="thumbnail"  @click="directskip(teacherliving)">
         <p class="title">{{ living.title }}</p>
         <span><Button type="success" @click="updateModal = true">UPDATE</Button></span>
         <Modal
@@ -40,74 +40,73 @@
   </div>
 </template>
 <script>
-  import axios from 'axios';
-  export default {
-    data() {
-      return {
-        validate: '',
-        newLiving: {
-          title: '',
-          thumbnail: '',
-          url: '',
-          password: ''
-        },
-        addModal: false,
-        updateModal: false,
-        deleteModal: false,
-        myLivingList: [{
-          title: '111',
-          thumbnail: '111',
-          url: '111',
-          password: '111'
-        },],
-        userInfo: {
-          username: '',
-          password: '',
-          mobile: '',
-          status: '',
-        },
-      }
-    },
-    created() {
-      this.getMyLivingList();
-    },
-    methods: {
-
-      getMyLivingList() {
-        const data = this.myLivingList;
-        this.$Message.success("wtf");
-        axios.post("/api/list/user_living_list", data).then((resp) => {
-
-        })
+import axios from 'axios'
+export default {
+  data () {
+    return {
+      validate: '',
+      newLiving: {
+        title: '',
+        thumbnail: '',
+        url: '',
+        password: ''
       },
-      addLiving() {
-
-        this.addModal = false;
-      },
-      updateLiving() {
-        const data = this.myLivingList;
-        axios.post("/api/", data).then((resp) => {
-
-        })
-        this.updateModal = false;
-      },
-      deleteLiving() {
-        const data = this.myLivingList;
-        if (validate === 'yes') {
-          axios.post("/api/", data).then((resp) => {
-
-          })
-        }
-        this.deleteModal = false;
-      },
-      cancel() {
-        this.$Message.info('Clicked cancel');
-        this.addModal = false;
-        this.updateModal = false;
-        this.deleteModal = false;
+      addModal: false,
+      updateModal: false,
+      deleteModal: false,
+      myLivingList: [{
+        title: '111',
+        thumbnail: '111',
+        url: '111',
+        password: '111'
+      }],
+      userInfo: {
+        username: '',
+        password: '',
+        mobile: '',
+        status: ''
       }
     }
+  },
+  created () {
+    this.getMyLivingList()
+  },
+  methods: {
+    directskip (teacherliving) {
+      this.$router.push({path: 'teacherliving'})
+    },
+    getMyLivingList () {
+      const data = this.myLivingList
+      axios.post('/api/list/user_living_list', data).then((resp) => {
+      })
+    },
+    addLiving () {
+      this.addModal = false
+    },
+    updateLiving () {
+      const data = this.myLivingList
+      axios.post('/api/', data).then((resp) => {
+
+      })
+      this.updateModal = false
+    },
+    deleteLiving () {
+      const data = this.myLivingList
+      if (this.validate === 'yes') {
+        axios.post('/api/', data).then((resp) => {
+
+        })
+      }
+      this.deleteModal = false
+    },
+    cancel () {
+      this.$Message.info('Clicked cancel')
+      this.addModal = false
+      this.updateModal = false
+      this.deleteModal = false
+    }
   }
+}
 </script>
 <style>
 .card {
