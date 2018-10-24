@@ -16,3 +16,9 @@ def index(path):
 @app.route('/display')
 def dispolay():
     return render_template("displaypdf.html")
+    
+
+#get pdf file
+@app.route('/pdf/<path>')
+def getPDF(path):
+    return send_from_directory('/mnt/NBTV', path)
