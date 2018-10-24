@@ -53,7 +53,7 @@
       </CellGroup>
     </Modal>
 
-    <Card id="mainlivingcard" class="cardtealiving00">
+    <div id="mainlivingcard" class="cardtealiving00">
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
@@ -61,13 +61,13 @@
       <div class="bottomveido">
         <h3>礼物等其他显示部分（待修改）</h3>
       </div>
-    </Card>
+    </div>
 
-    <Card id="mainpdfcard" class="cardtealivingpdf">
+    <div id="mainpdfcard" class="cardtealivingpdf">
       <iframe id="displayPdfIframe" class="pdfframe"/>
-    </Card>
+    </div>
 
-    <Card id="mainselectcard" class="cardtealivingselect">
+    <div id="mainselectcard" class="cardtealivingselect">
       <p class="selecttitle00">{{curtitle}}</p>
       <RadioGroup class="radiotea" v-model="ionselect" vertical>
         <Radio v-bind:label="curans[0]">
@@ -84,13 +84,13 @@
         </Radio>
       </RadioGroup>
       <p class="anstea00">本题目答案：{{curanswer}}</p>
-    </Card>
+    </div>
 
-    <Card id="littlelivingcard" class="cardtealittleliving">
+    <div id="littlelivingcard" class="cardtealittleliving">
 
       <div id='littleplayer' ></div>
 
-    </Card>
+    </div>
 
     <div id="liaotianshi" class="danmuxinxi">
       <Card style="height: 800px">
