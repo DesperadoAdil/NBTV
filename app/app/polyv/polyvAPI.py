@@ -1,5 +1,5 @@
-from polyv import const
-from polyv import md5
+from . import const
+from . import md5
 import urllib3
 import time
 

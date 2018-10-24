@@ -112,7 +112,7 @@ def getList():
 	print(data)
 	data = json.loads(data)
 
-	if not username.verify(data['username'], data['password'], 'teacher')
+	if not username.verify(data['username'], data['password'], 'teacher'):
 		return {"status": "error:no such classroom"}
 
 	ret = {}
