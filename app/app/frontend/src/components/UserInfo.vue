@@ -2,13 +2,13 @@
   <div id="userInfo">
 		<Form :model="formLeft" label-position="left" :label-width="100">
       <FormItem prop="username" label = "username">
-        <Input type="text" v-model="formInline.username" name="username" placeholder="Username" readonly>
+        <Input type="text" v-model="userInfo.username" name="username" placeholder="Username" readonly>
           <Icon type="ios-person-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
 
       <FormItem prop="repeat password" label = "status">
-        <Radio v-model="formInline.job" disabled>{{formInline.job}}</Radio>
+        <Radio v-model="userInfo.job" disabled>{{userInfo.job}}</Radio>
       </FormItem>
 
       <FormItem>
@@ -23,7 +23,7 @@
             <Form :model="formData">
 
               <FormItem label="Name" label-position="top">
-                  <Input v-model="formInline.username" placeholder="please enter user name" />
+                  <Input v-model="userInfo.username" placeholder="please enter user name" />
               </FormItem>
 
               <FormItem label="Password" label-position="top">
@@ -35,7 +35,7 @@
               </FormItem>
 
               <FormItem label="Mobile" label-position="top">
-                  <Input v-model="formInline.mobile" placeholder="please enter mobile number" />
+                  <Input v-model="userInfo.mobile" placeholder="please enter mobile number" />
               </FormItem>
 
               <FormItem label="Verification" label-position="top">
@@ -87,7 +87,8 @@ export default {
         status: '',
         username: '',
         password: '',
-        mobile: ''
+        mobile: '',
+        job: ''
       }
     }
   },
