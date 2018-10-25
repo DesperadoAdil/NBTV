@@ -12,15 +12,15 @@
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
       <Input v-model="newLiving.password" placeholder="课程密码（可空）"></Input>
     </Modal>
-    <div v-for="living in myLivingList" :key="living.url">
+    <div v-for="(living, index) in myLivingList" :key="living.url">
       <Card class="card">
         <img :src="living.thumbnail" class="thumbnail"  @click="directskip(teacherliving)">
         <p class="title">{{ living.title }}</p>
-        <span><Button type="success" @click="updateModal = true">UPDATE</Button></span>
+        <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
         <Modal
           v-model="updateModal"
           title="更新课程"
-          @on-ok="updateLiving()"
+          @on-ok="updateLiving(index)"
           @on-cancel="cancel">
           <Input v-model="living.title" placeholder="课程名称"></Input>
           <Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>
@@ -31,7 +31,7 @@
         <Modal
           v-model="deleteModal"
           title="删除课程"
-          @on-ok="deleteLiving()"
+          @on-ok="deleteLiving(index)"
           @on-cancel="cancel">
           <Input v-model="validate" placeholder="确认删除请输入yes"></Input>
         </Modal>
@@ -46,19 +46,26 @@ export default {
     return {
       validate: '',
       newLiving: {
+        username: '',
+        password: '',
+        job: '',
         title: '',
         thumbnail: '',
         url: '',
-        password: ''
+        class_password: ''
       },
       addModal: false,
       updateModal: false,
       deleteModal: false,
       myLivingList: [{
-        title: '111',
-        thumbnail: '111',
-        url: '111',
-        password: '111'
+        username: '',
+        password: '',
+        job: '',
+        old_url: '',
+        title: '',
+        thumbnail: '',
+        url: '',
+        class_password: ''
       }],
       userInfo: {
         username: '',
@@ -75,26 +82,44 @@ export default {
     directskip (teacherliving) {
       this.$router.push({path: 'teacherliving'})
     },
+    getBackUp (index) {
+      this.updateModal = true
+      this.myLivingList[index]['old_url'] = this.myLivingList[index]['url']
+    },
     getMyLivingList () {
       const data = this.myLivingList
-      axios.post('/api/list/user_living_list', data).then((resp) => {
+      axios.post('/api/classroom/user_living_list', data).then((resp) => {
+        this.myLivingList = resp.data
       })
     },
     addLiving () {
       this.addModal = false
+      this.newLiving['username'] = this.$cookies.get('user').username
+      this.newLiving['password'] = this.$cookies.get('user').password
+      this.newLiving['job'] = this.$cookies.get('user').job
+      const data = this.newLiving
+      axios.post('/api/list/add_class', data).then((resp) => {
+        this.getMyLivingList()
+      })
     },
-    updateLiving () {
-      const data = this.myLivingList
-      axios.post('/api/', data).then((resp) => {
-
+    updateLiving (index) {
+      this.myLivingList[index]['username'] = this.$cookies.get('user').username
+      this.myLivingList[index]['password'] = this.$cookies.get('user').password
+      this.myLivingList[index]['job'] = this.$cookies.get('user').job
+      const data = this.myLivingList[index]
+      axios.post('/api/classroom/update_class', data).then((resp) => {
+        this.getMyLivingList()
       })
       this.updateModal = false
     },
-    deleteLiving () {
-      const data = this.myLivingList
+    deleteLiving (index) {
+      this.myLivingList[index]['username'] = this.$cookies.get('user').username
+      this.myLivingList[index]['password'] = this.$cookies.get('user').password
+      this.myLivingList[index]['job'] = this.$cookies.get('user').job
+      const data = this.myLivingList[index]
       if (this.validate === 'yes') {
-        axios.post('/api/', data).then((resp) => {
-
+        axios.post('/api/classroom/delete_class', data).then((resp) => {
+          this.getMyLivingList()
         })
       }
       this.deleteModal = false
