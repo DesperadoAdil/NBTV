@@ -71,7 +71,8 @@ export default {
         username: '',
         password: '',
         mobile: '',
-        status: ''
+        status: '',
+        job: ''
       }
     }
   },
@@ -87,7 +88,12 @@ export default {
       this.myLivingList[index]['old_url'] = this.myLivingList[index]['url']
     },
     getMyLivingList () {
-      const data = this.myLivingList
+      this.userInfo['username'] = this.$cookies.get('user').username
+      this.userInfo['status'] = this.$cookies.get('user').status
+      this.userInfo['job'] = this.$cookies.get('user').job
+      this.userInfo['password'] = this.$cookies.get('user').password
+      this.userInfo['mobile'] = this.$cookies.get('user').mobile
+      const data = this.userInfo
       axios.post('/api/classroom/user_living_list', data).then((resp) => {
         this.myLivingList = resp.data
       })
