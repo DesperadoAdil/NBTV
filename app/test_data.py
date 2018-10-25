@@ -8,7 +8,7 @@ classroom.teacher = "adil"
 classroom.title = "Test"
 classroom.thumbnail = "/static/image/test.jpg"
 classroom.password = "123456"
-classroom.url = "/class/242544"
+classroom.url = "/242544"
 classroom.rtmpUrl = ""
 classroom.studentlist = json.dumps(["stu1", "stu2"])
 db.session.add(classroom)

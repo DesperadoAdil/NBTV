@@ -279,7 +279,7 @@ def get_pdfs():
         ret.append(dic)
 
     print (json.dumps(ret))
-    return json.dumps(ret) 
+    return json.dumps(ret)
 
 
 #Get_selects
@@ -299,4 +299,12 @@ def get_selects():
         print ("Get PDF Error: Wrong Teacher")
         return ret
 
-    #根据房间查找选择题列表，未完待续
+    for item in classroom.choicequestion:
+        dic = {}
+        dic['title'] = item.statement
+        dic['ans'] = item.optionList
+        dic['answer'] = item.answer
+        ret.append(dic)
+
+    print (json.dumps(ret))
+    return json.dumps(ret)

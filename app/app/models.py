@@ -26,14 +26,17 @@ class Classrooms(db.Model):
     visible = db.Column(db.String(5), nullable=False, default = "yes")
     createtime = db.Column(db.DateTime, default=datetime.now)
 
+    choicequestion = db.relationship('ChoiceQuestion', backref='classroom', lazy='dynamic')
+    codequestion = db.relationship('CodeQuestion', backref='classroom', lazy='dynamic')
+
     def __repr__(self):
         return '<ClassroomUrl %r>' % self.url
 
 
 class Teachers(db.Model):
     __tablename__ = 'teachers'
-    phonenumber = db.Column(db.String(11), primary_key=True,  unique=True, nullable=False)
-    username = db.Column(db.String(50), unique=True, nullable=False)
+    phonenumber = db.Column(db.String(11), unique=True, nullable=False)
+    username = db.Column(db.String(50), primary_key=True, unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
     classroomlist = db.Column(db.Text, nullable=False, default = "[]")
     classroom = db.relationship('Classrooms', backref='teachers', lazy='dynamic')
@@ -44,8 +47,8 @@ class Teachers(db.Model):
 
 class Students(db.Model):
     __tablename__ = 'students'
-    phonenumber = db.Column(db.String(11), primary_key=True, unique=True, nullable=False)
-    username = db.Column(db.String(50), unique=True, nullable=False)
+    phonenumber = db.Column(db.String(11), unique=True, nullable=False)
+    username = db.Column(db.String(50), primary_key=True, unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
     classroomlist = db.Column(db.Text, nullable=False, default = "[]")
 
@@ -68,7 +71,7 @@ class ChoiceQuestion(db.Model):
 	answer = db.Column(db.Integer, nullable = False)
 	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
 	submitRecord = db.Column(db.Text, nullable = False)
-
+	classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
 
 	def __repr__(self):
 		return '<choiceQuestionId %r>' % self.choiceQuestionId
@@ -80,6 +83,7 @@ class CodeQuestion(db.Model):
 	language = db.Column(db.String(10), nullable = False)
 	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
 	submitRecord = db.Column(db.Text, nullable = False)
+	classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
 
 	def __repr__(self):
 		return '<codequestionId %r>' % self.uniqueId
