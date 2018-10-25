@@ -138,7 +138,7 @@
         'width':'100%',
         'height':600+'px',
         'uid':'7181857ac2',
-        'vid':'242544'
+        'vid':'248980'
       });
       num++;
       console.log(num);
@@ -243,7 +243,7 @@
       modal2: false,
       modal1: false,
       modal4: false,
-      vid:'242544',
+      vid:'248980',
       theme1: 'light',
       toopen:true,
       openclose:'ios-videocam-outline',
