@@ -4,6 +4,7 @@ from . import user
 from sqlalchemy import and_, or_, not_
 from ..textMessage import TextMessage
 from ..models import *
+from ..classroom.Classroom import classroomManager
 import json
 import random
 from .User import usermanager
@@ -191,6 +192,8 @@ def change_mobile():
 #My_list
 @user.route('/mylist', methods = ['POST'])
 def my_list():
+    ret = []
+    
     data = request.get_data()
     print (data)
     data = json.loads(data)
@@ -199,7 +202,15 @@ def my_list():
     job = data['job']
 
     user = usermanager.search("username", username, job)
-    return user.classroomlist
+    classroomlist = json.loads(user.classroomlist)
+    for item in classroomlist:
+        classroom = classroomManager.search(item)
+        if classroom == None:
+            print ("Mylist Error: No Such Class")
+        dic = classroomManager.dict(classroom)
+        ret.append(dic)
+    print (json.dumps(ret))
+    return json.dumps(ret)
 
 
 #Del_myclass
@@ -215,7 +226,7 @@ def del_myclass():
     username = data['username']
     job = data['job']
     classroom = data['classroom']
-    Classroom = Classrooms.query.filter_by(vid = classroom['vid']).first()
+    Classroom = classroomManager.search(classroom['url'])
     if Classroom == None:
         print ("Delete Myclass Error: No Such Class")
         return json.dumps(ret)
@@ -224,14 +235,14 @@ def del_myclass():
         User = usermanager.search("username", username, job)
         user = usermanager.dict(User)
         userclassroom = json.loads(User.classroomlist)
-        userclassroom.remove(classroom)
+        userclassroom.remove(classroom['url'])
         if job == "teacher":
             classroomuser = json.loads(Classroom.teacherlist)
-            classroomuser.remove(user)
+            classroomuser.remove(user['username'])
             Classroom.teacherlist = json.dumps(classroomuser)
         else:
             classroomuser = json.loads(Classroom.studentlist)
-            classroomuser.remove(user)
+            classroomuser.remove(user['username'])
             Classroom.studentlist = json.dumps(classroomuser)
         db.session.add(Classroom)
         db.session.commit()
