@@ -260,4 +260,32 @@ def get_pdfs():
         print ("Get PDF Error: Wrong Teacher")
         return ret
 
+    data = json.loads(classroom.filelist)
+    for item in data:
+        dic = {}
+        dic['title'] = item
+        dic['url'] = "/pdf/" + username + "/" + item
+        ret.append(dic)
+
+    print (json.dumps(ret))
+    return json.dumps(ret) 
+
+
+#Get_selects
+@user.route('/getselects', methods = ['POST'])
+def get_selects():
+    ret = []
     
+    data = request.get_data()
+    print (data)
+    data = json.loads(data)
+
+    username = data['name']
+    job = data['job']
+    vid = data['vid']
+    classroom = Classrooms.query.filter_by(vid = vid).first()
+    if classroom.teacher != username:
+        print ("Get PDF Error: Wrong Teacher")
+        return ret
+
+    #根据房间查找选择题列表，未完待续
