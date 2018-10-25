@@ -5,6 +5,7 @@ from . import classroom
 from ..polyv import polyvAPI
 from .Classroom import classroomManager
 from ..user.User import usermanager
+from ..models import Classrooms
 
 
 polyvManager = polyvAPI.ChannelManager()
@@ -116,10 +117,10 @@ def getList():
 		return {"status": "error:no such classroom"}
 
 	ret = {}
-	l = json.loads(usermanager.search("username", data["username"], "teacher").classroomlist)
+	l = usermanager.search("username", data["username"], "teacher").classroom
+	l = Classrooms.query.filter(Classrooms.teacher == data['username']).all()
 	ans = []
-	for v in l:
-		tmp = classroomManager.search(v)
+	for tmp in l:
 		tmpd = {"title": tmp.title, "thumbnail": tmp.thumbnail, "url": tmp.url, "password": tmp.password}
 		ans.append(tmpd)
 	return json.dumps(ans, ensure_ascii = False)

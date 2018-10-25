@@ -142,7 +142,6 @@ export default {
 <style>
 .card {
   width: 320px;
-  height: 200px;
 }
 .posi{
   position: absolute;
