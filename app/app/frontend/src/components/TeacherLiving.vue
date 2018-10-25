@@ -98,7 +98,8 @@
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
-      <div id='player' ></div>
+      <video id="mainvideo00" width="100%" height="600" controls></video>
+      <canvas id="canvas" width="100%" height="600"></canvas>
       <div class="bottomveido">
         <h3>礼物等其他显示部分（待修改）</h3>
       </div>
@@ -128,8 +129,7 @@
     </div>
 
     <div id="littlelivingcard" class="cardtealittleliving" :style="{display:littlelivingcarddisplay?'block':'none'}">
-
-      <div id='littleplayer' ></div>
+      <video id="littlevideo00" width="100%" height="260" controls></video>
 
     </div>
 
@@ -289,8 +289,10 @@
       modal1: false,
       modal4: false,
       modal5: false,
+      curstream:'',
       vid:'248980',
       cururl:'',
+      curvideo:true,
       theme1: 'light',
       toopen:true,
       openclose:'ios-videocam-outline',
@@ -307,6 +309,53 @@
     };
   },
   methods: {
+    getUserMedia(constraints, success, error) {
+      let mainvideo00 = document.getElementById('mainvideo00');
+      let canvas = document.getElementById('canvas');
+      let context = canvas.getContext('2d');
+      if (navigator.mediaDevices.getUserMedia) {
+        //最新的标准API
+        navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+      } else if (navigator.webkitGetUserMedia) {
+        //webkit核心浏览器
+        navigator.webkitGetUserMedia(constraints,success, error)
+      } else if (navigator.mozGetUserMedia) {
+        //firfox浏览器
+        navigator.mozGetUserMedia(constraints, success, error);
+      } else if (navigator.getUserMedia) {
+        //旧版API
+        navigator.getUserMedia(constraints, success, error);
+      }
+    },
+    success(stream) {
+      let littlevideo00 = document.getElementById('littlevideo00')
+      let mainvideo00 = document.getElementById('mainvideo00');
+      let canvas = document.getElementById('canvas');
+      let context = canvas.getContext('2d');
+      //兼容webkit核心浏览器
+      let CompatibleURL = window.URL || window.webkitURL;
+      //将视频流设置为video元素的源
+      console.log(stream);
+      this.curstream=stream;
+      //video.src = CompatibleURL.createObjectURL(stream);
+      if(this.curvideo){
+        mainvideo00.srcObject = stream;
+        mainvideo00.play();
+        littlevideo00.pause();
+      }
+      else{
+        littlevideo00.srcObject = stream;
+        littlevideo00.play();
+        mainvideo00.pause()
+      }
+
+    },
+    error(error) {
+      let mainvideo00 = document.getElementById('mainvideo00');
+      let canvas = document.getElementById('canvas');
+      let context = canvas.getContext('2d');
+      console.log('访问用户媒体设备失败');
+    },
       exportData (type)
       {
         if (type === 1) {
@@ -380,18 +429,25 @@
           axios.post('/api/user/showpdfs', data).then((resp) => {
 
           });
+
           this.littlelivingcarddisplay=true;
           this.mainselectcarddisplay=false;
           this.mainpdfcarddisplay=true;
           this.mainlivingcarddisplay=false;
           this.liaotianshiheight=330+'px';
           this.displayPdfurl="/static/pdfjs/web/viewer.html?file="+ipdf.url;
-          var player = polyvObject('#littleplayer').livePlayer({
-            'width':'100%',
-            'height':260+'px',
-            'uid':'7181857ac2',
-            'vid':this.vid,
-          });
+          this.curvideo=false;
+          let mainvideo00 = document.getElementById('mainvideo00');
+          let canvas = document.getElementById('canvas');
+          let context = canvas.getContext('2d');
+          if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+            console.log("sadasdsad")
+            //调用用户媒体设备, 访问摄像头
+            this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
+          } else {
+            alert('不支持访问用户媒体');
+          }
+
           this.modal1=false;
         },
         onCancel: () => {
@@ -419,12 +475,17 @@
           this.mainpdfcarddisplay=false;
           this.mainlivingcarddisplay=false;
           this.liaotianshiheight=330+'px';
-          var player = polyvObject('#littleplayer').livePlayer({
-            'width':'100%',
-            'height':260+'px',
-            'uid':'7181857ac2',
-            'vid':this.vid,
-          });
+          this.curvideo=false;
+          let mainvideo00 = document.getElementById('mainvideo00');
+          let canvas = document.getElementById('canvas');
+          let context = canvas.getContext('2d');
+          if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+            console.log("sadasdsad")
+            //调用用户媒体设备, 访问摄像头
+            this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
+          } else {
+            alert('不支持访问用户媒体');
+          }
           this.curtitle=iselect.title;
           this.curans=iselect.ans;
           this.curanswer=iselect.answer;
@@ -447,6 +508,17 @@
           this.mainpdfcarddisplay=false;
           this.mainlivingcarddisplay=true;
           this.liaotianshiheight=60+'px';
+          this.curvideo=true;
+          let mainvideo00 = document.getElementById('mainvideo00');
+          let canvas = document.getElementById('canvas');
+          let context = canvas.getContext('2d');
+          if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+            console.log("sadasdsad")
+            //调用用户媒体设备, 访问摄像头
+            this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
+          } else {
+            alert('不支持访问用户媒体');
+          }
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel');
@@ -475,6 +547,19 @@
             this.openclose='ios-power';
             this.getstudents();
 
+            console.log("sadasdsad")
+            let mainvideo00 = document.getElementById('mainvideo00');
+            let canvas = document.getElementById('canvas');
+            let context = canvas.getContext('2d');
+            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+              console.log("sadasdsad")
+              //调用用户媒体设备, 访问摄像头
+              this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
+            } else {
+              alert('不支持访问用户媒体');
+            }
+
+
             const data = this.curuser;
             data['username'] = this.userInfo['username'];
             data['job'] = this.userInfo['job'];
@@ -502,6 +587,12 @@
             this.toopen=true;
             this.opentext='开播';
             this.openclose='ios-videocam-outline';
+
+//            let mainvideo00 = document.getElementById('mainvideo00');
+//            mainvideo00.srcObject = null;
+//            mainvideo00.pause();
+            window.location.reload()
+
 
             const data = this.curuser;
             data['username'] = this.userInfo['username'];
@@ -567,9 +658,13 @@
   }
   .topveido{
     height: auto;
+    float: left;
   }
   .bottomveido{
+    position:absolute;
     height: auto;
+    top:660px;
+    text-align: center;
   }
   .danmuxinxi{
     position:absolute;
