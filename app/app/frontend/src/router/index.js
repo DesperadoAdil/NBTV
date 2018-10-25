@@ -23,7 +23,7 @@ const router = new Router({
       component: Login
     },
     {
-      path: '/teacherliving',
+      path: '/teacherliving/:url',
       name: 'TeacherLiving',
       component: TeacherLiving
     },
@@ -71,15 +71,15 @@ export default router
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
 
-  if (to.path !== '/login' && window.$cookies.get('user') === null) {
-    return next('/login');
-  }
-  const publicPages = ['/login', '/Register', '/living', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo', '/teacherliving', '/developer']
-  const authRequired = !publicPages.includes(to.path)
-
-  if (authRequired) {
-    return next('/list')
-  }
+  //if (to.path !== '/login' && window.$cookies.get('user') === null) {
+  //  return next('/login');
+  //}
+  //const publicPages = ['/login', '/Register', '/living','/teacherliving', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo', '/teacherliving', '/developer']
+  //const authRequired = !publicPages.includes(to.path)
+  //
+  //if (authRequired) {
+  //  return next('/list')
+  //}
 
   next()
 })
