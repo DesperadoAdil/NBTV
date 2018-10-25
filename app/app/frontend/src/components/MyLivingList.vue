@@ -14,7 +14,7 @@
     </Modal>
     <div v-for="(living, index) in myLivingList" :key="living.url">
       <Card class="card">
-        <img :src="living.thumbnail" class="thumbnail"  @click="directskip(teacherliving)">
+        <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
         <p class="title">{{ living.title }}</p>
         <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
         <Modal
@@ -58,13 +58,13 @@ export default {
       updateModal: false,
       deleteModal: false,
       myLivingList: [{
-        username: '',
+        username: 'zsh',
         password: '',
         job: '',
         old_url: '',
-        title: '',
-        thumbnail: '',
-        url: '',
+        title: 'zsh',
+        thumbnail: '../assets/logo.png',
+        url: 'zshliving',
         class_password: ''
       }],
       userInfo: {
@@ -80,8 +80,8 @@ export default {
     this.getMyLivingList()
   },
   methods: {
-    directskip (teacherliving) {
-      this.$router.push({path: 'teacherliving'})
+    directskip (iitem) {
+      this.$router.push({path: '/teacherliving/'+iitem.url,params :{url:iitem.url}});
     },
     getBackUp (index) {
       this.updateModal = true
