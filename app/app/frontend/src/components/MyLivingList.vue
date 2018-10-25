@@ -10,7 +10,7 @@
       <Input v-model="newLiving.title" placeholder="课程名称"></Input>
       <Input v-model="newLiving.thumbnail" placeholder="缩略图（待修改）"></Input>
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
-      <Input v-model="newLiving.password" placeholder="课程密码（可空）"></Input>
+      <Input v-model="newLiving.class_password" placeholder="课程密码（可空）"></Input>
     </Modal>
     <div v-for="(living, index) in myLivingList" :key="living.url">
       <Card class="card">
@@ -25,7 +25,7 @@
           <Input v-model="living.title" placeholder="课程名称"></Input>
           <Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>
           <Input v-model="living.url" placeholder="课程url"></Input>
-          <Input v-model="living.password" placeholder="课程密码（可空）"></Input>
+          <Input v-model="living.class_password" placeholder="课程密码（可空）"></Input>
         </Modal>
         <span><Button type="error" @click="deleteModal = true">DELETE</Button></span>
         <Modal
