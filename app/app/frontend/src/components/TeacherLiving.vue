@@ -269,12 +269,19 @@
         status: '',
         job:'',
       },
+      curuser:{
+        username: '',
+        job: '',
+        url: '',
+        item:'',
+      },
       modal3: false,
       modal2: false,
       modal1: false,
       modal4: false,
       modal5: false,
       vid:'248980',
+      cururl:'',
       theme1: 'light',
       toopen:true,
       openclose:'ios-videocam-outline',
@@ -301,37 +308,36 @@
       },
       getstudents(){
       console.log("1321312");
-      var params = new URLSearchParams();
-      params.append('name', this.userInfo['username']);
-      params.append('job',this.userInfo['job']);
-      params.append('vid',this.vid);
-      axios.post('/api/user/getstudents',params).then((resp) => {
+      const data = this.curuser;
+      data['username'] = this.userInfo['username'];
+      data['job'] = this.userInfo['job'];
+      data['url'] = this.cururl;
+      axios.post('/api/user/getstudents', data).then((resp) => {
         this.studentitems=resp.studentitems;
       });
     },
     showstudentti(item){
       console.log("1321312");
       this.curstu=item;
-      var params = new URLSearchParams();
-      params.append('name', this.userInfo['username']);
-      params.append('job',this.userInfo['job']);
-      params.append('stu',this.curstu);
-      params.append('vid',this.vid);
-      axios.post('/api/user/getstudentsti',params).then((resp) => {
+      const data = this.curuser;
+      data['username'] = this.userInfo['username'];
+      data['job'] = this.userInfo['job'];
+      data['url'] = this.cururl;
+      data['item'] = this.curstu;
+      axios.post('/api/user/getstudentsti', data).then((resp) => {
         this.curti=resp.curti;
       });
       this.modal3=true;
     },
     teatext(){
-      var params = new URLSearchParams();
-      params.append('name', this.userInfo['username']);
-      params.append('job',this.userInfo['job']);
-      params.append('vid',this.vid);
-      axios.post('/api/user/getpdfs',params).then((resp) => {
+      const data = this.curuser;
+      data['username'] = this.userInfo['username'];
+      data['job'] = this.userInfo['job'];
+      data['url'] = this.cururl;
+      axios.post('/api/user/getpdfs', data).then((resp) => {
         this.pdfitems=resp.pdfitems;
       });
       this.modal1=true;
-
     },
     upload () {
       var params = new URLSearchParams()
@@ -342,11 +348,11 @@
       this.modal5 = true
     },
     teaselect(){
-      var params = new URLSearchParams();
-      params.append('name', this.userInfo['username']);
-      params.append('job',this.userInfo['job']);
-      params.append('vid',this.vid);
-      axios.post('/api/user/getselects',params).then((resp) => {
+      const data = this.curuser;
+      data['username'] = this.userInfo['username'];
+      data['job'] = this.userInfo['job'];
+      data['url'] = this.cururl;
+      axios.post('/api/user/getselects', data).then((resp) => {
         this.selectitems=resp.selectitems;
       });
       this.modal2=true;
@@ -357,12 +363,12 @@
         title: '提示',
         content: '是否展示'+ipdf.title,
         onOk: () => {
-          var params = new URLSearchParams();
-          params.append('name', this.userInfo['username']);
-          params.append('job',this.userInfo['job']);
-          params.append('vid',this.vid);
-          params.append('pdf',ipdf.title);
-          axios.post('/api/user/showpdfs',params).then((resp) => {
+          const data = this.curuser;
+          data['username'] = this.userInfo['username'];
+          data['job'] = this.userInfo['job'];
+          data['url'] = this.cururl;
+          data['item'] = ipdf.title;
+          axios.post('/api/user/showpdfs', data).then((resp) => {
 
           });
           var mainlivingcard = document.getElementById("mainlivingcard");
@@ -397,12 +403,13 @@
         title: '提示',
         content: '是否展示: \n ' +iselect.title,
         onOk: () => {
-          var params = new URLSearchParams();
-          params.append('name', this.userInfo['username']);
-          params.append('job',this.userInfo['job']);
-          params.append('vid',this.vid);
-          params.append('select',iselect.title);
-          axios.post('/api/user/showselect',params).then((resp) => {
+          const data = this.curuser;
+          data['username'] = this.userInfo['username'];
+          data['job'] = this.userInfo['job'];
+          data['url'] = this.cururl;
+          data['item'] = iselect.title;
+          axios.post('/api/user/showselect', data).then((resp) => {
+
           });
           var mainlivingcard = document.getElementById("mainlivingcard");
           mainlivingcard.style.display="none";
@@ -474,14 +481,17 @@
             this.opentext='关播';
             this.openclose='ios-power';
             this.getstudents();
-            var params = new URLSearchParams();
-            params.append('name', this.userInfo['username']);
-            params.append('job',this.userInfo['job']);
-            axios.post('/api/user/openliving',params).then((resp) => {
+
+            const data = this.curuser;
+            data['username'] = this.userInfo['username'];
+            data['job'] = this.userInfo['job'];
+            data['url'] = this.cururl;
+            axios.post('/api/user/openliving', data).then((resp) => {
               this.vid=reap.vid;
               var div = document.getElementById("player");
               div.style.vid=resp.vid;
             });
+
           },
           onCancel: () => {
 
@@ -499,10 +509,12 @@
             this.toopen=true;
             this.opentext='开播';
             this.openclose='ios-videocam-outline';
-            var params = new URLSearchParams();
-            params.append('name', this.userInfo['username']);
-            params.append('job',this.userInfo['job']);
-            axios.post('/api/user/closeliving',params).then((resp) => {
+
+            const data = this.curuser;
+            data['username'] = this.userInfo['username'];
+            data['job'] = this.userInfo['job'];
+            data['url'] = this.cururl;
+            axios.post('/api/user/closeliving', data).then((resp) => {
 
             });
           },
