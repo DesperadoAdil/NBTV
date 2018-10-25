@@ -1,4 +1,4 @@
-from ..models import Teachers, Students
+from ..models import *
 import json
 
 class UserManager:

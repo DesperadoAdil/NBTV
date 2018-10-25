@@ -1,5 +1,5 @@
 import json
-from ..models import Classrooms
+from ..models import Classrooms, db
 
 
 class ClassroomManager:
@@ -20,7 +20,7 @@ class ClassroomManager:
                                 ret['audiencelist'] = classroom.audiencelist
                                 ret['filelist'] = classroom.filelist
                                 ret['visible'] = classroom.visible
-                                ret['createtime'] = classroom.createtime
+                                ret['createtime'] = str(classroom.createtime)
                                 return ret
 
 	def insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):

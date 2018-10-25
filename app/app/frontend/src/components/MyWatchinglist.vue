@@ -48,6 +48,15 @@ export default {
   name: 'List',
   data: function () {
     return {
+      mylistform: {
+        username: '',
+        job: ''
+      },
+      delmyclassform: {
+        username: '',
+        job: '',
+        classroom: ''
+      },
       userInfo: {
         status: '',
         username: '',
@@ -164,11 +173,15 @@ export default {
         title: '警告',
         content: '确认删除直播间吗',
         onOk: () => {
-          var params = new URLSearchParams()
-          params.append('name', this.userInfo['username'])
-          params.append('classroom', a)
-          params.append('job', this.userInfo['job'])
-          axios.post('/api/user/delmyclass', params).then((resp) => {
+          //var params = new URLSearchParams()
+          //params.append('name', this.userInfo['username'])
+          //params.append('classroom', a)
+          //params.append('job', this.userInfo['job'])
+          const data = this.delmyclassform
+          data['username'] = this.userInfo['username']
+          data['job'] = this.userInfo['job']
+          data['classroom'] = a
+          axios.post('/api/user/delmyclass', data).then((resp) => {
 
           })
           Array.prototype.indexOf = function (val) {
@@ -192,10 +205,13 @@ export default {
       this.$router.push({path: 'living', query: { id: a.vid}})
     },
     getList: function () {
-      var params = new URLSearchParams()
-      params.append('name', this.userInfo['username'])
-      params.append('job', this.userInfo['job'])
-      axios.post('/api/user/mylist', params).then((resp) => {
+      //var params = new URLSearchParams()
+      //params.append('name', this.userInfo['username'])
+      //params.append('job', this.userInfo['job'])
+      const data = this.mylistform
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      axios.post('/api/user/mylist', data).then((resp) => {
         this.items = resp.data
       })
     }
