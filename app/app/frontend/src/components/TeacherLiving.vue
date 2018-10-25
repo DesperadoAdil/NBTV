@@ -94,7 +94,7 @@
       <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
     </Modal>
 
-    <div id="mainlivingcard" class="cardtealiving00">
+    <div id="mainlivingcard" class="cardtealiving00" :style="{display:mainlivingcarddisplay?'block':'none'}">
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
@@ -104,11 +104,11 @@
       </div>
     </div>
 
-    <div id="mainpdfcard" class="cardtealivingpdf">
-      <iframe id="displayPdfIframe" class="pdfframe"/>
+    <div id="mainpdfcard" class="cardtealivingpdf" :style="{display:mainpdfcarddisplay?'block':'none'}">
+      <iframe id="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
 
-    <div id="mainselectcard" class="cardtealivingselect">
+    <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
       <p class="selecttitle00">{{curtitle}}</p>
       <RadioGroup class="radiotea" v-model="ionselect" vertical>
         <Radio v-bind:label="curans[0]" style="font-size: 15px">
@@ -127,13 +127,13 @@
       <p class="anstea00">本题目答案：{{curanswer}}</p>
     </div>
 
-    <div id="littlelivingcard" class="cardtealittleliving">
+    <div id="littlelivingcard" class="cardtealittleliving" :style="{display:littlelivingcarddisplay?'block':'none'}">
 
       <div id='littleplayer' ></div>
 
     </div>
 
-    <div id="liaotianshi" class="danmuxinxi">
+    <div id="liaotianshi" class="danmuxinxi" :style="{top:liaotianshiheight}">
       <Card style="height: 800px">
         <h3>聊天室信息显示部分（待修改）</h3>
       </Card>
@@ -182,6 +182,14 @@
 
     return {
       //<!--vediosrc:'',-->
+//      mainlivingcarddispaly:block,
+//      mainlivingcarddispaly:'none',
+      displayPdfurl:'',
+      liaotianshiheight:60+'px',
+      littlelivingcarddisplay:false,
+      mainselectcarddisplay:false,
+      mainpdfcarddisplay:false,
+      mainlivingcarddisplay:true,
       examOptions: {
         Description: '',
         OptionA: '',
@@ -372,24 +380,18 @@
           axios.post('/api/user/showpdfs', data).then((resp) => {
 
           });
-          var mainlivingcard = document.getElementById("mainlivingcard");
-          mainlivingcard.style.display="none";
-          var littlelivingcard = document.getElementById("littlelivingcard");
-          littlelivingcard.style.display="block";
+          this.littlelivingcarddisplay=true;
+          this.mainselectcarddisplay=false;
+          this.mainpdfcarddisplay=true;
+          this.mainlivingcarddisplay=false;
+          this.liaotianshiheight=330+'px';
+          this.displayPdfurl="/static/pdfjs/web/viewer.html?file="+ipdf.url;
           var player = polyvObject('#littleplayer').livePlayer({
             'width':'100%',
             'height':260+'px',
             'uid':'7181857ac2',
             'vid':this.vid,
           });
-          var mainselectcard = document.getElementById("mainselectcard");
-          mainselectcard.style.display="none";
-          var mainpdfcard = document.getElementById("mainpdfcard");
-          mainpdfcard.style.display="block";
-          var liaotianshi= document.getElementById("liaotianshi");
-          liaotianshi.style.top=330+"px";
-          var frame = document.getElementById('displayPdfIframe');
-          frame.src = "/static/pdfjs/web/viewer.html?file="+ipdf.url;
           this.modal1=false;
         },
         onCancel: () => {
@@ -412,22 +414,17 @@
           axios.post('/api/user/showselect', data).then((resp) => {
 
           });
-          var mainlivingcard = document.getElementById("mainlivingcard");
-          mainlivingcard.style.display="none";
-          var littlelivingcard = document.getElementById("littlelivingcard");
-          littlelivingcard.style.display="block";
+          this.littlelivingcarddisplay=true;
+          this.mainselectcarddisplay=true;
+          this.mainpdfcarddisplay=false;
+          this.mainlivingcarddisplay=false;
+          this.liaotianshiheight=330+'px';
           var player = polyvObject('#littleplayer').livePlayer({
             'width':'100%',
             'height':260+'px',
             'uid':'7181857ac2',
             'vid':this.vid,
           });
-          var mainpdfcard = document.getElementById("mainpdfcard");
-          mainpdfcard.style.display="none";
-          var mainselectcard = document.getElementById("mainselectcard");
-          mainselectcard.style.display="block";
-          var liaotianshi= document.getElementById("liaotianshi");
-          liaotianshi.style.top=330+"px";
           this.curtitle=iselect.title;
           this.curans=iselect.ans;
           this.curanswer=iselect.answer;
@@ -445,16 +442,11 @@
         content: '确认退出教学资源',
         onOk: () => {
           console.log("1321312");
-          var mainlivingcard = document.getElementById("mainlivingcard");
-          mainlivingcard.style.display="block";
-          var mainselectcard = document.getElementById("mainselectcard");
-          mainselectcard.style.display="none";
-          var littlelivingcard = document.getElementById("littlelivingcard");
-          littlelivingcard.style.display="none";
-          var mainpdfcard = document.getElementById("mainpdfcard");
-          mainpdfcard.style.display="none";
-          var liaotianshi= document.getElementById("liaotianshi");
-          liaotianshi.style.top=60+"px";
+          this.littlelivingcarddisplay=false;
+          this.mainselectcarddisplay=false;
+          this.mainpdfcarddisplay=false;
+          this.mainlivingcarddisplay=true;
+          this.liaotianshiheight=60+'px';
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel');
