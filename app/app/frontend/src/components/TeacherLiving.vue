@@ -9,7 +9,7 @@
             <Icon type="ios-paper" />
             添加教学资源
           </template>
-          <MenuItem name="1-1" class="menuitentea">添加课件</MenuItem>
+          <MenuItem name="1-1" class="menuitentea" @click.native="upload">添加课件</MenuItem>
           <MenuItem name="1-2" class="menuitentea">添加题目</MenuItem>
         </Submenu>
         <Submenu name="2" class="menuitentea">
@@ -33,6 +33,16 @@
         <span class="menuitentea">{{this.opentext}}</span>
       </Button>
     </card>
+
+    <!--上传-->
+    <Modal   v-model="modal4"    @on-ok=""    @on-cancel="">
+      <p slot="header" style="font-size: 20px">
+        <span>上传课件</span>
+      </p>
+      <Upload action="//jsonplaceholder.typicode.com/posts/">
+        <Button icon="ios-cloud-upload-outline">Upload files</Button>
+      </Upload>
+    </Modal>
 
     <!--pdf等课件信息-->
     <Modal   v-model="modal1"    @on-ok=""    @on-cancel="">
@@ -232,6 +242,7 @@
       modal3: false,
       modal2: false,
       modal1: false,
+      modal4: false,
       vid:'242544',
       theme1: 'light',
       toopen:true,
@@ -290,6 +301,10 @@
       });
       this.modal1=true;
 
+    },
+    upload () {
+      var params = new URLSearchParams()
+      this.modal4 = true
     },
     teaselect(){
       var params = new URLSearchParams();
