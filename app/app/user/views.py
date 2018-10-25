@@ -263,10 +263,10 @@ def get_pdfs():
     print (data)
     data = json.loads(data)
 
-    username = data['name']
+    username = data['username']
     job = data['job']
-    vid = data['vid']
-    classroom = Classrooms.query.filter_by(vid = vid).first()
+    url = data['url']
+    classroom = classroomManager.search(url)
     if classroom.teacher != username:
         print ("Get PDF Error: Wrong Teacher")
         return ret
@@ -291,12 +291,12 @@ def get_selects():
     print (data)
     data = json.loads(data)
 
-    username = data['name']
+    username = data['username']
     job = data['job']
-    vid = data['vid']
-    classroom = Classrooms.query.filter_by(vid = vid).first()
+    url = data['url']
+    classroom = classroomManager.search(url)
     if classroom.teacher != username:
-        print ("Get PDF Error: Wrong Teacher")
+        print ("Get Selects Error: Wrong Teacher")
         return ret
 
     for item in classroom.choicequestion:
