@@ -104,7 +104,7 @@ export default {
       this.newLiving['password'] = this.$cookies.get('user').password
       this.newLiving['job'] = this.$cookies.get('user').job
       const data = this.newLiving
-      axios.post('/api/list/add_class', data).then((resp) => {
+      axios.post('/api/classroom/add_class', data).then((resp) => {
         this.getMyLivingList()
       })
     },
