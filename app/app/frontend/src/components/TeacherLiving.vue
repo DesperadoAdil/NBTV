@@ -10,7 +10,7 @@
             添加教学资源
           </template>
           <MenuItem name="1-1" class="menuitentea" @click.native="upload">添加课件</MenuItem>
-          <MenuItem name="1-2" class="menuitentea">添加题目</MenuItem>
+          <MenuItem name="1-2" class="menuitentea" @click.native="exam">添加题目</MenuItem>
         </Submenu>
         <Submenu name="2" class="menuitentea">
           <template slot="title">
@@ -42,6 +42,29 @@
       <Upload action="//jsonplaceholder.typicode.com/posts/">
         <Button icon="ios-cloud-upload-outline">Upload files</Button>
       </Upload>
+    </Modal>
+
+    <Modal   v-model="modal5"    @on-ok=""    @on-cancel="">
+      <p slot="header" style="font-size: 20px">
+        <span>设置选择题</span>
+      </p>
+      <Form ref="examOptions" :model="examOptions" :rules="ruleInline">
+        <FormItem prop="Description">
+          <Input type="text" v-model="examOptions.Description" placeholder="Description"></Input>
+        </FormItem>
+        <FormItem prop="OptionA">
+          <Input type="text" v-model="examOptions.OptionA" placeholder="OptionA"></Input>
+        </FormItem>
+        <FormItem prop="OptionB">
+          <Input type="text" v-model="examOptions.OptionB" placeholder="OptionB"></Input>
+        </FormItem>
+        <FormItem prop="OptionC">
+          <Input type="text" v-model="examOptions.OptionC" placeholder="OptionC"></Input>
+        </FormItem>
+        <FormItem prop="OptionD">
+          <Input type="text" v-model="examOptions.OptionD" placeholder="OptionD"></Input>
+        </FormItem>
+      </Form>
     </Modal>
 
     <!--pdf等课件信息-->
@@ -158,6 +181,13 @@
 
     return {
       //<!--vediosrc:'',-->
+      examOptions: {
+        Description: '',
+        OptionA: '',
+        OptionB: '',
+        OptionC: '',
+        OptionD: ''
+      },
       columns1: [
         {
           title: '题目',
@@ -243,6 +273,7 @@
       modal2: false,
       modal1: false,
       modal4: false,
+      modal5: false,
       vid:'248980',
       theme1: 'light',
       toopen:true,
@@ -305,6 +336,10 @@
     upload () {
       var params = new URLSearchParams()
       this.modal4 = true
+    },
+    exam () {
+      var params = new URLSearchParams()
+      this.modal5 = true
     },
     teaselect(){
       var params = new URLSearchParams();
