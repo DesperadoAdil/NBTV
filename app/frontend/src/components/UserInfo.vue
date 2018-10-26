@@ -1,6 +1,6 @@
 <template>
   <div id="userInfo">
-		<Form :model="formLeft" label-position="left" :label-width="100">
+    <Form :model="formLeft" label-position="left" :label-width="100">
       <FormItem prop="username" label = "username">
         <Input type="text" v-model="userInfo.username" name="username" placeholder="Username" readonly>
           <Icon type="ios-person-outline" slot="prepend"></Icon>
