@@ -26,8 +26,8 @@ class Classrooms(db.Model):
     visible = db.Column(db.String(5), nullable=False, default = "yes")
     createtime = db.Column(db.DateTime, default=datetime.now)
 
-    choicequestion = db.relationship('ChoiceQuestion', backref='classroom', lazy='dynamic')
-    codequestion = db.relationship('CodeQuestion', backref='classroom', lazy='dynamic')
+    choicequestion = db.relationship('ChoiceQuestion', backref='classrooms', lazy='dynamic')
+    codequestion = db.relationship('CodeQuestion', backref='classrooms', lazy='dynamic')
 
     def __repr__(self):
         return '<ClassroomUrl %r>' % self.url
