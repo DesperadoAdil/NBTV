@@ -82,6 +82,16 @@ export default {
   methods: {
     directskip (iitem) {
       this.$router.push({path: '/teacherliving/'+iitem.url});
+      this.$Modal.confirm({
+              title: '提示',
+              content: '是否确认进入直播间',
+              onOk: () => {
+              window.location.reload();
+        },
+        onCancel: () => {
+          history.go(-1);
+        }
+      });
     },
     getBackUp (index) {
       this.updateModal = true
