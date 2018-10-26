@@ -336,7 +336,7 @@
       let CompatibleURL = window.URL || window.webkitURL;
       //将视频流设置为video元素的源
       console.log(stream);
-      this.curstream=stream;
+
       //video.src = CompatibleURL.createObjectURL(stream);
       if(this.curvideo){
         mainvideo00.srcObject = stream;
@@ -346,15 +346,14 @@
       else{
         littlevideo00.srcObject = stream;
         littlevideo00.play();
-        mainvideo00.pause()
-      }
+        mainvideo00.pause()      }
 
     },
     error(error) {
       let mainvideo00 = document.getElementById('mainvideo00');
       let canvas = document.getElementById('canvas');
       let context = canvas.getContext('2d');
-      console.log('访问用户媒体设备失败');
+      alert('访问用户媒体设备失败');
     },
       exportData (type)
       {
@@ -437,15 +436,17 @@
           this.liaotianshiheight=330+'px';
           this.displayPdfurl="/static/pdfjs/web/viewer.html?file="+ipdf.url;
           this.curvideo=false;
-          let mainvideo00 = document.getElementById('mainvideo00');
-          let canvas = document.getElementById('canvas');
-          let context = canvas.getContext('2d');
-          if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-            console.log("sadasdsad")
-            //调用用户媒体设备, 访问摄像头
-            this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
-          } else {
-            alert('不支持访问用户媒体');
+          if(!this.toopen) {
+            let mainvideo00 = document.getElementById('mainvideo00');
+            let canvas = document.getElementById('canvas');
+            let context = canvas.getContext('2d');
+            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+              console.log("sadasdsad")
+              //调用用户媒体设备, 访问摄像头
+              this.getUserMedia({video: {width: 100, height: 320}}, this.success, this.error);
+            } else {
+              alert('不支持访问用户媒体');
+            }
           }
 
           this.modal1=false;
@@ -476,16 +477,19 @@
           this.mainlivingcarddisplay=false;
           this.liaotianshiheight=330+'px';
           this.curvideo=false;
-          let mainvideo00 = document.getElementById('mainvideo00');
-          let canvas = document.getElementById('canvas');
-          let context = canvas.getContext('2d');
-          if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-            console.log("sadasdsad")
-            //调用用户媒体设备, 访问摄像头
-            this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
-          } else {
-            alert('不支持访问用户媒体');
+          if(!this.toopen){
+            let mainvideo00 = document.getElementById('mainvideo00');
+            let canvas = document.getElementById('canvas');
+            let context = canvas.getContext('2d');
+            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+              console.log("sadasdsad")
+              //调用用户媒体设备, 访问摄像头
+              this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
+            } else {
+              alert('不支持访问用户媒体');
+            }
           }
+
           this.curtitle=iselect.title;
           this.curans=iselect.ans;
           this.curanswer=iselect.answer;
@@ -509,16 +513,19 @@
           this.mainlivingcarddisplay=true;
           this.liaotianshiheight=60+'px';
           this.curvideo=true;
-          let mainvideo00 = document.getElementById('mainvideo00');
-          let canvas = document.getElementById('canvas');
-          let context = canvas.getContext('2d');
-          if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-            console.log("sadasdsad")
-            //调用用户媒体设备, 访问摄像头
-            this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
-          } else {
-            alert('不支持访问用户媒体');
+          if(!this.toopen){
+            let mainvideo00 = document.getElementById('mainvideo00');
+            let canvas = document.getElementById('canvas');
+            let context = canvas.getContext('2d');
+            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+              console.log("sadasdsad")
+              //调用用户媒体设备, 访问摄像头
+              this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
+            } else {
+              alert('不支持访问用户媒体');
+            }
           }
+
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel');
