@@ -99,80 +99,80 @@
 </template>
 
 <script >
-  import router from './router'
-  export default {
-    name: 'App',
-    data () {
-      return {
-        showinfo: false,
-        editmobile: false,
-        showrpass: false,
-        theme1: 'light',
-        active: '',
-        userInfo: {
-          status: 'success',
-          username: 'adil',
-          password: '123456',
-          mobile: '18810081008',
-          job: 'teacher'
-        },
-        // changed this to 已登录 to debug
-        LoginOrLogout: '已登录'
+import router from './router'
+export default {
+  name: 'App',
+  data () {
+    return {
+      showinfo: false,
+      editmobile: false,
+      showrpass: false,
+      theme1: 'light',
+      active: '',
+      userInfo: {
+        status: 'success',
+        username: 'adil',
+        password: '123456',
+        mobile: '18810081008',
+        job: 'teacher'
+      },
+      // changed this to 已登录 to debug
+      LoginOrLogout: '已登录'
+    }
+  },
+  created () {
+    this.showUserInfo()
+  },
+  methods: {
+    logout () {
+      this.LoginOrLogout = '登录'
+      this.userInfo = {
+        status: '',
+        username: '',
+        password: '',
+        mobile: '',
+        job: ''
+      }
+      this.$cookies.remove('user')
+      router.push('/Login')
+    },
+    cancel () {
+      this.$Message.info('Cancel the change of password')
+    },
+    isTeacher () {
+      return this.userInfo['job'] === 'teacher'
+    },
+    handleJump (name) {
+      if (this.userInfo['status'] !== 'success') { // 未登录
+        router.push('/login')
+      } else if (name === 'list') {
+        router.push('/list')
+      } else if (name === 'myLivingList') {
+        router.push('/MyLivingList')
+      } else if (name === 'myWatchingList') {
+        router.push('/mywatchinglist')
+      } else if (name === 'UserInfo') {
+        router.push('/UserInfo')
       }
     },
-    created () {
-      this.showUserInfo()
+    changepassword () {
+      this.showrpass = false
     },
-    methods: {
-      logout () {
-        this.LoginOrLogout = '登录'
-        this.userInfo = {
-          status: '',
-          username: '',
-          password: '',
-          mobile: '',
-          job: ''
-        }
-        this.$cookies.remove('user')
-        router.push('/Login')
-      },
-      cancel () {
-        this.$Message.info('Cancel the change of password')
-      },
-      isTeacher () {
-        return this.userInfo['job'] === 'teacher'
-      },
-      handleJump (name) {
-        if (this.userInfo['status'] !== 'success') { // 未登录
-          router.push('/login')
-        } else if (name === 'list') {
-          router.push('/list')
-        } else if (name === 'myLivingList') {
-          router.push('/MyLivingList')
-        } else if (name === 'myWatchingList') {
-          router.push('/mywatchinglist')
-        } else if (name === 'UserInfo') {
-          router.push('/UserInfo')
-        }
-      },
-      changepassword () {
-        this.showrpass = false
-      },
-      showUserInfo () {
-        if (this.$cookies.get('user') === null) {
-          return
-        }
-        this.userInfo['username'] = this.$cookies.get('user').username
-        this.userInfo['status'] = this.$cookies.get('user').status
-        this.userInfo['job'] = this.$cookies.get('user').job
-        this.userInfo['password'] = this.$cookies.get('user').password
-        this.userInfo['mobile'] = this.$cookies.get('user').mobile
-        if (this.userInfo['status'] === 'success') {
-          this.LoginOrLogout = this.userInfo['username']
-        }
+    showUserInfo () {
+      if (this.$cookies.get('user') === null) {
+        return
+      }
+      this.userInfo['username'] = this.$cookies.get('user').username
+      this.userInfo['status'] = this.$cookies.get('user').status
+      this.userInfo['job'] = this.$cookies.get('user').job
+      this.userInfo['password'] = this.$cookies.get('user').password
+      this.userInfo['mobile'] = this.$cookies.get('user').mobile
+      if (this.userInfo['status'] === 'success') {
+        this.LoginOrLogout = this.userInfo['username']
       }
     }
   }
+}
 
 </script>
 
