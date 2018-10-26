@@ -13,9 +13,16 @@
         <Icon type="logo-youtube" />
         我开的直播间
       </MenuItem>
+
+      <!--
+
+      将登出部分整合到下拉菜单中
+
       <MenuItem v-if="LoginOrLogout !== '登录'" name="5" style="float:right" class="ilogin" @click.native="logout">
         {{ '登出' }}
       </MenuItem>
+      -->
+
       <MenuItem name="1" style="float:right;" class="ilogin" @click.native="handleJump('UserInfo')">
         <Icon v-if="LoginOrLogout === '登录'" type="ios-contact-outline" />
           {{ LoginOrLogout }}
@@ -34,13 +41,14 @@ export default {
       theme1: 'light',
       active: '',
       userInfo: {
-        status: '',
-        username: '',
-        password: '',
-        mobile: '',
-        job: ''
+        status: 'success',
+        username: 'adil',
+        password: '123456',
+        mobile: '18810081008',
+        job: 'teacher'
       },
-      LoginOrLogout: '登录'
+      // changed this to 已登录 to debug
+      LoginOrLogout: '已登录'
     }
   },
   created () {
