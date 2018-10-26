@@ -17,18 +17,128 @@
       <!--
 
       将登出部分整合到下拉菜单中
-
       <MenuItem v-if="LoginOrLogout !== '登录'" name="5" style="float:right" class="ilogin" @click.native="logout">
         {{ '登出' }}
       </MenuItem>
+
       -->
 
-      <MenuItem name="1" style="float:right;" class="ilogin" @click.native="handleJump('UserInfo')">
+      <MenuItem name="1" style="float:right;" @click.native="showinfo = true" type="primary">
         <Icon v-if="LoginOrLogout === '登录'" type="ios-contact-outline" />
           {{ LoginOrLogout }}
+        <Drawer title="User Info" v-model="showinfo" width="480">
+          <Form>
+            <Row :gutter="32">
+              <Col span="18">
+                <FormItem label="Name" label-position="left" label-width="80">
+                  {{userInfo.username}}
+                </FormItem>
+              </Col>
+              <Col span="6">
+              </Col>
+            </Row>
+            <Row :gutter="32">
+              <Col span="18">
+                <FormItem label="Job" label-position="left" label-width="80">
+                  {{userInfo.job}}
+                </FormItem>
+              </Col>
+              <Col span="6">
+              </Col>
+            </Row>
+            <Row :gutter="32">
+              <Col span="18">
+                <FormItem label="Password" label-position="left" label-width="80">
+                  <Input v-model="userInfo.password" placeholder="please enter user name" />
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <Button>Edit</Button>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row :gutter="32">
+              <Col span="18">
+                <FormItem label="Mobile" label-position="left" label-width="80">
+                  <Input v-model="userInfo.mobile" placeholder="please enter user name" />
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <Button>Edit</Button>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row :gutter="32">
+              <Col span="18">
+                <FormItem label="Status" label-position="left" label-width="80">
+                  <Input v-model="userInfo.status" placeholder="please enter user name" />
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <Button>Edit</Button>
+                </FormItem>
+              </Col>
+            </Row>
+            <!--
+            <FormItem label="Name" label-position = "left" label-width="80">
+              <Input v-model="userInfo.username" placeholder="enter name" readonly="true"/>
+            </FormItem>
+            <FormItem label="mobile" label-position = "left" label-width="80" >
+              <Input v-model="userInfo.mobile" placeholder="enter mobile" readonly="editmobile = true"/>
+            </FormItem>
+            <FormItem label="password" label-position = "left" label-width="80" >
+              <Input v-model="userInfo.password" placeholder="enter mobile" readonly="editmobile = true"/>
+            </FormItem>
+            <FormItem  label="repeat password" label-position = "left" label-width="80" >
+              <Input v-model="userInfo.password" placeholder="enter mobile" readonly="editmobile = true"/>
+            </FormItem>
+            <FormItem label="status" label-position = "left" label-width="80" >
+              <Input v-model="userInfo.status" placeholder="enter mobile" readonly="editmobile = true"/>
+            </FormItem>
+
+            -->
+          </Form>
+          <div class="demo-drawer-footer">
+            <Button style="margin-right: 8px" @click="showinfo = false">Apply</Button>
+            <Button type="primary" @click.native="logout">Log out</Button>
+          </div>
+        </Drawer>
       </MenuItem>
     </Menu>
     <router-view/>
+    <!--
+    <Drawer title="show" v-model="showinfo" width="720">
+      <Form :model="infopage">
+        <FormItem label="Name" label-position="top">
+          <Input v-model="userInfo.username" placeholder="please enter user name" />
+        </FormItem>
+
+        <FormItem label="Password" label-position="top">
+          <Input v-model="formInline.password" placeholder="please enter password" />
+        </FormItem>
+
+        <FormItem label="Repeat Password" label-position="top">
+          <Input v-model="formInline.rpassword" placeholder="please re-enter password" />
+        </FormItem>
+
+        <FormItem label="Mobile" label-position="top">
+          <Input v-model="userInfo.mobile" placeholder="please enter mobile number" />
+        </FormItem>
+
+        <FormItem label="Verification" label-position="top">
+          <Input v-model="formInline.Verification" placeholder="please enter verification" />
+        </FormItem>
+
+      </Form>
+      <div class="demo-drawer-footer">
+        <Button style="margin-right: 8px" @click="showinfo = false">Cancel</Button>
+        <Button type="primary" @click="showinfo = false">Submit</Button>
+      </div>
+    </Drawer>
+    -->
   </div>
 </template>
 
@@ -38,6 +148,8 @@ export default {
   name: 'App',
   data () {
     return {
+      showinfo: false,
+      editmobile: false,
       theme1: 'light',
       active: '',
       userInfo: {
@@ -116,5 +228,15 @@ export default {
 }
 .ilogin{
   font-size: 20px;
+}
+.demo-drawer-footer{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 16px;
+  text-align: right;
+  background: #fff;
 }
 </style>
