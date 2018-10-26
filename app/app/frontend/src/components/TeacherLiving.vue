@@ -170,11 +170,12 @@
   created:function(){
     this.cururl = this.$route.params.url;
     console.log(this.cururl);
-    const s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.src = 'https://player.polyv.net/livescript/liveplayer.js';
-    document.body.appendChild(s);
+//    const s = document.createElement('script');
+//    s.type = 'text/javascript';
+//    s.src = 'https://player.polyv.net/livescript/liveplayer.js';
+//    document.body.appendChild(s);
     this.showUserInfo();
+//    window.location.reload()
   },
 
   data() {
