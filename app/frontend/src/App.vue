@@ -62,7 +62,7 @@
               </Col>
               <Col span="6">
                 <FormItem>
-                  <Button v-if="!showNewMobile" @click="changeMobile()">Edit</Button>
+                  <Button @click="changeMobile()">{{mobileButton}}</Button>
                 </FormItem>
               </Col>
             </Row>
@@ -71,7 +71,7 @@
             <Row :gutter="32" v-if="showNewMobile">
               <Col span="18">
                 <FormItem label="New Mobile" label-position="left" label-width="80">
-                  <Input type="text" v-model="this.newMobile"></Input>
+                  <Input type="text" v-model="this.newMobile" placeholder="New Phone Number Here"></Input>
                 </FormItem>
               </Col>
               <Col span="6">
@@ -81,16 +81,27 @@
               </Col>
             </Row>
 
-            <!-- 设置验证码 -->
+            <!-- 设置旧手机的验证码 -->
             <Row :gutter="32" v-if="showNewMobile">
               <Col span="18">
                 <FormItem label="Verification" label-position="left" label-width="80">
-                  <Input v-model="verification" placeholder="Verification Code Here"></Input>
+                  <Input v-model="oldVerification" placeholder="Old Verification Code Here"></Input>
+                </FormItem>
+              </Col>
+              <Col span="6">
+              </Col>
+            </Row>
+
+            <!-- 设置新手机的验证码 -->
+            <Row :gutter="32" v-if="showNewMobile">
+              <Col span="18">
+                <FormItem label="Verification" label-position="left" label-width="80">
+                  <Input v-model="newVerification" placeholder="New Verification Code Here"></Input>
                 </FormItem>
               </Col>
               <Col span="6">
                 <FormItem>
-                  <Button >Verify</Button>
+                  <Button @click="submitMobileChange()">Verify</Button>
                 </FormItem>
               </Col>
             </Row>
@@ -107,7 +118,7 @@
               </Col>
               <Col span="6">
                 <FormItem>
-                  <Button v-if="!showRpass" @click="changePassword()">Edit</Button>
+                  <Button @click="changePassword()">{{passButton}}</Button>
                 </FormItem>
               </Col>
             </Row>
@@ -141,6 +152,7 @@
 
 <script >
 import router from './router'
+import axios from 'axios'
 export default {
   name: 'App',
   data () {
@@ -153,7 +165,11 @@ export default {
       newMobile: '',
       newPassword: '******',
       newRpassword: '',
-      verification: '',
+      oldVerification: '',
+      newVerification: '',
+      // buttons
+      mobileButton: 'Edit',
+      passButton: 'Edit',
       // hanky's var
       theme1: 'light',
       active: '',
@@ -165,29 +181,95 @@ export default {
         job: 'teacher'
       },
       // changed this to 已登录 to debug
-      LoginOrLogout: '已登录'
+      LoginOrLogout: '已登录',
+      // Password Submit
+      passSub: {
+        status: 'login/logout',
+        mobile: '',
+        old_password: '',
+        new_password: '',
+        job: ''
+      },
+      mobileSub: {
+        status: 'login/logout',
+        old_mobile: '',
+        old_verification: '',
+        new_mobile: '',
+        new_verification: '',
+        job: ''
+      }
     }
   },
   created () {
     this.showUserInfo()
   },
   methods: {
+    submitMobileChange () {
+      // set input variable
+      this.mobileSub.old_mobile = this.userInfo.mobile
+      this.mobileSub.old_verification = this.oldVerification
+      this.mobileSub.new_mobile = this.newMobile
+      this.mobileSub.new_verification = this.newVerification
+      this.mobileSub.job = this.userInfo.job
+      // post
+      axios.post('/api/user/change_mobile', this.mobileSub).then((resp) => {
+        // this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 更改userInfo
+          this.userInfo.mobile = this.newMobile
+          // 需要更改一下Cookie 现在还没好
+          // this.$cookies.set('user', resp.data)
+          window.location.reload()
+        } else { // 如果失败
+          this.$Message.error('更改失败')
+        }
+      })
+      // Hide the bars
+      this.showNewMobile = false
+    },
     submitPassChange () {
-      // use some api
-      input: { status : 'login/logout',
-        mobile : '',
-        old_password : '',
-        new_password : '',
-        job : 'student/teacher'
-      }
+      // set input variable
+      this.passSub.mobile = this.userInfo.mobile
+      this.passSub.old_password = this.userInfo.password
+      this.passSub.new_password = this.newPassword
+      this.passSub.job = this.userInfo.job
+      // post
+      axios.post('/api/user/change_password', this.passSub).then((resp) => {
+        // this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 更改userInfo
+          this.userInfo.password = this.newPassword
+          // 需要更改一下Cookie 现在还没好
+          // this.$cookies.set('user', resp.data)
+          window.location.reload()
+        } else { // 如果失败
+          this.$Message.error('更改失败')
+        }
+      })
+      // Hide the bars
+      this.showRpass = false
     },
     changeMobile () {
-      // need to use api
-      this.showNewMobile = true
+      if (this.showNewMobile === false) {
+        this.showNewMobile = true
+        this.mobileButton = 'Cancel'
+      } else {
+        this.showNewMobile = false
+        this.mobileButton = 'Edit'
+      }
     },
     changePassword () {
-      this.showRpass = true
-      this.newPassword = ''
+      // Edit / Cancel Password Change
+      if (this.showRpass === false) {
+        this.showRpass = true
+        this.newPassword = ''
+        this.passButton = 'Cancel'
+      } else {
+        this.showRpass = false
+        this.passButton = 'Edit'
+      }
     },
     isTeacher () {
       return this.userInfo['job'] === 'teacher'
