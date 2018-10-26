@@ -67,7 +67,10 @@
                     @on-ok="changemobile"
                     @on-cancel="cancel">
                     <Input label="old phone number" v-model="userInfo.mobile" readonly="true"></Input>
-                    <Input label="enter new mobile" v-model="newMobile"></Input>
+                    <Input label="new phone number" v-model="newmobile" placeholder="enter your new mobile here"></Input>
+                    <Button>Send Verification</Button>
+                    <Input label="Verification" placeholder="enter verification here"></Input>
+                    <Button>Submit</Button>
                   </Modal>
                 </FormItem>
               </Col>
@@ -82,11 +85,24 @@
               </Col>
               <Col span="6">
                 <FormItem>
-                  <Button @click="changepassword()">Edit</Button>
+                  <Button @click="changepassword()">{{passButton}}</Button>
                 </FormItem>
               </Col>
             </Row>
+
+            <!-- 重复的用户密码 -->
+            <Row :gutter="32" v-if="showrpass">
+              <Col span="18">
+                <FormItem label="Password" label-position="left" label-width="80">
+                  {{userInfo.password}}
+                </FormItem>
+              </Col>
+              <Col span="6">
+              </Col>
+            </Row>
+
           </Form>
+
           <div class="demo-drawer-footer">
             <Button style="margin-right: 8px" @click="showinfo = false">Apply</Button>
             <Button type="primary" @click.native="logout">Log out</Button>
@@ -107,6 +123,8 @@ export default {
       showinfo: false,
       editmobile: false,
       showrpass: false,
+      newmobile: '',
+      passButton: 'Edit',
       theme1: 'light',
       active: '',
       userInfo: {
@@ -136,6 +154,10 @@ export default {
       this.$cookies.remove('user')
       router.push('/Login')
     },
+    changemobile () {
+      // need to use api
+      this.$Message.info('change mobile')
+    },
     cancel () {
       this.$Message.info('Cancel the change of password')
     },
@@ -156,7 +178,14 @@ export default {
       }
     },
     changepassword () {
-      this.showrpass = false
+      this.showrpass = true
+      if (this.passButton === 'Edit') {
+        this.passButton = 'Apply'
+      } else { // when equals apply
+        this.passButton = 'Edit'
+        this.showrpass = false
+        // add axios api and ...
+      }
     },
     showUserInfo () {
       if (this.$cookies.get('user') === null) {

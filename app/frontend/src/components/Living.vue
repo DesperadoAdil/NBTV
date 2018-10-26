@@ -307,12 +307,11 @@
     };
   },
   methods: {
-    exportData (type)
-    {
+    exportData (type) {
       if (type === 1) {
         this.$refs.table.exportCsv({
-          filename: this.curstu+'数据统计'
-        });
+          filename: this.curstu + '数据统计'
+        })
       }
     },
     getstudents(){
