@@ -151,16 +151,21 @@
 
     name: 'load',
     mounted() {
-//    var timer = setTimeout(function(){
-//      doItPerSecond();
-//    },1000)
-//    var num = 0;
-//    function doItPerSecond() {
-//      //dosomething...
-//
-//      num++;
-//      console.log(num);
-//    };
+    var timer = setTimeout(function(){
+      doItPerSecond();
+    },1000)
+    var num = 0;
+    function doItPerSecond() {
+      //dosomething...
+      var player = polyvObject('#player').livePlayer({
+        'width':'100%',
+        'height':600+'px',
+        'uid':'7181857ac2',
+        'vid':'248980'
+      });
+      num++;
+      console.log(num);
+    };
   },
   created:function(){
     this.cururl = this.$route.params.url;
