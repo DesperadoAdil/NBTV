@@ -53,7 +53,46 @@
       <p slot="header" style="font-size: 20px">
         <span>设置选择题</span>
       </p>
-      <Form>
+      <Form model="sub_multi" label-width="80" style="width: 300px">
+        <FormItem label="Statement">
+          <Input v-model="sub_multi.statement"></Input>
+        </FormItem>
+        <!-- 现在仅实现四个选项 -->
+        <FormItem label="OptionA">
+          <Input v-model="answer1"></Input>
+        </FormItem>
+        <FormItem label="OptionB">
+          <Input v-model="answer2"></Input>
+        </FormItem>
+        <FormItem label="OptionC">
+          <Input v-model="answer3"></Input>
+        </FormItem>
+        <FormItem label="OptionD">
+          <Input v-model="answer4"></Input>
+        </FormItem>
+        <FormItem label="The Answer">
+          <Input v-model="sub_multi.answer"></Input>
+        </FormItem>
+        <!-- 以下为可以实现选项的动态添加删除的原型代码
+        <FormItem
+          v-for="option in sub_multi.optionList">
+          <Row>
+            <Col span="18">
+              <Input type="text" placeholder="Enter Your Choice"></Input>
+            </Col>
+            <Col span="4" offset="1">
+              <Button @click="handleRemove(index)">Delete</Button>
+            </Col>
+          </Row>
+        </FormItem>
+        <FormItem>
+          <Row>
+            <Col span="12">
+              <Button type="dashed" long @click="handleAdd" icon="md-add">Add a Choice</Button>
+            </Col>
+          </Row>
+        </FormItem>
+        -->
       </Form>
     </Modal>
 
@@ -171,13 +210,27 @@ export default{
       //      mainlivingcarddispaly:block,
       //      mainlivingcarddispaly:'none',
       // 功能对话框
+
+      // Yuxuan's variables:
       modal_pdf: false,
       modal_multi: false,
+      sub_multi: {
+        statement: '',
+        optionList: [this.answer1, this.answer2, this.answer3, this.answer4],
+        answer: '一个数字',
+        url: '教室url'
+      },
+      answer1: '',
+      answer2: '',
+      answer3: '',
+      answer4: '',
       modal_code: false,
       sub_code: {
         statement: '',
         language: '' // language 应当是个多选框
       },
+
+      // Shihang
       modal3: false,
       modal2: false,
       modal1: false,
@@ -387,11 +440,39 @@ export default{
       })
       this.modal1 = true
     },
+
+    // Yuxuan's Methods Starts Here
     addPDF () {
       // send pdf to backend
     },
+    handleReset (name) {
+      this.$refs[name].resetFields()
+    },
+    handleAdd () {
+      this.index++
+      this.sub_multi.optionList.push({
+        value: '',
+        index: this.index,
+        status: 1
+      })
+    },
+    handleRemove (index) {
+      this.sub_multi.optionList[index].status = 0
+    },
     addMulti () {
-      // send multi to backend
+      // send sub_multi should be set by now
+      // need to get url but I am waiting for hanky
+      axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 维护选择题列表,此处尚无
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('添加选择题失败')
+        }
+      })
     },
     addCode () {
       // sub_code should be set by now
@@ -408,6 +489,7 @@ export default{
         }
       })
     },
+    // Yuxuan's Methods Stops Here
     teaselect () {
       const data = this.curuser
       data['username'] = this.userInfo['username']
