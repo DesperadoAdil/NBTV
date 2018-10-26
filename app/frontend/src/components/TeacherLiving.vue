@@ -4,14 +4,17 @@
     <card  class="cardtea">
       <p slot="title" style="font-size: 20px">选项</p>
       <Menu style="width: 100%">
+        <!-- 添加教学资源 -->
         <Submenu name="1" class="menuitentea">
           <template slot="title" >
             <Icon type="ios-paper" />
             添加教学资源
           </template>
-          <MenuItem name="1-1" class="menuitentea" @click.native="upload">添加课件</MenuItem>
-          <MenuItem name="1-2" class="menuitentea" @click.native="exam">添加题目</MenuItem>
+          <MenuItem @click.native="modal_pdf = true">添加课件</MenuItem>
+          <MenuItem @click.native="modal_multi = true">添加选择题</MenuItem>
+          <MenuItem @click.native="modal_code = true">添加编程题</MenuItem>
         </Submenu>
+        <!-- 使用教学资源 -->
         <Submenu name="2" class="menuitentea">
           <template slot="title">
             <Icon type="ios-people" />
@@ -21,6 +24,7 @@
           <MenuItem name="2-2" class="menuitentea" @click.native="teaselect">布置选择题目</MenuItem>
           <MenuItem name="2-2" class="menuitentea" @click.native="closetext">退出教学资源</MenuItem>
         </Submenu>
+        <!-- 学生做题情况 -->
         <Submenu name="3" class="menuitentea"  >
           <template slot="title">
             <Icon type="ios-stats" />
@@ -35,7 +39,7 @@
     </card>
 
     <!--上传-->
-    <Modal   v-model="modal4"    @on-ok=""    @on-cancel="">
+    <Modal v-model="modal_pdf" @on-ok="addPDF()" @on-cancel="modal_pdf = false">
       <p slot="header" style="font-size: 20px">
         <span>上传课件</span>
       </p>
@@ -44,25 +48,36 @@
       </Upload>
     </Modal>
 
-    <Modal   v-model="modal5"    @on-ok=""    @on-cancel="">
+    <!--设置选择题-->
+    <Modal   v-model="modal_multi"    @on-ok="addMulti()"    @on-cancel="modal_multi = false">
       <p slot="header" style="font-size: 20px">
         <span>设置选择题</span>
       </p>
-      <Form ref="examOptions" :model="examOptions" :rules="ruleInline">
-        <FormItem prop="Description">
-          <Input type="text" v-model="examOptions.Description" placeholder="Description"></Input>
+      <Form>
+      </Form>
+    </Modal>
+
+    <!--设置编程题-->
+    <Modal   v-model="modal_code"    @on-ok="addCode()"    @on-cancel="modal_code = false">
+      <p slot="header" style="font-size: 20px">
+        <span>设置编程题</span>
+      </p>
+      <Form>
+        <FormItem label="Text">
+          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
+          <Input v-model="sub_code.statement"
+                 type="textarea" rows="4"
+                 placeholder="Enter Your Statement">
+          </Input>
         </FormItem>
-        <FormItem prop="OptionA">
-          <Input type="text" v-model="examOptions.OptionA" placeholder="OptionA"></Input>
-        </FormItem>
-        <FormItem prop="OptionB">
-          <Input type="text" v-model="examOptions.OptionB" placeholder="OptionB"></Input>
-        </FormItem>
-        <FormItem prop="OptionC">
-          <Input type="text" v-model="examOptions.OptionC" placeholder="OptionC"></Input>
-        </FormItem>
-        <FormItem prop="OptionD">
-          <Input type="text" v-model="examOptions.OptionD" placeholder="OptionD"></Input>
+        <FormItem label="Language">
+          <Select v-model="sub_code.language">
+            <Option>python</Option>
+            <Option>C++</Option>
+            <Option>Java</Option>
+            <Option>JavaScript</Option>
+            <Option>Vue.js</Option>
+          </Select>
         </FormItem>
       </Form>
     </Modal>
@@ -139,58 +154,70 @@
       </Card>
     </div>
 
-
-
   </div>
 </template>
 
+<!-- script starts
+    -->
 <!--<script src="https://player.polyv.net/livescript/liveplayer.js"></script>-->
+
 <script>
-  import axios from 'axios';
-  export default{
-
-    name: 'load',
-    mounted() {
-//    var timer = setTimeout(function(){
-//      doItPerSecond();
-//    },1000)
-//    var num = 0;
-//    function doItPerSecond() {
-//      //dosomething...
-//      var player = polyvObject('#player').livePlayer({
-//        'width':'100%',
-//        'height':600+'px',
-//        'uid':'7181857ac2',
-//        'vid':'248980'
-//      });
-//      num++;
-//      console.log(num);
-//    };
-  },
-  created:function(){
-    this.cururl = this.$route.params.url;
-    console.log(this.cururl);
-//    const s = document.createElement('script');
-//    s.type = 'text/javascript';
-//    s.src = 'https://player.polyv.net/livescript/liveplayer.js';
-//    document.body.appendChild(s);
-    this.showUserInfo();
-//    window.location.reload()
-  },
-
-  data() {
-
-
+import axios from 'axios'
+export default{
+  name: 'load',
+  data () {
     return {
-      //<!--vediosrc:'',-->
-//      mainlivingcarddispaly:block,
-//      mainlivingcarddispaly:'none',
-      displayPdfurl:'',
-      liaotianshiheight:60+'px',
-      littlelivingcarddisplay:false,
-      mainselectcarddisplay:false,
-      mainpdfcarddisplay:false,
-      mainlivingcarddisplay:true,
+      // <!--vediosrc:'',-->
+      //      mainlivingcarddispaly:block,
+      //      mainlivingcarddispaly:'none',
+      // 功能对话框
+      modal_pdf: false,
+      modal_multi: false,
+      modal_code: false,
+      sub_code: {
+        statement: '',
+        language: '' // language 应当是个多选框
+      },
+      modal3: false,
+      modal2: false,
+      modal1: false,
+      displayPdfurl: '',
+      liaotianshiheight: 60 + 'px',
+      littlelivingcarddisplay: false,
+      mainselectcarddisplay: false,
+      mainpdfcarddisplay: false,
+      mainlivingcarddisplay: true,
+      userInfo: {
+        username: '',
+        password: '',
+        mobile: '',
+        status: '',
+        job: ''
+      },
+      curuser: {
+        username: '',
+        job: '',
+        url: '',
+        item: ''
+      },
+      curstream: '',
+      vid: '248980',
+      cururl: '',
+      curvideo: true,
+      theme1: 'light',
+      toopen: true,
+      openclose: 'ios-videocam-outline',
+      opentext: '开播',
+      note: {
+        position: 'absolute',
+        top: '0px',
+        left: '0px',
+        width: '100%',
+        height: '100%',
+        backgroundSize: '100% 100%',
+        backgroundRepeat: 'no-repeat'
+      },
+      // 题目数据
       examOptions: {
         Description: '',
         OptionA: '',
@@ -206,419 +233,407 @@
         {
           title: '答案',
           key: 'ans'
-        },
+        }
       ],
-      curstu:'zsh',
-      curti:[
+      curstu: 'zsh',
+      curti: [
         {
-          title:'1',
-          ans:'A',
+          title: '1',
+          ans: 'A'
         },
         {
-          title:'2',
-          ans:'B',
+          title: '2',
+          ans: 'B'
         },
         {
-          title:'3',
-          ans:'int main()',
+          title: '3',
+          ans: 'int main()'
         },
         {
-          title:'4',
-          ans:'#include<> \n using namespace std; int main(){ int c; cout<<c++<<endl; return 0}',
-        },
+          title: '4',
+          ans: '#include<> \n using namespace std; int main(){ int c; cout<<c++<<endl; return 0}'
+        }
       ],
-      studentitems:['zsh','adil','zhq','hyx','xcj'],
-      ionselect:'111',
-      curtitle:'xjbx1',
-      curans:['1','2','3','4'],
-      curanswer:'A',
+      studentitems: ['zsh', 'adil', 'zhq', 'hyx', 'xcj'],
+      ionselect: '111',
+      curtitle: 'xjbx1',
+      curans: ['1', '2', '3', '4'],
+      curanswer: 'A',
       selectitems: [
         {
-          title:'xjbx1',
-          ans:['1','2','3','4'],
-          answer:'A'
+          title: 'xjbx1',
+          ans: ['1', '2', '3', '4'],
+          answer: 'A'
         },
         {
-          title:'xjbx2',
-          ans:['1','2','3','4'],
-          answer:'A'
+          title: 'xjbx2',
+          ans: ['1', '2', '3', '4'],
+          answer: 'A'
         },
         {
-          title:'xjbx3',
-          ans:['1','2','3','4'],
-          answer:'A'
+          title: 'xjbx3',
+          ans: ['1', '2', '3', '4'],
+          answer: 'A'
         },
         {
-          title:'xjbx4',
-          ans:['1','2','3','4'],
-          answer:'A'
-        },
+          title: 'xjbx4',
+          ans: ['1', '2', '3', '4'],
+          answer: 'A'
+        }
       ],
       pdfitems: [
         {
-          title:'pdf1',
-          url:'/static/pdf/1-1.pdf',
+          title: 'pdf1',
+          url: '/static/pdf/1-1.pdf'
         },
         {
-          title:'pdf2',
-          url:'/static/pdf/1-1.pdf',
+          title: 'pdf2',
+          url: '/static/pdf/1-1.pdf'
         },
         {
-          title:'pdf3',
-          url:'/static/pdf/1-1.pdf',
+          title: 'pdf3',
+          url: '/static/pdf/1-1.pdf'
         },
         {
-          title:'pdf4',
-          url:'/static/pdf/1-1.pdf',
+          title: 'pdf4',
+          url: '/static/pdf/1-1.pdf'
         }
-      ],
-      userInfo: {
-        username: '',
-        password: '',
-        mobile: '',
-        status: '',
-        job:'',
-      },
-      curuser:{
-        username: '',
-        job: '',
-        url: '',
-        item:'',
-      },
-      modal3: false,
-      modal2: false,
-      modal1: false,
-      modal4: false,
-      modal5: false,
-      curstream:'',
-      vid:'248980',
-      cururl:'',
-      curvideo:true,
-      theme1: 'light',
-      toopen:true,
-      openclose:'ios-videocam-outline',
-      opentext:'开播',
-      note: {
-        position:"absolute",
-        top:"0px",
-        left:"0px",
-        width: "100%",
-        height:"100%",
-        backgroundSize: "100% 100%",
-        backgroundRepeat: "no-repeat",
-      }
-    };
+      ]
+    }
   },
   methods: {
-    getUserMedia(constraints, success, error) {
-      let mainvideo00 = document.getElementById('mainvideo00');
-      let canvas = document.getElementById('canvas');
-      let context = canvas.getContext('2d');
+    getUserMedia (constraints, success, error) {
+      let mainvideo00 = document.getElementById('mainvideo00')
+      let canvas = document.getElementById('canvas')
+      let context = canvas.getContext('2d')
       if (navigator.mediaDevices.getUserMedia) {
-        //最新的标准API
-        navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+        // 最新的标准API
+        navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error)
       } else if (navigator.webkitGetUserMedia) {
-        //webkit核心浏览器
-        navigator.webkitGetUserMedia(constraints,success, error)
+        // webkit核心浏览器
+        navigator.webkitGetUserMedia(constraints, success, error)
       } else if (navigator.mozGetUserMedia) {
-        //firfox浏览器
-        navigator.mozGetUserMedia(constraints, success, error);
+        // firfox浏览器
+        navigator.mozGetUserMedia(constraints, success, error)
       } else if (navigator.getUserMedia) {
-        //旧版API
-        navigator.getUserMedia(constraints, success, error);
+        // 旧版API
+        navigator.getUserMedia(constraints, success, error)
       }
     },
-    success(stream) {
+    success (stream) {
       let littlevideo00 = document.getElementById('littlevideo00')
-      let mainvideo00 = document.getElementById('mainvideo00');
-      let canvas = document.getElementById('canvas');
-      let context = canvas.getContext('2d');
-      //兼容webkit核心浏览器
-      let CompatibleURL = window.URL || window.webkitURL;
-      //将视频流设置为video元素的源
-      console.log(stream);
+      let mainvideo00 = document.getElementById('mainvideo00')
+      let canvas = document.getElementById('canvas')
+      let context = canvas.getContext('2d')
+      // 兼容webkit核心浏览器
+      let CompatibleURL = window.URL || window.webkitURL
+      // 将视频流设置为video元素的源
+      console.log(stream)
 
-      //video.src = CompatibleURL.createObjectURL(stream);
-      if(this.curvideo){
-        mainvideo00.srcObject = stream;
-        mainvideo00.play();
-        littlevideo00.pause();
+      // video.src = CompatibleURL.createObjectURL(stream);
+      if (this.curvideo) {
+        mainvideo00.srcObject = stream
+        mainvideo00.play()
+        littlevideo00.pause()
+      } else {
+        littlevideo00.srcObject = stream
+        littlevideo00.play()
+        mainvideo00.pause()
       }
-      else{
-        littlevideo00.srcObject = stream;
-        littlevideo00.play();
-        mainvideo00.pause()      }
-
     },
-    error(error) {
-      let mainvideo00 = document.getElementById('mainvideo00');
-      let canvas = document.getElementById('canvas');
-      let context = canvas.getContext('2d');
-      alert('访问用户媒体设备失败');
+    error (error) {
+      let mainvideo00 = document.getElementById('mainvideo00')
+      let canvas = document.getElementById('canvas')
+      let context = canvas.getContext('2d')
+      alert('访问用户媒体设备失败')
     },
-      exportData (type)
-      {
-        if (type === 1) {
-          this.$refs.table.exportCsv({
-            filename: this.curstu+'数据统计'
-          });
-        }
-      },
-      getstudents(){
-      console.log("1321312");
-      const data = this.curuser;
-      data['username'] = this.userInfo['username'];
-      data['job'] = this.userInfo['job'];
-      data['url'] = this.cururl;
+    exportData (type) {
+      if (type === 1) {
+        this.$refs.table.exportCsv({
+          filename: this.curstu + '数据统计'
+        })
+      }
+    },
+    getstudents () {
+      console.log('1321312')
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
       axios.post('/api/user/getstudents', data).then((resp) => {
-        this.studentitems=resp.studentitems;
-      });
+        this.studentitems = resp.studentitems
+      })
     },
-    showstudentti(item){
-      console.log("1321312");
-      this.curstu=item;
-      const data = this.curuser;
-      data['username'] = this.userInfo['username'];
-      data['job'] = this.userInfo['job'];
-      data['url'] = this.cururl;
-      data['item'] = this.curstu;
+    showstudentti (item) {
+      console.log('1321312')
+      this.curstu = item
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      data['item'] = this.curstu
       axios.post('/api/user/getstudentsti', data).then((resp) => {
-        this.curti=resp.curti;
-      });
-      this.modal3=true;
+        this.curti = resp.curti
+      })
+      this.modal3 = true
     },
-    teatext(){
-      const data = this.curuser;
-      data['username'] = this.userInfo['username'];
-      data['job'] = this.userInfo['job'];
-      data['url'] = this.cururl;
+    teatext () {
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
       axios.post('/api/user/getpdfs', data).then((resp) => {
-        this.pdfitems=resp.pdfitems;
-      });
-      this.modal1=true;
+        this.pdfitems = resp.pdfitems
+      })
+      this.modal1 = true
     },
-    upload () {
-      var params = new URLSearchParams()
-      this.modal4 = true
+    addPDF () {
+      // send pdf to backend
     },
-    exam () {
-      var params = new URLSearchParams()
-      this.modal5 = true
+    addMulti () {
+      // send multi to backend
     },
-    teaselect(){
-      const data = this.curuser;
-      data['username'] = this.userInfo['username'];
-      data['job'] = this.userInfo['job'];
-      data['url'] = this.cururl;
+    addCode () {
+      // sub_code should be set by now
+      // post
+      axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 应当要维护一下代码题的列表,此处未添加
+          window.location.reload()
+        // 如果失败
+        } else {
+          this.$Message.error('添加代码题失败')
+        }
+      })
+    },
+    teaselect () {
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
       axios.post('/api/user/getselects', data).then((resp) => {
-        this.selectitems=resp.selectitems;
-      });
-      this.modal2=true;
+        this.selectitems = resp.selectitems
+      })
+      this.modal2 = true
     },
-    showpdf:function(ipdf){
-      console.log("1321312");
+    showpdf: function (ipdf) {
+      console.log('1321312')
       this.$Modal.confirm({
         title: '提示',
-        content: '是否展示'+ipdf.title,
+        content: '是否展示' + ipdf.title,
         onOk: () => {
-          const data = this.curuser;
-          data['username'] = this.userInfo['username'];
-          data['job'] = this.userInfo['job'];
-          data['url'] = this.cururl;
-          data['item'] = ipdf.title;
+          const data = this.curuser
+          data['username'] = this.userInfo['username']
+          data['job'] = this.userInfo['job']
+          data['url'] = this.cururl
+          data['item'] = ipdf.title
           axios.post('/api/user/showpdfs', data).then((resp) => {
 
-          });
+          })
 
-          this.littlelivingcarddisplay=true;
-          this.mainselectcarddisplay=false;
-          this.mainpdfcarddisplay=true;
-          this.mainlivingcarddisplay=false;
-          this.liaotianshiheight=330+'px';
-          this.displayPdfurl="/static/pdfjs/web/viewer.html?file="+ipdf.url;
-          this.curvideo=false;
-          if(!this.toopen) {
-            let mainvideo00 = document.getElementById('mainvideo00');
-            let canvas = document.getElementById('canvas');
-            let context = canvas.getContext('2d');
+          this.littlelivingcarddisplay = true
+          this.mainselectcarddisplay = false
+          this.mainpdfcarddisplay = true
+          this.mainlivingcarddisplay = false
+          this.liaotianshiheight = 330 + 'px'
+          this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
+          this.curvideo = false
+          if (!this.toopen) {
+            let mainvideo00 = document.getElementById('mainvideo00')
+            let canvas = document.getElementById('canvas')
+            let context = canvas.getContext('2d')
             if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-              console.log("sadasdsad")
-              //调用用户媒体设备, 访问摄像头
-              this.getUserMedia({video: {width: 100, height: 320}}, this.success, this.error);
+              console.log('sadasdsad')
+              // 调用用户媒体设备, 访问摄像头
+              this.getUserMedia({video: {width: 100, height: 320}}, this.success, this.error)
             } else {
-              alert('不支持访问用户媒体');
+              alert('不支持访问用户媒体')
             }
           }
 
-          this.modal1=false;
+          this.modal1 = false
         },
         onCancel: () => {
-          this.$Message.info('Clicked cancel');
+          this.$Message.info('Clicked cancel')
         }
-      });
-
+      })
     },
-    showselect:function(iselect){
-      console.log("1321312");
+    showselect: function (iselect) {
+      console.log('1321312')
       this.$Modal.confirm({
         title: '提示',
-        content: '是否展示: \n ' +iselect.title,
+        content: '是否展示: \n ' + iselect.title,
         onOk: () => {
-          const data = this.curuser;
-          data['username'] = this.userInfo['username'];
-          data['job'] = this.userInfo['job'];
-          data['url'] = this.cururl;
-          data['item'] = iselect.title;
+          const data = this.curuser
+          data['username'] = this.userInfo['username']
+          data['job'] = this.userInfo['job']
+          data['url'] = this.cururl
+          data['item'] = iselect.title
           axios.post('/api/user/showselect', data).then((resp) => {
 
-          });
-          this.littlelivingcarddisplay=true;
-          this.mainselectcarddisplay=true;
-          this.mainpdfcarddisplay=false;
-          this.mainlivingcarddisplay=false;
-          this.liaotianshiheight=330+'px';
-          this.curvideo=false;
-          if(!this.toopen){
-            let mainvideo00 = document.getElementById('mainvideo00');
-            let canvas = document.getElementById('canvas');
-            let context = canvas.getContext('2d');
+          })
+          this.littlelivingcarddisplay = true
+          this.mainselectcarddisplay = true
+          this.mainpdfcarddisplay = false
+          this.mainlivingcarddisplay = false
+          this.liaotianshiheight = 330 + 'px'
+          this.curvideo = false
+          if (!this.toopen) {
+            let mainvideo00 = document.getElementById('mainvideo00')
+            let canvas = document.getElementById('canvas')
+            let context = canvas.getContext('2d')
             if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-              console.log("sadasdsad")
-              //调用用户媒体设备, 访问摄像头
-              this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
+              console.log('sadasdsad')
+              // 调用用户媒体设备, 访问摄像头
+              this.getUserMedia({video: {width: 100, height: 320}}, this.success, this.error)
             } else {
-              alert('不支持访问用户媒体');
+              alert('不支持访问用户媒体')
             }
           }
 
-          this.curtitle=iselect.title;
-          this.curans=iselect.ans;
-          this.curanswer=iselect.answer;
-          this.modal2=false;
+          this.curtitle = iselect.title
+          this.curans = iselect.ans
+          this.curanswer = iselect.answer
+          this.modal2 = false
         },
         onCancel: () => {
-          this.$Message.info('Clicked cancel');
+          this.$Message.info('Clicked cancel')
         }
-      });
-
+      })
     },
-    closetext(){
+    closetext () {
       this.$Modal.confirm({
         title: '提示',
         content: '确认退出教学资源',
         onOk: () => {
-          console.log("1321312");
-          this.littlelivingcarddisplay=false;
-          this.mainselectcarddisplay=false;
-          this.mainpdfcarddisplay=false;
-          this.mainlivingcarddisplay=true;
-          this.liaotianshiheight=60+'px';
-          this.curvideo=true;
-          if(!this.toopen){
-            let mainvideo00 = document.getElementById('mainvideo00');
-            let canvas = document.getElementById('canvas');
-            let context = canvas.getContext('2d');
+          console.log('1321312')
+          this.littlelivingcarddisplay = false
+          this.mainselectcarddisplay = false
+          this.mainpdfcarddisplay = false
+          this.mainlivingcarddisplay = true
+          this.liaotianshiheight = 60 + 'px'
+          this.curvideo = true
+          if (!this.toopen) {
+            let mainvideo00 = document.getElementById('mainvideo00')
+            let canvas = document.getElementById('canvas')
+            let context = canvas.getContext('2d')
             if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-              console.log("sadasdsad")
-              //调用用户媒体设备, 访问摄像头
-              this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
+              console.log('sadasdsad')
+              // 调用用户媒体设备, 访问摄像头
+              this.getUserMedia({video: {width: 100, height: 320}}, this.success, this.error)
             } else {
-              alert('不支持访问用户媒体');
+              alert('不支持访问用户媒体')
             }
           }
-
         },
         onCancel: () => {
-          this.$Message.info('Clicked cancel');
+          this.$Message.info('Clicked cancel')
         }
-      });
+      })
     },
-    showUserInfo() {
-      console.log("1234567");
-      this.userInfo['username'] = this.$cookies.get('user').username;
-      this.userInfo['status']= this.$cookies.get('user').status;
-      this.userInfo['password'] = this.$cookies.get('user').password;
-      this.userInfo['mobile'] = this.$cookies.get('user').mobile;
-      this.userInfo['job'] = this.$cookies.get('user').job;
+    showUserInfo () {
+      console.log('1234567')
+      this.userInfo['username'] = this.$cookies.get('user').username
+      this.userInfo['status'] = this.$cookies.get('user').status
+      this.userInfo['password'] = this.$cookies.get('user').password
+      this.userInfo['mobile'] = this.$cookies.get('user').mobile
+      this.userInfo['job'] = this.$cookies.get('user').job
     },
-
-    teaopenclose(){
-
-      if(this.toopen)
-      {
+    teaopenclose () {
+      if (this.toopen) {
         this.$Modal.confirm({
           title: '提示',
           content: '是否确认开播',
           onOk: () => {
-            this.toopen=false;
-            this.opentext='关播';
-            this.openclose='ios-power';
-            this.getstudents();
+            this.toopen = false
+            this.opentext = '关播'
+            this.openclose = 'ios-power'
+            this.getstudents()
 
-            console.log("sadasdsad")
-            let mainvideo00 = document.getElementById('mainvideo00');
-            let canvas = document.getElementById('canvas');
-            let context = canvas.getContext('2d');
+            console.log('sadasdsad')
+            let mainvideo00 = document.getElementById('mainvideo00')
+            let canvas = document.getElementById('canvas')
+            let context = canvas.getContext('2d')
             if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-              console.log("sadasdsad")
-              //调用用户媒体设备, 访问摄像头
-              this.getUserMedia({video : {width: 100, height: 320}}, this.success, this.error);
+              console.log('sadasdsad')
+              // 调用用户媒体设备, 访问摄像头
+              this.getUserMedia({video: {width: 100, height: 320}}, this.success, this.error)
             } else {
-              alert('不支持访问用户媒体');
+              alert('不支持访问用户媒体')
             }
 
-
-            const data = this.curuser;
-            data['username'] = this.userInfo['username'];
-            data['job'] = this.userInfo['job'];
-            data['url'] = this.cururl;
+            const data = this.curuser
+            data['username'] = this.userInfo['username']
+            data['job'] = this.userInfo['job']
+            data['url'] = this.cururl
             axios.post('/api/user/openliving', data).then((resp) => {
-              this.vid=reap.vid;
-              var div = document.getElementById("player");
-              div.style.vid=resp.vid;
-            });
-
+              this.vid = reap.vid
+              var div = document.getElementById('player')
+              div.style.vid = resp.vid
+            })
           },
           onCancel: () => {
-
           }
-        });
-
-
-      }
-      else
-      {
+        })
+      } else {
         this.$Modal.confirm({
           title: '提示',
           content: '是否确认关播',
           onOk: () => {
-            this.toopen=true;
-            this.opentext='开播';
-            this.openclose='ios-videocam-outline';
+            this.toopen = true
+            this.opentext = '开播'
+            this.openclose = 'ios-videocam-outline'
 
-//            let mainvideo00 = document.getElementById('mainvideo00');
-//            mainvideo00.srcObject = null;
-//            mainvideo00.pause();
+            //            let mainvideo00 = document.getElementById('mainvideo00');
+            //            mainvideo00.srcObject = null;
+            //            mainvideo00.pause();
             window.location.reload()
 
-
-            const data = this.curuser;
-            data['username'] = this.userInfo['username'];
-            data['job'] = this.userInfo['job'];
-            data['url'] = this.cururl;
+            const data = this.curuser
+            data['username'] = this.userInfo['username']
+            data['job'] = this.userInfo['job']
+            data['url'] = this.cururl
             axios.post('/api/user/closeliving', data).then((resp) => {
-
-            });
+            })
           },
           onCancel: () => {
 
           }
-        });
+        })
       }
     },
-
+    mounted () {
+      //    var timer = setTimeout(function(){
+      //      doItPerSecond();
+      //    },1000)
+      //    var num = 0;
+      //    function doItPerSecond() {
+      //      //dosomething...
+      //      var player = polyvObject('#player').livePlayer({
+      //        'width':'100%',
+      //        'height':600+'px',
+      //        'uid':'7181857ac2',
+      //        'vid':'248980'
+      //      });
+      //      num++;
+      //      console.log(num);
+      //    };
+    },
+    created: function () {
+      this.cururl = this.$route.params.url
+      console.log(this.cururl)
+      //    const s = document.createElement('script');
+      //    s.type = 'text/javascript';
+      //    s.src = 'https://player.polyv.net/livescript/liveplayer.js';
+      //    document.body.appendChild(s);
+      this.showUserInfo()
+      //    window.location.reload()
+    }
   }
-  };
+}
+
 </script>
 <style>
   .login-container{
@@ -723,4 +738,3 @@
     margin-top: 15px;
   }
 </style>
-
