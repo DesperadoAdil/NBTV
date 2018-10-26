@@ -76,7 +76,7 @@
               </Col>
               <Col span="6">
                 <FormItem>
-                  <Button >Send</Button>
+                  <Button @click="sendVerification()">Send</Button>
                 </FormItem>
               </Col>
             </Row>
@@ -197,6 +197,9 @@ export default {
         new_mobile: '',
         new_verification: '',
         job: ''
+      },
+      verificationSub: {
+        mobile: ''
       }
     }
   },
@@ -250,6 +253,22 @@ export default {
       })
       // Hide the bars
       this.showRpass = false
+    },
+    sendVerification () {
+      // send verification to both phones
+      this.verificationSub.mobile = this.userInfo.mobile
+      axios.post('/api/user/request_verification', this.verificationSub).then((resp) => {
+        if (resp.data.status === 'success') {
+          this.$.message('原手机验证码发送成功')
+        }
+      })
+      // send to new phone
+      this.verificationSub.mobile = this.newMobile
+      axios.post('/api/user/request_verification', this.verificationSub).then((resp) => {
+        if (resp.data.status === 'success') {
+          this.$.message('新手机验证码发送成功')
+        }
+      })
     },
     changeMobile () {
       if (this.showNewMobile === false) {
