@@ -12,7 +12,7 @@
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "build": "node build/build.js",
-    "postbuild": "mv dist/index.html ../templates/ && mv dist/static/js ../static/ && mv dist/static/css ../static/ && mv dist/static/img ../static/ && mv dist/static/fonts ../static/"
+    "postbuild": "mv dist/index.html ../app/templates/ && mv dist/static/js ../app/static/ && mv dist/static/css ../app/static/ && mv dist/static/img ../app/static/ && mv dist/static/fonts ../app/static/"
   },
   "dependencies": {
     "axios": "^0.18.0",
