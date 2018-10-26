@@ -26,8 +26,9 @@
       <MenuItem name="1" style="float:right;" @click.native="showinfo = true" type="primary">
         <Icon v-if="LoginOrLogout === '登录'" type="ios-contact-outline" />
           {{ LoginOrLogout }}
-        <Drawer title="User Info" v-model="showinfo" width="480">
-          <Form>
+        <Drawer title="User Information" v-model="showinfo" width="480">
+          <Form inline>
+            <!-- 用户名称 -->
             <Row :gutter="32">
               <Col span="18">
                 <FormItem label="Name" label-position="left" label-width="80">
@@ -37,6 +38,7 @@
               <Col span="6">
               </Col>
             </Row>
+            <!-- 用户身份 -->
             <Row :gutter="32">
               <Col span="18">
                 <FormItem label="Job" label-position="left" label-width="80">
@@ -46,22 +48,11 @@
               <Col span="6">
               </Col>
             </Row>
-            <Row :gutter="32">
-              <Col span="18">
-                <FormItem label="Password" label-position="left" label-width="80">
-                  <Input v-model="userInfo.password" placeholder="please enter user name" />
-                </FormItem>
-              </Col>
-              <Col span="6">
-                <FormItem>
-                  <Button>Edit</Button>
-                </FormItem>
-              </Col>
-            </Row>
+            <!-- 用户手机号 -->
             <Row :gutter="32">
               <Col span="18">
                 <FormItem label="Mobile" label-position="left" label-width="80">
-                  <Input v-model="userInfo.mobile" placeholder="please enter user name" />
+                  {{userInfo.mobile}}
                 </FormItem>
               </Col>
               <Col span="6">
@@ -72,34 +63,28 @@
             </Row>
             <Row :gutter="32">
               <Col span="18">
-                <FormItem label="Status" label-position="left" label-width="80">
-                  <Input v-model="userInfo.status" placeholder="please enter user name" />
+                <FormItem label="Password" label-position="left" label-width="80">
+                  <Input v-model="userInfo.password" placeholder="please enter user password" readonly="true"/>
                 </FormItem>
               </Col>
               <Col span="6">
                 <FormItem>
-                  <Button>Edit</Button>
+                  <Button @click="showrpass = true">Edit</Button>
                 </FormItem>
               </Col>
             </Row>
-            <!--
-            <FormItem label="Name" label-position = "left" label-width="80">
-              <Input v-model="userInfo.username" placeholder="enter name" readonly="true"/>
-            </FormItem>
-            <FormItem label="mobile" label-position = "left" label-width="80" >
-              <Input v-model="userInfo.mobile" placeholder="enter mobile" readonly="editmobile = true"/>
-            </FormItem>
-            <FormItem label="password" label-position = "left" label-width="80" >
-              <Input v-model="userInfo.password" placeholder="enter mobile" readonly="editmobile = true"/>
-            </FormItem>
-            <FormItem  label="repeat password" label-position = "left" label-width="80" >
-              <Input v-model="userInfo.password" placeholder="enter mobile" readonly="editmobile = true"/>
-            </FormItem>
-            <FormItem label="status" label-position = "left" label-width="80" >
-              <Input v-model="userInfo.status" placeholder="enter mobile" readonly="editmobile = true"/>
-            </FormItem>
-
-            -->
+            <Row :gutter="32" >
+              <Col span="18">
+                <FormItem label="Password" label-position="left" label-width="80" v-model="showrpass">
+                  <Input v-model="userInfo.password" placeholder="please repeat password" />
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <Button @click="changepassword()">Apply</Button>
+                </FormItem>
+              </Col>
+            </Row>
           </Form>
           <div class="demo-drawer-footer">
             <Button style="margin-right: 8px" @click="showinfo = false">Apply</Button>
@@ -109,36 +94,6 @@
       </MenuItem>
     </Menu>
     <router-view/>
-    <!--
-    <Drawer title="show" v-model="showinfo" width="720">
-      <Form :model="infopage">
-        <FormItem label="Name" label-position="top">
-          <Input v-model="userInfo.username" placeholder="please enter user name" />
-        </FormItem>
-
-        <FormItem label="Password" label-position="top">
-          <Input v-model="formInline.password" placeholder="please enter password" />
-        </FormItem>
-
-        <FormItem label="Repeat Password" label-position="top">
-          <Input v-model="formInline.rpassword" placeholder="please re-enter password" />
-        </FormItem>
-
-        <FormItem label="Mobile" label-position="top">
-          <Input v-model="userInfo.mobile" placeholder="please enter mobile number" />
-        </FormItem>
-
-        <FormItem label="Verification" label-position="top">
-          <Input v-model="formInline.Verification" placeholder="please enter verification" />
-        </FormItem>
-
-      </Form>
-      <div class="demo-drawer-footer">
-        <Button style="margin-right: 8px" @click="showinfo = false">Cancel</Button>
-        <Button type="primary" @click="showinfo = false">Submit</Button>
-      </div>
-    </Drawer>
-    -->
   </div>
 </template>
 
@@ -150,6 +105,7 @@ export default {
     return {
       showinfo: false,
       editmobile: false,
+      showrpass: false,
       theme1: 'light',
       active: '',
       userInfo: {
@@ -194,6 +150,9 @@ export default {
       } else if (name === 'UserInfo') {
         router.push('/UserInfo')
       }
+    },
+    changepassword () {
+      this.showrpass = false
     },
     showUserInfo () {
       if (this.$cookies.get('user') === null) {
