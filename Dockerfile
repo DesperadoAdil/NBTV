@@ -18,7 +18,7 @@ RUN pip3 install --upgrade pip
 RUN pip3 install --trusted-host mirrors.cloud.tencent.com \
     -i http://mirrors.cloud.tencent.com/pypi/simple/ -r requirements.txt
 COPY app $HOME
-WORKDIR $HOME/app/frontend
+WORKDIR $HOME/frontend
 # 加速
 RUN npm config set registry https://registry.npm.taobao.org
 RUN CHROMEDRIVER_CDNURL=https://npm.taobao.org/mirrors/chromedriver npm install
