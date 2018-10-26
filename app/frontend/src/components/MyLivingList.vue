@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     directskip (iitem) {
-      this.$router.push({path: '/teacherliving/'+iitem.url,name:'TeacherLiving'});
+      this.$router.push({path: '/teacherliving/'+iitem.url});
     },
     getBackUp (index) {
       this.updateModal = true
