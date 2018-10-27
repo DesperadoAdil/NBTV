@@ -461,8 +461,8 @@ export default{
     },
     addMulti () {
       // send sub_multi should be set by now
-      // need to get url but I am waiting for hanky
-      /*
+      this.sub_multi.url = this.cururl
+      /* 把选项数组改成字典
       axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
@@ -479,7 +479,7 @@ export default{
     addCode () {
       // sub_code should be set by now
       // post
-      /*
+      /* 后端还没写好
       axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
