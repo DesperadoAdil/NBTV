@@ -215,7 +215,6 @@ export default {
       this.mobileSub.new_verification = this.newVerification
       this.mobileSub.job = this.userInfo.job
       // post
-      /*
       axios.post('/api/user/change_mobile', this.mobileSub).then((resp) => {
         // this.$Message.success(resp.data.status)
         // 如果成功
@@ -229,7 +228,6 @@ export default {
           this.$Message.error('更改失败')
         }
       })
-      */
       // Hide the bars
       this.showNewMobile = false
     },
@@ -240,7 +238,6 @@ export default {
       this.passSub.new_password = this.newPassword
       this.passSub.job = this.userInfo.job
       // post
-      /*
       axios.post('/api/user/change_password', this.passSub).then((resp) => {
         // this.$Message.success(resp.data.status)
         // 如果成功
@@ -254,14 +251,13 @@ export default {
           this.$Message.error('更改失败')
         }
       })
-      */
       // Hide the bars
       this.showRpass = false
     },
     sendVerification () {
       // send verification to both phones
       this.verificationSub.mobile = this.userInfo.mobile
-      /*
+
       axios.post('/api/user/request_verification', this.verificationSub).then((resp) => {
         if (resp.data.status === 'success') {
           this.$.message('原手机验证码发送成功')
@@ -275,7 +271,6 @@ export default {
           this.$.message('新手机验证码发送成功')
         }
       })
-      */
     },
     changeMobile () {
       if (this.showNewMobile === false) {
