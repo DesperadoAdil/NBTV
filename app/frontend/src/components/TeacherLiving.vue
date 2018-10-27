@@ -392,7 +392,7 @@
       data['username'] = this.userInfo['username'];
       data['job'] = this.userInfo['job'];
       data['url'] = this.cururl;
-      axios.post('/api/user/getpdfs', data).then((resp) => {
+      axios.post('/api/resourse/getpdfs', data).then((resp) => {
         this.pdfitems=resp.pdfitems;
       });
       this.modal1=true;
@@ -410,7 +410,7 @@
       data['username'] = this.userInfo['username'];
       data['job'] = this.userInfo['job'];
       data['url'] = this.cururl;
-      axios.post('/api/user/getselects', data).then((resp) => {
+      axios.post('/api/resourse/getselects', data).then((resp) => {
         this.selectitems=resp.selectitems;
       });
       this.modal2=true;
