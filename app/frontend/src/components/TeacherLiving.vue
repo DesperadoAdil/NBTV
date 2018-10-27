@@ -430,21 +430,26 @@ export default{
       })
       this.modal3 = true
     },
-    teatext () {
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      axios.post('/api/user/getpdfs', data).then((resp) => {
-        this.pdfitems = resp.pdfitems
-      })
-      this.modal1 = true
-    },
+
+    teatext()
+          {
+            const data = this.curuser;
+            data['username'] = this.userInfo['username'];
+            data['job'] = this.userInfo['job'];
+            data['url'] = this.cururl;
+            axios.post('/api/resourse/getpdfs', data).then((resp) => {
+              this.pdfitems = resp.pdfitems;
+          }
+          )
+          ;
+          this.modal1 = true;
+          },
 
     // Yuxuan's Methods Starts Here
-    addPDF () {
+    addPDF(){
       // send pdf to backend
-    },
+    }     ,
+
     handleReset (name) {
       this.$refs[name].resetFields()
     },
@@ -456,6 +461,20 @@ export default{
         status: 1
       })
     },
+
+    teaselect()
+        {
+          const data = this.curuser;
+          data['username'] = this.userInfo['username'];
+          data['job'] = this.userInfo['job'];
+          data['url'] = this.cururl;
+          axios.post('/api/resourse/getselects', data).then((resp) => {
+            this.selectitems = resp.selectitems;
+        }
+        )
+        ;
+        this.modal2 = true;
+        },
     handleRemove (index) {
       this.sub_multi.optionList[index].status = 0
     },
@@ -494,16 +513,7 @@ export default{
       */
     },
     // Yuxuan's Methods Stops Here
-    teaselect () {
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      axios.post('/api/user/getselects', data).then((resp) => {
-        this.selectitems = resp.selectitems
-      })
-      this.modal2 = true
-    },
+
     showpdf: function (ipdf) {
       console.log('1321312')
       this.$Modal.confirm({
