@@ -23,11 +23,12 @@
 
       -->
 
-      <MenuItem name="1" style="float:right;" @click.native="showinfo = true" type="primary">
-        <Icon v-if="LoginOrLogout === '登录'" type="ios-contact-outline" />
-          {{ LoginOrLogout }}
-        <Drawer title="User Information" v-model="showinfo" width="480">
-          <Form inline>
+      <MenuItem name="1" style="float:right;" @click.native="showInfo = true" type="primary">
+        <Icon v-if="LoginOrLogout === '登录'" type="ios-contact-outline" />{{ LoginOrLogout }}
+        <Drawer title="User Information" v-model="showInfo" width="480">
+          <Form>
+            <br>
+            <br>
             <!-- 用户名称 -->
             <Row :gutter="32">
               <Col span="18">
@@ -38,6 +39,8 @@
               <Col span="6">
               </Col>
             </Row>
+            <br>
+            <br>
             <!-- 用户身份 -->
             <Row :gutter="32">
               <Col span="18">
@@ -48,46 +51,96 @@
               <Col span="6">
               </Col>
             </Row>
+            <br>
+            <br>
             <!-- 用户手机号 -->
             <Row :gutter="32">
               <Col span="18">
-                <FormItem label="Mobile" label-position="left" label-width="80">
-                  {{userInfo.mobile}}
+                <FormItem label="Current Mobile" label-position="left" label-width="80">
+                  <Input type="text" v-model="userInfo.mobile" readonly></Input>
                 </FormItem>
               </Col>
               <Col span="6">
                 <FormItem>
-                  <Button>Edit</Button>
+                  <Button @click="changeMobile()">{{mobileButton}}</Button>
                 </FormItem>
               </Col>
             </Row>
-            <Row :gutter="32">
+
+            <!-- 用户的新手机号 -->
+            <Row :gutter="32" v-if="showNewMobile">
               <Col span="18">
-                <FormItem label="Password" label-position="left" label-width="80">
-                  <Input v-model="userInfo.password" placeholder="please enter user password" readonly="true"/>
+                <FormItem label="New Mobile" label-position="left" label-width="80">
+                  <Input type="text" v-model="this.newMobile" placeholder="New Phone Number Here"></Input>
                 </FormItem>
               </Col>
               <Col span="6">
                 <FormItem>
-                  <Button @click="showrpass = true">Edit</Button>
+                  <Button @click="sendVerification()">Send</Button>
                 </FormItem>
               </Col>
             </Row>
+
+            <!-- 设置旧手机的验证码 -->
+            <Row :gutter="32" v-if="showNewMobile">
+              <Col span="18">
+                <FormItem label="Verification" label-position="left" label-width="80">
+                  <Input v-model="oldVerification" placeholder="Old Verification Code Here"></Input>
+                </FormItem>
+              </Col>
+              <Col span="6">
+              </Col>
+            </Row>
+
+            <!-- 设置新手机的验证码 -->
+            <Row :gutter="32" v-if="showNewMobile">
+              <Col span="18">
+                <FormItem label="Verification" label-position="left" label-width="80">
+                  <Input v-model="newVerification" placeholder="New Verification Code Here"></Input>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <Button @click="submitMobileChange()">Verify</Button>
+                </FormItem>
+              </Col>
+            </Row>
+
+            <br>
+            <br>
+
+            <!-- 用户密码 -->
             <Row :gutter="32" >
               <Col span="18">
-                <FormItem label="Password" label-position="left" label-width="80" v-model="showrpass">
-                  <Input v-model="userInfo.password" placeholder="please repeat password" />
+                <FormItem label="Current Password" label-position="left" label-width="80">
+                  <Input type="text" v-model="newPassword"></Input>
                 </FormItem>
               </Col>
               <Col span="6">
                 <FormItem>
-                  <Button @click="changepassword()">Apply</Button>
+                  <Button @click="changePassword()">{{passButton}}</Button>
                 </FormItem>
               </Col>
             </Row>
+
+            <!-- 重复的用户密码 -->
+            <Row :gutter="32" v-if="showRpass">
+              <Col span="18">
+                <FormItem label="New Password" label-position="left" label-width="80">
+                  <Input type="text" v-model="this.newRpassword"></Input>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <Button @click="submitPassChange()">Apply</Button>
+                </FormItem>
+              </Col>
+            </Row>
+
           </Form>
+
           <div class="demo-drawer-footer">
-            <Button style="margin-right: 8px" @click="showinfo = false">Apply</Button>
+            <Button style="margin-right: 8px" @click="showInfo = false">Apply</Button>
             <Button type="primary" @click.native="logout">Log out</Button>
           </div>
         </Drawer>
@@ -99,13 +152,25 @@
 
 <script >
 import router from './router'
+import axios from 'axios'
 export default {
   name: 'App',
   data () {
     return {
-      showinfo: false,
-      editmobile: false,
-      showrpass: false,
+      // boolean to show or not
+      showInfo: false,
+      showRpass: false,
+      showNewMobile: false,
+      // mobile and password
+      newMobile: '',
+      newPassword: '******',
+      newRpassword: '',
+      oldVerification: '',
+      newVerification: '',
+      // buttons
+      mobileButton: 'Edit',
+      passButton: 'Edit',
+      // hanky's var
       theme1: 'light',
       active: '',
       userInfo: {
@@ -116,24 +181,116 @@ export default {
         job: 'teacher'
       },
       // changed this to 已登录 to debug
-      LoginOrLogout: '已登录'
+      LoginOrLogout: '已登录',
+      // Password Submit
+      passSub: {
+        status: 'login/logout',
+        mobile: '',
+        old_password: '',
+        new_password: '',
+        job: ''
+      },
+      mobileSub: {
+        status: 'login/logout',
+        old_mobile: '',
+        old_verification: '',
+        new_mobile: '',
+        new_verification: '',
+        job: ''
+      },
+      verificationSub: {
+        mobile: ''
+      }
     }
   },
   created () {
     this.showUserInfo()
   },
   methods: {
-    logout () {
-      this.LoginOrLogout = '登录'
-      this.userInfo = {
-        status: '',
-        username: '',
-        password: '',
-        mobile: '',
-        job: ''
+    submitMobileChange () {
+      // set input variable
+      this.mobileSub.old_mobile = this.userInfo.mobile
+      this.mobileSub.old_verification = this.oldVerification
+      this.mobileSub.new_mobile = this.newMobile
+      this.mobileSub.new_verification = this.newVerification
+      this.mobileSub.job = this.userInfo.job
+      // post
+      axios.post('/api/user/change_mobile', this.mobileSub).then((resp) => {
+        // this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 更改userInfo
+          this.userInfo.mobile = this.newMobile
+          // 需要更改一下Cookie 现在还没好
+          // this.$cookies.set('user', resp.data)
+          window.location.reload()
+        } else { // 如果失败
+          this.$Message.error('更改失败')
+        }
+      })
+      // Hide the bars
+      this.showNewMobile = false
+    },
+    submitPassChange () {
+      // set input variable
+      this.passSub.mobile = this.userInfo.mobile
+      this.passSub.old_password = this.userInfo.password
+      this.passSub.new_password = this.newPassword
+      this.passSub.job = this.userInfo.job
+      // post
+      axios.post('/api/user/change_password', this.passSub).then((resp) => {
+        // this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 更改userInfo
+          this.userInfo.password = this.newPassword
+          // 需要更改一下Cookie 现在还没好
+          // this.$cookies.set('user', resp.data)
+          window.location.reload()
+        } else { // 如果失败
+          this.$Message.error('更改失败')
+        }
+      })
+      // Hide the bars
+      this.showRpass = false
+    },
+    sendVerification () {
+      // send verification to both phones
+      this.verificationSub.mobile = this.userInfo.mobile
+
+      axios.post('/api/user/request_verification', this.verificationSub).then((resp) => {
+        if (resp.data.status === 'success') {
+          this.$.message('原手机验证码发送成功')
+        }
+      })
+
+      // send to new phone
+      this.verificationSub.mobile = this.newMobile
+      axios.post('/api/user/request_verification', this.verificationSub).then((resp) => {
+        if (resp.data.status === 'success') {
+          this.$.message('新手机验证码发送成功')
+        }
+      })
+    },
+    changeMobile () {
+      if (this.showNewMobile === false) {
+        this.showNewMobile = true
+        this.mobileButton = 'Cancel'
+      } else {
+        this.showNewMobile = false
+        this.mobileButton = 'Edit'
       }
-      this.$cookies.remove('user')
-      router.push('/Login')
+    },
+    changePassword () {
+      // Edit / Cancel Password Change
+      if (this.showRpass === false) {
+        this.showRpass = true
+        this.newPassword = ''
+        this.passButton = 'Cancel'
+      } else {
+        this.showRpass = false
+        this.passButton = 'Edit'
+      }
     },
     isTeacher () {
       return this.userInfo['job'] === 'teacher'
@@ -151,8 +308,17 @@ export default {
         router.push('/UserInfo')
       }
     },
-    changepassword () {
-      this.showrpass = false
+    logout () {
+      this.LoginOrLogout = '登录'
+      this.userInfo = {
+        status: '',
+        username: '',
+        password: '',
+        mobile: '',
+        job: ''
+      }
+      this.$cookies.remove('user')
+      router.push('/Login')
     },
     showUserInfo () {
       if (this.$cookies.get('user') === null) {
@@ -173,29 +339,29 @@ export default {
 </script>
 
 <style>
-#app {
-  min-width: 1200px;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-.mylist{
-  margin-right: 20px;
-  font-size: 20px;
-}
-.ilogin{
-  font-size: 20px;
-}
-.demo-drawer-footer{
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  border-top: 1px solid #e8e8e8;
-  padding: 10px 16px;
-  text-align: right;
-  background: #fff;
-}
+  #app {
+    min-width: 1200px;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+  }
+  .mylist{
+    margin-right: 20px;
+    font-size: 20px;
+  }
+  .ilogin{
+    font-size: 20px;
+  }
+  .demo-drawer-footer{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid #e8e8e8;
+    padding: 10px 16px;
+    text-align: right;
+    background: #fff;
+  }
 </style>
