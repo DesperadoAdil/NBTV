@@ -10,11 +10,11 @@
       <Input v-model="newLiving.title" placeholder="课程名称"></Input>
       <Input v-model="newLiving.thumbnail" placeholder="缩略图（待修改）"></Input>
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
-      <Input v-model="newLiving.password" placeholder="课程密码（可空）"></Input>
+      <Input v-model="newLiving.class_password" placeholder="课程密码（可空）"></Input>
     </Modal>
     <div v-for="(living, index) in myLivingList" :key="living.url">
       <Card class="card">
-        <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
+        <img :src="living.thumbnail" class="thumbnail"  @click="directSkip(living)">
         <p class="title">{{ living.title }}</p>
         <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
         <Modal
@@ -25,7 +25,7 @@
           <Input v-model="living.title" placeholder="课程名称"></Input>
           <Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>
           <Input v-model="living.url" placeholder="课程url"></Input>
-          <Input v-model="living.password" placeholder="课程密码（可空）"></Input>
+          <Input v-model="living.class_password" placeholder="课程密码（可空）"></Input>
         </Modal>
         <span><Button type="error" @click="deleteModal = true">DELETE</Button></span>
         <Modal
@@ -80,18 +80,18 @@ export default {
     this.getMyLivingList()
   },
   methods: {
-    directskip (iitem) {
-      this.$router.push({path: '/teacherliving/'+iitem.url});
+    directSkip (living) {
+      this.$router.push({path: '/teacherliving/' + living.url})
       this.$Modal.confirm({
-              title: '提示',
-              content: '是否确认进入直播间',
-              onOk: () => {
-              window.location.reload();
+        title: '提示',
+        content: '是否确认进入直播间',
+        onOk: () => {
+          window.location.reload()
         },
         onCancel: () => {
-          history.go(-1);
+          history.go(-1)
         }
-      });
+      })
     },
     getBackUp (index) {
       this.updateModal = true
