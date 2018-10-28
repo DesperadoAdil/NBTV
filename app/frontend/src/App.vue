@@ -32,7 +32,6 @@
           </a>
           <DropdownMenu slot="list" style="width: 400px">
 
-
             <Form>
             <!-- 用户名称 -->
             <FormItem label="Name" label-position="left" label-width="80">
@@ -54,8 +53,6 @@
                 </Col>
               </Row>
             </FormItem>
-
-
 
             <!-- 用户的新手机号 -->
             <div v-if="showNewMobile">
@@ -129,7 +126,6 @@
             <Button style="margin: 8px" @click="showInfo = false">Apply</Button>
             <Button type="primary" @click.native="logout">Log out</Button>
             </div>
-
 
           </DropdownMenu>
         </Dropdown>
@@ -283,11 +279,11 @@ export default {
       theme1: 'light',
       active: '',
       userInfo: {
-        status: 'success',
-        username: 'adil',
-        password: '123456',
-        mobile: '18810081008',
-        job: 'teacher'
+        status: '',
+        username: '',
+        password: '',
+        mobile: '',
+        job: ''
       },
       // changed this to 已登录 to debug
       LoginOrLogout: '登录',
@@ -317,13 +313,10 @@ export default {
   },
   methods: {
     handleOpen () {
-      if(this.visible == true)
-      this.visible = false;
-      else
-        this.visible = true;
+      this.visible = this.visible !== true
     },
     handleClose () {
-      this.visible = false;
+      this.visible = false
     },
     submitMobileChange () {
       // set input variable
@@ -427,7 +420,7 @@ export default {
       }
     },
     logout () {
-      this.visible = false;
+      this.visible = false
       this.LoginOrLogout = '登录'
       this.userInfo = {
         status: '',
