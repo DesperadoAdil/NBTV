@@ -364,6 +364,32 @@ export default{
       ]
     }
   },
+  mounted () {
+    //    var timer = setTimeout(function(){
+    //      doItPerSecond();
+    //    },1000)
+    //    var num = 0;
+    //    function doItPerSecond() {
+    //      //dosomething...
+    //      var player = polyvObject('#player').livePlayer({
+    //        'width':'100%',
+    //        'height':600+'px',
+    //        'uid':'7181857ac2',
+    //        'vid':'248980'
+    //      });
+    //      num++;
+    //      console.log(num);
+    //    };
+  },
+  created () {
+    this.cururl = this.$route.params.url
+    //    const s = document.createElement('script');
+    //    s.type = 'text/javascript';
+    //    s.src = 'https://player.polyv.net/livescript/liveplayer.js';
+    //    document.body.appendChild(s);
+    this.showUserInfo()
+    //    window.location.reload()
+  },
   methods: {
     exportData (type) {
       if (type === 1) {
@@ -653,33 +679,7 @@ export default{
         })
       }
     },
-    mounted () {
-      //    var timer = setTimeout(function(){
-      //      doItPerSecond();
-      //    },1000)
-      //    var num = 0;
-      //    function doItPerSecond() {
-      //      //dosomething...
-      //      var player = polyvObject('#player').livePlayer({
-      //        'width':'100%',
-      //        'height':600+'px',
-      //        'uid':'7181857ac2',
-      //        'vid':'248980'
-      //      });
-      //      num++;
-      //      console.log(num);
-      //    };
-    },
-    created: function () {
-      this.cururl = this.$route.params.url
-      console.log(this.cururl)
-      //    const s = document.createElement('script');
-      //    s.type = 'text/javascript';
-      //    s.src = 'https://player.polyv.net/livescript/liveplayer.js';
-      //    document.body.appendChild(s);
-      this.showUserInfo()
-      //    window.location.reload()
-    }
+
   }
 }
 

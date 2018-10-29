@@ -65,18 +65,23 @@ export default router
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
-  if (/^[a-zA-Z0-9_]{6,16}$/.test(to.path)) {
-    return next('/teacherliving/' + to.path)
-  }
+  /*
   if (to.path !== '/login' && window.$cookies.get('user') === null) {
     return next('/login')
+  }人
+  */
+  if (/^\/teacherliving\/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$/.test(to.path)) {
+    console.log(1)
+    return next()
   }
-  // const publicPages = ['/login', '/Register', '/living','/teacherliving', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo', '/teacherliving', '/developer']
-  // const authRequired = !publicPages.includes(to.path)
-  //
-  // if (authRequired) {
-  //  return next('/list')
-  // }
-
+  const publicPages = ['/login', '/register', '/living', '/teacherliving', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo', '/teacherliving', '/developer']
+  const authRequired = !publicPages.includes(to.path)
+  if (authRequired) {
+    if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$/.test(to.path)) {
+      console.log(2)
+      return next('/teacherliving/' + to.path)
+    }
+    return next('/list')
+  }
   next()
 })
