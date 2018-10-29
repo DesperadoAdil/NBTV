@@ -19,11 +19,12 @@ def addClass():
 	data = json.loads(data)
 	try:
 		if not usermanager.verify(data['username'], data['password'], "teacher"):
-			return {"status": "error:password wrong"}
+			ret["status"] = "error:password wrong"
+			return json.dumps(ret, ensure_ascii = False)
 	except Exception as err:
 		print(err)
 		ret['status'] = "error"
-		return ret
+		return json.dumps(ret, ensure_ascii = False)
 
 	#在保利威视创建一个直播频道
 	response = polyvManager.createChannel(data['title'])
@@ -32,7 +33,7 @@ def addClass():
 		print('polyv make a mistake')
 		print(response.data.decode("utf8"))
 		ret["status"] = "error: polyv has been error"
-		return ret
+		return json.dumps(ret, ensure_ascii = False)
 
 	responseData = json.loads(response.data.decode('utf8'))
 	vid = responseData['data']['channelId']
@@ -52,9 +53,9 @@ def addClass():
 	except Exception as err:
 		print(err)
 		ret['status'] = "error: no such teacher"
-		return ret
+		
 	
-	return ret
+	return json.dumps(ret, ensure_ascii = False)
 
 
 @classroom.route('/delete_class', methods = ['POST'])
@@ -64,18 +65,24 @@ def deleteClass():
 	print(data)
 	data = json.loads(data)
 
+	ret = {}
+
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
-		return {"status": "error:password wrong"}
+
+		ret["status"] = "error:password wrong"
+		return json.dumps(ret, ensure_ascii = False)
 
 	classroomTmp = classroomManager.search(data['url'])
 	if classroomTmp is None:
-		return {"status": "error:no such classroom"}
+		ret["status"] = "error:no such classroom"
+		return json.dumps(ret, ensure_ascii = False)
 
 	#从保利威视那删除这个直播频道
 	response = polyvManager.deleteChannel(classroomTmp.vid)
 	responseData = json.loads(response.data.decode('utf8'))
 	if responseData['status'] == "error":
-		return {"status": "error: polyv"}
+		ret["status"] = "error: polyv"
+		return json.dumps(ret, ensure_ascii = False)
 
 	#从教师的教室列表中删除教室
 	try:
@@ -86,7 +93,7 @@ def deleteClass():
 	except Exception as err:
 		print(err)
 		ret['status'] = "error: no such teacher or classroom"
-		return ret
+		return json.dumps(ret, ensure_ascii = False)
 
 	#从直播间观众的观看列表中删除教室
 	try:
@@ -113,7 +120,7 @@ def deleteClass():
 	ret = {}
 	ret['status'] = classroomManager.delete(data['url'])
 
-	return ret
+	return json.dumps(ret, ensure_ascii = False)
 
 
 @classroom.route('/update_class', methods = ['POST'])
@@ -124,12 +131,13 @@ def updateClass():
 	data = json.loads(data)
 
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
-		return {"status": "error:no such classroom"}
+		ret["status"] = "error:no such classroom"
+		return json.dumps(ret, ensure_ascii = False)
 
 	ret = {}
 	# update(self, title, thumbnail, newUrl, passwd, oldUrl):
 	ret['status'] = classroomManager.update(data['title'], data['thumbnail'], data['url'], data['class_password'], data['old_url'])
-	return ret
+	return json.dumps(ret, ensure_ascii = False)
 
 @classroom.route('/user_living_list', methods = ['POST'])
 def getList():
@@ -139,7 +147,8 @@ def getList():
 	data = json.loads(data)
 
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
-		return {"status": "error:no such classroom"}
+		ret["status"] = "error:no such classroom"
+		return json.dumps(ret, ensure_ascii = False)
 
 	ret = {}
 	l = usermanager.search("username", data["username"], "teacher").classroom
