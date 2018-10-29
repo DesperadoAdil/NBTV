@@ -115,8 +115,8 @@
          - **description:** 教师在教室中添加代码题
          - **input:** `{ statement : '', language : '' }`
          - **output:** `{ status : 'success/error', uniqueId : '' }`
-         - **frontend:** *???*
-         - **backend:** *???*
+         - **frontend:** *Yuxuan*
+         - **backend:** *xcjthu*
 
       - ##### 删除代码题
          - **url:** */api/resourse/delete_code*
