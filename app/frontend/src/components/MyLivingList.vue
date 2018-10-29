@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     directskip (living) {
-      this.$router.push({path: '/teacherliving/' + living.url})
+      this.$router.push({path: '/teacherliving/' + living.url, params: {url: living.url}})
       this.$Modal.confirm({
         title: '提示',
         content: '是否确认进入直播间',
