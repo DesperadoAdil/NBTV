@@ -192,7 +192,6 @@
       </object>
     </div>
 
-
     <div id="liaotianshi" class="danmuxinxi" :style="{top:liaotianshiheight}">
       <Card style="height: 800px">
         <h3>聊天室信息显示部分（待修改）</h3>
@@ -220,9 +219,9 @@ export default{
       // 功能对话框
 
       // Yuxuan's variables:
-      stream:'',
-      streamer:'',
-      streamername:'7181857ac220181025144543640',
+      stream: '',
+      streamer: '',
+      streamername: '7181857ac220181025144543640',
       modal_pdf: false,
       modal_multi: false,
       sub_multi: {
@@ -397,24 +396,23 @@ export default{
       this.modal3 = true
     },
 
-    teatext()
-          {
-            const data = this.curuser;
-            data['username'] = this.userInfo['username'];
-            data['job'] = this.userInfo['job'];
-            data['url'] = this.cururl;
-            axios.post('/api/resourse/getpdfs', data).then((resp) => {
-              this.pdfitems = resp.pdfitems;
-          }
-          )
-          ;
-          this.modal1 = true;
-          },
+    teatext () {
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      axios.post('/api/resourse/getpdfs', data).then((resp) => {
+        this.pdfitems = resp.pdfitems
+      }
+      )
+
+      this.modal1 = true
+    },
 
     // Yuxuan's Methods Starts Here
-    addPDF(){
+    addPDF () {
       // send pdf to backend
-    }     ,
+    },
 
     handleReset (name) {
       this.$refs[name].resetFields()
@@ -428,19 +426,18 @@ export default{
       })
     },
 
-    teaselect()
-        {
-          const data = this.curuser;
-          data['username'] = this.userInfo['username'];
-          data['job'] = this.userInfo['job'];
-          data['url'] = this.cururl;
-          axios.post('/api/resourse/getselects', data).then((resp) => {
-            this.selectitems = resp.selectitems;
-        }
-        )
-        ;
-        this.modal2 = true;
-        },
+    teaselect () {
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      axios.post('/api/resourse/getselects', data).then((resp) => {
+        this.selectitems = resp.selectitems
+      }
+      )
+
+      this.modal2 = true
+    },
     handleRemove (index) {
       this.sub_multi.optionList[index].status = 0
     },
@@ -504,20 +501,15 @@ export default{
           this.modal1 = false
           console.log('1321312')
           if (!this.toopen) {
-
-                  var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'));
-                  var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'));
-            streamer2.setScreenPosition(-100,0);
-            streamer2.setScreenSize(700,380);
-                  console.log('1321312')
-            streamer.disconnect();
-            streamer2.publish('rtmp://push-c1.videocc.net/recordf',this.streamername);
-
-
+            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+            streamer2.setScreenPosition(-100, 0)
+            streamer2.setScreenSize(700, 380)
+            console.log('1321312')
+            streamer.disconnect()
+            streamer2.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
           }
-         console.log('1321312')
-
-
+          console.log('1321312')
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -545,14 +537,12 @@ export default{
           this.liaotianshiheight = 330 + 'px'
           this.curvideo = false
           if (!this.toopen) {
-
-            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'));
-            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'));
-            streamer2.setScreenPosition(-100,0);
-            streamer2.setScreenSize(700,380);
-            streamer2.publish('rtmp://push-c1.videocc.net/recordf',this.streamername);
-            streamer.disconnect();
-
+            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+            streamer2.setScreenPosition(-100, 0)
+            streamer2.setScreenSize(700, 380)
+            streamer2.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+            streamer.disconnect()
           }
 
           this.curtitle = iselect.title
@@ -566,7 +556,6 @@ export default{
       })
     },
     closetext () {
-
       this.$Modal.confirm({
         title: '提示',
         content: '确认退出教学资源',
@@ -580,16 +569,13 @@ export default{
           this.curvideo = true
 
           if (!this.toopen) {
-
-                  setSWFIsReady();
-                  var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'));
-                  var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'));
-                  streamer.setScreenPosition(-100,0);
-                  streamer.setScreenSize(700,380);
-                  streamer.publish('rtmp://push-c1.videocc.net/recordf',this.streamername);
-                  streamer2.disconnect();
-
-
+            setSWFIsReady()
+            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+            streamer.setScreenPosition(-100, 0)
+            streamer.setScreenSize(700, 380)
+            streamer.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+            streamer2.disconnect()
           }
         },
         onCancel: () => {
@@ -621,28 +607,25 @@ export default{
             data['job'] = this.userInfo['job']
             data['url'] = this.cururl
             axios.post('/api/user/openliving', data).then((resp) => {
-              this.streamername=resp.streamername;
+              this.streamername = resp.streamername
             })
-            if (this.curvideo){
-              setSWFIsReady();
-              var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'));
-              var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'));
-              streamer.setScreenPosition(-100,0);
-              streamer.setScreenSize(700,380);
-              streamer.publish('rtmp://push-c1.videocc.net/recordf',this.streamername);
-              streamer2.disconnect();
+            if (this.curvideo) {
+              setSWFIsReady()
+              var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+              var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+              streamer.setScreenPosition(-100, 0)
+              streamer.setScreenSize(700, 380)
+              streamer.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+              streamer2.disconnect()
+            } else {
+              setSWFIsReady()
+              var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+              var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+              streamer2.setScreenPosition(-100, 0)
+              streamer2.setScreenSize(700, 380)
+              streamer2.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+              streamer.disconnect()
             }
-            else    {
-              setSWFIsReady();
-              var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'));
-              var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'));
-              streamer2.setScreenPosition(-100,0);
-              streamer2.setScreenSize(700,380);
-              streamer2.publish('rtmp://push-c1.videocc.net/recordf',this.streamername);
-              streamer.disconnect();
-
-            }
-
           },
           onCancel: () => {
           }
