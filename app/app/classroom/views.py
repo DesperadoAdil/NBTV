@@ -25,17 +25,6 @@ def addClass():
 		ret['status'] = "error"
 		return ret
 
-	# 在教师的教室列表中插入教室
-	try:
-		teacher = usermanager.search("username", data["username"], "teacher")
-		teacher.classroom.append(classroomManager.search(data['url']))
-		db.session.add(teacher)
-		db.session.commit()
-	except Exception as err:
-		print(err)
-		ret['status'] = "error: no such teacher"
-		return ret
-
 	#在保利威视创建一个直播频道
 	response = polyvManager.createChannel(data['title'])
 
@@ -54,6 +43,17 @@ def addClass():
 	ret = {}
 	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], data['thumbnail'], data['class_password'], data['url'])
 
+	# 在教师的教室列表中插入教室
+	try:
+		teacher = usermanager.search("username", data["username"], "teacher")
+		teacher.classroom.append(classroomManager.search(data['url']))
+		db.session.add(teacher)
+		db.session.commit()
+	except Exception as err:
+		print(err)
+		ret['status'] = "error: no such teacher"
+		return ret
+	
 	return ret
 
 
