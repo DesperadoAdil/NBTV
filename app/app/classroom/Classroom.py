@@ -44,7 +44,7 @@ class ClassroomManager:
 			db.session.commit()
 			return "success"
 		except Exception as err:
-			print("delete classroom: ", err)
+			print("delete classroom: ", err.encode("utf-8"))
 			return "error"
 
 	def update(self, title, thumbnail, newUrl, passwd, oldUrl):
@@ -63,7 +63,7 @@ class ClassroomManager:
 
 			return "success"
 		except Exception as err:
-			print("update classrooms: ", err)
+			print("update classrooms: ", err.encode("utf-8"))
 			return "error"
 
 	def search(self, url):

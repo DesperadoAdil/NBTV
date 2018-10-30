@@ -92,7 +92,7 @@ def deleteClass():
 			db.ssesion.add(student)
 		db.session.commit()
 	except Exception as err:
-		print(err)
+		print(err.encode("utf-8"))
 		ret['status'] = "error: no such teacher or classroom"
 
 	ret['status'] = classroomManager.delete(data['url'])
