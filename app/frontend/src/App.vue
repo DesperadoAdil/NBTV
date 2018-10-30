@@ -429,8 +429,8 @@ export default {
         mobile: '',
         job: ''
       }
+      router.push('/login')
       this.$cookies.remove('user')
-      router.push('/Login')
     },
     showUserInfo () {
       if (this.$cookies.get('user') === null) {
