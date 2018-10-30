@@ -27,7 +27,7 @@ def addClass():
 		return json.dumps(ret, ensure_ascii = False)
 
 	#在保利威视创建一个直播频道
-	response = polyvManager.createChannel(data['title'])
+	response = polyvManager.createChannel(data['title'], data['class_password'])
 
 	if not response.status == 200:
 		print('polyv make a mistake')
