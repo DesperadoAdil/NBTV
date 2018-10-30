@@ -58,13 +58,13 @@ export default {
       updateModal: false,
       deleteModal: false,
       myLivingList: [{
-        username: 'zsh',
+        username: '',
         password: '',
         job: '',
         old_url: '',
-        title: 'zsh',
+        title: '',
         thumbnail: '../assets/logo.png',
-        url: 'zshliving',
+        url: '',
         class_password: ''
       }],
       userInfo: {
@@ -105,7 +105,14 @@ export default {
       this.userInfo['mobile'] = this.$cookies.get('user').mobile
       const data = this.userInfo
       axios.post('/api/classroom/user_living_list', data).then((resp) => {
-        this.myLivingList = resp.data
+        for (var i = 0; i < resp.data.length; i++) {
+          var living = {}
+          living['title'] = resp.data[i]['title']
+          living['url'] = resp.data[i]['url']
+          living['thumbnail'] = resp.data[i]['thumbnail']
+          living['class_password'] = resp.data[i]['password']
+          this.myLivingList.push(living)
+        }
       })
     },
     addLiving () {
