@@ -65,11 +65,9 @@ export default router
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
-  /*
   if (to.path !== '/login' && window.$cookies.get('user') === null) {
     return next('/login')
-  }人
-  */
+  }
   if (/^\/teacherliving\/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$/.test(to.path)) {
     console.log(1)
     return next()
