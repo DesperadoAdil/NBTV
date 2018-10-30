@@ -15,8 +15,8 @@ ENV HOME=/app
 WORKDIR $HOME
 COPY requirements.txt $HOME
 RUN pip3 install --upgrade pip
-RUN pip3 install --trusted-host mirrors.cloud.tencent.com \
-    -i http://mirrors.cloud.tencent.com/pypi/simple/ -r requirements.txt
+RUN pip3 install --trusted-host mirrors.tuna.tsinghua.edu.cn \
+    -i https://pypi.tuna.tsinghua.edu.cn/simple/ -r requirements.txt
 COPY app $HOME
 WORKDIR $HOME/frontend
 # 加速
