@@ -25,14 +25,14 @@ class ClassroomManager:
 
 	def insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
 		#在调用这个接口之前，需要先判断是否是本用户插入的，需要验证密码
-		#try:
-		classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = thumbnail, password = passwd, rtmpUrl = rtmpUrl, url = url)
-		db.session.add(classroomTmp)
-		db.session.commit()
-		return "success"
-		#except Exception as err:
-			#print(err)
-			#return "error"
+		try:
+			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = thumbnail, password = passwd, rtmpUrl = rtmpUrl, url = url)
+			db.session.add(classroomTmp)
+			db.session.commit()
+			return "success"
+		except Exception as err:
+			print(err)
+			return "error"
 
 	def delete(self, url):
 		#在调用这个接口之前，需要先判断是否是本用户删除的，需要验证密码
