@@ -1,5 +1,5 @@
 import json
-from ..models import Classrooms, db
+from ..models import *
 
 
 class ClassroomManager:
@@ -51,7 +51,7 @@ class ClassroomManager:
 	def update(self, title, thumbnail, newUrl, passwd, oldUrl):
 		#在调用这个接口之前，需要先判断是否是本用户删除的，需要验证密码
 		try:
-			tmpClass = Classrooms.query.filter_by(url = url).first()
+			tmpClass = Classrooms.query.filter_by(url = oldUrl).first()
 			if tmpClass is None:
 				return "error:NoSuchClassroom"
 
