@@ -113,7 +113,6 @@ export default {
           living['class_password'] = resp.data[i]['password']
           this.myLivingList.push(living)
         }
-        this.myLivingList = resp.data
       })
     },
     addLiving () {
