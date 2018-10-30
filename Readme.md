@@ -1,5 +1,27 @@
 # README
 ---
+##commit message符合规范
+- 采用了Git Hook来检查每一次的commit message是否符合规范
+
+####commit规范
+commit message都要符合这一个规范：  
+**Type #\d+：description**  
+
+1. Type包括  
+	1) **Feat**: 新功能（feature）  
+	2) **Fix**: 修复bug  
+	3) **Docs**: 文档  
+	4) **Style**: 格式（不影响代码运行的变动）  
+	5) **Refactor**: 重构  
+	6) **Test**: 增加测试  
+	7) **Chore**: 构建过程或辅助工具变动  
+	
+2. \#\d+: 为该commit关联的issue，每一个commit都应该关联至一个issue
+
+####增加脚本来控制commit message符合规范
+将commit-msg文件拷贝到 .git/hooks/commit-msg即可
+
+
 ## API汇总
 - ### 用户信息管理
    - #### 登录
