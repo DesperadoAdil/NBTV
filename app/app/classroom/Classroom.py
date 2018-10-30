@@ -29,10 +29,9 @@ class ClassroomManager:
 			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = thumbnail, password = passwd, rtmpUrl = rtmpUrl, url = url)
 			db.session.add(classroomTmp)
 			db.session.commit()
-
 			return "success"
 		except Exception as err:
-			print(err)
+			print(err.encode("utf-8"))
 			return "error"
 
 	def delete(self, url):
