@@ -77,42 +77,40 @@ class Messages(db.Model):
         return '<PhoneNumber %r>' % self.phonenumber
 
 class ChoiceQuestion(db.Model):
-	__tablename__ = 'choicequestion'
+    __tablename__ = 'choicequestion'
     __table_args__ = {
         'mysql_charset':'utf8'
     }
-	statement = db.Column(db.String(1000), nullable = False)
-	optionList = db.Column(db.String(1000), nullable = False)
-	answer = db.Column(db.Integer, nullable = False)
-	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
-	submitRecord = db.Column(db.Text, nullable = False)
-	classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
+    statement = db.Column(db.String(1000), nullable = False)
+    optionList = db.Column(db.String(1000), nullable = False)
+    answer = db.Column(db.Integer, nullable = False)
+    uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+    submitRecord = db.Column(db.Text, nullable = False)
+    classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
 
-	def __repr__(self):
-		return '<choiceQuestionId %r>' % self.choiceQuestionId
+    def __repr__(self):
+        return '<choiceQuestionId %r>' % self.choiceQuestionId
 
 
 class CodeQuestion(db.Model):
-	__tablename__ = 'codequestion'
-    __table_args__ = {
-        'mysql_charset':'utf8'
-    }
-	statement = db.Column(db.String(1000), nullable = False)
-	language = db.Column(db.String(10), nullable = False)
-	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
-	submitRecord = db.Column(db.Text, nullable = False)
-	classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
+    __tablename__ = 'codequestion'
+    __table_args__ = { 'mysql_charset':'utf8' }
+    statement = db.Column(db.String(1000), nullable = False)
+    language = db.Column(db.String(10), nullable = False)
+    uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+    submitRecord = db.Column(db.Text, nullable = False)
+    classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
 
-	def __repr__(self):
-		return '<codequestionId %r>' % self.uniqueId
+    def __repr__(self):
+        return '<codequestionId %r>' % self.uniqueId
 
 class PDFFile(db.Model):
-	__tablename__ = 'pdffile'
+    __tablename__ = 'pdffile'
     __table_args__ = {
         'mysql_charset':'utf8'
     }
-	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
-	filePath = db.Column(db.Text, nullable = False)
+    uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+    filePath = db.Column(db.Text, nullable = False)
 
-	def __repr__(self):
-		return '<pdfId %r>' % self.uniqueId
+    def __repr__(self):
+        return '<pdfId %r>' % self.uniqueId
