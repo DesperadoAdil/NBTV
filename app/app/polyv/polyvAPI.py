@@ -25,8 +25,10 @@ class ChannelManager:
 		return md5.toMD5(ansStr)
 		
 
-	def createChannel(self, name, passwd = None, sceneType = SCENE_ALONE):
+	def createChannel(self, name, passwd = "", sceneType = SCENE_ALONE):
 		'''返回API 返回内容'''
+		if passwd == "":
+		    passwd = "000000"
 		params = {"appId": const.AppID, "channelPasswd": passwd, "name": name, "timestamp": str(self.getTimeMillis()), "userId": const.UserID, "scene": sceneType}
 
 		sign = self.generateSign(params, const.AppSecret)

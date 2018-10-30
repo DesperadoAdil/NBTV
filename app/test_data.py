@@ -23,14 +23,14 @@ student1 = Students()
 student1.phonenumber = "17799163760"
 student1.username = "stu1"
 student1.password = "123456"
-student1.classroomlist = json.dumps(["/class/242544"])
+student1.classroomlist = json.dumps(["/242544"])
 db.session.add(student1)
 
 student2 = Students()
 student2.phonenumber = "17799163761"
 student2.username = "stu2"
 student2.password = "123456"
-student2.classroomlist = json.dumps(["/class/242544"])
+student2.classroomlist = json.dumps(["/242544"])
 db.session.add(student2)
 
 db.session.commit()
