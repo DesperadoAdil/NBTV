@@ -3,6 +3,9 @@ from datetime import datetime
 
 class Classrooms(db.Model):
     __tablename__ = 'classrooms'
+    __table_args__ = {
+        'mysql_charset':'utf8'
+    }
     # id = db.Column(db.Integer, primary_key=True,  unique=True, nullable=False)
     vid = db.Column(db.Integer, unique=True, nullable=False)
     teacher = db.Column(db.String(50), db.ForeignKey('teachers.username'), nullable=False)
@@ -35,6 +38,9 @@ class Classrooms(db.Model):
 
 class Teachers(db.Model):
     __tablename__ = 'teachers'
+    __table_args__ = {
+        'mysql_charset':'utf8'
+    }
     phonenumber = db.Column(db.String(11), unique=True, nullable=False)
     username = db.Column(db.String(50), primary_key=True, unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
@@ -47,6 +53,9 @@ class Teachers(db.Model):
 
 class Students(db.Model):
     __tablename__ = 'students'
+    __table_args__ = {
+        'mysql_charset':'utf8'
+    }
     phonenumber = db.Column(db.String(11), unique=True, nullable=False)
     username = db.Column(db.String(50), primary_key=True, unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
@@ -58,6 +67,9 @@ class Students(db.Model):
 
 class Messages(db.Model):
     __tablename__ = 'messages'
+    __table_args__ = {
+        'mysql_charset':'utf8'
+    }
     phonenumber = db.Column(db.String(11), primary_key=True, unique=True, nullable=False)
     message = db.Column(db.String(6), nullable=False)
 
@@ -66,6 +78,9 @@ class Messages(db.Model):
 
 class ChoiceQuestion(db.Model):
 	__tablename__ = 'choicequestion'
+    __table_args__ = {
+        'mysql_charset':'utf8'
+    }
 	statement = db.Column(db.String(1000), nullable = False)
 	optionList = db.Column(db.String(1000), nullable = False)
 	answer = db.Column(db.Integer, nullable = False)
@@ -79,6 +94,9 @@ class ChoiceQuestion(db.Model):
 
 class CodeQuestion(db.Model):
 	__tablename__ = 'codequestion'
+    __table_args__ = {
+        'mysql_charset':'utf8'
+    }
 	statement = db.Column(db.String(1000), nullable = False)
 	language = db.Column(db.String(10), nullable = False)
 	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
@@ -90,6 +108,9 @@ class CodeQuestion(db.Model):
 
 class PDFFile(db.Model):
 	__tablename__ = 'pdffile'
+    __table_args__ = {
+        'mysql_charset':'utf8'
+    }
 	uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
 	filePath = db.Column(db.Text, nullable = False)
 
