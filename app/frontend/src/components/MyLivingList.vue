@@ -105,6 +105,7 @@ export default {
       this.userInfo['mobile'] = this.$cookies.get('user').mobile
       const data = this.userInfo
       axios.post('/api/classroom/user_living_list', data).then((resp) => {
+        this.myLivingList = []
         for (var i = 0; i < resp.data.length; i++) {
           var living = {}
           living['title'] = resp.data[i]['title']
