@@ -106,12 +106,12 @@ def updateClass():
 	print('update a classroom')
 	print(data)
 	data = json.loads(data)
-
+	
+	ret = {}
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
 		ret["status"] = "error:password wrong"
 		return json.dumps(ret, ensure_ascii = False)
 
-	ret = {}
 	# update(self, title, thumbnail, newUrl, passwd, oldUrl):
 	ret['status'] = classroomManager.update(data['title'], data['thumbnail'], data['url'], data['class_password'], data['old_url'])
 	return json.dumps(ret, ensure_ascii = False)
@@ -128,7 +128,6 @@ def getList():
 		ret["status"] = "error:password wrong"
 		return json.dumps(ret, ensure_ascii = False)
 
-	ret = {}
 	l = usermanager.search("username", data["username"], "teacher").classroom
 	#l = Classrooms.query.filter(Classrooms.teacher == data['username']).all()
 	ans = []
