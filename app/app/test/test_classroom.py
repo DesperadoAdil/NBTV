@@ -42,12 +42,12 @@ class ClassroomTest(BaseTestCase):
 
 
 	def test_updateclass(self):
-		data['old_url'] = "123"
+		self.data['old_url'] = "123"
 		# 这是可以正确插入的结果
 		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.data, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
 
-		dataerror['old_url'] = "123"
+		self.dataerror['old_url'] = "123"
 		# 这是不可以正确插入的结果
 		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.dataerror, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')

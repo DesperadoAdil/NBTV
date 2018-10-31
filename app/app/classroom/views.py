@@ -123,6 +123,7 @@ def getList():
 	print(data)
 	data = json.loads(data)
 
+	ret = {}
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
 		ret["status"] = "error:password wrong"
 		return json.dumps(ret, ensure_ascii = False)
