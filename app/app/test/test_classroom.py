@@ -7,19 +7,21 @@ class ClassroomTest(BaseTestCase):
 	data = {
 			"username": "adil",
 			"password": "123456",
-			"title": "adilnb",
+			"title": "adilnba!",
 			"class_password": "121121",
 			"thumbnail": "/static/image/test.jpg",
 			"url": "123",
+			"old_url": "123"
 		}
 
 	dataerror = {
 		"username": "adil",
 		"password": "1234",
-		"title": "adilnb",
+		"title": "adilnba!",
 		"class_password": "121121",
 		"thumbnail": "/static/image/test.jpg",
-		"url": "123"
+		"url": "123",
+		"old_url": "123"
 	}
 
 	def test_add_classroom(self):
@@ -32,6 +34,16 @@ class ClassroomTest(BaseTestCase):
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
 
 
+	def test_updateclass(self):
+		# 这是可以正确插入的结果
+		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.data, ensure_ascii = False))
+		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
+
+		# 这是不可以正确插入的结果
+		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.dataerror, ensure_ascii = False))
+		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
+
+
 	def test_delete_classroom(self):
 		response = self.app.post('/api/classroom/delete_class', data = json.dumps(self.data, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
@@ -40,17 +52,6 @@ class ClassroomTest(BaseTestCase):
 		response = self.app.post('/api/classroom/delete_class', data = json.dumps(self.dataerror, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
 
-
-	def test_updateclass(self):
-		self.data['old_url'] = "123"
-		# 这是可以正确插入的结果
-		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.data, ensure_ascii = False))
-		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
-
-		self.dataerror['old_url'] = "123"
-		# 这是不可以正确插入的结果
-		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.dataerror, ensure_ascii = False))
-		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
 
 	def test_classlist(self):
 		response = self.app.post('/api/classroom/user_living_list', data = json.dumps({"username": "adil", "password": "123456"}))
