@@ -3,7 +3,7 @@ from flask import *
 import json
 from . import classroom
 from ..polyv import polyvAPI
-from .Classroom import classroomManager
+from .Classroom import *
 from ..user.User import usermanager
 from ..models import Classrooms
 
@@ -12,21 +12,28 @@ polyvManager = polyvAPI.ChannelManager()
 
 @classroom.route('/add_class', methods = ['POST'])
 def addClass():
-
+	ret = {}
 	data = request.get_data()
 	print('add a class')
 	print(data)
 	data = json.loads(data)
-
-	if not usermanager.verify(data['username'], data['password'], "teacher"):
-		return {"status": "error:password wrong"}
-
+	try:
+		if not usermanager.verify(data['username'], data['password'], "teacher"):
+			ret["status"] = "error:password wrong"
+			return json.dumps(ret, ensure_ascii = False)
+	except Exception as err:
+		print(err)
+		ret['status'] = "error"
+		return json.dumps(ret, ensure_ascii = False)
 
 	#在保利威视创建一个直播频道
-	response = polyvManager.createChannel(data['title'])
+	response = polyvManager.createChannel(data['title'], data['class_password'])
 
 	if not response.status == 200:
 		print('polyv make a mistake')
+		print(response.data.decode("utf8"))
+		ret["status"] = "error: polyv has been error"
+		return json.dumps(ret, ensure_ascii = False)
 
 	responseData = json.loads(response.data.decode('utf8'))
 	vid = responseData['data']['channelId']
@@ -36,76 +43,61 @@ def addClass():
 	# insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
 	ret = {}
 	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], data['thumbnail'], data['class_password'], data['url'])
-	
-	# 在教师的教室列表中插入教室
-	try:
-		teacher = usermanager.search("username", data["username"], "teacher")
-		teacher.classroom.append(classroomManager.search(data['url']))
-		db.session.add(teacher)
-		db.session.commit()
-	except Exception as err:
-		print(err)
-		ret['status'] = "error: no such teacher or classroom"
 
-	return ret
+	return json.dumps(ret, ensure_ascii = False)
 
 
 @classroom.route('/delete_class', methods = ['POST'])
 def deleteClass():
-        data = request.get_data()
-        print('delete a class')
-        print(data)
-        data = json.loads(data)
+	data = request.get_data()
+	print('delete a class')
+	print(data)
+	data = json.loads(data)
 
-        if not usermanager.verify(data['username'], data['password'], 'teacher'):
-                return {"status": "error:password wrong"}
+	ret = {}
 
-        classroomTmp = classroomManager.search(data['url'])
-        if classroomTmp is None:
-                return {"status": "error:no such classroom"}
+	if not usermanager.verify(data['username'], data['password'], 'teacher'):
 
-        #从保利威视那删除这个直播频道
-        response = polyvManager.deleteChannel(classroomTmp.vid)
-        responseData = json.loads(response.data.decode('utf8'))
-        if responseData['status'] == "error":
-                return {"status": "error: polyv"}
+		ret["status"] = "error:password wrong"
+		return json.dumps(ret, ensure_ascii = False)
 
-        #从教师的教室列表中删除教室
-        try:
-                teacher = usermanager.search("username", data['username'], "teacher")
-                teacher.classroom.remove(classroomTmp)
-                db.session.add(teacher)
-                db.session.commit()
-        except Exception as err:
-                print(err)
-                ret['status'] = "error: no such teacher or classroom"
+	classroomTmp = classroomManager.search(data['url'])
+	if classroomTmp is None:
+		ret["status"] = "error:no such classroom"
+		return json.dumps(ret, ensure_ascii = False)
 
-        #从直播间观众的观看列表中删除教室
-        try:
-                teacherlist = json.loads(classroomTmp.teacherlist)
-                for teachername in teacherlist:
-                        teacher = usermanager.search("username", teachername, "teacher")
-                        classroomlist = json.loads(teacher.classroomlist)
-                        classroomlist.remove(data['url'])
-                        teacher.classroomlist = json.dumps(classroomlist)
-                        db.ssesion.add(teacher)
+	#从保利威视那删除这个直播频道
+	response = polyvManager.deleteChannel(classroomTmp.vid)
+	responseData = json.loads(response.data.decode('utf8'))
+	if responseData['status'] == "error":
+		ret["status"] = "error: polyv"
+		return json.dumps(ret, ensure_ascii = False)
 
-                studentlist = json.loads(classroomTmp.studentlist)
-                for studentname in studentlist:
-                        student = usermanager.search("username", studentname, "student")
-                        classroomlist = json.loads(student.classroomlist)
-                        classroomlist.remove(data['url'])
-                        student.classroomlist = json.dumps(classroomlist)
-                        db.ssesion.add(student)
-                db.session.commit()
-        except Exception as err:
-                print(err)
-                ret['status'] = "error: no such teacher or classroom"
+	#从直播间观众的观看列表中删除教室
+	try:
+		teacherlist = json.loads(classroomTmp.teacherlist)
+		for teachername in teacherlist:
+			teacher = usermanager.search("username", teachername, "teacher")
+			classroomlist = json.loads(teacher.classroomlist)
+			classroomlist.remove(data['url'])
+			teacher.classroomlist = json.dumps(classroomlist)
+			db.ssesion.add(teacher)
 
-        ret = {}
-        ret['status'] = classroomManager.delete(data['url'])
+		studentlist = json.loads(classroomTmp.studentlist)
+		for studentname in studentlist:
+			student = usermanager.search("username", studentname, "student")
+			classroomlist = json.loads(student.classroomlist)
+			classroomlist.remove(data['url'])
+			student.classroomlist = json.dumps(classroomlist)
+			db.ssesion.add(student)
+		db.session.commit()
+	except Exception as err:
+		print(err.encode("utf-8"))
+		ret['status'] = "error: no such teacher or classroom"
 
-        return ret
+	ret['status'] = classroomManager.delete(data['url'])
+
+	return json.dumps(ret, ensure_ascii = False)
 
 
 @classroom.route('/update_class', methods = ['POST'])
@@ -116,12 +108,13 @@ def updateClass():
 	data = json.loads(data)
 
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
-		return {"status": "error:no such classroom"}
+		ret["status"] = "error:password wrong"
+		return json.dumps(ret, ensure_ascii = False)
 
 	ret = {}
 	# update(self, title, thumbnail, newUrl, passwd, oldUrl):
 	ret['status'] = classroomManager.update(data['title'], data['thumbnail'], data['url'], data['class_password'], data['old_url'])
-	return ret
+	return json.dumps(ret, ensure_ascii = False)
 
 @classroom.route('/user_living_list', methods = ['POST'])
 def getList():
@@ -131,7 +124,8 @@ def getList():
 	data = json.loads(data)
 
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
-		return {"status": "error:no such classroom"}
+		ret["status"] = "error:password wrong"
+		return json.dumps(ret, ensure_ascii = False)
 
 	ret = {}
 	l = usermanager.search("username", data["username"], "teacher").classroom
@@ -141,12 +135,4 @@ def getList():
 		tmpd = {"title": tmp.title, "thumbnail": tmp.thumbnail, "url": tmp.url, "password": tmp.password}
 		ans.append(tmpd)
 	return json.dumps(ans, ensure_ascii = False)
-
-
-
-
-
-
-
-
 

@@ -74,6 +74,7 @@ class UserManager:
             return False
         if user is None:
             print ("Verify Error: User Not Found")
+            return False
         if password != user.password:
             return False
         return True

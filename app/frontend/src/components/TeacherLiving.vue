@@ -152,7 +152,10 @@
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
-      <video id="mainvideo00" width="100%" height="600" controls></video>
+      <object >
+        <embed id="rtmp-streamer" src="../../static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
+               width="100%" height="600px" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
+      </object>
       <canvas id="canvas" width="100%" height="600"></canvas>
       <div class="bottomveido">
         <h3>礼物等其他显示部分（待修改）</h3>
@@ -183,8 +186,10 @@
     </div>
 
     <div id="littlelivingcard" class="cardtealittleliving" :style="{display:littlelivingcarddisplay?'block':'none'}">
-      <video id="littlevideo00" width="100%" height="260" controls></video>
-
+      <object >
+        <embed id="rtmp-streamer2" src="../../static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
+               width="100%" height="260px" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
+      </object>
     </div>
 
     <div id="liaotianshi" class="danmuxinxi" :style="{top:liaotianshiheight}">
@@ -202,6 +207,8 @@
 
 <script>
 import axios from 'axios'
+import {setSWFIsReady} from '../../static/js/livingrtmp.js'
+import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 export default{
   name: 'load',
   data () {
@@ -212,6 +219,9 @@ export default{
       // 功能对话框
 
       // Yuxuan's variables:
+      stream: '',
+      streamer: '',
+      streamername: '7181857ac220181025144543640',
       modal_pdf: false,
       modal_multi: false,
       sub_multi: {
@@ -354,52 +364,33 @@ export default{
       ]
     }
   },
+  mounted () {
+    //    var timer = setTimeout(function(){
+    //      doItPerSecond();
+    //    },1000)
+    //    var num = 0;
+    //    function doItPerSecond() {
+    //      //dosomething...
+    //      var player = polyvObject('#player').livePlayer({
+    //        'width':'100%',
+    //        'height':600+'px',
+    //        'uid':'7181857ac2',
+    //        'vid':'248980'
+    //      });
+    //      num++;
+    //      console.log(num);
+    //    };
+  },
+  created () {
+    this.cururl = this.$route.params.url
+    //    const s = document.createElement('script');
+    //    s.type = 'text/javascript';
+    //    s.src = 'https://player.polyv.net/livescript/liveplayer.js';
+    //    document.body.appendChild(s);
+    this.showUserInfo()
+    //    window.location.reload()
+  },
   methods: {
-    getUserMedia (constraints, success, error) {
-      let mainvideo00 = document.getElementById('mainvideo00')
-      let canvas = document.getElementById('canvas')
-      let context = canvas.getContext('2d')
-      if (navigator.mediaDevices.getUserMedia) {
-        // 最新的标准API
-        navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error)
-      } else if (navigator.webkitGetUserMedia) {
-        // webkit核心浏览器
-        navigator.webkitGetUserMedia(constraints, success, error)
-      } else if (navigator.mozGetUserMedia) {
-        // firfox浏览器
-        navigator.mozGetUserMedia(constraints, success, error)
-      } else if (navigator.getUserMedia) {
-        // 旧版API
-        navigator.getUserMedia(constraints, success, error)
-      }
-    },
-    success (stream) {
-      let littlevideo00 = document.getElementById('littlevideo00')
-      let mainvideo00 = document.getElementById('mainvideo00')
-      let canvas = document.getElementById('canvas')
-      let context = canvas.getContext('2d')
-      // 兼容webkit核心浏览器
-      let CompatibleURL = window.URL || window.webkitURL
-      // 将视频流设置为video元素的源
-      console.log(stream)
-
-      // video.src = CompatibleURL.createObjectURL(stream);
-      if (this.curvideo) {
-        mainvideo00.srcObject = stream
-        mainvideo00.play()
-        littlevideo00.pause()
-      } else {
-        littlevideo00.srcObject = stream
-        littlevideo00.play()
-        mainvideo00.pause()
-      }
-    },
-    error (error) {
-      let mainvideo00 = document.getElementById('mainvideo00')
-      let canvas = document.getElementById('canvas')
-      let context = canvas.getContext('2d')
-      alert('访问用户媒体设备失败')
-    },
     exportData (type) {
       if (type === 1) {
         this.$refs.table.exportCsv({
@@ -431,24 +422,23 @@ export default{
       this.modal3 = true
     },
 
-    teatext()
-          {
-            const data = this.curuser;
-            data['username'] = this.userInfo['username'];
-            data['job'] = this.userInfo['job'];
-            data['url'] = this.cururl;
-            axios.post('/api/resourse/getpdfs', data).then((resp) => {
-              this.pdfitems = resp.pdfitems;
-          }
-          )
-          ;
-          this.modal1 = true;
-          },
+    teatext () {
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      axios.post('/api/resourse/getpdfs', data).then((resp) => {
+        this.pdfitems = resp.pdfitems
+      }
+      )
+
+      this.modal1 = true
+    },
 
     // Yuxuan's Methods Starts Here
-    addPDF(){
+    addPDF () {
       // send pdf to backend
-    }     ,
+    },
 
     handleReset (name) {
       this.$refs[name].resetFields()
@@ -462,19 +452,18 @@ export default{
       })
     },
 
-    teaselect()
-        {
-          const data = this.curuser;
-          data['username'] = this.userInfo['username'];
-          data['job'] = this.userInfo['job'];
-          data['url'] = this.cururl;
-          axios.post('/api/resourse/getselects', data).then((resp) => {
-            this.selectitems = resp.selectitems;
-        }
-        )
-        ;
-        this.modal2 = true;
-        },
+    teaselect () {
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      axios.post('/api/resourse/getselects', data).then((resp) => {
+        this.selectitems = resp.selectitems
+      }
+      )
+
+      this.modal2 = true
+    },
     handleRemove (index) {
       this.sub_multi.optionList[index].status = 0
     },
@@ -528,7 +517,6 @@ export default{
           axios.post('/api/user/showpdfs', data).then((resp) => {
 
           })
-
           this.littlelivingcarddisplay = true
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
@@ -536,20 +524,18 @@ export default{
           this.liaotianshiheight = 330 + 'px'
           this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
           this.curvideo = false
-          if (!this.toopen) {
-            let mainvideo00 = document.getElementById('mainvideo00')
-            let canvas = document.getElementById('canvas')
-            let context = canvas.getContext('2d')
-            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-              console.log('sadasdsad')
-              // 调用用户媒体设备, 访问摄像头
-              this.getUserMedia({video: {width: 100, height: 320}}, this.success, this.error)
-            } else {
-              alert('不支持访问用户媒体')
-            }
-          }
-
           this.modal1 = false
+          console.log('1321312')
+          if (!this.toopen) {
+            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+            //streamer2.setScreenPosition(-100, 0)
+           // streamer2.setScreenSize(700, 380)
+            console.log('1321312')
+            streamer.disconnect()
+            streamer2.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+          }
+          console.log('1321312')
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -577,16 +563,12 @@ export default{
           this.liaotianshiheight = 330 + 'px'
           this.curvideo = false
           if (!this.toopen) {
-            let mainvideo00 = document.getElementById('mainvideo00')
-            let canvas = document.getElementById('canvas')
-            let context = canvas.getContext('2d')
-            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-              console.log('sadasdsad')
-              // 调用用户媒体设备, 访问摄像头
-              this.getUserMedia({video: {width: 100, height: 320}}, this.success, this.error)
-            } else {
-              alert('不支持访问用户媒体')
-            }
+            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+            streamer2.setScreenPosition(-100, 0)
+            streamer2.setScreenSize(700, 380)
+            streamer2.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+            streamer.disconnect()
           }
 
           this.curtitle = iselect.title
@@ -611,17 +593,15 @@ export default{
           this.mainlivingcarddisplay = true
           this.liaotianshiheight = 60 + 'px'
           this.curvideo = true
+
           if (!this.toopen) {
-            let mainvideo00 = document.getElementById('mainvideo00')
-            let canvas = document.getElementById('canvas')
-            let context = canvas.getContext('2d')
-            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-              console.log('sadasdsad')
-              // 调用用户媒体设备, 访问摄像头
-              this.getUserMedia({video: {width: 100, height: 320}}, this.success, this.error)
-            } else {
-              alert('不支持访问用户媒体')
-            }
+            setSWFIsReady()
+            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+            streamer.setScreenPosition(-100, 0)
+            streamer.setScreenSize(700, 380)
+            streamer.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+            streamer2.disconnect()
           }
         },
         onCancel: () => {
@@ -643,32 +623,35 @@ export default{
           title: '提示',
           content: '是否确认开播',
           onOk: () => {
+            console.log('sadasdsad')
             this.toopen = false
             this.opentext = '关播'
             this.openclose = 'ios-power'
             this.getstudents()
-
-            console.log('sadasdsad')
-            let mainvideo00 = document.getElementById('mainvideo00')
-            let canvas = document.getElementById('canvas')
-            let context = canvas.getContext('2d')
-            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-              console.log('sadasdsad')
-              // 调用用户媒体设备, 访问摄像头
-              this.getUserMedia({video: {width: 100, height: 320}}, this.success, this.error)
-            } else {
-              alert('不支持访问用户媒体')
-            }
-
             const data = this.curuser
             data['username'] = this.userInfo['username']
             data['job'] = this.userInfo['job']
             data['url'] = this.cururl
             axios.post('/api/user/openliving', data).then((resp) => {
-              this.vid = reap.vid
-              var div = document.getElementById('player')
-              div.style.vid = resp.vid
+              this.streamername = resp.streamername
             })
+            if (this.curvideo) {
+              setSWFIsReady()
+               streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+               streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+             //streamer.setScreenPosition(-100, 0)
+              //streamer.setScreenSize(700, 380)
+              streamer000.publish('rtmp://push-c1.videocc.net/recordf', '7181857ac220181025144543640')
+              streamer222.disconnect()
+            } else {
+              setSWFIsReady()
+              var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+              var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+             // streamer2.setScreenPosition(-100, 0)
+              //streamer2.setScreenSize(700, 380)
+              streamer222.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+              streamer000.disconnect()
+            }
           },
           onCancel: () => {
           }
@@ -681,10 +664,6 @@ export default{
             this.toopen = true
             this.opentext = '开播'
             this.openclose = 'ios-videocam-outline'
-
-            //            let mainvideo00 = document.getElementById('mainvideo00');
-            //            mainvideo00.srcObject = null;
-            //            mainvideo00.pause();
             window.location.reload()
 
             const data = this.curuser
@@ -700,33 +679,7 @@ export default{
         })
       }
     },
-    mounted () {
-      //    var timer = setTimeout(function(){
-      //      doItPerSecond();
-      //    },1000)
-      //    var num = 0;
-      //    function doItPerSecond() {
-      //      //dosomething...
-      //      var player = polyvObject('#player').livePlayer({
-      //        'width':'100%',
-      //        'height':600+'px',
-      //        'uid':'7181857ac2',
-      //        'vid':'248980'
-      //      });
-      //      num++;
-      //      console.log(num);
-      //    };
-    },
-    created: function () {
-      this.cururl = this.$route.params.url
-      console.log(this.cururl)
-      //    const s = document.createElement('script');
-      //    s.type = 'text/javascript';
-      //    s.src = 'https://player.polyv.net/livescript/liveplayer.js';
-      //    document.body.appendChild(s);
-      this.showUserInfo()
-      //    window.location.reload()
-    }
+
   }
 }
 
