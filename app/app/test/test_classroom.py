@@ -10,7 +10,7 @@ class ClassroomTest(BaseTestCase):
 			"title": "adilnb",
 			"class_password": "121121",
 			"thumbnail": "/static/image/test.jpg",
-			"url": "123",
+			"url": "242544",
 		}
 
 	dataerror = {
@@ -19,7 +19,7 @@ class ClassroomTest(BaseTestCase):
 		"title": "adilnb",
 		"class_password": "121121",
 		"thumbnail": "/static/image/test.jpg",
-		"url": "123"
+		"url": "242544"
 	}
 
 	def test_add_classroom(self):
@@ -42,12 +42,12 @@ class ClassroomTest(BaseTestCase):
 
 
 	def test_updateclass(self):
-		self.data['old_url'] = "123"
+		self.data['old_url'] = "242544"
 		# 这是可以正确插入的结果
 		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.data, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
 
-		self.dataerror['old_url'] = "123"
+		self.dataerror['old_url'] = "242544"
 		# 这是不可以正确插入的结果
 		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.dataerror, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
