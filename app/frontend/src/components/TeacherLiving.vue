@@ -641,7 +641,7 @@ export default{
               var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
              //streamer.setScreenPosition(-100, 0)
               //streamer.setScreenSize(700, 380)
-              streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+              streamer000.publish('rtmp://push-c1.videocc.net/recordf', '7181857ac220181025144543640')
               streamer222.disconnect()
             } else {
               setSWFIsReady()
