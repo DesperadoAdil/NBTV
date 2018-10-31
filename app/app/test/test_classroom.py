@@ -22,6 +22,7 @@ class ClassroomTest(BaseTestCase):
 		"thumbnail": "/static/image/test.jpg",
 		"url": "123",
 		"old_url": "123"
+
 	}
 
 	def test_add_classroom(self):
