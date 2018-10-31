@@ -13,7 +13,7 @@
           <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
           <p class="title">{{ item.title }} </p>
           <p class="teacher">授课老师：{{ item.teacher }} </p>
-          <p class="audiencenum">当前人数：{{ item.audienceList.length}}</p>
+          <p class="audiencenum">当前人数：{{ item.audiencelist.length}}</p>
           <p class="audiencenum">开播时间：{{ item.createtime}}</p>
         </Card>
       </Col>
