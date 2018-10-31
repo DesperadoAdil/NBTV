@@ -35,7 +35,7 @@ class ClassroomTest(BaseTestCase):
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
 
 
-	def test_updateclass(self):
+	def test_bupdate_classroom(self):
 		# 这是可以正确插入的结果
 		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.data, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
