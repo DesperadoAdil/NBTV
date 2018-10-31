@@ -637,20 +637,20 @@ export default{
             })
             if (this.curvideo) {
               setSWFIsReady()
-              var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-              var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+              var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+              var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
              //streamer.setScreenPosition(-100, 0)
               //streamer.setScreenSize(700, 380)
-              streamer.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
-              streamer2.disconnect()
+              streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+              streamer222.disconnect()
             } else {
               setSWFIsReady()
-              var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-              var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+              var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+              var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
              // streamer2.setScreenPosition(-100, 0)
               //streamer2.setScreenSize(700, 380)
-              streamer2.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
-              streamer.disconnect()
+              streamer222.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+              streamer000.disconnect()
             }
           },
           onCancel: () => {
