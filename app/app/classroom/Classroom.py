@@ -7,21 +7,21 @@ class ClassroomManager:
 		pass
 
 	def dict(self, classroom):
-                                ret = {}
-                                ret['vid'] = classroom.vid
-                                ret['teacher'] = classroom.teacher
-                                ret['title'] = classroom.title
-                                ret['thumbnail'] = classroom.thumbnail
-                                ret['password'] = classroom.password
-                                ret['url'] = classroom.url
-                                ret['rtmpUrl'] = classroom.rtmpUrl
-                                ret['studentlist'] = classroom.studentlist
-                                ret['teacherlist'] = classroom.teacherlist
-                                ret['audiencelist'] = classroom.audiencelist
-                                ret['filelist'] = classroom.filelist
-                                ret['visible'] = classroom.visible
-                                ret['createtime'] = str(classroom.createtime)
-                                return ret
+		ret = {}
+		ret['vid'] = classroom.vid
+		ret['teacher'] = classroom.teacher
+		ret['title'] = classroom.title
+		ret['thumbnail'] = classroom.thumbnail
+		ret['password'] = classroom.password
+		ret['url'] = classroom.url
+		ret['rtmpUrl'] = classroom.rtmpUrl
+		ret['studentlist'] = classroom.studentlist
+		ret['teacherlist'] = classroom.teacherlist
+		ret['audiencelist'] = classroom.audiencelist
+		ret['filelist'] = classroom.filelist
+		ret['visible'] = classroom.visible
+		ret['createtime'] = str(classroom.createtime)
+		return ret
 
 	def insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
 		#在调用这个接口之前，需要先判断是否是本用户插入的，需要验证密码
