@@ -8,8 +8,8 @@ import List from '@/components/List'
 import Living from '@/components/Living'
 import MyLivingList from '@/components/MyLivingList'
 import MyWatchingList from '@/components/MyWatchinglist'
-import UserInfo from '@/components/UserInfo'
 import TeacherLiving from '@/components/TeacherLiving'
+import HomePage from '@/components/HomePage'
 
 Vue.use(Router)
 Vue.use(VueCookies)
@@ -53,11 +53,10 @@ const router = new Router({
       component: MyLivingList
     },
     {
-      path: '/UserInfo',
-      name: 'UserInfo',
-      component: UserInfo
+      path: '/',
+      name: 'HomePage',
+      component: HomePage
     }
-
   ]
 })
 
