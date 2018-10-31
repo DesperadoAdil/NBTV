@@ -108,7 +108,7 @@ def updateClass():
 	data = json.loads(data)
 
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
-		ret["status"] = "error:no such classroom"
+		ret["status"] = "error:password wrong"
 		return json.dumps(ret, ensure_ascii = False)
 
 	ret = {}
@@ -124,7 +124,7 @@ def getList():
 	data = json.loads(data)
 
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
-		ret["status"] = "error:no such classroom"
+		ret["status"] = "error:password wrong"
 		return json.dumps(ret, ensure_ascii = False)
 
 	ret = {}
