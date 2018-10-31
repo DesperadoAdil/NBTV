@@ -21,9 +21,9 @@ class ChannelManager:
 		for key in sorted(params):
 			ansStr += str(key) + str(params[key])
 		ansStr += secret
-		print("generateSign:", ansStr)
+		print("generateSign:", ansStr.encode("utf-8"))
 		return md5.toMD5(ansStr)
-		
+
 
 	def createChannel(self, name, passwd = "", sceneType = SCENE_ALONE):
 		'''返回API 返回内容'''

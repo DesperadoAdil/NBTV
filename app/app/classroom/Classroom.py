@@ -1,5 +1,5 @@
 import json
-from ..models import Classrooms, db
+from ..models import *
 
 
 class ClassroomManager:
@@ -26,10 +26,9 @@ class ClassroomManager:
 	def insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
 		#在调用这个接口之前，需要先判断是否是本用户插入的，需要验证密码
 		try:
-			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = thumbnail, passwd = passwd, rtmpUrl = rtmpUrl, url = url)
+			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = thumbnail, password = passwd, rtmpUrl = rtmpUrl, url = url)
 			db.session.add(classroomTmp)
 			db.session.commit()
-
 			return "success"
 		except Exception as err:
 			print(err)
@@ -51,7 +50,7 @@ class ClassroomManager:
 	def update(self, title, thumbnail, newUrl, passwd, oldUrl):
 		#在调用这个接口之前，需要先判断是否是本用户删除的，需要验证密码
 		try:
-			tmpClass = Classrooms.query.filter_by(url = url).first()
+			tmpClass = Classrooms.query.filter_by(url = oldUrl).first()
 			if tmpClass is None:
 				return "error:NoSuchClassroom"
 
@@ -72,6 +71,3 @@ class ClassroomManager:
 
 
 classroomManager = ClassroomManager()
-
-
-

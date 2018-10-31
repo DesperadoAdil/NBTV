@@ -3,7 +3,7 @@ from flask import *
 import json
 from . import classroom
 from ..polyv import polyvAPI
-from .Classroom import classroomManager
+from .Classroom import *
 from ..user.User import usermanager
 from ..models import Classrooms
 
@@ -44,17 +44,6 @@ def addClass():
 	ret = {}
 	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], data['thumbnail'], data['class_password'], data['url'])
 
-	# 在教师的教室列表中插入教室
-	try:
-		teacher = usermanager.search("username", data["username"], "teacher")
-		teacher.classroom.append(classroomManager.search(data['url']))
-		db.session.add(teacher)
-		db.session.commit()
-	except Exception as err:
-		print(err)
-		ret['status'] = "error: no such teacher"
-		
-	
 	return json.dumps(ret, ensure_ascii = False)
 
 
@@ -84,17 +73,6 @@ def deleteClass():
 		ret["status"] = "error: polyv"
 		return json.dumps(ret, ensure_ascii = False)
 
-	#从教师的教室列表中删除教室
-	try:
-		teacher = usermanager.search("username", data['username'], "teacher")
-		teacher.classroom.remove(classroomTmp)
-		db.session.add(teacher)
-		db.session.commit()
-	except Exception as err:
-		print(err)
-		ret['status'] = "error: no such teacher or classroom"
-		return json.dumps(ret, ensure_ascii = False)
-
 	#从直播间观众的观看列表中删除教室
 	try:
 		teacherlist = json.loads(classroomTmp.teacherlist)
@@ -114,10 +92,9 @@ def deleteClass():
 			db.ssesion.add(student)
 		db.session.commit()
 	except Exception as err:
-		print(err)
+		print(err.encode("utf-8"))
 		ret['status'] = "error: no such teacher or classroom"
 
-	ret = {}
 	ret['status'] = classroomManager.delete(data['url'])
 
 	return json.dumps(ret, ensure_ascii = False)
@@ -158,7 +135,4 @@ def getList():
 		tmpd = {"title": tmp.title, "thumbnail": tmp.thumbnail, "url": tmp.url, "password": tmp.password}
 		ans.append(tmpd)
 	return json.dumps(ans, ensure_ascii = False)
-
-
-
 
