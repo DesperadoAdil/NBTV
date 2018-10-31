@@ -169,6 +169,10 @@ export default {
   },
   methods: {
     handleOpen () {
+      if (this.LoginOrLogout === '登录') {
+        router.push('/login')
+        return
+      }
       this.visible = this.visible !== true
     },
     handleClose () {
