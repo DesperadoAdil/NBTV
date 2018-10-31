@@ -43,7 +43,7 @@
       <p slot="header" style="font-size: 20px">
         <span>上传课件</span>
       </p>
-      <Upload action="//jsonplaceholder.typicode.com/posts/">
+      <Upload action="上传的地址" headers="设置上传的请求头部">
         <Button icon="ios-cloud-upload-outline">Upload files</Button>
       </Upload>
     </Modal>
@@ -57,25 +57,7 @@
         <FormItem label="Statement">
           <Input v-model="sub_multi.statement"></Input>
         </FormItem>
-        <!--现在仅实现四个选项
-        <FormItem label="OptionA">
-          <Input v-model="answer1"></Input>
-        </FormItem>
-        <FormItem label="OptionB">
-          <Input v-model="answer2"></Input>
-        </FormItem>
-        <FormItem label="OptionC">
-          <Input v-model="answer3"></Input>
-        </FormItem>
-        <FormItem label="OptionD">
-          <Input v-model="answer4"></Input>
-        </FormItem>
-        <FormItem label="The Answer">
-          <Input v-model="sub_multi.answer"></Input>
-        </FormItem>
-
-        -->
-        <!-- 以下为可以实现选项的动态添加删除的原型代码  -->
+        <!-- 以下为可以实现选项的动态添加删除的代码  -->
         <FormItem
           v-for="(item, index) in multi_options"
           v-if="item.status"
