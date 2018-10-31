@@ -53,11 +53,11 @@
       <p slot="header" style="font-size: 20px">
         <span>设置选择题</span>
       </p>
-      <Form model="sub_multi" label-width="80" style="width: 300px">
+      <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
         <FormItem label="Statement">
           <Input v-model="sub_multi.statement"></Input>
         </FormItem>
-        <!-- 现在仅实现四个选项 -->
+        <!--现在仅实现四个选项
         <FormItem label="OptionA">
           <Input v-model="answer1"></Input>
         </FormItem>
@@ -73,9 +73,13 @@
         <FormItem label="The Answer">
           <Input v-model="sub_multi.answer"></Input>
         </FormItem>
-        <!-- 以下为可以实现选项的动态添加删除的原型代码
+
+        -->
+        <!-- 以下为可以实现选项的动态添加删除的原型代码  -->
         <FormItem
-          v-for="option in sub_multi.optionList">
+          v-for="(item, index) in multi_options"
+          v-if="item.status"
+          :key="index">
           <Row>
             <Col span="18">
               <Input type="text" placeholder="Enter Your Choice"></Input>
@@ -92,7 +96,9 @@
             </Col>
           </Row>
         </FormItem>
-        -->
+        <FormItem label="The Answer">
+          <Input v-model="sub_multi.answer" placeholder="a number"></Input>
+        </FormItem>
       </Form>
     </Modal>
 
@@ -214,10 +220,18 @@ export default{
       // Yuxuan's variables:
       modal_pdf: false,
       modal_multi: false,
+      multi_options: [
+        {
+          value: '',
+          index: 1,
+          status: 1
+        }
+      ],
+      multi_index: 1,
       sub_multi: {
         statement: '',
-        optionList: [this.answer1, this.answer2, this.answer3, this.answer4],
-        answer: '一个数字',
+        optionList: [],
+        answer: '',
         url: '教室url'
       },
       answer1: '',
@@ -450,19 +464,25 @@ export default{
     },
     handleAdd () {
       this.index++
-      this.sub_multi.optionList.push({
+      this.multi_options.push({
         value: '',
         index: this.index,
         status: 1
       })
     },
     handleRemove (index) {
-      this.sub_multi.optionList[index].status = 0
+      this.multi_options[index].status = 0
     },
     addMulti () {
       // send sub_multi should be set by now
       this.sub_multi.url = this.cururl
-      /* 把选项数组改成字典
+      // 将multi_option这个列表改成可发送的数组
+      for (var i = 0; i < this.index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
+      // post
       axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
@@ -474,12 +494,10 @@ export default{
           this.$Message.error('添加选择题失败')
         }
       })
-      */
     },
     addCode () {
       // sub_code should be set by now
       // post
-      /* 后端还没写好
       axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
@@ -491,7 +509,6 @@ export default{
           this.$Message.error('添加代码题失败')
         }
       })
-      */
     },
     // Yuxuan's Methods Stops Here
     teaselect () {
