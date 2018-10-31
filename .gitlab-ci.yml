@@ -37,7 +37,7 @@ unit-test:
   script:
   # 进入flask目录，注意保证测试报告的相对原始路径和sonar-project.properties的配置一样
   # python 测试
-    - cd app
+    # - cd app
     - coverage run --source . -m test --junit-xml=xunit-reports/xunit-result.xml
     - PYTHON_RET=$?
     - coverage xml -o coverage-reports/coverage.xml
