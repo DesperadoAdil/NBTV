@@ -1,6 +1,11 @@
 <template>
   <div id="myLivingList" class="posi">
-    <Button type="primary" @click="addModal = true">ADD</Button>
+    <h1 class="list-info">
+      <Icon type="ios-time" />
+      我的直播
+      <Button type="primary" @click="addModal = true">新建直播间</Button>
+    </h1>
+    <Divider />
     <Modal
       :model="newLiving"
       v-model="addModal"
@@ -12,31 +17,33 @@
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
       <Input v-model="newLiving.class_password" placeholder="课程密码（可空）"></Input>
     </Modal>
-    <div v-for="(living, index) in myLivingList" :key="living.url">
-      <Card class="card">
-        <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
-        <p class="title">{{ living.title }}</p>
-        <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
-        <Modal
-          v-model="updateModal"
-          title="更新课程"
-          @on-ok="updateLiving(index)"
-          @on-cancel="cancel">
-          <Input v-model="living.title" placeholder="课程名称"></Input>
-          <Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>
-          <Input v-model="living.url" placeholder="课程url"></Input>
-          <Input v-model="living.class_password" placeholder="课程密码（可空）"></Input>
-        </Modal>
-        <span><Button type="error" @click="deleteModal = true">DELETE</Button></span>
-        <Modal
-          v-model="deleteModal"
-          title="删除课程"
-          @on-ok="deleteLiving(index)"
-          @on-cancel="cancel">
-          <Input v-model="validate" placeholder="确认删除请输入yes"></Input>
-        </Modal>
-      </Card>
-    </div>
+    <Row>
+      <Col span="8" v-for="(living, index) in myLivingList" :key="living.url">
+          <Card class="living-card">
+            <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
+            <p class="title">{{ living.title }}</p>
+            <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
+            <Modal
+              v-model="updateModal"
+              title="更新课程"
+              @on-ok="updateLiving(index)"
+              @on-cancel="cancel">
+              <Input v-model="living.title" placeholder="课程名称"></Input>
+              <Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>
+              <Input v-model="living.url" placeholder="课程url"></Input>
+              <Input v-model="living.class_password" placeholder="课程密码（可空）"></Input>
+            </Modal>
+            <span><Button type="error" @click="deleteModal = true">DELETE</Button></span>
+            <Modal
+              v-model="deleteModal"
+              title="删除课程"
+              @on-ok="deleteLiving(index)"
+              @on-cancel="cancel">
+              <Input v-model="validate" placeholder="确认删除请输入yes"></Input>
+            </Modal>
+          </Card>
+      </Col>
+    </Row>
   </div>
 </template>
 <script>
@@ -66,7 +73,7 @@ export default {
         thumbnail: '../assets/logo.png',
         url: '',
         class_password: ''
-      }],
+      },{},{},{},{}],
       userInfo: {
         username: '',
         password: '',
@@ -158,8 +165,17 @@ export default {
 }
 </script>
 <style>
-.card {
-  width: 320px;
+ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+li {
+  list-style: none;
+}
+.living-card {
+  padding: 3%;
+  margin: 6%;
 }
 .posi{
   position: absolute;
