@@ -189,8 +189,7 @@
   </div>
 </template>
 
-<!-- script starts
-    -->
+<!-- script starts-->
 <!--<script src="https://player.polyv.net/livescript/liveplayer.js"></script>-->
 
 <script>

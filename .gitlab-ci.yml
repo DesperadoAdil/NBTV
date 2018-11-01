@@ -9,13 +9,13 @@ build:
   stage: build
   script:
     - export BUILD_IMAGE_NAME=$CI_REGISTRY_IMAGE
-    - export BUILD_IMAGE_TAG=$CI_COMMIT_SHA
+    - export BUILD_IMAGE_TAG=$CI_COMMIT_REF_SLUG
     - export BUILD_IMAGE_USERNAME=$CI_REGISTRY_USER
     - export BUILD_IMAGE_PASSWORD=$CI_REGISTRY_PASSWORD
     - deployer build
 
 unit-test:
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: test
 #  before_script:
 #    - echo "deb http://mirrors.tencentyun.com/ubuntu/ xenial main restricted universe multiverse" > /etc/apt/sources.list
@@ -38,7 +38,7 @@ unit-test:
   # 进入flask目录，注意保证测试报告的相对原始路径和sonar-project.properties的配置一样
   # python 测试
     - cd /app
-    - coverage run --source . -m test #--junit-xml=xunit-reports/xunit-result.xml
+    - coverage run --source . -m test --junit-xml=xunit-reports/xunit-result.xml
     - PYTHON_RET=$?
     - coverage xml -o coverage-reports/coverage.xml
     - coverage report
@@ -62,6 +62,6 @@ unit-test:
 deploy:
   stage: deploy
   script:
-    - deployer dyno replace $CI_PROJECT_NAME "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" "$REGISTRY_USER" "$REGISTRY_PWD"
+    - deployer dyno replace $CI_PROJECT_NAME "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" "$REGISTRY_USER" "$REGISTRY_PWD"
   only:
     - master
