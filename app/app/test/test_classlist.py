@@ -4,7 +4,7 @@ from app.classroom.Classroom import classroomManager
 import unittest
 import json
 
-class UserTest(BaseTestCase):
+class ClasslistTest(BaseTestCase):
     def test_classlist(self):
         print ("Test:Classlist===============================")
 
