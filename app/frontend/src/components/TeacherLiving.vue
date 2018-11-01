@@ -207,8 +207,8 @@
 
 <script>
 import axios from 'axios'
-import {setSWFIsReady} from '../../static/js/livingrtmp.js'
-import {RtmpStreamer} from '../../static/js/livingrtmp.js'
+//import {setSWFIsReady} from '../../static/js/livingrtmp.js'
+//import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 export default{
   name: 'load',
   data () {
@@ -636,11 +636,11 @@ export default{
               this.streamername = resp.streamername
             })
             if (this.curvideo) {
-              setSWFIsReady()
-               var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-               var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-              //streamer000 = document.getElementById('rtmp-streamer')
-              //streamer222 = document.getElementById('rtmp-streamer2')
+              //setSWFIsReady()
+               //var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+               //var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+              streamer000 = document.getElementById('rtmp-streamer')
+              streamer222 = document.getElementById('rtmp-streamer2')
 
               //streamer.setScreenPosition(-100, 0)
               //streamer.setScreenSize(700, 380)
