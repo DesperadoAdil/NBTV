@@ -2,6 +2,7 @@
 from flask import *
 from . import classlist
 from ..models import *
+from ..classroom.Classroom import classroomManager
 import json
 
 #List
@@ -14,19 +15,7 @@ def list():
             print ("No living room!")
             break
         else:
-            dic = {}
-            # dic["id"] = str(Class.id)
-            dic["vid"] = str(Class.vid)
-            dic["teacher"] = Class.teacher
-            dic["title"] = Class.title
-            dic["thumbnail"] = Class.thumbnail
-            dic["password"] = Class.password
-            dic["url"] = Class.url
-            dic["studentlist"] = Class.studentlist
-            dic["teacherlist"] = Class.teacherlist
-            dic["audiencelist"] = Class.audiencelist
-            dic["visible"] = Class.visible
-            dic["createtime"] = str(Class.createtime)
+            dic = classroomManager.dict(Class)
             ret.append(dic)
     print (json.dumps(ret))
     return json.dumps(ret)

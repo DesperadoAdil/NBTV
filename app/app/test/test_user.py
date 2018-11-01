@@ -140,8 +140,8 @@ class UserTest(BaseTestCase):
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
 
 
-	data_mylist = { "username" : 'stu1', "job" : 'student' }
-	dataerror_mylist = { "username" : 'stu1', "job" : 'student' }
+	data_mylist = { "username" : "stu1", "job" : "student" }
+	dataerror_mylist = { "username" : "stu1", "job" : "student" }
 
 	def test_mylist(self):
 		print ("Test:Mylist===============================")
@@ -152,3 +152,21 @@ class UserTest(BaseTestCase):
 		# 这是可以正确获取直播间列表的结果
 		response = self.app.post('/api/user/mylist', data = json.dumps(self.data_mylist, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), ret)
+
+
+	classroom = classroomManager.dict(classroomManager.search("242544"))
+	classroom["url"] = "123456"
+	data_delmyclass = { "username" : "stu2", "job" : "student", "classroom" : classroom }
+	dataerror_delmyclass = { "username" : "stu2", "job" : "student", "classroom" : classroom }
+
+	def test_ndelmyclass(self):
+		print ("Test:Delmyclass===============================")
+
+		# 这是不可以正确喊出直播间列表的结果
+		response = self.app.post('/api/user/delmyclass', data = json.dumps(self.dataerror_delmyclass, ensure_ascii = False))
+		self.assertEquals(response.data.decode('utf8'), '{"status": "error"}')
+
+		# 这是可以正确喊出直播间列表的结果
+		self.classroom["url"] = "242544"
+		response = self.app.post('/api/user/delmyclass', data = json.dumps(self.data_delmyclass, ensure_ascii = False))
+		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
