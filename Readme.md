@@ -1,9 +1,9 @@
 # README
 ---
-##commit message符合规范
+## commit message符合规范
 - 采用了Git Hook来检查每一次的commit message是否符合规范
 
-####commit规范
+#### commit规范
 commit message都要符合这一个规范：  
 **Type #\d+：description**  
 
@@ -18,7 +18,7 @@ commit message都要符合这一个规范：
 
 2. \#\d+: 为该commit关联的issue，每一个commit都应该关联至一个issue
 
-####增加脚本来控制commit message符合规范
+#### 增加脚本来控制commit message符合规范  
 将commit-msg文件拷贝到 .git/hooks/commit-msg即可
 
 
