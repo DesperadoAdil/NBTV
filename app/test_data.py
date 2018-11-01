@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 from app import db
 from app.models import *
 import json
@@ -11,6 +12,16 @@ classroom.password = "123456"
 classroom.url = "242544"
 classroom.rtmpUrl = ""
 classroom.studentlist = json.dumps(["stu1", "stu2"])
+db.session.add(classroom)
+
+classroom = Classrooms()
+classroom.vid = 250810
+classroom.teacher = "adil"
+classroom.title = "小葵花妈妈课堂"
+classroom.thumbnail = "/static/image/123456.jpg"
+classroom.password = "123456"
+classroom.url = "123456"
+classroom.rtmpUrl = "rtmp://push2.videocc.net/recordfe/7181857ac220181030221452650"
 db.session.add(classroom)
 
 teacher = Teachers()
