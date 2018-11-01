@@ -1,71 +1,24 @@
 <template>
-	<div id="list" class="posi">
-    <Layout class="layoutlist">
-      <Header>
-          <ButtonGroup class="btns" size="large" shape="circle" vertical="false">
-            <Tooltip placement="top" v-if="userInfo.job=='teacher'" >
-              <Button class="addbutton" size="large" type="primary"  shape="circle" icon="md-add" ></Button>
-              <div slot="content">
-                <p class="addtext">新建直播间</p>
-              </div>
-            </Tooltip>
-            <Tooltip placement="top">
-              <Button class="addbutton" size="large" type="primary"  shape="circle" icon="md-help"></Button>
-              <div slot="content">
-                <p class="addtext">待创建功能</p>
-              </div>
-            </Tooltip>
-          </ButtonGroup>
-
-          <ButtonGroup class="paixu">
-            <!--<ButtonGroup class="listbtns">-->
-            <!--<Button class="listtext" type="text" >在线直播</Button>-->
-            <Button class="listbtn" type="primary"  @click="timelist">按开播时间排列</Button>
-            <Button class="listbtn" type="primary"  @click="audiencelist">按观众人数排序</Button>
-          </ButtonGroup>
-      </Header>
-      <Content class="listclass">
-
-        <!--<p class="listtext">在线直播</p>-->
-
-        <Row>
-          <Col span="8" v-for="item in items" :key="item.id">
-            <Card class="listcard">
-              <!--<div class="aspectration" data-ratio="16:9">-->
-                  <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
-              <!--</div>-->
-              <p class="title">{{ item.title }} </p>
-              <p class="teacher">授课老师：{{ item.teacher }} </p>
-              <p class="audiencenum">当前人数：{{ item.audiencelist.length}}</p>
-              <p class="audiencenum">开播时间：{{ item.createtime}}</p>
-            </Card>
-          </Col>
-        </Row>
-
-        <!--<ul class="oldlist">-->
-          <!--<li  v-for="item in items">-->
-            <!--<Card class="card" >-->
-              <!--<img :src="item.thumbnail" class="thumbnail" @click="skip(item)">-->
-              <!--<div class="classroomDetail" style="text-align:center">-->
-						<!--<span class="title">-->
-							<!--{{ item.title }}-->
-						<!--</span>-->
-						<!--<span class="teacher">-->
-							<!--{{ item.teacher }}-->
-						<!--</span>-->
-						<!--<span class="audience">-->
-							<!--{{ item.audiencenum }}-->
-						<!--</span>-->
-              <!--</div>-->
-            <!--</Card>-->
-          <!--</li>-->
-        <!--</ul>-->
-      </Content>
-      <Footer class="layout-footer-center">2018-? &copy; SitTillGraduation</Footer>
-
-    </Layout>
-
-	</div>
+  <div id="list" class="posi">
+    <h1 class="list-info">
+      <Icon type="ios-time" />
+      正在播出
+      <Button class="listbtn" @click="timelist">开播时间</Button>
+      <Button class="listbtn" @click="audiencelist">观众人数</Button>
+    </h1>
+    <Divider />
+    <Row>
+      <Col span="8" v-for="item in items" :key="item.id">
+        <Card class="listcard">
+          <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
+          <p class="title">{{ item.title }} </p>
+          <p class="teacher">授课老师：{{ item.teacher }} </p>
+          <p class="audiencenum">当前人数：{{ item.audiencelist.length}}</p>
+          <p class="audiencenum">开播时间：{{ item.createtime}}</p>
+        </Card>
+      </Col>
+    </Row>
+  </div>
 
 </template>
 <script>
@@ -83,7 +36,6 @@ export default {
       },
       LoginOrLogout: '登录',
       currentpassword: '',
-      imgwitd: '100px',
       items: []
     }
   },
@@ -152,14 +104,6 @@ export default {
             }
           }
         }
-
-        if (val1 < val2) {
-          return -1
-        } else if (val1 > val2) {
-          return 1
-        } else {
-          return 0
-        }
       }
       this.items.sort(compare)
       this.$Notice.success({
@@ -171,8 +115,8 @@ export default {
       console.log('123')
 
       var compare = function (obj1, obj2) {
-        var val1 = obj1.audiencelist.length
-        var val2 = obj2.audiencelist.length
+        var val1 = obj1.audienceList.length
+        var val2 = obj2.audienceList.length
         if (val1 > val2) {
           return -1
         } else if (val1 < val2) {
@@ -242,42 +186,14 @@ li {
   top: 60px;
   width: 100%;
 }
-
-.addbutton{
-  margin:10px;
-
-}
-.addtext{
-  test-align:left;
-  font-size: 20px;
-  font-style:normal;
-  font-family:"Times New Roman", Times, serif;
-}
-.btns{
-  float:left;
-  padding-left: 4%;
-}
 .layout-footer-center{
   text-align: center;
   font-size:20px;
 }
-.listclass{
-  padding-top: 3%;
-  padding-left: 5%;
-  padding-right: 5%;
-  padding-bottom: 3%;
-
-}
-.paixu{
-  float:right;
-  padding-right: 4%;
-}
 .listbtn{
   test-align:left;
-  font-size: 20px;
   font-style:normal;
   font-family:"Times New Roman", Times, serif;
-  margin:10px;
 }
 .layoutlist{
   min-height:850px;
@@ -287,7 +203,7 @@ li {
   margin: 6%;
 }
 .thumbnail {
-    height:250px;
+  height:250px;
   width: 100%;
 }
 .title{
@@ -301,5 +217,8 @@ li {
 .audiencenum{
   font-size:20px ;
   text-align:left;
+}
+.list-info {
+  text-align: left;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="tealivingmain">
 
-    <card  class="cardtea">
+    <div  class="cardtea">
       <p slot="title" style="font-size: 20px">选项</p>
       <Menu style="width: 100%">
         <!-- 添加教学资源 -->
@@ -36,7 +36,7 @@
       <Button class="btnopen" type="primary"  v-bind:icon="openclose"  @click="teaopenclose()">
         <span class="menuitentea">{{this.opentext}}</span>
       </Button>
-    </card>
+    </div>
 
     <!--上传-->
     <Modal v-model="modal_pdf" @on-ok="addPDF()" @on-cancel="modal_pdf = false">
@@ -148,7 +148,7 @@
       <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
     </Modal>
 
-    <div id="mainlivingcard" class="cardtealiving00" :style="{display:mainlivingcarddisplay?'block':'none'}">
+    <div  id="mainlivingcard" class="cardtealiving00" :style="{display:mainlivingcarddisplay?'block':'none'}">
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
@@ -637,11 +637,14 @@ export default{
             })
             if (this.curvideo) {
               setSWFIsReady()
-              var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-              var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-             //streamer.setScreenPosition(-100, 0)
+               var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
+               var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+              //streamer000 = document.getElementById('rtmp-streamer')
+              //streamer222 = document.getElementById('rtmp-streamer2')
+
+              //streamer.setScreenPosition(-100, 0)
               //streamer.setScreenSize(700, 380)
-              streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+              streamer000.publish('rtmp://push-c1.videocc.net/recordf', '7181857ac220181025144543640')
               streamer222.disconnect()
             } else {
               setSWFIsReady()
@@ -702,6 +705,9 @@ export default{
     width: 100%;
   }
   .cardtea{
+    position:absolute;
+    left: 0;
+    top:60px;
     width: 18%;
   }
   .menuitentea{
