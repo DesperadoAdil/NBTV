@@ -115,8 +115,8 @@ export default {
       console.log('123')
 
       var compare = function (obj1, obj2) {
-        var val1 = obj1.audienceList.length
-        var val2 = obj2.audienceList.length
+        var val1 = obj1.audiencelist.length
+        var val2 = obj2.audiencelist.length
         if (val1 > val2) {
           return -1
         } else if (val1 < val2) {
