@@ -141,7 +141,7 @@
         <h3>教室信息显示部分（待修改）</h3>
       </div>
       <object >
-        <embed id="rtmp-streamer1" src="../../static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
+        <embed id="rtmp-streamer1" src="/static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
                width="100%" height="600px" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
       </object>
       <canvas id="canvas" width="100%" height="600"></canvas>
@@ -175,7 +175,7 @@
 
     <div id="littlelivingcard" class="cardtealittleliving" :style="{display:littlelivingcarddisplay?'block':'none'}">
       <object >
-        <embed id="rtmp-streamer2" src="../../static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
+        <embed id="rtmp-streamer2" src="/static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
                width="100%" height="260px" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
       </object>
     </div>
@@ -638,7 +638,7 @@ export default{
             })
             if (this.curvideo) {
               setSWFIsReady()
-              
+
               var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
               var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
               //var streamer000 = document.getElementById('rtmp-streamer1')
