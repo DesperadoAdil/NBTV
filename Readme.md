@@ -15,7 +15,7 @@ commit message都要符合这一个规范：
 	5) **Refactor**: 重构  
 	6) **Test**: 增加测试  
 	7) **Chore**: 构建过程或辅助工具变动  
-	
+
 2. \#\d+: 为该commit关联的issue，每一个commit都应该关联至一个issue
 
 ####增加脚本来控制commit message符合规范
@@ -64,7 +64,7 @@ commit message都要符合这一个规范：
       - **frontend:** *Hanky*
       - **backend:** *Adil*
 
-   - #### 用户观看直播间列表
+   - #### 获取用户观看的直播间列表
       - **url:** */api/user/mylist*
       - **description:** 获取用户观看的直播间教室列表
       - **input:** `{ username : '', job : 'student/teacher' }`
@@ -72,9 +72,9 @@ commit message都要符合这一个规范：
       - **frontend:** *Jamgun*
       - **backend:** *Adil*
 
-   - #### 教师删除自己的直播间
+   - #### 用户删除自己观看的的直播间
 	 - **url:** */api/user/delmyclass*
-	 - **description:** 教师的删除自己的直播间
+	 - **description:** 用户的删除自己观看的的直播间
 	 - **input:** `{ username : '', job : 'student/teacher', classroom : 'mylist中得到的直播间列表中的某一个直播间' }`
 	 - **output:** `{ status : 'success/error' }` //删除成功就返回success
 	 - **frontend:** *Jamgun*
