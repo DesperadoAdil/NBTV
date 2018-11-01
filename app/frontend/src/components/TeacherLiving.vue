@@ -153,7 +153,7 @@
         <h3>教室信息显示部分（待修改）</h3>
       </div>
       <object >
-        <embed id="rtmp-streamer" src="../../static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
+        <embed id="rtmp-streamer1" src="../../static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
                width="100%" height="600px" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
       </object>
       <canvas id="canvas" width="100%" height="600"></canvas>
@@ -209,6 +209,8 @@
 import axios from 'axios'
 //import {setSWFIsReady} from '../../static/js/livingrtmp.js'
 //import {RtmpStreamer} from '../../static/js/livingrtmp.js'
+import {setSWFIsReady} from '../../static/js/livingrtmp.js'
+import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 export default{
   name: 'load',
   data () {
@@ -636,20 +638,23 @@ export default{
               this.streamername = resp.streamername
             })
             if (this.curvideo) {
-              //setSWFIsReady()
-               //var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-               //var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-              streamer000 = document.getElementById('rtmp-streamer')
-              streamer222 = document.getElementById('rtmp-streamer2')
+              setSWFIsReady()
+              
+              var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
+              var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+              //var streamer000 = document.getElementById('rtmp-streamer1')
+              //var streamer222 = document.getElementById('rtmp-streamer2')
 
-              //streamer.setScreenPosition(-100, 0)
-              //streamer.setScreenSize(700, 380)
+              streamer000.setScreenPosition(-100, 0)
+              streamer000.setScreenSize(700, 380)
               streamer000.publish('rtmp://push-c1.videocc.net/recordf', '7181857ac220181025144543640')
               streamer222.disconnect()
             } else {
-              setSWFIsReady()
-              var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-              var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+              //setSWFIsReady()
+              //var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
+              //var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
+              var treamer000 = document.getElementById('rtmp-streamer1')
+              var streamer222 = document.getElementById('rtmp-streamer2')
              // streamer2.setScreenPosition(-100, 0)
               //streamer2.setScreenSize(700, 380)
               streamer222.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
