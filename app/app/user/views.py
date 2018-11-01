@@ -25,7 +25,7 @@ def login():
 
     user = usermanager.search(data["loginway"], username, job)
     if user is None or password != user.password:
-        ret['status']='error:用户名或密码错误！'
+        ret['status']='error: wrong username or password'
         return json.dumps(ret)
     print (job + ' login, username = ' + user.username)
     ret['username'] = user.username
@@ -57,11 +57,11 @@ def register():
 
     mess = Messages.query.filter(Messages.phonenumber == phonenumber).first()
     if mess is None:
-        ret['status']='error:请先发送短信验证码！'
+        ret['status']='error: please send textMessage first'
         return json.dumps(ret)
     if verification != mess.message:
         print ('Not equal:' + verification + ' !=  ' + mess.message)
-        ret['status']='error:验证码错误！'
+        ret['status']='error: wrong textMessage'
         return json.dumps(ret)
     else:
         print ('Equal!')
@@ -70,7 +70,7 @@ def register():
 
     user = usermanager.search("phonenumber", phonenumber, job)
     if user is not None:
-        ret['status']='error:用户已存在！'
+        ret['status']='error: user already exist'
         return json.dumps(ret)
     ret['status'] = usermanager.insert(phonenumber, username, password, job)
     print (json.dumps(ret))
@@ -122,7 +122,7 @@ def change_password():
 
     status = data['status']
     if status != "login":
-        ret['status']='error:该用户未登录！'
+        ret['status']='error: user does not login'
         return json.dumps(ret)
     phonenumber = data['mobile']
     old_password = data['old_password']
@@ -131,10 +131,10 @@ def change_password():
 
     user = usermanager.search("phonenumber", phonenumber, job)
     if user is None:
-        ret['status']='error:该用户不存在！'
+        ret['status']='error: user does not exist'
         return json.dumps(ret)
     if old_password != user.password:
-        ret['status']='error:原密码错误！'
+        ret['status']='error: wrong old_password'
         return json.dumps(ret)
     ret['status'] = usermanager.update(user, phonenumber, user.username, new_password, user.classroomlist)
     print (json.dumps(ret))
@@ -153,7 +153,7 @@ def change_mobile():
 
     status = data['status']
     if status != "login":
-        ret['status']='error:该用户未登录！'
+        ret['status']='error: user does not login'
         return json.dumps(ret)
     old_mobile = data['old_mobile']
     old_verification = data['old_verification']
@@ -164,15 +164,15 @@ def change_mobile():
     old_mess = Messages.query.filter_by(phonenumber = old_mobile).first()
     new_mess = Messages.query.filter_by(phonenumber = new_mobile).first()
     if old_mess is None or new_mess is None:
-        ret['status']='error:请先发送短信验证码！'
+        ret['status']='error: please send textMessage first'
         return json.dumps(ret)
     if old_verification != old_mess.message:
         print ('Not equal:' + old_verification + ' !=  ' + old_mess.message)
-        ret['status']='error:原手机短信验证码错误！'
+        ret['status']='error: wrong old_verification'
         return json.dumps(ret)
     elif new_verificaiton != new_mess.message:
-        ret['status']='error:新手机短信验证码错误！'
-        print ('Not equal:' + new_verification + ' !=  ' + new_mess.message)
+        ret['status']='error: wrong new_verification'
+        print ('Not equal:' + new_verificaiton + ' !=  ' + new_mess.message)
         return json.dumps(ret)
     else:
         print ('Both equal!')
@@ -182,7 +182,7 @@ def change_mobile():
 
     user = usermanager.search("phonenumber", old_mobile, job)
     if user is None:
-        ret['status']='error:用户不存在！'
+        ret['status']='error: user does not exist'
         return json.dumps(ret)
     ret['status'] = usermanager.update(user, new_mobile, user.username, user.password, user.classroomlist)
     print (json.dumps(ret))
