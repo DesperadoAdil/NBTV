@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import VueCookies from 'vue-cookies'
+import RTMP from 'rtmp-streamer'
 
 import Login from '@/components/Login'
 import Register from '@/components/Register'
@@ -13,6 +14,7 @@ import HomePage from '@/components/HomePage'
 
 Vue.use(Router)
 Vue.use(VueCookies)
+Vue.use(RTMP)
 
 const router = new Router({
   mode: 'history',
