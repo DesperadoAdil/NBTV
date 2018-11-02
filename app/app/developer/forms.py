@@ -37,14 +37,6 @@ class UserForm(Form):
 
 
 class ClassForm(Form):
-    id = StringField(
-        label = '教室ID',
-        validators=[
-            validators.DataRequired()
-        ],
-        widget=widgets.TextInput(),
-        render_kw={'class': 'form-control'}
-    )
     vid = StringField(
         label = '直播流VID',
         validators=[
@@ -94,8 +86,14 @@ class ClassForm(Form):
         render_kw={'class': 'form-control'}
     )
     visible = RadioField(
-        label='是否公开',
+        label='是否可见',
         choices=(('yes', '是'), ('no', '否')),
         coerce=str,
         default = 'yes'
+    )
+    mode = RadioField(
+        label='私密模式',
+        choices=(('private', '私密'), ('protected', '密码进入'), ('public', '公开')),
+        coerce=str,
+        default = 'private'
     )

@@ -12,6 +12,7 @@ class ClassroomManager:
 		ret['teacher'] = classroom.teacher
 		ret['title'] = classroom.title
 		ret['thumbnail'] = classroom.thumbnail
+		ret['mode'] = classroom.mode
 		ret['password'] = classroom.password
 		ret['url'] = classroom.url
 		ret['rtmpUrl'] = classroom.rtmpUrl
