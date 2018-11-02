@@ -9,8 +9,11 @@ class Classrooms(db.Model):
     # id = db.Column(db.Integer, primary_key=True,  unique=True, nullable=False)
     vid = db.Column(db.Integer, unique=True, nullable=False)
     teacher = db.Column(db.String(50), db.ForeignKey('teachers.username'), nullable=False)
-    title = db.Column(db.String(50), nullable=False)
+    title = db.Column(db.String(150), nullable=False)
     thumbnail = db.Column(db.String(100), nullable=False)
+    #直播间私密模式
+    mode = db.Column(db.String(10), nullable=False, default="private")
+
     #直播间的密码
     password = db.Column(db.String(50), nullable=False)
 
@@ -22,7 +25,7 @@ class Classrooms(db.Model):
 
     studentlist = db.Column(db.Text, nullable=False, default = "[]")
     teacherlist = db.Column(db.Text, nullable=False, default = "[]")
-    audiencelist = db.Column(db.Text, nullable=False, default = "[]")
+    #audiencelist = db.Column(db.Text, nullable=False, default = "[]")
 
     filelist = db.Column(db.Text, nullable = False, default = "[]")
 

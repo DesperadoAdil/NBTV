@@ -154,19 +154,30 @@ class UserTest(BaseTestCase):
 		self.assertEquals(response.data.decode('utf8'), ret)
 
 
-	classroom = classroomManager.dict(classroomManager.search("242544"))
+	testuser = Students(phonenumber = "12345678910", username = "testuser", password = "123456", classroomlist = json.dumps(["242544"]))
+	db.session.add(testuser)
+	Classroom = classroomManager.search("242544")
+	classroomuser = json.loads(Classroom.studentlist)
+	classroomuser.append("testuser")
+	Classroom.studentlist = json.dumps(classroomuser)
+	db.session.add(Classroom)
+	db.session.commit()
+	classroom = classroomManager.dict(Classroom)
 	classroom["url"] = "123456"
-	data_delmyclass = { "username" : "stu2", "job" : "student", "classroom" : classroom }
+	data_delmyclass = { "username" : "testuser", "job" : "student", "classroom" : classroom }
 	dataerror_delmyclass = { "username" : "stu2", "job" : "student", "classroom" : classroom }
 
 	def test_ndelmyclass(self):
 		print ("Test:Delmyclass===============================")
 
-		# 这是不可以正确喊出直播间列表的结果
+		# 这是不可以正确删除直播间列表的结果
 		response = self.app.post('/api/user/delmyclass', data = json.dumps(self.dataerror_delmyclass, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error"}')
 
-		# 这是可以正确喊出直播间列表的结果
+		# 这是可以正确删除直播间列表的结果
 		self.classroom["url"] = "242544"
 		response = self.app.post('/api/user/delmyclass', data = json.dumps(self.data_delmyclass, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
+		testuser = Students.query.filter_by(username = "testuser").first()
+		db.session.delete(testuser)
+		db.session.commit()

@@ -13,7 +13,7 @@ def base():
 @developer.route('/add_user', methods = ['GET', 'POST'])
 def add_user():
     form = UserForm()
-    
+
     if request.method == 'GET':
         return render_template("developer.html", form = form)
     else:
@@ -48,17 +48,17 @@ def add_user():
 @developer.route('/add_classroom', methods = ['GET', 'POST'])
 def add_classroom():
     form = ClassForm()
-    
+
     if request.method == 'GET':
         return render_template("developer.html", form = form)
     else:
         form = ClassForm(formdata=request.form)
         if form.validate():
             print('Data: ', form.data)
-            id = int(form.data['id'])
-            classroom = Classrooms.query.filter_by(id = id).first()
+            url = int(form.data['url'])
+            classroom = Classrooms.query.filter_by(url = url).first()
             if classroom is None:
-                classroom = Classrooms(id=id, vid=form.data['vid'], teacher=form.data['teacher'], title=form.data['title'], thumbnail=form.data['thumbnail'], password=form.data['password'], url=form.data['url'], studentlist="[]", teacherlist="[]", audiencelist="[]", visible=form.data['visible'])
+                classroom = Classrooms(vid=form.data['vid'], teacher=form.data['teacher'], title=form.data['title'], thumbnail=form.data['thumbnail'], password=form.data['password'], url=form.data['url'], visible=form.data['visible'], mode=form.data['mode'])
                 db.session.add(classroom)
                 db.session.commit()
                 return render_template("base.html")

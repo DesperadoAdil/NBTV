@@ -12,12 +12,12 @@ class ClassroomManager:
 		ret['teacher'] = classroom.teacher
 		ret['title'] = classroom.title
 		ret['thumbnail'] = classroom.thumbnail
+		ret['mode'] = classroom.mode
 		ret['password'] = classroom.password
 		ret['url'] = classroom.url
 		ret['rtmpUrl'] = classroom.rtmpUrl
 		ret['studentlist'] = classroom.studentlist
 		ret['teacherlist'] = classroom.teacherlist
-		ret['audiencelist'] = classroom.audiencelist
 		ret['filelist'] = classroom.filelist
 		ret['visible'] = classroom.visible
 		ret['createtime'] = str(classroom.createtime)
