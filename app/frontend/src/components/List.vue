@@ -8,18 +8,17 @@
     </h1>
     <Divider />
     <Row>
-      <Col span="8" v-for="item in items" :key="item.id">
+      <Col span="8" v-for="item in items" :key="item.vid" v-if="item.mode !== 'private'">
         <Card class="listcard">
           <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
           <p class="title">{{ item.title }} </p>
           <p class="teacher">授课老师：{{ item.teacher }} </p>
-          <p class="audiencenum">当前人数：{{ item.audiencelist.length}}</p>
-          <p class="audiencenum">开播时间：{{ item.createtime}}</p>
+          <p class="audiencenum">开播时间：{{ item.showtime}}</p>
+          <p class="audiencenum">创建时间：{{ item.createtime}}</p>
         </Card>
       </Col>
     </Row>
   </div>
-
 </template>
 <script>
 import axios from 'axios'
@@ -186,17 +185,10 @@ li {
   top: 60px;
   width: 100%;
 }
-.layout-footer-center{
-  text-align: center;
-  font-size:20px;
-}
 .listbtn{
   test-align:left;
   font-style:normal;
   font-family:"Times New Roman", Times, serif;
-}
-.layoutlist{
-  min-height:850px;
 }
 .listcard {
   padding: 3%;
