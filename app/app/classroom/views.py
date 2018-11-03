@@ -42,7 +42,7 @@ def addClass():
 	# 在教室列表里插入一个教室
 	# insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
 	ret = {}
-	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], data['thumbnail'], data['class_password'], data['url'])
+	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], data['thumbnail'], data['class_password'], data['url'], data['mode'])
 
 	return json.dumps(ret, ensure_ascii = False)
 
@@ -106,7 +106,7 @@ def updateClass():
 	print('update a classroom')
 	print(data)
 	data = json.loads(data)
-	
+
 	ret = {}
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
 		ret["status"] = "error:password wrong"
@@ -135,4 +135,3 @@ def getList():
 		tmpd = {"title": tmp.title, "thumbnail": tmp.thumbnail, "url": tmp.url, "password": tmp.password}
 		ans.append(tmpd)
 	return json.dumps(ans, ensure_ascii = False)
-

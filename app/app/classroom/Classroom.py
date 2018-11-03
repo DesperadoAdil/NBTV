@@ -21,12 +21,13 @@ class ClassroomManager:
 		ret['filelist'] = classroom.filelist
 		ret['visible'] = classroom.visible
 		ret['createtime'] = str(classroom.createtime)
+		ret['showtime'] = str(classroom.showtime)
 		return ret
 
-	def insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
+	def insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url, mode):
 		#在调用这个接口之前，需要先判断是否是本用户插入的，需要验证密码
 		try:
-			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = thumbnail, password = passwd, rtmpUrl = rtmpUrl, url = url)
+			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = thumbnail, password = passwd, rtmpUrl = rtmpUrl, url = url, mode = mode)
 			db.session.add(classroomTmp)
 			db.session.commit()
 			return "success"

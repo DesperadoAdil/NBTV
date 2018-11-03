@@ -177,7 +177,7 @@ commit message都要符合这一个规范：
 	    - #### 创建直播间
          - **url:** */api/classroom/add_class*
          - **description:** 教师登录后创建教室直播间
-         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '' }`
+         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '', mode : 'private/protected/public' }`
          - **output:** `{ status : 'success/error' }` //创建成功就返回success
          - **frontend:** *Hanky*
          - **backend:** *xcjthu*

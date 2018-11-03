@@ -11,7 +11,8 @@ class ClassroomTest(BaseTestCase):
 			"class_password": "121121",
 			"thumbnail": "/static/image/test.jpg",
 			"url": "123",
-			"old_url": "123"
+			"old_url": "123",
+			"mode": "private"
 		}
 
 	dataerror = {
@@ -21,8 +22,8 @@ class ClassroomTest(BaseTestCase):
 		"class_password": "121121",
 		"thumbnail": "/static/image/test.jpg",
 		"url": "123",
-		"old_url": "123"
-
+		"old_url": "123",
+		"mode": "private"
 	}
 
 	def test_add_classroom(self):
@@ -60,4 +61,3 @@ class ClassroomTest(BaseTestCase):
 
 		response = self.app.post('/api/classroom/user_living_list', data = json.dumps({"username": "error", "password": "123456"}))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
-
