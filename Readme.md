@@ -177,7 +177,7 @@ commit message都要符合这一个规范：
 	    - #### 创建直播间
          - **url:** */api/classroom/add_class*
          - **description:** 教师登录后创建教室直播间
-         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '' }`
+         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '', mode : '' }`
          - **output:** `{ status : 'success/error' }` //创建成功就返回success
          - **frontend:** *Hanky*
          - **backend:** *xcjthu*
@@ -193,13 +193,13 @@ commit message都要符合这一个规范：
 	    - #### 修改直播间
          - **url:** */api/classroom/update_class*
          - **description:** 教师修改直播间的信息
-         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '', old_url : '' }`
+         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '', old_url : '', mode : '' }`
          - **output:** `{ status : 'success/error' }` //修改成功就返回success
          - **frontend:** *Hanky*
          - **backend:** *xcjthu*
 
 	    - #### 教师的直播间教室列表
-         - **url:** */api/classroom/user_living_list*
+         - **url:** */api/classroom/user\_living\_list*
          - **description:** 获取教师的直播间教室列表
          - **input:** `{ username : '', password : '' }`
          - **output:** `[ {classrooms}, ... ]`

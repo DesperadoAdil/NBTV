@@ -138,7 +138,7 @@ export default {
       theme1: 'light',
       active: '',
       userInfo: {
-        status: '',
+        status: 'success',
         username: '',
         password: '',
         mobile: '',
