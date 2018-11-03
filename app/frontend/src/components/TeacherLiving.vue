@@ -136,7 +136,7 @@
       <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
     </Modal>
 
-    <div  id="mainlivingcard" :class="classmain ? 'cardtealiving00' : 'cardtealittleliving'" >
+    <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving'" >
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
@@ -190,7 +190,7 @@ export default{
   data () {
     return {
       videohei:700+'px',
-      classmain:true,
+      classmain0:true,
       stream: '',
       streamer: '',
       streamername: '7181857ac220181025144543640',
@@ -442,11 +442,13 @@ export default{
 
           })
           console.log('1321312')
+          this.videohei=260+'px'
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
-          this.classmain=false
+          this.classmain0=false
+          console.log(this.classmain0)
+          console.log(document.getElementById('rtmp-streamer1').class)
           this.liaotianshiheight = 350 + 'px'
-          this.videohei=260+'px'
           this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
           this.curvideo = false
           this.modal1 = false
@@ -470,11 +472,11 @@ export default{
           axios.post('/api/user/showselect', data).then((resp) => {
 
           })
+          this.videohei=260+'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
-          this.classmain=false
+          this.classmain0=false
           this.liaotianshiheight = 350 + 'px'
-          this.videohei=260+'px'
           this.curvideo = false
           this.curtitle = iselect.title
           this.curans = iselect.ans
@@ -493,7 +495,7 @@ export default{
         onOk: () => {
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
-          this.classmain=true
+          this.classmain0=true
           this.liaotianshiheight = 60 + 'px'
           this.videohei=700+'px'
           this.curvideo = true
@@ -536,9 +538,9 @@ export default{
             })
               setSWFIsReady()
               var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
-              streamer000.setScreenPosition(-100, 0)
-              streamer000.setScreenSize(700, 380)
-              streamer000.publish('rtmp://push-c1.videocc.net/recordf', '7181857ac220181025144543640')
+//              streamer000.setScreenPosition(-100, 0)
+//              streamer000.setScreenSize(700, 380)
+              streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
           },
           onCancel: () => {
           }

@@ -4,7 +4,7 @@
       <Icon type="ios-time" />
       正在播出
       <Button class="listbtn" @click="timelist">开播时间</Button>
-      <Button class="listbtn" @click="audiencelist">观众人数</Button>
+      <Button class="listbtn" @click="audiencelist">创建时间</Button>
     </h1>
     <Divider />
     <Row>
@@ -19,6 +19,7 @@
       </Col>
     </Row>
   </div>
+
 </template>
 <script>
 import axios from 'axios'
@@ -55,46 +56,44 @@ export default {
     },
     timelist: function () {
       var compare = function (obj1, obj2) {
-        var val1 = obj1.createtime
-        var val2 = obj2.createtime
+        var val1 = obj1.showtime
+        var val2 = obj2.showtime
         var datas1 = val1.split(' ')
         var datas2 = val2.split(' ')
-
         var date1 = datas1[0].split('-')
         var date2 = datas2[0].split('-')
-
         var time1 = datas1[1].split(':')
         var time2 = datas2[1].split(':')
         console.log(parseInt(date1[0]))
         if (parseInt(date1[0]) < parseInt(date2[0])) {
-          return -1
-        } else if (parseInt(date1[0]) > parseInt(date2[0])) {
           return 1
+        } else if (parseInt(date1[0]) > parseInt(date2[0])) {
+          return -1
         } else {
           if (parseInt(date1[1]) < parseInt(date2[1])) {
-            return -1
-          } else if (parseInt(date1[1]) > parseInt(date2[1])) {
             return 1
+          } else if (parseInt(date1[1]) > parseInt(date2[1])) {
+            return -1
           } else {
             if (parseInt(date1[2]) < parseInt(date2[2])) {
-              return -1
-            } else if (parseInt(date1[2]) > parseInt(date2[2])) {
               return 1
+            } else if (parseInt(date1[2]) > parseInt(date2[2])) {
+              return -1
             } else {
               if (parseInt(time1[0]) < parseInt(time2[0])) {
-                return -1
-              } else if (parseInt(time1[0]) > parseInt(time2[0])) {
                 return 1
+              } else if (parseInt(time1[0]) > parseInt(time2[0])) {
+                return -1
               } else {
                 if (parseInt(time1[1]) < parseInt(time2[1])) {
-                  return -1
-                } else if (parseInt(time1[1]) > parseInt(time2[1])) {
                   return 1
+                } else if (parseInt(time1[1]) > parseInt(time2[1])) {
+                  return -1
                 } else {
                   if (parseInt(time1[2]) < parseInt(time2[2])) {
-                    return -1
-                  } else if (parseInt(time1[2]) > parseInt(time2[2])) {
                     return 1
+                  } else if (parseInt(time1[2]) > parseInt(time2[2])) {
+                    return -1
                   } else {
                     return 0
                   }
@@ -107,27 +106,62 @@ export default {
       this.items.sort(compare)
       this.$Notice.success({
         title: '消息提示',
-        desc: '已经按照时间排序'
+        desc: '已经按照开播时间排序'
       })
     },
     audiencelist: function () {
-      console.log('123')
-
       var compare = function (obj1, obj2) {
-        var val1 = obj1.audiencelist.length
-        var val2 = obj2.audiencelist.length
-        if (val1 > val2) {
-          return -1
-        } else if (val1 < val2) {
+        var val1 = obj1.createtime
+        var val2 = obj2.createtime
+        var datas1 = val1.split(' ')
+        var datas2 = val2.split(' ')
+        var date1 = datas1[0].split('-')
+        var date2 = datas2[0].split('-')
+        var time1 = datas1[1].split(':')
+        var time2 = datas2[1].split(':')
+        console.log(parseInt(date1[0]))
+        if (parseInt(date1[0]) < parseInt(date2[0])) {
           return 1
+        } else if (parseInt(date1[0]) > parseInt(date2[0])) {
+          return -1
         } else {
-          return 0
+          if (parseInt(date1[1]) < parseInt(date2[1])) {
+            return 1
+          } else if (parseInt(date1[1]) > parseInt(date2[1])) {
+            return -1
+          } else {
+            if (parseInt(date1[2]) < parseInt(date2[2])) {
+              return 1
+            } else if (parseInt(date1[2]) > parseInt(date2[2])) {
+              return -1
+            } else {
+              if (parseInt(time1[0]) < parseInt(time2[0])) {
+                return 1
+              } else if (parseInt(time1[0]) > parseInt(time2[0])) {
+                return -1
+              } else {
+                if (parseInt(time1[1]) < parseInt(time2[1])) {
+                  return 1
+                } else if (parseInt(time1[1]) > parseInt(time2[1])) {
+                  return -1
+                } else {
+                  if (parseInt(time1[2]) < parseInt(time2[2])) {
+                    return 1
+                  } else if (parseInt(time1[2]) > parseInt(time2[2])) {
+                    return -1
+                  } else {
+                    return 0
+                  }
+                }
+              }
+            }
+          }
         }
       }
       this.items.sort(compare)
       this.$Notice.success({
         title: '消息提示',
-        desc: '已经按照热度排序'
+        desc: '已经按照创建时间排序'
       })
     },
 
@@ -185,11 +219,14 @@ li {
   top: 60px;
   width: 100%;
 }
+
+
 .listbtn{
   test-align:left;
   font-style:normal;
   font-family:"Times New Roman", Times, serif;
 }
+
 .listcard {
   padding: 3%;
   margin: 6%;
