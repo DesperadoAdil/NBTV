@@ -23,6 +23,17 @@ commit message都要符合这一个规范：
 
 ## API汇总
 
+- ### 学生直播界面管理
+
+  - ####  根据房间的url获取房间的vid
+
+    - **url:** /api/user/urlgetvid 
+    - **description:** 根据url返回房间的vid
+    - **input:**  `{ username : '', job : '', url : ''}`注：username为学生姓名
+    - **output:** `{ vid : ''}`
+    - **frontend:** Jamgun
+    - **backend:** ？
+
 - ### 老师直播界面管理
 
   - #### 获取某个学生的做题情况
