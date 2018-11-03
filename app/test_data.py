@@ -11,6 +11,7 @@ classroom.thumbnail = "/static/image/test.jpg"
 classroom.password = "123456"
 classroom.url = "242544"
 classroom.rtmpUrl = ""
+classroom.mode = "protected"
 classroom.studentlist = json.dumps(["stu1", "stu2"])
 db.session.add(classroom)
 
@@ -22,6 +23,7 @@ classroom.thumbnail = "/static/image/123456.jpg"
 classroom.password = "123456"
 classroom.url = "123456"
 classroom.rtmpUrl = "rtmp://push2.videocc.net/recordfe/7181857ac220181030221452650"
+classroom.mode = "protected"
 db.session.add(classroom)
 
 teacher = Teachers()
