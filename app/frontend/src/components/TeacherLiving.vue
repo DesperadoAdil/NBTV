@@ -3,7 +3,7 @@
 
     <div  class="cardtea">
       <p slot="title" style="font-size: 20px">选项</p>
-      <Menu style="width: 100%">
+      <Menu name="0" style="width: 100%">
         <!-- 添加教学资源 -->
         <Submenu name="1" class="menuitentea">
           <template slot="title" >
@@ -136,15 +136,14 @@
       <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
     </Modal>
 
-    <div  id="mainlivingcard" class="cardtealiving00" :style="{display:mainlivingcarddisplay?'block':'none'}">
+    <div  id="mainlivingcard" :class="classmain ? 'cardtealiving00' : 'cardtealittleliving'" >
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
       <object >
         <embed id="rtmp-streamer1" src="/static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
-               width="100%" height="600px" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
+               width="100%" :style="{height:videohei}"  allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
       </object>
-      <canvas id="canvas" width="100%" height="600"></canvas>
       <div class="bottomveido">
         <h3>礼物等其他显示部分（待修改）</h3>
       </div>
@@ -173,13 +172,6 @@
       <p class="anstea00">本题目答案：{{curanswer}}</p>
     </div>
 
-    <div id="littlelivingcard" class="cardtealittleliving" :style="{display:littlelivingcarddisplay?'block':'none'}">
-      <object >
-        <embed id="rtmp-streamer2" src="/static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
-               width="100%" height="260px" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
-      </object>
-    </div>
-
     <div id="liaotianshi" class="danmuxinxi" :style="{top:liaotianshiheight}">
       <Card style="height: 800px">
         <h3>聊天室信息显示部分（待修改）</h3>
@@ -189,25 +181,16 @@
   </div>
 </template>
 
-<!-- script starts-->
-<!--<script src="https://player.polyv.net/livescript/liveplayer.js"></script>-->
-
 <script>
 import axios from 'axios'
-//import {setSWFIsReady} from '../../static/js/livingrtmp.js'
-//import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 import {setSWFIsReady} from '../../static/js/livingrtmp.js'
 import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 export default{
   name: 'load',
   data () {
     return {
-      // <!--vediosrc:'',-->
-      //      mainlivingcarddispaly:block,
-      //      mainlivingcarddispaly:'none',
-      // 功能对话框
-
-      // Yuxuan's variables:
+      videohei:700+'px',
+      classmain:true,
       stream: '',
       streamer: '',
       streamername: '7181857ac220181025144543640',
@@ -236,7 +219,6 @@ export default{
         statement: '',
         language: '' // language 应当是个多选框
       },
-
       // Shihang
       modal3: false,
       modal2: false,
@@ -268,15 +250,6 @@ export default{
       toopen: true,
       openclose: 'ios-videocam-outline',
       opentext: '开播',
-      note: {
-        position: 'absolute',
-        top: '0px',
-        left: '0px',
-        width: '100%',
-        height: '100%',
-        backgroundSize: '100% 100%',
-        backgroundRepeat: 'no-repeat'
-      },
       // 题目数据
       examOptions: {
         Description: '',
@@ -299,19 +272,15 @@ export default{
       curti: [
         {
           title: '1',
-          ans: 'A'
-        },
-        {
-          title: '2',
-          ans: 'B'
-        },
-        {
-          title: '3',
-          ans: 'int main()'
+          type : 'select',
+          ans: 'A',
+          standardans:''
         },
         {
           title: '4',
-          ans: '#include<> \n using namespace std; int main(){ int c; cout<<c++<<endl; return 0}'
+          type : 'code',
+          ans: '#include<> \n using namespace std; int main(){ int c; cout<<c++<<endl; return 0}',
+          standardans:''
         }
       ],
       studentitems: ['zsh', 'adil', 'zhq', 'hyx', 'xcj'],
@@ -330,16 +299,6 @@ export default{
           ans: ['1', '2', '3', '4'],
           answer: 'A'
         },
-        {
-          title: 'xjbx3',
-          ans: ['1', '2', '3', '4'],
-          answer: 'A'
-        },
-        {
-          title: 'xjbx4',
-          ans: ['1', '2', '3', '4'],
-          answer: 'A'
-        }
       ],
       pdfitems: [
         {
@@ -350,42 +309,16 @@ export default{
           title: 'pdf2',
           url: '/static/pdf/1-1.pdf'
         },
-        {
-          title: 'pdf3',
-          url: '/static/pdf/1-1.pdf'
-        },
-        {
-          title: 'pdf4',
-          url: '/static/pdf/1-1.pdf'
-        }
+
       ]
     }
   },
   mounted () {
-    //    var timer = setTimeout(function(){
-    //      doItPerSecond();
-    //    },1000)
-    //    var num = 0;
-    //    function doItPerSecond() {
-    //      //dosomething...
-    //      var player = polyvObject('#player').livePlayer({
-    //        'width':'100%',
-    //        'height':600+'px',
-    //        'uid':'7181857ac2',
-    //        'vid':'248980'
-    //      });
-    //      num++;
-    //      console.log(num);
-    //    };
   },
   created () {
     this.cururl = this.$route.params.url
-    //    const s = document.createElement('script');
-    //    s.type = 'text/javascript';
-    //    s.src = 'https://player.polyv.net/livescript/liveplayer.js';
-    //    document.body.appendChild(s);
+    console.log(this.cururl)
     this.showUserInfo()
-    //    window.location.reload()
   },
   methods: {
     exportData (type) {
@@ -396,7 +329,6 @@ export default{
       }
     },
     getstudents () {
-      console.log('1321312')
       const data = this.curuser
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
@@ -406,7 +338,6 @@ export default{
       })
     },
     showstudentti (item) {
-      console.log('1321312')
       this.curstu = item
       const data = this.curuser
       data['username'] = this.userInfo['username']
@@ -428,15 +359,11 @@ export default{
         this.pdfitems = resp.pdfitems
       }
       )
-
       this.modal1 = true
     },
-
-    // Yuxuan's Methods Starts Here
     addPDF () {
       // send pdf to backend
     },
-
     handleReset (name) {
       this.$refs[name].resetFields()
     },
@@ -448,7 +375,6 @@ export default{
         status: 1
       })
     },
-
     teaselect () {
       const data = this.curuser
       data['username'] = this.userInfo['username']
@@ -458,7 +384,6 @@ export default{
         this.selectitems = resp.selectitems
       }
       )
-
       this.modal2 = true
     },
     handleRemove (index) {
@@ -504,7 +429,6 @@ export default{
     // Yuxuan's Methods Stops Here
 
     showpdf: function (ipdf) {
-      console.log('1321312')
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示' + ipdf.title,
@@ -517,33 +441,23 @@ export default{
           axios.post('/api/user/showpdfs', data).then((resp) => {
 
           })
-          this.littlelivingcarddisplay = true
+          console.log('1321312')
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
-          this.mainlivingcarddisplay = false
-          this.liaotianshiheight = 330 + 'px'
+          this.classmain=false
+          this.liaotianshiheight = 350 + 'px'
+          this.videohei=260+'px'
           this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
           this.curvideo = false
           this.modal1 = false
           console.log('1321312')
-          if (!this.toopen) {
-            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-            //streamer2.setScreenPosition(-100, 0)
-           // streamer2.setScreenSize(700, 380)
-            console.log('1321312')
-            streamer.disconnect()
-            streamer2.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
-          }
-          console.log('1321312')
-        },
+      },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
         }
       })
     },
     showselect: function (iselect) {
-      console.log('1321312')
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示: \n ' + iselect.title,
@@ -556,21 +470,12 @@ export default{
           axios.post('/api/user/showselect', data).then((resp) => {
 
           })
-          this.littlelivingcarddisplay = true
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
-          this.mainlivingcarddisplay = false
-          this.liaotianshiheight = 330 + 'px'
+          this.classmain=false
+          this.liaotianshiheight = 350 + 'px'
+          this.videohei=260+'px'
           this.curvideo = false
-          if (!this.toopen) {
-            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-            streamer2.setScreenPosition(-100, 0)
-            streamer2.setScreenSize(700, 380)
-            streamer2.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
-            streamer.disconnect()
-          }
-
           this.curtitle = iselect.title
           this.curans = iselect.ans
           this.curanswer = iselect.answer
@@ -586,23 +491,19 @@ export default{
         title: '提示',
         content: '确认退出教学资源',
         onOk: () => {
-          console.log('1321312')
-          this.littlelivingcarddisplay = false
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
-          this.mainlivingcarddisplay = true
+          this.classmain=true
           this.liaotianshiheight = 60 + 'px'
+          this.videohei=700+'px'
           this.curvideo = true
+          const data = this.curuser
+          data['username'] = this.userInfo['username']
+          data['job'] = this.userInfo['job']
+          data['url'] = this.cururl
+          axios.post('/api/user/closepdfsec', data).then((resp) => {
 
-          if (!this.toopen) {
-            setSWFIsReady()
-            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-            streamer.setScreenPosition(-100, 0)
-            streamer.setScreenSize(700, 380)
-            streamer.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
-            streamer2.disconnect()
-          }
+          })
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -610,7 +511,6 @@ export default{
       })
     },
     showUserInfo () {
-      console.log('1234567')
       this.userInfo['username'] = this.$cookies.get('user').username
       this.userInfo['status'] = this.$cookies.get('user').status
       this.userInfo['password'] = this.$cookies.get('user').password
@@ -623,7 +523,6 @@ export default{
           title: '提示',
           content: '是否确认开播',
           onOk: () => {
-            console.log('sadasdsad')
             this.toopen = false
             this.opentext = '关播'
             this.openclose = 'ios-power'
@@ -635,29 +534,11 @@ export default{
             axios.post('/api/user/openliving', data).then((resp) => {
               this.streamername = resp.streamername
             })
-            if (this.curvideo) {
               setSWFIsReady()
-
               var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
-              var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-              //var streamer000 = document.getElementById('rtmp-streamer1')
-              //var streamer222 = document.getElementById('rtmp-streamer2')
-
               streamer000.setScreenPosition(-100, 0)
               streamer000.setScreenSize(700, 380)
               streamer000.publish('rtmp://push-c1.videocc.net/recordf', '7181857ac220181025144543640')
-              streamer222.disconnect()
-            } else {
-              //setSWFIsReady()
-              //var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
-              //var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-              var treamer000 = document.getElementById('rtmp-streamer1')
-              var streamer222 = document.getElementById('rtmp-streamer2')
-             // streamer2.setScreenPosition(-100, 0)
-              //streamer2.setScreenSize(700, 380)
-              streamer222.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
-              streamer000.disconnect()
-            }
           },
           onCancel: () => {
           }
@@ -671,7 +552,6 @@ export default{
             this.opentext = '开播'
             this.openclose = 'ios-videocam-outline'
             window.location.reload()
-
             const data = this.curuser
             data['username'] = this.userInfo['username']
             data['job'] = this.userInfo['job']
@@ -691,19 +571,6 @@ export default{
 
 </script>
 <style>
-  .login-container{
-    box-shadow: 0 0px 8px 0 rgba(0,0,0,0.06),0 1px 0px 0 rgba(0,0,0, 0.02);
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    background-clip: padding-box;
-    margin: 180px auto;
-    width: 350px;
-    padding: 35px 35px 15px 35px;
-    background: #fff;
-    border: 1px solid #eaeaea;
-    box-shadow: 0 0 25px #cac6c6;
-  }
   .tealivingmain{
     width: 100%;
   }
@@ -744,7 +611,6 @@ export default{
   .bottomveido{
     position:absolute;
     height: auto;
-    top:660px;
     text-align: center;
   }
   .danmuxinxi{
@@ -758,7 +624,6 @@ export default{
     left: 79%;
     width: 21%;
     top:60px;
-    display: none;
   }
   .cardtealivingselect{
     position:absolute;
