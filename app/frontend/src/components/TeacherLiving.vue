@@ -36,6 +36,8 @@
       <Button class="btnopen" type="primary"  v-bind:icon="openclose"  @click="teaopenclose()">
         <span class="menuitentea">{{this.opentext}}</span>
       </Button>
+      <Button type="primary" shape="circle" v-bind:icon="jinmai" @click="tojinmai"></Button>
+      <Button type="primary" shape="circle" v-bind:icon="jinshipin" @click="tojinshipin()"></Button>
     </div>
 
     <!--上传-->
@@ -189,9 +191,13 @@ export default{
   name: 'load',
   data () {
     return {
+      jinmai:'ios-mic',
+      jinshipin:'ios-eye',
+      isjinmai:false,
+      isjinshipin:false,
       videohei:700+'px',
       classmain0:true,
-      stream: '',
+      stream000: '',
       streamer: '',
       streamername: '7181857ac220181025144543640',
       modal_pdf: false,
@@ -537,10 +543,10 @@ export default{
               this.streamername = resp.streamername
             })
               setSWFIsReady()
-              var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
-//              streamer000.setScreenPosition(-100, 0)
-//              streamer000.setScreenSize(700, 380)
-              streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+              this.streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
+  this.streamer000.setScreenPosition(-100, 0)
+  this.streamer000.setScreenSize(700, 380)
+  this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
           },
           onCancel: () => {
           }
@@ -567,6 +573,46 @@ export default{
         })
       }
     },
+    tojinmai(){
+      if(this.isjinmai){
+        this.jinmai='ios-mic'
+        this.isjinmai=false
+        this.streamer000.disconnect()
+        this.streamer000.setScreenPosition(-1000, 0)
+        this.streamer000.setScreenSize(700, 380)
+        this.streamer000.setMicRate(0)
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+      }else{
+        this.jinmai='ios-mic-off'
+        this.isjinmai=true
+        this.streamer000.disconnect()
+        this.streamer000.setScreenPosition(-1000, 0)
+        this.streamer000.setScreenSize(700, 380)
+        this.streamer000.setMicRate(0)
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+      }
+    },
+    tojinshipin(){
+
+      if(this.isjinshipin){
+        this.jinshipin='ios-eye'
+        this.isjinshipin=false
+        this.streamer000.disconnect()
+        this.streamer000.setScreenPosition(-1000, 0)
+        this.streamer000.setScreenSize(700, 380)
+        this. streamer000.setCamFrameInterval(15)
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+      }else{
+        this.jinshipin='ios-eye-off'
+        this.isjinshipin=true
+        this.streamer000.disconnect()
+        this.streamer000.setScreenPosition(-1000, 0)
+        this.streamer000.setScreenSize(700, 380)
+        this. streamer000.setCamFrameInterval(100000)
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+
+      }
+    }
 
   }
 }

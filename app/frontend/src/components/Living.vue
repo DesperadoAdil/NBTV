@@ -84,7 +84,7 @@
       });
       var player = polyvObject('#player2').livePlayer({
         'width':'100%',
-        'height':300+'px',
+        'height':200+'px',
         'uid':'7181857ac2',
         'vid':yyy
       });
