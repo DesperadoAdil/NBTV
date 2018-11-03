@@ -16,6 +16,9 @@
       <Input v-model="newLiving.thumbnail" placeholder="缩略图（待修改）"></Input>
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
       <Input v-model="newLiving.class_password" placeholder="课程密码（可空）"></Input>
+      <Select v-model="newLiving.mode">课程Mode
+        <Option v-for="item in modeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
     </Modal>
     <Row>
       <Col span="8" v-for="(living, index) in myLivingList" :key="living.url">
@@ -59,8 +62,23 @@ export default {
         title: '',
         thumbnail: '',
         url: '',
-        class_password: ''
+        class_password: '',
+        mode: ''
       },
+      modeList: [
+        {
+          value: 'private',
+          label: '只有我的学生能看到'
+        },
+        {
+          value: 'protected',
+          label: '有密码就可以进入'
+        },
+        {
+          value: 'public',
+          label: '公开课'
+        }
+      ],
       addModal: false,
       updateModal: false,
       deleteModal: false,
@@ -119,6 +137,7 @@ export default {
           living['url'] = resp.data[i]['url']
           living['thumbnail'] = resp.data[i]['thumbnail']
           living['class_password'] = resp.data[i]['password']
+          living['mode'] = resp.data[i]['mode']
           this.myLivingList.push(living)
         }
       })

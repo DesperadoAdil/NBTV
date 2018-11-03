@@ -8,7 +8,7 @@
     </h1>
     <Divider />
     <Row>
-      <Col span="12" v-for="item in items" :key="item.id">
+      <Col span="12" v-for="item in items" :key="item.vid">
         <Card class="watchcard">
           <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
           <p class="title"></p>
@@ -20,8 +20,8 @@
             </div>
           </Tooltip>
           <p class="teacher">授课老师：{{ item.teacher }} </p>
-          <p class="audiencenum">当前人数：{{ item.audiencelist.length}}</p>
-          <p class="audiencenum">开播时间：{{ item.createtime}}</p>
+          <p class="audiencenum">开播时间：{{ item.showtime}}</p>
+          <p class="audiencenum">创建时间：{{ item.createtime}}</p>
         </Card>
       </Col>
     </Row>
