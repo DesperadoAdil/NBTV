@@ -36,7 +36,24 @@ export default {
       },
       LoginOrLogout: '登录',
       currentpassword: '',
-      items: []
+      items: [
+        {
+          id: '1',
+          teacher: 'zsh',
+          title: 'math',
+          thumbnail: require('../assets/logo.png'),
+          password: '123',
+          url: 'zsh',
+          studentlist: '',
+          teacherlist: '',
+          audiencelist: [1,5,6,21,321,43],
+          visible: '',
+          vid:'242544',
+          createtime:'2018-10-18 13:37:05',
+          showtime:'2018-10-18 13:37:05'
+        },
+
+      ]
     }
   },
   created () {
@@ -185,7 +202,10 @@ export default {
           })
         },
         onOk: () => {
-          if (this.currentpassword === aab.password) { this.$router.push({path: 'living', query: { id: aab.vid}}) } else {
+          if (this.currentpassword === aab.password) {
+            this.$router.push({path: '/living/'+ aab.url})
+          }
+          else {
             this.$Notice.error({
               title: '消息提示',
               desc: '您输入的密码错误，请仔细检查 '

@@ -136,7 +136,7 @@
       <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
     </Modal>
 
-    <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving'" >
+    <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
@@ -611,7 +611,6 @@ export default{
     float: left;
   }
   .bottomveido{
-    position:absolute;
     height: auto;
     text-align: center;
   }
@@ -621,7 +620,7 @@ export default{
     width: 21%;
     top:60px;
   }
-  .cardtealittleliving{
+  .cardtealittleliving00{
     position:absolute;
     left: 79%;
     width: 21%;

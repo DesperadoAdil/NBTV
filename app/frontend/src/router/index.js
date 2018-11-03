@@ -45,7 +45,7 @@ const router = new Router({
       component: List
     },
     {
-      path: '/living',
+      path: '/living/:url',
       name: 'Living',
       component: Living
     },
