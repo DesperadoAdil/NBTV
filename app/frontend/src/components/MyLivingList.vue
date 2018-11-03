@@ -35,9 +35,6 @@
               <Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>
               <Input v-model="living.url" placeholder="课程url"></Input>
               <Input v-model="living.class_password" placeholder="课程密码（可空）"></Input>
-              <Select v-model="living.mode">课程Mode
-                <Option v-for="item in modeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
             </Modal>
             <span><Button type="error" @click="deleteModal = true">DELETE</Button></span>
             <Modal
@@ -93,8 +90,7 @@ export default {
         title: '',
         thumbnail: '../assets/logo.png',
         url: '',
-        class_password: '',
-        mode: ''
+        class_password: ''
       },{},{},{},{}],
       userInfo: {
         username: '',
