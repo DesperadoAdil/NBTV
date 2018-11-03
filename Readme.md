@@ -193,7 +193,7 @@ commit message都要符合这一个规范：
 	    - #### 修改直播间
          - **url:** */api/classroom/update_class*
          - **description:** 教师修改直播间的信息
-         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '', old_url : '', mode : '' }`
+         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '', old_url : '' }`
          - **output:** `{ status : 'success/error' }` //修改成功就返回success
          - **frontend:** *Hanky*
          - **backend:** *xcjthu*
