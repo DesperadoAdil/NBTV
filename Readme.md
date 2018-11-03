@@ -199,7 +199,7 @@ commit message都要符合这一个规范：
          - **backend:** *xcjthu*
 
 	    - #### 教师的直播间教室列表
-         - **url:** */api/classroom/user_living_list*
+         - **url:** */api/classroom/user\_living\_list*
          - **description:** 获取教师的直播间教室列表
          - **input:** `{ username : '', password : '' }`
          - **output:** `[ {classrooms}, ... ]`
