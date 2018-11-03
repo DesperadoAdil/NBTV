@@ -1,9 +1,9 @@
 # README
 ---
-## commit message符合规范
+##commit message符合规范
 - 采用了Git Hook来检查每一次的commit message是否符合规范
 
-#### commit规范
+####commit规范
 commit message都要符合这一个规范：  
 **Type #\d+：description**  
 
@@ -18,11 +18,67 @@ commit message都要符合这一个规范：
 
 2. \#\d+: 为该commit关联的issue，每一个commit都应该关联至一个issue
 
-#### 增加脚本来控制commit message符合规范  
+####增加脚本来控制commit message符合规范
 将commit-msg文件拷贝到 .git/hooks/commit-msg即可
 
-
 ## API汇总
+
+- ### 老师直播界面管理
+
+  - #### 获取某个学生的做题情况
+
+    - **url:** /api/user/getstudentsti  
+    - **description:** 返回某学生的做题情况 
+    - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为学生姓名
+    - **output:** `[{ title : '',type : 'select/code', ans : '',standardans : '' },...]`
+    - **frontend:** Jamgun
+    - **backend:** ？
+
+  - #### 通知后端：老师要展示某个PDF文件
+
+    - **url:** /api/user/showpdfs  
+    - **description:** 通知后端：老师要展示某个PDF文件，后端再通知学生端 
+    - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为PDF的title
+    - **output:** 暂无
+    - **frontend:** Jamgun
+    - **backend:** ？****
+
+  - #### 通知后端：老师要展示某选择题
+
+    - **url:**/api/user/showselect 
+    - **description:** 通知后端：老师要展示某个选择题，后端再通知学生端 
+    - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为选择题的title
+    - **output:** 暂无
+    - **frontend:** Jamgun
+    - **backend:** ？****
+
+  - #### 通知后端：老师要退出教学资源
+
+    - **url:**/api/user/closepdfsec
+    - **description:** 通知后端：老师要退出教学资源，后端再通知学生端 
+    - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
+    - **output:** 暂无
+    - **frontend:** Jamgun
+    - **backend:** ？****
+
+  - #### 通知后端：老师要开播
+
+    - **url:**/api/user/openliving
+    - **description:** 通知后端：老师要开播，后端返回推流地址 
+    - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
+    - **output:**`{ streamername : '' }`
+    - **frontend:** Jamgun
+    - **backend:** ？****
+
+  - #### 通知后端：老师要关播
+
+    - **url:**/api/user/closeliving
+    - **description:** 通知后端：老师要关播，后端通知学生端 
+    - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
+    - **output:**暂无
+    - **frontend:** Jamgun
+    - **backend:** ？****
+
 - ### 用户信息管理
    - #### 登录
       - **url:** */api/user/login*  
@@ -177,7 +233,7 @@ commit message都要符合这一个规范：
 	    - #### 创建直播间
          - **url:** */api/classroom/add_class*
          - **description:** 教师登录后创建教室直播间
-         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '', mode : 'private/protected/public' }`
+         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '' }`
          - **output:** `{ status : 'success/error' }` //创建成功就返回success
          - **frontend:** *Hanky*
          - **backend:** *xcjthu*
@@ -199,7 +255,7 @@ commit message都要符合这一个规范：
          - **backend:** *xcjthu*
 
 	    - #### 教师的直播间教室列表
-         - **url:** */api/classroom/user\_living\_list*
+         - **url:** */api/classroom/user_living_list*
          - **description:** 获取教师的直播间教室列表
          - **input:** `{ username : '', password : '' }`
          - **output:** `[ {classrooms}, ... ]`
