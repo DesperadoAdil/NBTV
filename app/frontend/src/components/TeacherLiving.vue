@@ -187,13 +187,11 @@
       </RadioGroup>
       <p class="anstea00">本题目答案：{{curanswer}}</p>
     </div>
-
-    <div id="liaotianshi" class="danmuxinxi" :style="{top:liaotianshiheight}">
-      <Card style="height: 800px">
-        <h3>聊天室信息显示部分（待修改）</h3>
-      </Card>
-    </div>
-
+    <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
+    <Card id="chatingRoom">
+      这是一个聊天室
+    </Card>
+    <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
   </div>
 </template>
 
@@ -205,13 +203,20 @@ export default{
   name: 'load',
   data () {
     return {
-      astu:'',
-      jinmai:'ios-mic',
-      jinshipin:'ios-eye',
-      isjinmai:false,
-      isjinshipin:false,
-      videohei:700+'px',
-      classmain0:true,
+      /**
+       * 以下为聊天室使用，请勿改动
+       */
+
+      /**
+       * 以上为聊天室使用，请勿改动
+       */
+      astu: '',
+      jinmai: 'ios-mic',
+      jinshipin: 'ios-eye',
+      isjinmai: false,
+      isjinshipin: false,
+      videohei: 700 + 'px',
+      classmain0: true,
       stream000: '',
       streamer: '',
       streamername: '7181857ac220181025144543640',
@@ -245,7 +250,6 @@ export default{
       modal2: false,
       modal1: false,
       displayPdfurl: '',
-      liaotianshiheight: 60 + 'px',
       littlelivingcarddisplay: false,
       mainselectcarddisplay: false,
       mainpdfcarddisplay: false,
@@ -293,15 +297,15 @@ export default{
       curti: [
         {
           title: '1',
-          type : 'select',
+          type: 'select',
           ans: 'A',
-          standardans:''
+          standardans: ''
         },
         {
           title: '4',
-          type : 'code',
+          type: 'code',
           ans: '#include<> \n using namespace std; int main(){ int c; cout<<c++<<endl; return 0}',
-          standardans:''
+          standardans: ''
         }
       ],
       studentitems: ['zsh', 'adil', 'zhq', 'hyx', 'xcj'],
@@ -319,7 +323,7 @@ export default{
           title: 'xjbx2',
           ans: ['1', '2', '3', '4'],
           answer: 'A'
-        },
+        }
       ],
       pdfitems: [
         {
@@ -329,7 +333,7 @@ export default{
         {
           title: 'pdf2',
           url: '/static/pdf/1-1.pdf'
-        },
+        }
 
       ]
     }
@@ -340,50 +344,67 @@ export default{
     this.cururl = this.$route.params.url
     console.log(this.cururl)
     this.showUserInfo()
+    /**
+     * 以下为聊天室使用，请勿改动
+     */
+    this.chatingRoomInit()
+    /**
+     * 以上为聊天室使用，请勿改动
+     */
   },
   methods: {
-    subxlsx(){
-      console.log("dhasjkhda")
+    /**
+     * 以下为聊天室使用，请勿改动
+     */
+    chatingRoomInit () {
+
+    },
+
+    /**
+     * 以上为聊天室使用，请勿改动
+     */
+    subxlsx () {
+      console.log('dhasjkhda')
       const data = this.curuser
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
       data['url'] = this.cururl
-      data['item']=document.querySelector('input[type=file]').files[0]
+      data['item'] = document.querySelector('input[type=file]').files[0]
       console.log(data['item'])
       axios.post('/api/user/xlsxaddstudents', data).then((resp) => {
         this.studentitems = resp.studentitems
-    })
+      })
     },
-    addstua(){
-    console.log("dhasjkhda")
-        this.$Modal.confirm({
-              render: (h) => {
-              return h('Input', {
-                props: {
-                  id: 'passinput',
-                  autofocus: true,
-                  placeholder: 'Please enter the username of this student'
-                },
-                on: {
-                  input: (val) => {
-                  this.astu = val
+    addstua () {
+      console.log('dhasjkhda')
+      this.$Modal.confirm({
+        render: (h) => {
+          return h('Input', {
+            props: {
+              id: 'passinput',
+              autofocus: true,
+              placeholder: 'Please enter the username of this student'
+            },
+            on: {
+              input: (val) => {
+                this.astu = val
               }
             }
-        })
+          })
         },
         onOk: () => {
-                const data = this.curuser
-                data['username'] = this.userInfo['username']
-                data['job'] = this.userInfo['job']
-                data['url'] = this.cururl
-                data['item']=this.astu
-                console.log("dhasjkhda")
-                console.log(this.astu)
-              axios.post('/api/user/aaddstudents', data).then((resp) => {
-              this.studentitems = resp.studentitems
+          const data = this.curuser
+          data['username'] = this.userInfo['username']
+          data['job'] = this.userInfo['job']
+          data['url'] = this.cururl
+          data['item'] = this.astu
+          console.log('dhasjkhda')
+          console.log(this.astu)
+          axios.post('/api/user/aaddstudents', data).then((resp) => {
+            this.studentitems = resp.studentitems
           })
         }
-        })
+      })
     },
     exportData (type) {
       if (type === 1) {
@@ -506,10 +527,10 @@ export default{
 
           })
           console.log('1321312')
-          this.videohei=260+'px'
+          this.videohei = 260 + 'px'
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
-          this.classmain0=false
+          this.classmain0 = false
           console.log(this.classmain0)
           console.log(document.getElementById('rtmp-streamer1').class)
           this.liaotianshiheight = 350 + 'px'
@@ -517,7 +538,7 @@ export default{
           this.curvideo = false
           this.modal1 = false
           console.log('1321312')
-      },
+        },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
         }
@@ -536,10 +557,10 @@ export default{
           axios.post('/api/user/showselect', data).then((resp) => {
 
           })
-          this.videohei=260+'px'
+          this.videohei = 260 + 'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
-          this.classmain0=false
+          this.classmain0 = false
           this.liaotianshiheight = 350 + 'px'
           this.curvideo = false
           this.curtitle = iselect.title
@@ -559,9 +580,9 @@ export default{
         onOk: () => {
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
-          this.classmain0=true
+          this.classmain0 = true
           this.liaotianshiheight = 60 + 'px'
-          this.videohei=700+'px'
+          this.videohei = 700 + 'px'
           this.curvideo = true
           const data = this.curuser
           data['username'] = this.userInfo['username']
@@ -600,11 +621,11 @@ export default{
             axios.post('/api/user/openliving', data).then((resp) => {
               this.streamername = resp.streamername
             })
-              setSWFIsReady()
-              this.streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
-  this.streamer000.setScreenPosition(-100, 0)
-  this.streamer000.setScreenSize(700, 380)
-  this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+            setSWFIsReady()
+            this.streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
+            this.streamer000.setScreenPosition(-100, 0)
+            this.streamer000.setScreenSize(700, 380)
+            this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
           },
           onCancel: () => {
           }
@@ -631,44 +652,42 @@ export default{
         })
       }
     },
-    tojinmai(){
-      if(this.isjinmai){
-        this.jinmai='ios-mic'
-        this.isjinmai=false
+    tojinmai () {
+      if (this.isjinmai) {
+        this.jinmai = 'ios-mic'
+        this.isjinmai = false
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setMicRate(0)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
-      }else{
-        this.jinmai='ios-mic-off'
-        this.isjinmai=true
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+      } else {
+        this.jinmai = 'ios-mic-off'
+        this.isjinmai = true
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setMicRate(0)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
       }
     },
-    tojinshipin(){
-
-      if(this.isjinshipin){
-        this.jinshipin='ios-eye'
-        this.isjinshipin=false
+    tojinshipin () {
+      if (this.isjinshipin) {
+        this.jinshipin = 'ios-eye'
+        this.isjinshipin = false
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
-        this. streamer000.setCamFrameInterval(15)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
-      }else{
-        this.jinshipin='ios-eye-off'
-        this.isjinshipin=true
+        this.streamer000.setCamFrameInterval(15)
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+      } else {
+        this.jinshipin = 'ios-eye-off'
+        this.isjinshipin = true
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
-        this. streamer000.setCamFrameInterval(100000)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
-
+        this.streamer000.setCamFrameInterval(100000)
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
       }
     }
 
@@ -677,6 +696,15 @@ export default{
 
 </script>
 <style>
+  /* 赵汉卿负责的聊天室部分，请勿修改 */
+  #chatingRoom {
+    position:absolute;
+    left: 79%;
+    width: 21%;
+    top:60px;
+    height: 90%;
+  }
+  /* 赵汉卿负责的聊天室部分，请勿修改 */
   .tealivingmain{
     width: 100%;
   }
@@ -686,6 +714,19 @@ export default{
     top:60px;
     width: 18%;
   }
+  .cardtealiving00{
+    position:absolute;
+    left: 19%;
+    width: 59%;
+    top:60px;
+  }
+  .cardtealittleliving00{
+    position:absolute;
+    left: 79%;
+    width: 21%;
+    top:60px;
+  }
+
   .menuitentea{
     font-size: 20px;
   }
@@ -693,12 +734,7 @@ export default{
     padding-:5%;
     margin:5%;
   }
-  .cardtealiving00{
-    position:absolute;
-    left: 19%;
-    width: 59%;
-    top:60px;
-  }
+
   .cardtealivingpdf{
     position:absolute;
     left: 19%;
@@ -718,18 +754,6 @@ export default{
     height: auto;
     text-align: center;
   }
-  .danmuxinxi{
-    position:absolute;
-    left: 79%;
-    width: 21%;
-    top:60px;
-  }
-  .cardtealittleliving00{
-    position:absolute;
-    left: 79%;
-    width: 21%;
-    top:60px;
-  }
   .cardtealivingselect{
     position:absolute;
     left: 19%;
@@ -738,10 +762,7 @@ export default{
     top:60px;
     display: none;
   }
-  .teamainvedio{
-    width:100%;
-    height:700px;
-  }
+
   .selecttitle00{
     padding-top: 3%;
     position:relative;
