@@ -32,6 +32,20 @@
           </template>
           <MenuItem name="3-1" class="menuitentea" v-for="item in studentitems" @click.native="showstudentti(item)">{{item}}</MenuItem>
         </Submenu>
+        <Submenu name="4" class="menuitentea"  >
+          <template slot="title">
+            <Icon type="ios-stats" />
+            添加学生
+          </template>
+          <MenuItem name="4-1" class="menuitentea" >
+            <a href="javascript:;" class="upf">xlsx添加学生
+              <input type="file" name="fileinput" id="fileinput">
+            </a>
+            <Button type="primary" @click="subxlsx">submit</Button>
+
+          </MenuItem>
+          <MenuItem name="4-2" class="menuitentea" @click.native="addstua">用户名添加学生</MenuItem>
+        </Submenu>
       </Menu>
       <Button class="btnopen" type="primary"  v-bind:icon="openclose"  @click="teaopenclose()">
         <span class="menuitentea">{{this.opentext}}</span>
@@ -191,6 +205,7 @@ export default{
   name: 'load',
   data () {
     return {
+      astu:'',
       jinmai:'ios-mic',
       jinshipin:'ios-eye',
       isjinmai:false,
@@ -327,6 +342,49 @@ export default{
     this.showUserInfo()
   },
   methods: {
+    subxlsx(){
+      console.log("dhasjkhda")
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      data['item']=document.querySelector('input[type=file]').files[0]
+      console.log(data['item'])
+      axios.post('/api/user/xlsxaddstudents', data).then((resp) => {
+        this.studentitems = resp.studentitems
+    })
+    },
+    addstua(){
+    console.log("dhasjkhda")
+        this.$Modal.confirm({
+              render: (h) => {
+              return h('Input', {
+                props: {
+                  id: 'passinput',
+                  autofocus: true,
+                  placeholder: 'Please enter the username of this student'
+                },
+                on: {
+                  input: (val) => {
+                  this.astu = val
+              }
+            }
+        })
+        },
+        onOk: () => {
+                const data = this.curuser
+                data['username'] = this.userInfo['username']
+                data['job'] = this.userInfo['job']
+                data['url'] = this.cururl
+                data['item']=this.astu
+                console.log("dhasjkhda")
+                console.log(this.astu)
+              axios.post('/api/user/aaddstudents', data).then((resp) => {
+              this.studentitems = resp.studentitems
+          })
+        }
+        })
+    },
     exportData (type) {
       if (type === 1) {
         this.$refs.table.exportCsv({
@@ -706,5 +764,31 @@ export default{
   }
   .databutton{
     margin-top: 15px;
+  }
+  .upf {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+  }
+  .upf input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+  }
+  .upf:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
   }
 </style>
