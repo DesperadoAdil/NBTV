@@ -36,6 +36,24 @@ commit message都要符合这一个规范：
 
 - ### 老师直播界面管理
 
+  - #### xlsx添加学生
+
+    - **url:** /api/user/xlsxaddstudents
+    - **description:** 前端给后端xlsx，后端返回学生列表
+    - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为xlsx文件
+    - **output:** `['zsh','xcj',...]`
+    - **frontend:** Jamgun
+    - **backend:** ？
+
+  - #### 用户名添加学生
+
+    - **url:** /api/user/aaddstudents
+    - **description:** 前端给后端用户名，后端返回学生列表
+    - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为学生用户名
+    - **output:** `['zsh','xcj',...]`
+    - **frontend:** Jamgun
+    - **backend:** ？
+
   - #### 获取某个学生的做题情况
 
     - **url:** /api/user/getstudentsti  
@@ -140,12 +158,12 @@ commit message都要符合这一个规范：
       - **backend:** *Adil*
 
    - #### 用户删除自己观看的的直播间
-	 - **url:** */api/user/delmyclass*
-	 - **description:** 用户的删除自己观看的的直播间
-	 - **input:** `{ username : '', job : 'student/teacher', classroom : 'mylist中得到的直播间列表中的某一个直播间' }`
-	 - **output:** `{ status : 'success/error' }` //删除成功就返回success
-	 - **frontend:** *Jamgun*
-	 - **backend:** *Adil*
+    - **url:** */api/user/delmyclass*
+    - **description:** 用户的删除自己观看的的直播间
+    - **input:** `{ username : '', job : 'student/teacher', classroom : 'mylist中得到的直播间列表中的某一个直播间' }`
+    - **output:** `{ status : 'success/error' }` //删除成功就返回success
+    - **frontend:** *Jamgun*
+    - **backend:** *Adil*
 
 - ### 资源管理
    - #### pdf文件
@@ -244,7 +262,7 @@ commit message都要符合这一个规范：
 	    - #### 创建直播间
          - **url:** */api/classroom/add_class*
          - **description:** 教师登录后创建教室直播间
-         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '' }`
+         - **input:** `{ username : '', password : '', title : '', thumbnail : '', class_password : '', url : '' ，img:''}`
          - **output:** `{ status : 'success/error' }` //创建成功就返回success
          - **frontend:** *Hanky*
          - **backend:** *xcjthu*
