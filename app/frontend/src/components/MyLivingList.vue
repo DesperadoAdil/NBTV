@@ -14,6 +14,10 @@
       @on-cancel="cancel">
       <Input v-model="newLiving.title" placeholder="课程名称"></Input>
       <Input v-model="newLiving.thumbnail" placeholder="缩略图（待修改）"></Input>
+      <a href="javascript:;" class="upf">上传缩略图
+        <input type="file" name="fileinput" id="fileinput">
+      </a>
+      <!--<input  type="file" value="上传图片" placeholder="缩略图（待修改）"></input>-->
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
       <Input v-model="newLiving.class_password" placeholder="课程密码（可空）"></Input>
       <Select v-model="newLiving.mode">课程Mode
@@ -61,6 +65,7 @@ export default {
         job: '',
         title: '',
         thumbnail: '',
+        img:'',
         url: '',
         class_password: '',
         mode: ''
@@ -143,10 +148,16 @@ export default {
       })
     },
     addLiving () {
+      console.log(document.querySelector('input[type=file]').files[0])
       this.addModal = false
       this.newLiving['username'] = this.$cookies.get('user').username
       this.newLiving['password'] = this.$cookies.get('user').password
       this.newLiving['job'] = this.$cookies.get('user').job
+      console.log("1231")
+      this.newLiving['img']=document.querySelector('input[type=file]').files[0]
+      console.log("1231")
+      console.log(document.querySelector('input[type=file]').files[0])
+      console.log("4564")
       const data = this.newLiving
       axios.post('/api/classroom/add_class', data).then((resp) => {
         this.getMyLivingList()
@@ -199,5 +210,31 @@ li {
 .posi{
   position: absolute;
   top: 60px;
+}
+.upf {
+  position: relative;
+  display: inline-block;
+  background: #D0EEFF;
+  border: 1px solid #99D3F5;
+  border-radius: 4px;
+  padding: 4px 12px;
+  overflow: hidden;
+  color: #1E88C7;
+  text-decoration: none;
+  text-indent: 0;
+  line-height: 20px;
+}
+.upf input {
+  position: absolute;
+  font-size: 100px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+}
+.upf:hover {
+  background: #AADFFD;
+  border-color: #78C3F3;
+  color: #004974;
+  text-decoration: none;
 }
 </style>
