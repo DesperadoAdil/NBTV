@@ -173,10 +173,18 @@ commit message都要符合这一个规范：
          - **frontend:** *Yuxuan*
          - **backend:** *xcjthu*
 
-      - ### 查看pdf文件
+      - ### 删除pdf文件
+         - **url:** */api/resourse/delete_pdf*
+         - **description:** 用户删除pdf文件
+         - **input:** `{ username : '', title : '' }`
+         - **output:** `{ status : 'success/error' }`
+         - **frontend:** *Jamgun*
+         - **backend:** *Adil*
+
+     - ### 查看pdf文件列表
          - **url:** */api/resourse/getpdfs*
          - **description:** 用户查看pdf文件
-         - **input:** `{ username : '', job : '', url : '' }`
+         - **input:** `{ username : '' }`
          - **output:** `[ '{ title : '', url : 'pdf文件路径(/pdf/username/filename.pdf)' }', ... ]`
          - **frontend:** *Jamgun*
          - **backend:** *Adil*
@@ -185,7 +193,7 @@ commit message都要符合这一个规范：
       - ### 添加选择题
          - **url:** */api/resourse/add_multiple*
          - **description:** 教师在教室中添加选择题
-         - **input:** `{ statement : '', optionList : '[answer1, answer2,...]', answer : '一个数字', url : '教室url' }`
+         - **input:** `{ statement : '', optionList : '[answer1, answer2,...]', answer : '一个数字', username : '' }`
          - **output:** `{ status : 'success/error', uniqueId : '' }`
          - **frontend:** *Yuxuan*
          - **backend:** *xcjthu*
@@ -193,7 +201,7 @@ commit message都要符合这一个规范：
       - ### 删除选择题
          - **url:** */api/resourse/delete_mutiple*
          - **description:** 教师在教室中删除选择题
-         - **input:** `{ uniqueId : 'add_multiple中得到的uniqueId' }`
+         - **input:** `{ username : '', uniqueId : 'add_multiple中得到的uniqueId' }`
          - **output:** `{ status : 'success/error' }` //删除成功就返回success
          - **frontend:** *???*
          - **backend:** *???*
@@ -201,15 +209,15 @@ commit message都要符合这一个规范：
       - ### 修改选择题
          - **url:** */api/resourse/update_mutiple*
          - **description:** 教师在教室中修改选择题
-         - **input:** `{ uniqueId : 'add_multiple中得到的uniqueId', description : '', answer : '[{answer1,},{answer2,},...]', right : '一个数字' }`
+         - **input:** `{ username : '', uniqueId : 'add_multiple中得到的uniqueId', description : '', answer : '[{answer1,},{answer2,},...]', right : '一个数字' }`
          - **output:** `{ status : 'success/error' }` //修改成功就返回success
          - **frontend:** *???*
          - **backend:** *???*
 
       - ### 查看选择题
-         - **url:** */api/resourse/getselects*
+         - **url:** */api/resourse/getmutiples*
          - **description:** 用户查看选择题
-         - **input:** `{ username : '', job : '', url : '' }`
+         - **input:** `{ username : '' }`
          - **output:** `[ '{ title : '', ans : '[ '答案列表', ... ]', answer : '一个数字' }', ... ]`
          - **frontend:** *Jamgun*
          - **backend:** *Adil*
@@ -218,7 +226,7 @@ commit message都要符合这一个规范：
       - ### 添加代码题
          - **url:** */api/resourse/add_code*
          - **description:** 教师在教室中添加代码题
-         - **input:** `{ statement : '', language : '' }`
+         - **input:** `{ username : '', statement : '', language : '' }`
          - **output:** `{ status : 'success/error', uniqueId : '' }`
          - **frontend:** *Yuxuan*
          - **backend:** *xcjthu*
@@ -226,7 +234,7 @@ commit message都要符合这一个规范：
       - ### 删除代码题
          - **url:** */api/resourse/delete_code*
          - **description:** 教师在教室中删除代码题
-         - **input:** `{ uniqueId : 'add_multiple中得到的uniqueId' }`
+         - **input:** `{ username : '', uniqueId : 'add_multiple中得到的uniqueId' }`
          - **output:** `{ status : 'success/error' }` //删除成功就返回success
          - **frontend:** *???*
          - **backend:** *???*
@@ -234,7 +242,7 @@ commit message都要符合这一个规范：
       - ### 修改代码题
          - **url:** */api/resourse/update_code*
          - **description:** 教师在教室中修改代码题
-         - **input:** `{ uniqueId : 'add_multiple中得到的uniqueId', description : '', language : '' }`
+         - **input:** `{ username : '', uniqueId : 'add_multiple中得到的uniqueId', description : '', language : '' }`
          - **output:** `{ status : 'success/error' }` //修改成功就返回success
          - **frontend:** *???*
          - **backend:** *???*
@@ -242,8 +250,8 @@ commit message都要符合这一个规范：
       - ### 查看代码题
          - **url:** */api/resourse/getcodes*
          - **description:** 用户查看代码题
-         - **input:** `{ username : '', job : '', url : '' }`
-         - **output:** `[ '{ description : '', language : '' }', ... ]`
+         - **input:** `{ username : ''}`
+         - **output:** `[ '{ description : '', language : '' , students_work : [{username : '', code : ''}] }', ... ]`  //在每一项中新增学生错题情况的列表
          - **frontend:** *???*
          - **backend:** *???*
 
