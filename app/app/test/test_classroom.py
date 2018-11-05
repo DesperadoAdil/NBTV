@@ -1,4 +1,5 @@
 from app.test.BaseTestCase import BaseTestCase
+from app.models import *
 import unittest
 import json
 
@@ -46,6 +47,23 @@ class ClassroomTest(BaseTestCase):
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
 
 
+	data_aaddstudents = { "url" : "123", "item" : "test1"}
+	dataerror_aaddstudents = { "url" : "123", "item" : "erroruser"}
+	testuser = Students(phonenumber = "12345678911", username = "test1", password = "123456")
+	db.session.add(testuser)
+	db.session.commit()
+	def test_caaddstudents(self):
+		print ("Test:Addstudents===============================")		
+
+		# 这是正确的结果
+		response = self.app.post('/api/classroom/aaddstudents', data = json.dumps(self.data_aaddstudents, ensure_ascii = False))
+		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
+
+		# 这是不正确的结果
+		response = self.app.post('/api/classroom/aaddstudents', data = json.dumps(self.dataerror_aaddstudents, ensure_ascii = False))
+		self.assertEquals(response.data.decode('utf8'), '{"status": "error: no such student"}')
+
+
 	def test_delete_classroom(self):
 		response = self.app.post('/api/classroom/delete_class', data = json.dumps(self.data, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
@@ -53,6 +71,10 @@ class ClassroomTest(BaseTestCase):
 		# 这是不可以正确插入的结果
 		response = self.app.post('/api/classroom/delete_class', data = json.dumps(self.dataerror, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
+
+		testuser = Students.query.filter_by(username = "test1").first()
+		db.session.delete(testuser)
+		db.session.commit()
 
 
 	def test_classlist(self):

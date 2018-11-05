@@ -82,7 +82,7 @@ def deleteClass():
 			classroomlist = json.loads(teacher.classroomlist)
 			classroomlist.remove(data['url'])
 			teacher.classroomlist = json.dumps(classroomlist)
-			db.ssesion.add(teacher)
+			db.session.add(teacher)
 
 		studentlist = json.loads(classroomTmp.studentlist)
 		for studentname in studentlist:
@@ -90,10 +90,10 @@ def deleteClass():
 			classroomlist = json.loads(student.classroomlist)
 			classroomlist.remove(data['url'])
 			student.classroomlist = json.dumps(classroomlist)
-			db.ssesion.add(student)
+			db.session.add(student)
 		db.session.commit()
 	except Exception as err:
-		print(err.encode("utf-8"))
+		print(err)
 		ret['status'] = "error: no such teacher or classroom"
 
 	ret['status'] = classroomManager.delete(data['url'])
@@ -117,6 +117,7 @@ def updateClass():
 	ret['status'] = classroomManager.update(data['title'], data['thumbnail'], data['url'], data['class_password'], data['old_url'])
 	return json.dumps(ret, ensure_ascii = False)
 
+
 @classroom.route('/user_living_list', methods = ['POST'])
 def getList():
 	data = request.get_data()
@@ -139,12 +140,12 @@ def getList():
 
 
 #xlsx添加学生
-@classroom.route('/xlsxaddstudents')
+@classroom.route('/xlsxaddstudents', methods = ['POST'])
 def xlsxaddstudents():
 	ret = []
 	data = request.get_data()
-    print (data)
-    data = json.loads(data)
+	print (data)
+	data = json.loads(data)
 
 	url = data['url']
 	item = data['item']
@@ -182,19 +183,19 @@ def xlsxaddstudents():
 	db.session.add(classroom)
 	db.commit()
 
-	print json.dumps(ret)
+	print (json.dumps(ret))
 	return json.dumps(ret)
 
 
 #username添加学生
-@classroom.route('/aaddstudents')
+@classroom.route('/aaddstudents', methods = ['POST'])
 def aaddstudents():
 	ret = {}
 	ret["status"] = 'error'
 
 	data = request.get_data()
-    print (data)
-    data = json.loads(data)
+	print (data)
+	data = json.loads(data)
 
 	url = data['url']
 	item = data['item']
@@ -219,8 +220,8 @@ def aaddstudents():
 		classroomlist.append(url)
 		student.classroomlist = json.dumps(classroomlist)
 		db.session.add(student)
-		db.commit()
+		db.session.commit()
 		ret['status'] = "success"
 
-	print json.dumps(ret)
+	print (json.dumps(ret))
 	return json.dumps(ret)
