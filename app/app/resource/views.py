@@ -2,6 +2,7 @@ from .MultiChoiceQuestion import multiChoiceManager
 from .CodeQuestion import codeQuestionManager
 from .PDFfile import pdfManager
 from . import resource
+import json
 
 @resource.route('/add_multiple', methods = ['POST', 'GET'])
 def addMultiChoice():
@@ -9,23 +10,32 @@ def addMultiChoice():
 	print("add choice question")
 	print(data)
 	data = json.loads(data)
-
-	uniqueId = multiChoiceManager.insert(data['statement'], data['optionList'], data['answer'])
-	return "success"
+    ret = {}
+    try:
+	   uniqueId = multiChoiceManager.insert(data['statement'], data['optionList'], data['answer'])
+       ret["status"] = "success"
+       ret["uniqueId"] = uniqueId
+    except Exception as err:
+        print(err)
+        ret["status"] = "error"
+	return json.dumps(ret)
 
 @resource.route('/add_code', methods = ['POST', 'GET'])
 def addCode():
 	print('add code question')
+    ret = {}
 	try:
 		data = request.get_data()
 		print(data)
 		data = json.loads(data)
 
 		uniqueId = codeQuestionManager.insert(data['statement'], data['language'])
-		return "success"
+        ret["status"] = "success"
+        ret["uniqueId"] = uniqueId
 	except Exception as err:
 		print(err)
-		return "error"
+		ret["status"] = "error"
+    return json.dumps(ret)
 
 @resource.route('/add_pdf', methods = ['POST'])
 def addPDF():

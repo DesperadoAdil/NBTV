@@ -100,3 +100,4 @@ class ChannelManager:
 		data = self.sender.request("POST", url, fields = params)
 		return data
 
+instance = ChannelManager()
