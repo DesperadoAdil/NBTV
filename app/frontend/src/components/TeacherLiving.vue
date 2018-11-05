@@ -190,6 +190,50 @@
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
     <Card id="chatingRoom">
       这是一个聊天室
+      <div class="talk-contents">
+        <div class="talk-inner">
+          <div class="talk-nav">
+            <!--{{$route.query.username}}-->
+            <div class="talk-title">
+              {{$route.query.username}}
+            </div>
+          </div>
+          <div class="content">
+            <div v-for="msgObj in CHAT.msgArr" track-by="$index">
+              <div  class="talk-space self-talk"
+                    v-if="CHAT.msgArr[$index].fromUser == username && CHAT.msgArr[$index].toUser == $route.query.username"
+                    track-by="$index">
+                <div class="talk-content">
+                  <div class="talk-word talk-word-self">{{ msgObj.msg }}</div><i class="swip"></i>
+                </div>
+              </div>
+              <div v-else></div>
+              <div  class="talk-space user-talk"
+                    v-if="CHAT.msgArr[$index].toUser == username && CHAT.msgArr[$index].fromUser == $route.query.username"
+                    track-by="$index">
+                <div class="talk-content">
+                  <div v-if="CHAT.msgArr[$index].fromUser =='群聊'" class="talk-all">{{ msgObj.trueFrom }}</div>
+                  <div class="talk-word talk-word-user">
+                    {{ msgObj.msg }}
+                    <i class="swip-user"></i>
+                  </div>
+                </div>
+              </div>
+              <div v-else></div>
+            </div>
+          </div>
+          <div class="talker">
+            <div class="talker-toolbar">
+              <a class="talker-face"></a>
+            </div>
+            <textarea class="talker-input" type="text" v-model="msg" placeholder="Type your message.."></textarea>
+            <div class="action">
+              <span class="talker-tip">按下Cmd+Enter换行</span>
+              <span class="talker-send" @click="submit">发送</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </Card>
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
   </div>
