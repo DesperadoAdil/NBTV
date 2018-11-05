@@ -290,7 +290,7 @@ export default{
       mainpdfcarddisplay: false,
       mainlivingcarddisplay: true,
       userInfo: {
-        username: 'Hanky',
+        username: '',
         password: '',
         mobile: '',
         status: '',
@@ -385,7 +385,7 @@ export default{
   created () {
     this.cururl = this.$route.params.url
     console.log(this.cururl)
-    // this.showUserInfo()
+    this.showUserInfo()
     /**
      * 以下为聊天室使用，请勿改动
      */
