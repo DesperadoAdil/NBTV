@@ -12,9 +12,9 @@ def addMultiChoice():
     data = json.loads(data)
     ret = {}
     try:
-       uniqueId = multiChoiceManager.insert(data['statement'], data['optionList'], data['answer'])
-       ret["status"] = "success"
-       ret["uniqueId"] = uniqueId
+        uniqueId = multiChoiceManager.insert(data['statement'], data['optionList'], data['answer'])
+        ret["status"] = "success"
+        ret["uniqueId"] = uniqueId
     except Exception as err:
         print(err)
         ret["status"] = "error"
