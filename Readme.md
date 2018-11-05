@@ -27,7 +27,7 @@ commit message都要符合这一个规范：
 
   - ####  根据房间的url获取房间的vid
 
-    - **url:** /api/user/urlgetvid 
+    - **url:** /api/classroom_stu/urlgetvid 
     - **description:** 根据url返回房间的vid
     - **input:**  `{ username : '', job : '', url : ''}`注：username为学生姓名
     - **output:** `{ vid : ''}`
@@ -38,7 +38,7 @@ commit message都要符合这一个规范：
 
   - #### xlsx添加学生
 
-    - **url:** /api/user/xlsxaddstudents
+    - **url:** /api/classroom/xlsxaddstudents
     - **description:** 前端给后端xlsx，后端返回学生列表
     - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为xlsx文件
     - **output:** `['zsh','xcj',...]`
@@ -47,7 +47,7 @@ commit message都要符合这一个规范：
 
   - #### 用户名添加学生
 
-    - **url:** /api/user/aaddstudents
+    - **url:** /api/classroom/aaddstudents
     - **description:** 前端给后端用户名，后端返回学生列表
     - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为学生用户名
     - **output:** `['zsh','xcj',...]`
@@ -56,7 +56,7 @@ commit message都要符合这一个规范：
 
   - #### 获取某个学生的做题情况
 
-    - **url:** /api/user/getstudentsti  
+    - **url:** /api/classroom/getstudentsti  
     - **description:** 返回某学生的做题情况 
     - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为学生姓名
     - **output:** `[{ title : '',type : 'select/code', ans : '',standardans : '' },...]`
@@ -65,7 +65,7 @@ commit message都要符合这一个规范：
 
   - #### 通知后端：老师要展示某个PDF文件
 
-    - **url:** /api/user/showpdfs  
+    - **url:** /api/classroom/showpdfs  
     - **description:** 通知后端：老师要展示某个PDF文件，后端再通知学生端 
     - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为PDF的title
     - **output:** 暂无
@@ -74,7 +74,7 @@ commit message都要符合这一个规范：
 
   - #### 通知后端：老师要展示某选择题
 
-    - **url:**/api/user/showselect 
+    - **url:**/api/classroom/showselect 
     - **description:** 通知后端：老师要展示某个选择题，后端再通知学生端 
     - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为选择题的title
     - **output:** 暂无
@@ -83,7 +83,7 @@ commit message都要符合这一个规范：
 
   - #### 通知后端：老师要退出教学资源
 
-    - **url:**/api/user/closepdfsec
+    - **url:**/api/classroom/closepdfsec
     - **description:** 通知后端：老师要退出教学资源，后端再通知学生端 
     - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
     - **output:** 暂无
@@ -92,7 +92,7 @@ commit message都要符合这一个规范：
 
   - #### 通知后端：老师要开播
 
-    - **url:**/api/user/openliving
+    - **url:**/api/classroom/openliving
     - **description:** 通知后端：老师要开播，后端返回推流地址 
     - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
     - **output:**`{ streamername : '' }`
@@ -101,7 +101,7 @@ commit message都要符合这一个规范：
 
   - #### 通知后端：老师要关播
 
-    - **url:**/api/user/closeliving
+    - **url:**/api/classroom/closeliving
     - **description:** 通知后端：老师要关播，后端通知学生端 
     - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
     - **output:**暂无
