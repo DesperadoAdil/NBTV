@@ -181,20 +181,3 @@ class UserTest(BaseTestCase):
 		testuser = Students.query.filter_by(username = "testuser").first()
 		db.session.delete(testuser)
 		db.session.commit()
-
-
-	open_close_live_data = {
-		"username": "adil",
-		"url": "123456"
-	}
-	def test_open_close_live(self):
-		print("test: open and close live")
-
-		response = self.app.post('/api/user/openliving', json.dumps(open_close_live_data))
-		tmp = json.loads(response.data.decode('utf8'))
-		self.assertEquals(tmp['status'], "success")
-
-		response = self.app.post('/api/user/closeliving', json.dumps(open_close_live_data))
-		tmp = json.loads(response.data.decode('utf8'))
-		self.assertEquals(tmp['status'], "success")
-
