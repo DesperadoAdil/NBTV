@@ -190,11 +190,11 @@ class UserTest(BaseTestCase):
 	def test_open_close_live(self):
 		print("test: open and close live")
 
-		response = self.app.post('/api/user/openliving', json.dumps(open_close_live_data))
+		response = self.app.post('/api/user/openliving', json.dumps(self.open_close_live_data))
 		tmp = json.loads(response.data.decode('utf8'))
 		self.assertEquals(tmp['status'], "success")
 
-		response = self.app.post('/api/user/closeliving', json.dumps(open_close_live_data))
+		response = self.app.post('/api/user/closeliving', json.dumps(self.open_close_live_data))
 		tmp = json.loads(response.data.decode('utf8'))
 		self.assertEquals(tmp['status'], "success")
 
