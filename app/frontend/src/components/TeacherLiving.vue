@@ -195,13 +195,13 @@
           <div class="talk-nav">
             <!--{{$route.query.username}}-->
             <div class="talk-title">
-              {{$route.query.username}}
+              {{username}}
             </div>
           </div>
           <div class="content">
-            <div v-for="msgObj in CHAT.msgArr" track-by="$index">
+            <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
               <div  class="talk-space self-talk"
-                    v-if="CHAT.msgArr[$index].fromUser == username && CHAT.msgArr[$index].toUser == $route.query.username"
+                    v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username"
                     track-by="$index">
                 <div class="talk-content">
                   <div class="talk-word talk-word-self">{{ msgObj.msg }}</div><i class="swip"></i>
@@ -209,10 +209,10 @@
               </div>
               <div v-else></div>
               <div  class="talk-space user-talk"
-                    v-if="CHAT.msgArr[$index].toUser == username && CHAT.msgArr[$index].fromUser == $route.query.username"
+                    v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username"
                     track-by="$index">
                 <div class="talk-content">
-                  <div v-if="CHAT.msgArr[$index].fromUser =='群聊'" class="talk-all">{{ msgObj.trueFrom }}</div>
+                  <div v-if="CHAT.msgArr[index].fromUser ==='all'" class="talk-all">{{ msgObj.trueFrom }}</div>
                   <div class="talk-word talk-word-user">
                     {{ msgObj.msg }}
                     <i class="swip-user"></i>
@@ -243,6 +243,7 @@
 import axios from 'axios'
 import {setSWFIsReady} from '../../static/js/livingrtmp.js'
 import {RtmpStreamer} from '../../static/js/livingrtmp.js'
+import CHAT from '../client'
 export default{
   name: 'load',
   data () {
@@ -250,7 +251,9 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
-
+      msg: '',
+      CHAT,
+      username: 'all',
       /**
        * 以上为聊天室使用，请勿改动
        */
@@ -299,7 +302,7 @@ export default{
       mainpdfcarddisplay: false,
       mainlivingcarddisplay: true,
       userInfo: {
-        username: '',
+        username: 'Hanky',
         password: '',
         mobile: '',
         status: '',
@@ -383,11 +386,18 @@ export default{
     }
   },
   mounted () {
+    /**
+     * 以下为聊天室使用，请勿改动
+     */
+    // CHAT.message(this.userInfo.username)
+    /**
+     * 以上为聊天室使用，请勿改动
+     */
   },
   created () {
     this.cururl = this.$route.params.url
     console.log(this.cururl)
-    this.showUserInfo()
+    // this.showUserInfo()
     /**
      * 以下为聊天室使用，请勿改动
      */
@@ -401,9 +411,20 @@ export default{
      * 以下为聊天室使用，请勿改动
      */
     chatingRoomInit () {
-
+      // CHAT.init(this.userInfo.username)
     },
-
+    submit () {
+      var date = new Date()
+      var time = date.getHours() + ':' + date.getMinutes()
+      var obj = {
+        time: time,
+        msg: this.msg,
+        toUser: this.username,
+        fromUser: this.userInfo.username
+      }
+      this.msg = ''
+      // CHAT.submit(obj)
+    },
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -748,6 +769,7 @@ export default{
     top:60px;
     height: 90%;
   }
+
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   .tealivingmain{
     width: 100%;

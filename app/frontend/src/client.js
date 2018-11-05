@@ -4,17 +4,30 @@ const CHAT = {
   msgObj: document.getElementsByClassName('body-wrapper')[0],
   username: null,
   socket: null,
-  msgArr: [],
-  // 让浏览器滚动条保持在最低部
-  scrollToBottom: function () {
-    window.scrollTo(0, 900000)
-  },
-  // 退出，本例只是一个简单的刷新
+  msgArr: [{
+    time: '00:30',
+    msg: 'from God to all',
+    toUser: 'all',
+    fromUser: 'God'
+  }, {
+    time: '00:32',
+    msg: 'from Hanky to all',
+    toUser: 'all',
+    fromUser: 'Hanky'
+  }, {
+    time: '00:34',
+    msg: 'from God to all',
+    toUser: 'all',
+    fromUser: 'God'
+  }, {
+    time: '00:35',
+    msg: 'from Devil to all',
+    toUser: 'all',
+    fromUser: 'Devil'
+  }],
   logout: function () {
     this.socket.disconnect()
-    // location.reload();
   },
-  // 提交聊天消息内容
   submit: function (obj) {
     this.socket.emit('sendMsg', obj)
   },
@@ -26,7 +39,6 @@ const CHAT = {
     })
   },
   init: function (username) {
-    // 连接websocket后端服务器
     this.socket = io.connect(settings.socket, {'force new connection': true})
     this.socket.on('open', function () {
       console.log('已连接')
