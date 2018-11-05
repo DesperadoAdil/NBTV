@@ -272,6 +272,8 @@ def openlive():
         vid = classroom.vid
         ret['vid'] = vid
         response = polyvAPI.instance.openLive(vid)
+        
+        classroomManager.updateShowTime()
         if response.status == 200:
             ret['status'] = "error: polyv error"
         else:

@@ -30,9 +30,9 @@ class Classrooms(db.Model):
     filelist = db.Column(db.Text, nullable = False, default = "[]")
 
     visible = db.Column(db.String(5), nullable=False, default = "yes")
-    createtime = db.Column(db.DateTime, default=datetime.now)
+    createtime = db.Column(db.DateTime, default=datetime.now())
     #开播时间
-    showtime = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    showtime = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
     choicequestion = db.relationship('ChoiceQuestion', backref='classrooms', lazy='dynamic')
     codequestion = db.relationship('CodeQuestion', backref='classrooms', lazy='dynamic')
