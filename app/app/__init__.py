@@ -20,4 +20,7 @@ app.register_blueprint(resource_blueprint, url_prefix = '/api/resource')
 from .classroom import classroom as classroom_blueprint
 app.register_blueprint(classroom_blueprint, url_prefix = '/api/classroom')
 
+from .classroom_stu import classroom_stu as classroom_stu_blueprint
+app.register_blueprint(classroom_stu_blueprint, url_prefix = '/api/classroom_stu')
+
 from app import views, models

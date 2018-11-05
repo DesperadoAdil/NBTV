@@ -1,6 +1,11 @@
 <template>
   <div id="myLivingList" class="posi">
-    <Button type="primary" @click="addModal = true">ADD</Button>
+    <h1 class="list-info">
+      <Icon type="ios-time" />
+      我的直播
+      <Button type="primary" @click="addModal = true">新建直播间</Button>
+    </h1>
+    <Divider />
     <Modal
       :model="newLiving"
       v-model="addModal"
@@ -9,34 +14,43 @@
       @on-cancel="cancel">
       <Input v-model="newLiving.title" placeholder="课程名称"></Input>
       <Input v-model="newLiving.thumbnail" placeholder="缩略图（待修改）"></Input>
+      <a href="javascript:;" class="upf">上传缩略图
+        <input type="file" name="fileinput" id="fileinput">
+      </a>
+      <!--<input  type="file" value="上传图片" placeholder="缩略图（待修改）"></input>-->
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
-      <Input v-model="newLiving.password" placeholder="课程密码（可空）"></Input>
+      <Input v-model="newLiving.class_password" placeholder="课程密码（可空）"></Input>
+      <Select v-model="newLiving.mode">课程Mode
+        <Option v-for="item in modeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
     </Modal>
-    <div v-for="(living, index) in myLivingList" :key="living.url">
-      <Card class="card">
-        <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
-        <p class="title">{{ living.title }}</p>
-        <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
-        <Modal
-          v-model="updateModal"
-          title="更新课程"
-          @on-ok="updateLiving(index)"
-          @on-cancel="cancel">
-          <Input v-model="living.title" placeholder="课程名称"></Input>
-          <Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>
-          <Input v-model="living.url" placeholder="课程url"></Input>
-          <Input v-model="living.password" placeholder="课程密码（可空）"></Input>
-        </Modal>
-        <span><Button type="error" @click="deleteModal = true">DELETE</Button></span>
-        <Modal
-          v-model="deleteModal"
-          title="删除课程"
-          @on-ok="deleteLiving(index)"
-          @on-cancel="cancel">
-          <Input v-model="validate" placeholder="确认删除请输入yes"></Input>
-        </Modal>
-      </Card>
-    </div>
+    <Row>
+      <Col span="8" v-for="(living, index) in myLivingList" :key="living.url">
+          <Card class="living-card">
+            <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
+            <p class="title">{{ living.title }}</p>
+            <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
+            <Modal
+              v-model="updateModal"
+              title="更新课程"
+              @on-ok="updateLiving(index)"
+              @on-cancel="cancel">
+              <Input v-model="living.title" placeholder="课程名称"></Input>
+              <Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>
+              <Input v-model="living.url" placeholder="课程url"></Input>
+              <Input v-model="living.class_password" placeholder="课程密码（可空）"></Input>
+            </Modal>
+            <span><Button type="error" @click="deleteModal = true">DELETE</Button></span>
+            <Modal
+              v-model="deleteModal"
+              title="删除课程"
+              @on-ok="deleteLiving(index)"
+              @on-cancel="cancel">
+              <Input v-model="validate" placeholder="确认删除请输入yes"></Input>
+            </Modal>
+          </Card>
+      </Col>
+    </Row>
   </div>
 </template>
 <script>
@@ -51,22 +65,38 @@ export default {
         job: '',
         title: '',
         thumbnail: '',
+        img:'',
         url: '',
-        class_password: ''
+        class_password: '',
+        mode: ''
       },
+      modeList: [
+        {
+          value: 'private',
+          label: '只有我的学生能看到'
+        },
+        {
+          value: 'protected',
+          label: '有密码就可以进入'
+        },
+        {
+          value: 'public',
+          label: '公开课'
+        }
+      ],
       addModal: false,
       updateModal: false,
       deleteModal: false,
       myLivingList: [{
-        username: 'zsh',
+        username: '',
         password: '',
         job: '',
         old_url: '',
-        title: 'zsh',
+        title: '',
         thumbnail: '../assets/logo.png',
-        url: 'zshliving',
+        url: '',
         class_password: ''
-      }],
+      },{},{},{},{}],
       userInfo: {
         username: '',
         password: '',
@@ -80,18 +110,18 @@ export default {
     this.getMyLivingList()
   },
   methods: {
-    directskip (iitem) {
-      this.$router.push({path: '/teacherliving/'+iitem.url});
+    directskip (living) {
+      this.$router.push({path: '/teacherliving/' + living.url, params: {url: living.url}})
       this.$Modal.confirm({
-              title: '提示',
-              content: '是否确认进入直播间',
-              onOk: () => {
-              window.location.reload();
+        title: '提示',
+        content: '是否确认进入直播间',
+        onOk: () => {
+          window.location.reload()
         },
         onCancel: () => {
-          history.go(-1);
+          history.go(-1)
         }
-      });
+      })
     },
     getBackUp (index) {
       this.updateModal = true
@@ -105,14 +135,29 @@ export default {
       this.userInfo['mobile'] = this.$cookies.get('user').mobile
       const data = this.userInfo
       axios.post('/api/classroom/user_living_list', data).then((resp) => {
-        this.myLivingList = resp.data
+        this.myLivingList = []
+        for (var i = 0; i < resp.data.length; i++) {
+          var living = {}
+          living['title'] = resp.data[i]['title']
+          living['url'] = resp.data[i]['url']
+          living['thumbnail'] = resp.data[i]['thumbnail']
+          living['class_password'] = resp.data[i]['password']
+          living['mode'] = resp.data[i]['mode']
+          this.myLivingList.push(living)
+        }
       })
     },
     addLiving () {
+      console.log(document.querySelector('input[type=file]').files[0])
       this.addModal = false
       this.newLiving['username'] = this.$cookies.get('user').username
       this.newLiving['password'] = this.$cookies.get('user').password
       this.newLiving['job'] = this.$cookies.get('user').job
+      console.log("1231")
+      this.newLiving['img']=document.querySelector('input[type=file]').files[0]
+      console.log("1231")
+      console.log(document.querySelector('input[type=file]').files[0])
+      console.log("4564")
       const data = this.newLiving
       axios.post('/api/classroom/add_class', data).then((resp) => {
         this.getMyLivingList()
@@ -150,11 +195,46 @@ export default {
 }
 </script>
 <style>
-.card {
-  width: 320px;
+ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+li {
+  list-style: none;
+}
+.living-card {
+  padding: 3%;
+  margin: 6%;
 }
 .posi{
   position: absolute;
   top: 60px;
+}
+.upf {
+  position: relative;
+  display: inline-block;
+  background: #D0EEFF;
+  border: 1px solid #99D3F5;
+  border-radius: 4px;
+  padding: 4px 12px;
+  overflow: hidden;
+  color: #1E88C7;
+  text-decoration: none;
+  text-indent: 0;
+  line-height: 20px;
+}
+.upf input {
+  position: absolute;
+  font-size: 100px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+}
+.upf:hover {
+  background: #AADFFD;
+  border-color: #78C3F3;
+  color: #004974;
+  text-decoration: none;
 }
 </style>
