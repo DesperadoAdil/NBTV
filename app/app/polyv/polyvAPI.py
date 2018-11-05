@@ -79,3 +79,27 @@ class ChannelManager:
 		params["sign"] = sign
 		data = self.sender.request("POST", url, fields = params)
 		return data
+
+	def openLive(self, channelId):
+		url = const.LiveOpenUrl % channelId
+
+		timestamp = self.getTimeMillis()
+		params = {"appId": const.AppID, "timestamp": timestamp, "userId": const.UserID}
+		sign = self.generateSign(params, const.AppSecret)
+		params["sign"] = sign
+
+		data = self.sender.request("POST", url, fields = params)
+		return data
+
+	def closeLive(self, channelId):
+		url = const.LiveCloseUrl % channelId
+
+		timestamp = self.getTimeMillis()
+		params = {"appId": const.AppID, "timestamp": timestamp, "userId": const.UserID}
+		sign = self.generateSign(params, const.AppSecret)
+		params["sign"] = sign
+		
+		data = self.sender.request("POST", url, fields = params)
+		return data
+
+instance = ChannelManager()
