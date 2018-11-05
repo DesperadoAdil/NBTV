@@ -6,47 +6,47 @@ import json
 
 @resource.route('/add_multiple', methods = ['POST', 'GET'])
 def addMultiChoice():
-	data = request.get_data()
-	print("add choice question")
-	print(data)
-	data = json.loads(data)
+    data = request.get_data()
+    print("add choice question")
+    print(data)
+    data = json.loads(data)
     ret = {}
     try:
-	   uniqueId = multiChoiceManager.insert(data['statement'], data['optionList'], data['answer'])
+       uniqueId = multiChoiceManager.insert(data['statement'], data['optionList'], data['answer'])
        ret["status"] = "success"
        ret["uniqueId"] = uniqueId
     except Exception as err:
         print(err)
         ret["status"] = "error"
-	return json.dumps(ret)
+    return json.dumps(ret)
 
 @resource.route('/add_code', methods = ['POST', 'GET'])
 def addCode():
-	print('add code question')
+    print('add code question')
     ret = {}
-	try:
-		data = request.get_data()
-		print(data)
-		data = json.loads(data)
+    try:
+        data = request.get_data()
+        print(data)
+        data = json.loads(data)
 
-		uniqueId = codeQuestionManager.insert(data['statement'], data['language'])
+        uniqueId = codeQuestionManager.insert(data['statement'], data['language'])
         ret["status"] = "success"
         ret["uniqueId"] = uniqueId
-	except Exception as err:
-		print(err)
-		ret["status"] = "error"
+    except Exception as err:
+        print(err)
+        ret["status"] = "error"
     return json.dumps(ret)
 
 @resource.route('/add_pdf', methods = ['POST'])
 def addPDF():
-	print('add pdf file')
-	try:
-		f = request.files['file']
-		username = request.form['username']
-		pdfManager.insert(f, username)
-		return "success"
-	except:
-		return "error"
+    print('add pdf file')
+    try:
+        f = request.files['file']
+        username = request.form['username']
+        pdfManager.insert(f, username)
+        return "success"
+    except:
+        return "error"
 
 
 #Get_pdfs
