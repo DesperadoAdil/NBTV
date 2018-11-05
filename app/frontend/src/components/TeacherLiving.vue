@@ -189,11 +189,9 @@
     </div>
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
     <Card id="chatingRoom">
-      这是一个聊天室
       <div class="talk-contents">
         <div class="talk-inner">
           <div class="talk-nav">
-            <!--{{$route.query.username}}-->
             <div class="talk-title">
               {{username}}
             </div>
@@ -201,36 +199,26 @@
           <div class="content">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
               <div  class="talk-space self-talk"
-                    v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username"
-                    track-by="$index">
+                    v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
                 <div class="talk-content">
-                  <div class="talk-word talk-word-self">{{ msgObj.msg }}</div><i class="swip"></i>
+                  <div class="talk-self-name">{{ msgObj.fromUser }}</div>
+                  <div class="talk-word talk-word-self">{{ msgObj.msg }}</div>
                 </div>
               </div>
               <div v-else></div>
               <div  class="talk-space user-talk"
-                    v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username"
-                    track-by="$index">
+                    v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username">
                 <div class="talk-content">
-                  <div v-if="CHAT.msgArr[index].fromUser ==='all'" class="talk-all">{{ msgObj.trueFrom }}</div>
-                  <div class="talk-word talk-word-user">
-                    {{ msgObj.msg }}
-                    <i class="swip-user"></i>
-                  </div>
+                  <div class="talk-user-name">{{ msgObj.fromUser }}</div>
+                  <div class="talk-word talk-word-user">{{ msgObj.msg }}</div>
                 </div>
               </div>
               <div v-else></div>
             </div>
           </div>
           <div class="talker">
-            <div class="talker-toolbar">
-              <a class="talker-face"></a>
-            </div>
-            <textarea class="talker-input" type="text" v-model="msg" placeholder="Type your message.."></textarea>
-            <div class="action">
-              <span class="talker-tip">按下Cmd+Enter换行</span>
-              <span class="talker-send" @click="submit">发送</span>
-            </div>
+            <Input class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
+            <Button class="talker-send" type="success">发送</Button>
           </div>
         </div>
       </div>
@@ -769,7 +757,94 @@ export default{
     top:60px;
     height: 90%;
   }
+  .talk-contents {
+    height: 100%;
+    margin-left: 10px;
+  }
+  .talk-nav {
+    background-color: #eee;
+    margin-left: 10px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    line-height: 30px;
+  }
+  .talk-title {
+    position: relative;
+    padding: 10px 0;
+    margin: 0 19px;
+    border-bottom: 1px solid #d6d6d6;
+    background-color: #eee;
+    z-index: 1024;
+  }
+  .content {
+    background-color: #eee;
+    position: absolute;
+    bottom: 50px;
+    padding: 0 19px;
+    margin-left: 10px;
+    top: 51px;
+    right: 0;
+    left: 0;
+    overflow: scroll;
+  }
+  .talker {
+    margin-left: 10px;
+    padding-right: 19px;
+    border-top: 1px solid #d6d6d6;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
 
+  .talk-space {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  .talk-word {
+    display: inline-block;
+    position: relative;
+    background: -webkit-linear-gradient(left top, rgba(246, 94, 84, 1), rgba(218, 43, 101, 1)); /* Safari 5.1 - 6.0 */
+    color: #fff;
+    max-width: 60%;
+    min-height: 25px;
+    line-height: 25px;
+    margin: 0 1%;
+    padding: 4px 12px 2px 11px;
+    border-radius: 5px;
+    font-size: 12px;
+    word-break: break-all;
+  }
+  .talk-word-self {
+    border-bottom-right-radius: 0;
+    margin-right: 10px;
+    text-align: left;
+  }
+  .talk-word-user {
+    background: rgba(243, 243, 243, 1) none;
+    color: rgba(0, 0, 0, 1);
+    border-bottom-left-radius: 0;
+    margin-left: 10px;
+    text-align: right;
+  }
+  .self-talk {
+    margin-top: 10px;
+  }
+  .talk-content {
+    text-align: right;
+    position: relative;
+  }
+  .user-talk {
+    margin-top: 10px;
+  }
+  .talk-content {
+    text-align: left;
+    position: relative;
+    margin-left: 0px;
+  }
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   .tealivingmain{
     width: 100%;
