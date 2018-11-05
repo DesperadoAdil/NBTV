@@ -1,6 +1,6 @@
 import json
 from ..models import *
-
+from datetime import datetime
 
 class ClassroomManager:
 	def __init__(self):
@@ -66,6 +66,21 @@ class ClassroomManager:
 		except Exception as err:
 			print("update classrooms: ", err)
 			return "error"
+
+	def updateShowTime(self, url):
+		try:
+			tmpClass = Classrooms.query.filter_by(url = url).first()
+			if tmpClass is None:
+				return "error: no such classroom"
+
+			tmpClass.showtime = datetime.now()
+			db.session.add(tmpClass)
+			db.session.commit()
+			return "success"
+		except Exception as err:
+			print("updateShowTime: ", err)
+			return "error"
+
 
 	def search(self, url):
 		return Classrooms.query.filter_by(url = url).first()

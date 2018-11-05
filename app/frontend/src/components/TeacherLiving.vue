@@ -424,7 +424,7 @@ export default{
       data['url'] = this.cururl
       data['item'] = document.querySelector('input[type=file]').files[0]
       console.log(data['item'])
-      axios.post('/api/user/xlsxaddstudents', data).then((resp) => {
+      axios.post('/api/classroom/xlsxaddstudents', data).then((resp) => {
         this.studentitems = resp.studentitems
       })
     },
@@ -471,7 +471,7 @@ export default{
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
       data['url'] = this.cururl
-      axios.post('/api/user/getstudents', data).then((resp) => {
+      axios.post('/api/classroom/getstudents', data).then((resp) => {
         this.studentitems = resp.studentitems
       })
     },
@@ -482,7 +482,7 @@ export default{
       data['job'] = this.userInfo['job']
       data['url'] = this.cururl
       data['item'] = this.curstu
-      axios.post('/api/user/getstudentsti', data).then((resp) => {
+      axios.post('/api/classroom/getstudentsti', data).then((resp) => {
         this.curti = resp.curti
       })
       this.modal3 = true
@@ -576,7 +576,7 @@ export default{
           data['job'] = this.userInfo['job']
           data['url'] = this.cururl
           data['item'] = ipdf.title
-          axios.post('/api/user/showpdfs', data).then((resp) => {
+          axios.post('/api/classroom/showpdfs', data).then((resp) => {
 
           })
           console.log('1321312')
@@ -607,7 +607,7 @@ export default{
           data['job'] = this.userInfo['job']
           data['url'] = this.cururl
           data['item'] = iselect.title
-          axios.post('/api/user/showselect', data).then((resp) => {
+          axios.post('/api/classroom/showselect', data).then((resp) => {
 
           })
           this.videohei = 260 + 'px'
@@ -641,7 +641,7 @@ export default{
           data['username'] = this.userInfo['username']
           data['job'] = this.userInfo['job']
           data['url'] = this.cururl
-          axios.post('/api/user/closepdfsec', data).then((resp) => {
+          axios.post('/api/classroom/closepdfsec', data).then((resp) => {
 
           })
         },
@@ -671,7 +671,7 @@ export default{
             data['username'] = this.userInfo['username']
             data['job'] = this.userInfo['job']
             data['url'] = this.cururl
-            axios.post('/api/user/openliving', data).then((resp) => {
+            axios.post('/api/classroom/openliving', data).then((resp) => {
               this.streamername = resp.streamername
             })
             setSWFIsReady()
@@ -696,7 +696,7 @@ export default{
             data['username'] = this.userInfo['username']
             data['job'] = this.userInfo['job']
             data['url'] = this.cururl
-            axios.post('/api/user/closeliving', data).then((resp) => {
+            axios.post('/api/classroom/closeliving', data).then((resp) => {
             })
           },
           onCancel: () => {
