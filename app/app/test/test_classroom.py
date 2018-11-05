@@ -47,13 +47,13 @@ class ClassroomTest(BaseTestCase):
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
 
 
-	data_aaddstudents = { "url" : "123", "item" : "test1"}
-	dataerror_aaddstudents = { "url" : "123", "item" : "erroruser"}
+	data_aaddstudents = { "url" : "123", "item" : "test1" }
+	dataerror_aaddstudents = { "url" : "123", "item" : "erroruser" }
 	testuser = Students(phonenumber = "12345678911", username = "test1", password = "123456")
 	db.session.add(testuser)
 	db.session.commit()
 	def test_caaddstudents(self):
-		print ("Test:Addstudents===============================")		
+		print ("Test:Addstudents===============================")
 
 		# 这是正确的结果
 		response = self.app.post('/api/classroom/aaddstudents', data = json.dumps(self.data_aaddstudents, ensure_ascii = False))
@@ -86,21 +86,14 @@ class ClassroomTest(BaseTestCase):
 
 
 
-	open_close_live_data = {
-		"username": "adil",
-		"url": "123456"
-	}
+	open_close_live_data = { "username" : "adil", "url" : "123456" }
 	def test_open_close_live(self):
 		print("test: open and close live")
 
-		response = self.app.post('/api/classroom/openliving', json.dumps(self.open_close_live_data))
+		response = self.app.post('/api/classroom/openliving', data = json.dumps({ "username" : "adil", "url" : "123456" }))
 		tmp = json.loads(response.data.decode('utf8'))
 		self.assertEquals(tmp['status'], "success")
 
-		response = self.app.post('/api/classroom/closeliving', json.dumps(self.open_close_live_data))
+		response = self.app.post('/api/classroom/closeliving', data = json.dumps({ "username" : "adil", "url" : "123456" }))
 		tmp = json.loads(response.data.decode('utf8'))
 		self.assertEquals(tmp['status'], "success")
-
-
-
-

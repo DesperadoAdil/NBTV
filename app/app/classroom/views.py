@@ -229,9 +229,11 @@ def aaddstudents():
 
 
 
-@classroom.route('/openliving')
+@classroom.route('/openliving', methods = ['POST'])
 def openlive():
 	ret = {}
+	ret["status"] = 'error'
+
 	data = request.get_data()
 	print('openlive')
 	print(data)
@@ -244,20 +246,24 @@ def openlive():
 	else:
 
 		ret['streamername'] = classroom.rtmpUrl
+		vid = classroom.vid
 		response = polyvAPI.instance.openLive(vid)
 
 		classroomManager.updateShowTime(url)
-		if response.status == 200:
+		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
 			ret['status'] = "success"
 
-	return json.dumps(ret, enusure_ascii = False)
+	print (json.dumps(ret))
+	return json.dumps(ret)
 
 
-@classroom.route('/closeliving')
+@classroom.route('/closeliving', methods = ['POST'])
 def closelive():
 	ret = {}
+	ret["status"] = 'error'
+
 	data = request.get_data()
 	print('closelive')
 	print(data)
@@ -272,9 +278,10 @@ def closelive():
 		vid = classroom.vid
 		ret['vid'] = vid
 		response = polyvAPI.instance.closeLive(vid)
-		if response.status == 200:
+		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
 			ret['status'] = "success"
 
-	return json.dumps(ret, enusure_ascii = False)
+	print (json.dumps(ret))
+	return json.dumps(ret)
