@@ -372,6 +372,31 @@ commit message都要符合这一个规范：
       - **backend:** ？****
 
 ---
+##Socket通信
+通信的消息都是下面的obj
+
+	obj = {
+		time: '', //小时:分钟
+		msg: '',	//消息内容
+		toUser: '',	//目前为all，即群聊，之后加入私聊功能会用username
+		fromUser: ''	//发消息的用户名
+	}
+### 加入聊天室
+初始化socket，链接到url
+
+	io.connect(io.connect(url, {'force new connection': true}) //此处需要后端给定url	
+链接后端服务器，会调用
+	
+	socket.on('open', 随意)	//此处需要后端emit消息
+用来判断是否成功连接聊天室，然后调用
+
+	socket.emit('addUser', username)	//此处需要后端接收消息
+给后端发送消息，用来将当前用户加入聊天室	
+###发送消息
+	socket.emit('sendMsg', obj)
+###接收消息
+	socket.on('to' + username, obj)
+
 ## 数据库表结构
 ### NBTV
 数据表|功能|

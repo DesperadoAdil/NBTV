@@ -94,7 +94,7 @@ export default {
         old_url: '',
         title: '',
         thumbnail: '../assets/logo.png',
-        url: '',
+        url: '1',
         class_password: ''
       },{},{},{},{}],
       userInfo: {
