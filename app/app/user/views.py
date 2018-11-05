@@ -256,55 +256,6 @@ def del_myclass():
     return json.dumps(ret)
 
 
-@user.route('/openliving')
-def openlive():
-    ret = {}
-    data = request.get_data()
-    print('openlive')
-    print(data)
-
-    data = json.loads(data)
-    url = data['url']
-    classroom = classroomManager.search(url)
-    if classroom is None:
-        ret['status'] = "error: no such classroom"
-    else:
-        
-        ret['streamername'] = classroom.rtmpUrl
-        response = polyvAPI.instance.openLive(vid)
-        
-        classroomManager.updateShowTime(url)
-        if response.status == 200:
-            ret['status'] = "error: polyv error"
-        else:
-            ret['status'] = "success"
-
-    return json.dumps(ret, enusure_ascii = False)
-
-@user.route('/closeliving')
-def closelive():
-    ret = {}
-    data = request.get_data()
-    print('closelive')
-    print(data)
-
-    data = json.loads(data)
-    url = data['url']
-
-    classroom = classroomManager.search(url)
-    if classroom is None:
-        ret['status'] = "error: no such classroom"
-    else:
-        vid = classroom.vid
-        ret['vid'] = vid
-        response = polyvAPI.instance.closeLive(vid)
-        if response.status == 200:
-            ret['status'] = "error: polyv error"
-        else:
-            ret['status'] = "success"
-
-    return json.dumps(ret, enusure_ascii = False)
-
 
 
 

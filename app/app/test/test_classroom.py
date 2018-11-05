@@ -61,3 +61,24 @@ class ClassroomTest(BaseTestCase):
 
 		response = self.app.post('/api/classroom/user_living_list', data = json.dumps({"username": "error", "password": "123456"}))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
+
+
+
+	open_close_live_data = {
+		"username": "adil",
+		"url": "123456"
+	}
+	def test_open_close_live(self):
+		print("test: open and close live")
+
+		response = self.app.post('/api/classroom/openliving', json.dumps(self.open_close_live_data))
+		tmp = json.loads(response.data.decode('utf8'))
+		self.assertEquals(tmp['status'], "success")
+
+		response = self.app.post('/api/classroom/closeliving', json.dumps(self.open_close_live_data))
+		tmp = json.loads(response.data.decode('utf8'))
+		self.assertEquals(tmp['status'], "success")
+
+
+
+
