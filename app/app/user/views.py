@@ -269,8 +269,8 @@ def openlive():
     if classroom is None:
         ret['status'] = "error: no such classroom"
     else:
-        vid = classroom.vid
-        ret['vid'] = vid
+        
+        ret['streamername'] = classroom.rtmpUrl
         response = polyvAPI.instance.openLive(vid)
         
         classroomManager.updateShowTime(url)
