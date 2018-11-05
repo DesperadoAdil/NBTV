@@ -18,6 +18,7 @@ RUN pip3 install --upgrade pip
 RUN pip3 install --trusted-host mirrors.tuna.tsinghua.edu.cn \
     -i https://pypi.tuna.tsinghua.edu.cn/simple/ -r requirements.txt
 COPY app $HOME
+COPY sonar-project.properties $HOME
 WORKDIR $HOME/frontend
 # 加速
 RUN npm config set registry https://registry.npm.taobao.org

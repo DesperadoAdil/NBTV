@@ -1,9 +1,9 @@
 <template>
   <div class="tealivingmain">
 
-    <card  class="cardtea">
+    <div  class="cardtea">
       <p slot="title" style="font-size: 20px">选项</p>
-      <Menu style="width: 100%">
+      <Menu name="0" style="width: 100%">
         <!-- 添加教学资源 -->
         <Submenu name="1" class="menuitentea">
           <template slot="title" >
@@ -32,18 +32,34 @@
           </template>
           <MenuItem name="3-1" class="menuitentea" v-for="item in studentitems" @click.native="showstudentti(item)">{{item}}</MenuItem>
         </Submenu>
+        <Submenu name="4" class="menuitentea"  >
+          <template slot="title">
+            <Icon type="ios-stats" />
+            添加学生
+          </template>
+          <MenuItem name="4-1" class="menuitentea" >
+            <a href="javascript:;" class="upf">xlsx添加学生
+              <input type="file" name="fileinput" id="fileinput">
+            </a>
+            <Button type="primary" @click="subxlsx">submit</Button>
+
+          </MenuItem>
+          <MenuItem name="4-2" class="menuitentea" @click.native="addstua">用户名添加学生</MenuItem>
+        </Submenu>
       </Menu>
       <Button class="btnopen" type="primary"  v-bind:icon="openclose"  @click="teaopenclose()">
         <span class="menuitentea">{{this.opentext}}</span>
       </Button>
-    </card>
+      <Button type="primary" shape="circle" v-bind:icon="jinmai" @click="tojinmai"></Button>
+      <Button type="primary" shape="circle" v-bind:icon="jinshipin" @click="tojinshipin()"></Button>
+    </div>
 
     <!--上传-->
     <Modal v-model="modal_pdf" @on-ok="addPDF()" @on-cancel="modal_pdf = false">
       <p slot="header" style="font-size: 20px">
         <span>上传课件</span>
       </p>
-      <Upload action="//jsonplaceholder.typicode.com/posts/">
+      <Upload action="上传的地址" headers="设置上传的请求头部">
         <Button icon="ios-cloud-upload-outline">Upload files</Button>
       </Upload>
     </Modal>
@@ -53,29 +69,15 @@
       <p slot="header" style="font-size: 20px">
         <span>设置选择题</span>
       </p>
-      <Form model="sub_multi" label-width="80" style="width: 300px">
+      <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
         <FormItem label="Statement">
           <Input v-model="sub_multi.statement"></Input>
         </FormItem>
-        <!-- 现在仅实现四个选项 -->
-        <FormItem label="OptionA">
-          <Input v-model="answer1"></Input>
-        </FormItem>
-        <FormItem label="OptionB">
-          <Input v-model="answer2"></Input>
-        </FormItem>
-        <FormItem label="OptionC">
-          <Input v-model="answer3"></Input>
-        </FormItem>
-        <FormItem label="OptionD">
-          <Input v-model="answer4"></Input>
-        </FormItem>
-        <FormItem label="The Answer">
-          <Input v-model="sub_multi.answer"></Input>
-        </FormItem>
-        <!-- 以下为可以实现选项的动态添加删除的原型代码
+        <!-- 以下为可以实现选项的动态添加删除的代码  -->
         <FormItem
-          v-for="option in sub_multi.optionList">
+          v-for="(item, index) in multi_options"
+          v-if="item.status"
+          :key="index">
           <Row>
             <Col span="18">
               <Input type="text" placeholder="Enter Your Choice"></Input>
@@ -92,7 +94,9 @@
             </Col>
           </Row>
         </FormItem>
-        -->
+        <FormItem label="The Answer">
+          <Input v-model="sub_multi.answer" placeholder="a number"></Input>
+        </FormItem>
       </Form>
     </Modal>
 
@@ -148,15 +152,14 @@
       <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
     </Modal>
 
-    <div id="mainlivingcard" class="cardtealiving00" :style="{display:mainlivingcarddisplay?'block':'none'}">
+    <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
       <object >
-        <embed id="rtmp-streamer" src="../../static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
-               width="100%" height="600px" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
+        <embed id="rtmp-streamer1" src="/static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
+               width="100%" :style="{height:videohei}"  allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
       </object>
-      <canvas id="canvas" width="100%" height="600"></canvas>
       <div class="bottomveido">
         <h3>礼物等其他显示部分（待修改）</h3>
       </div>
@@ -185,13 +188,6 @@
       <p class="anstea00">本题目答案：{{curanswer}}</p>
     </div>
 
-    <div id="littlelivingcard" class="cardtealittleliving" :style="{display:littlelivingcarddisplay?'block':'none'}">
-      <object >
-        <embed id="rtmp-streamer2" src="../../static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
-               width="100%" height="260px" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
-      </object>
-    </div>
-
     <div id="liaotianshi" class="danmuxinxi" :style="{top:liaotianshiheight}">
       <Card style="height: 800px">
         <h3>聊天室信息显示部分（待修改）</h3>
@@ -201,10 +197,6 @@
   </div>
 </template>
 
-<!-- script starts
-    -->
-<!--<script src="https://player.polyv.net/livescript/liveplayer.js"></script>-->
-
 <script>
 import axios from 'axios'
 import {setSWFIsReady} from '../../static/js/livingrtmp.js'
@@ -213,21 +205,30 @@ export default{
   name: 'load',
   data () {
     return {
-      // <!--vediosrc:'',-->
-      //      mainlivingcarddispaly:block,
-      //      mainlivingcarddispaly:'none',
-      // 功能对话框
-
-      // Yuxuan's variables:
-      stream: '',
+      astu:'',
+      jinmai:'ios-mic',
+      jinshipin:'ios-eye',
+      isjinmai:false,
+      isjinshipin:false,
+      videohei:700+'px',
+      classmain0:true,
+      stream000: '',
       streamer: '',
       streamername: '7181857ac220181025144543640',
       modal_pdf: false,
       modal_multi: false,
+      multi_options: [
+        {
+          value: '',
+          index: 1,
+          status: 1
+        }
+      ],
+      multi_index: 1,
       sub_multi: {
         statement: '',
-        optionList: [this.answer1, this.answer2, this.answer3, this.answer4],
-        answer: '一个数字',
+        optionList: [],
+        answer: '',
         url: '教室url'
       },
       answer1: '',
@@ -239,7 +240,6 @@ export default{
         statement: '',
         language: '' // language 应当是个多选框
       },
-
       // Shihang
       modal3: false,
       modal2: false,
@@ -271,15 +271,6 @@ export default{
       toopen: true,
       openclose: 'ios-videocam-outline',
       opentext: '开播',
-      note: {
-        position: 'absolute',
-        top: '0px',
-        left: '0px',
-        width: '100%',
-        height: '100%',
-        backgroundSize: '100% 100%',
-        backgroundRepeat: 'no-repeat'
-      },
       // 题目数据
       examOptions: {
         Description: '',
@@ -302,19 +293,15 @@ export default{
       curti: [
         {
           title: '1',
-          ans: 'A'
-        },
-        {
-          title: '2',
-          ans: 'B'
-        },
-        {
-          title: '3',
-          ans: 'int main()'
+          type : 'select',
+          ans: 'A',
+          standardans:''
         },
         {
           title: '4',
-          ans: '#include<> \n using namespace std; int main(){ int c; cout<<c++<<endl; return 0}'
+          type : 'code',
+          ans: '#include<> \n using namespace std; int main(){ int c; cout<<c++<<endl; return 0}',
+          standardans:''
         }
       ],
       studentitems: ['zsh', 'adil', 'zhq', 'hyx', 'xcj'],
@@ -333,16 +320,6 @@ export default{
           ans: ['1', '2', '3', '4'],
           answer: 'A'
         },
-        {
-          title: 'xjbx3',
-          ans: ['1', '2', '3', '4'],
-          answer: 'A'
-        },
-        {
-          title: 'xjbx4',
-          ans: ['1', '2', '3', '4'],
-          answer: 'A'
-        }
       ],
       pdfitems: [
         {
@@ -353,44 +330,61 @@ export default{
           title: 'pdf2',
           url: '/static/pdf/1-1.pdf'
         },
-        {
-          title: 'pdf3',
-          url: '/static/pdf/1-1.pdf'
-        },
-        {
-          title: 'pdf4',
-          url: '/static/pdf/1-1.pdf'
-        }
+
       ]
     }
   },
   mounted () {
-    //    var timer = setTimeout(function(){
-    //      doItPerSecond();
-    //    },1000)
-    //    var num = 0;
-    //    function doItPerSecond() {
-    //      //dosomething...
-    //      var player = polyvObject('#player').livePlayer({
-    //        'width':'100%',
-    //        'height':600+'px',
-    //        'uid':'7181857ac2',
-    //        'vid':'248980'
-    //      });
-    //      num++;
-    //      console.log(num);
-    //    };
   },
   created () {
     this.cururl = this.$route.params.url
-    //    const s = document.createElement('script');
-    //    s.type = 'text/javascript';
-    //    s.src = 'https://player.polyv.net/livescript/liveplayer.js';
-    //    document.body.appendChild(s);
+    console.log(this.cururl)
     this.showUserInfo()
-    //    window.location.reload()
   },
   methods: {
+    subxlsx(){
+      console.log("dhasjkhda")
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      data['item']=document.querySelector('input[type=file]').files[0]
+      console.log(data['item'])
+      axios.post('/api/classroom/xlsxaddstudents', data).then((resp) => {
+        this.studentitems = resp.studentitems
+    })
+    },
+    addstua(){
+    console.log("dhasjkhda")
+        this.$Modal.confirm({
+              render: (h) => {
+              return h('Input', {
+                props: {
+                  id: 'passinput',
+                  autofocus: true,
+                  placeholder: 'Please enter the username of this student'
+                },
+                on: {
+                  input: (val) => {
+                  this.astu = val
+              }
+            }
+        })
+        },
+        onOk: () => {
+                const data = this.curuser
+                data['username'] = this.userInfo['username']
+                data['job'] = this.userInfo['job']
+                data['url'] = this.cururl
+                data['item']=this.astu
+                console.log("dhasjkhda")
+                console.log(this.astu)
+              axios.post('/api/classroom/aaddstudents', data).then((resp) => {
+              this.studentitems = resp.studentitems
+          })
+        }
+        })
+    },
     exportData (type) {
       if (type === 1) {
         this.$refs.table.exportCsv({
@@ -399,24 +393,22 @@ export default{
       }
     },
     getstudents () {
-      console.log('1321312')
       const data = this.curuser
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
       data['url'] = this.cururl
-      axios.post('/api/user/getstudents', data).then((resp) => {
+      axios.post('/api/classroom/getstudents', data).then((resp) => {
         this.studentitems = resp.studentitems
       })
     },
     showstudentti (item) {
-      console.log('1321312')
       this.curstu = item
       const data = this.curuser
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
       data['url'] = this.cururl
       data['item'] = this.curstu
-      axios.post('/api/user/getstudentsti', data).then((resp) => {
+      axios.post('/api/classroom/getstudentsti', data).then((resp) => {
         this.curti = resp.curti
       })
       this.modal3 = true
@@ -431,27 +423,22 @@ export default{
         this.pdfitems = resp.pdfitems
       }
       )
-
       this.modal1 = true
     },
-
-    // Yuxuan's Methods Starts Here
     addPDF () {
       // send pdf to backend
     },
-
     handleReset (name) {
       this.$refs[name].resetFields()
     },
     handleAdd () {
       this.index++
-      this.sub_multi.optionList.push({
+      this.multi_options.push({
         value: '',
         index: this.index,
         status: 1
       })
     },
-
     teaselect () {
       const data = this.curuser
       data['username'] = this.userInfo['username']
@@ -461,16 +448,21 @@ export default{
         this.selectitems = resp.selectitems
       }
       )
-
       this.modal2 = true
     },
     handleRemove (index) {
-      this.sub_multi.optionList[index].status = 0
+      this.multi_options[index].status = 0
     },
     addMulti () {
       // send sub_multi should be set by now
-      // need to get url but I am waiting for hanky
-      /*
+      this.sub_multi.url = this.cururl
+      // 将multi_option这个列表改成可发送的数组
+      for (var i = 0; i < this.index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
+      // post
       axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
@@ -482,12 +474,10 @@ export default{
           this.$Message.error('添加选择题失败')
         }
       })
-      */
     },
     addCode () {
       // sub_code should be set by now
       // post
-      /*
       axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
@@ -499,12 +489,10 @@ export default{
           this.$Message.error('添加代码题失败')
         }
       })
-      */
     },
     // Yuxuan's Methods Stops Here
 
     showpdf: function (ipdf) {
-      console.log('1321312')
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示' + ipdf.title,
@@ -514,36 +502,28 @@ export default{
           data['job'] = this.userInfo['job']
           data['url'] = this.cururl
           data['item'] = ipdf.title
-          axios.post('/api/user/showpdfs', data).then((resp) => {
+          axios.post('/api/classroom/showpdfs', data).then((resp) => {
 
           })
-          this.littlelivingcarddisplay = true
+          console.log('1321312')
+          this.videohei=260+'px'
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
-          this.mainlivingcarddisplay = false
-          this.liaotianshiheight = 330 + 'px'
+          this.classmain0=false
+          console.log(this.classmain0)
+          console.log(document.getElementById('rtmp-streamer1').class)
+          this.liaotianshiheight = 350 + 'px'
           this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
           this.curvideo = false
           this.modal1 = false
           console.log('1321312')
-          if (!this.toopen) {
-            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-            //streamer2.setScreenPosition(-100, 0)
-           // streamer2.setScreenSize(700, 380)
-            console.log('1321312')
-            streamer.disconnect()
-            streamer2.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
-          }
-          console.log('1321312')
-        },
+      },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
         }
       })
     },
     showselect: function (iselect) {
-      console.log('1321312')
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示: \n ' + iselect.title,
@@ -553,24 +533,15 @@ export default{
           data['job'] = this.userInfo['job']
           data['url'] = this.cururl
           data['item'] = iselect.title
-          axios.post('/api/user/showselect', data).then((resp) => {
+          axios.post('/api/classroom/showselect', data).then((resp) => {
 
           })
-          this.littlelivingcarddisplay = true
+          this.videohei=260+'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
-          this.mainlivingcarddisplay = false
-          this.liaotianshiheight = 330 + 'px'
+          this.classmain0=false
+          this.liaotianshiheight = 350 + 'px'
           this.curvideo = false
-          if (!this.toopen) {
-            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-            streamer2.setScreenPosition(-100, 0)
-            streamer2.setScreenSize(700, 380)
-            streamer2.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
-            streamer.disconnect()
-          }
-
           this.curtitle = iselect.title
           this.curans = iselect.ans
           this.curanswer = iselect.answer
@@ -586,23 +557,19 @@ export default{
         title: '提示',
         content: '确认退出教学资源',
         onOk: () => {
-          console.log('1321312')
-          this.littlelivingcarddisplay = false
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
-          this.mainlivingcarddisplay = true
+          this.classmain0=true
           this.liaotianshiheight = 60 + 'px'
+          this.videohei=700+'px'
           this.curvideo = true
+          const data = this.curuser
+          data['username'] = this.userInfo['username']
+          data['job'] = this.userInfo['job']
+          data['url'] = this.cururl
+          axios.post('/api/classroom/closepdfsec', data).then((resp) => {
 
-          if (!this.toopen) {
-            setSWFIsReady()
-            var streamer = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-            var streamer2 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-            streamer.setScreenPosition(-100, 0)
-            streamer.setScreenSize(700, 380)
-            streamer.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
-            streamer2.disconnect()
-          }
+          })
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -610,7 +577,6 @@ export default{
       })
     },
     showUserInfo () {
-      console.log('1234567')
       this.userInfo['username'] = this.$cookies.get('user').username
       this.userInfo['status'] = this.$cookies.get('user').status
       this.userInfo['password'] = this.$cookies.get('user').password
@@ -623,7 +589,6 @@ export default{
           title: '提示',
           content: '是否确认开播',
           onOk: () => {
-            console.log('sadasdsad')
             this.toopen = false
             this.opentext = '关播'
             this.openclose = 'ios-power'
@@ -632,26 +597,14 @@ export default{
             data['username'] = this.userInfo['username']
             data['job'] = this.userInfo['job']
             data['url'] = this.cururl
-            axios.post('/api/user/openliving', data).then((resp) => {
+            axios.post('/api/classroom/openliving', data).then((resp) => {
               this.streamername = resp.streamername
             })
-            if (this.curvideo) {
               setSWFIsReady()
-               streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-               streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-             //streamer.setScreenPosition(-100, 0)
-              //streamer.setScreenSize(700, 380)
-              streamer000.publish('rtmp://push-c1.videocc.net/recordf', '7181857ac220181025144543640')
-              streamer222.disconnect()
-            } else {
-              setSWFIsReady()
-              var streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer'))
-              var streamer222 = new RtmpStreamer(document.getElementById('rtmp-streamer2'))
-             // streamer2.setScreenPosition(-100, 0)
-              //streamer2.setScreenSize(700, 380)
-              streamer222.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
-              streamer000.disconnect()
-            }
+              this.streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
+  this.streamer000.setScreenPosition(-100, 0)
+  this.streamer000.setScreenSize(700, 380)
+  this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
           },
           onCancel: () => {
           }
@@ -665,12 +618,11 @@ export default{
             this.opentext = '开播'
             this.openclose = 'ios-videocam-outline'
             window.location.reload()
-
             const data = this.curuser
             data['username'] = this.userInfo['username']
             data['job'] = this.userInfo['job']
             data['url'] = this.cururl
-            axios.post('/api/user/closeliving', data).then((resp) => {
+            axios.post('/api/classroom/closeliving', data).then((resp) => {
             })
           },
           onCancel: () => {
@@ -679,29 +631,59 @@ export default{
         })
       }
     },
+    tojinmai(){
+      if(this.isjinmai){
+        this.jinmai='ios-mic'
+        this.isjinmai=false
+        this.streamer000.disconnect()
+        this.streamer000.setScreenPosition(-1000, 0)
+        this.streamer000.setScreenSize(700, 380)
+        this.streamer000.setMicRate(0)
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+      }else{
+        this.jinmai='ios-mic-off'
+        this.isjinmai=true
+        this.streamer000.disconnect()
+        this.streamer000.setScreenPosition(-1000, 0)
+        this.streamer000.setScreenSize(700, 380)
+        this.streamer000.setMicRate(0)
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+      }
+    },
+    tojinshipin(){
+
+      if(this.isjinshipin){
+        this.jinshipin='ios-eye'
+        this.isjinshipin=false
+        this.streamer000.disconnect()
+        this.streamer000.setScreenPosition(-1000, 0)
+        this.streamer000.setScreenSize(700, 380)
+        this. streamer000.setCamFrameInterval(15)
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+      }else{
+        this.jinshipin='ios-eye-off'
+        this.isjinshipin=true
+        this.streamer000.disconnect()
+        this.streamer000.setScreenPosition(-1000, 0)
+        this.streamer000.setScreenSize(700, 380)
+        this. streamer000.setCamFrameInterval(100000)
+        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+
+      }
+    }
 
   }
 }
 
 </script>
 <style>
-  .login-container{
-    box-shadow: 0 0px 8px 0 rgba(0,0,0,0.06),0 1px 0px 0 rgba(0,0,0, 0.02);
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    background-clip: padding-box;
-    margin: 180px auto;
-    width: 350px;
-    padding: 35px 35px 15px 35px;
-    background: #fff;
-    border: 1px solid #eaeaea;
-    box-shadow: 0 0 25px #cac6c6;
-  }
   .tealivingmain{
     width: 100%;
   }
   .cardtea{
+    position:absolute;
+    left: 0;
+    top:60px;
     width: 18%;
   }
   .menuitentea{
@@ -733,9 +715,7 @@ export default{
     float: left;
   }
   .bottomveido{
-    position:absolute;
     height: auto;
-    top:660px;
     text-align: center;
   }
   .danmuxinxi{
@@ -744,12 +724,11 @@ export default{
     width: 21%;
     top:60px;
   }
-  .cardtealittleliving{
+  .cardtealittleliving00{
     position:absolute;
     left: 79%;
     width: 21%;
     top:60px;
-    display: none;
   }
   .cardtealivingselect{
     position:absolute;
@@ -785,5 +764,31 @@ export default{
   }
   .databutton{
     margin-top: 15px;
+  }
+  .upf {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+  }
+  .upf input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+  }
+  .upf:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
   }
 </style>

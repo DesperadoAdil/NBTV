@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import VueCookies from 'vue-cookies'
+import RTMP from 'rtmp-streamer'
 
 import Login from '@/components/Login'
 import Register from '@/components/Register'
@@ -8,11 +9,12 @@ import List from '@/components/List'
 import Living from '@/components/Living'
 import MyLivingList from '@/components/MyLivingList'
 import MyWatchingList from '@/components/MyWatchinglist'
-import UserInfo from '@/components/UserInfo'
 import TeacherLiving from '@/components/TeacherLiving'
+import HomePage from '@/components/HomePage'
 
 Vue.use(Router)
 Vue.use(VueCookies)
+Vue.use(RTMP)
 
 const router = new Router({
   mode: 'history',
@@ -43,7 +45,7 @@ const router = new Router({
       component: List
     },
     {
-      path: '/living',
+      path: '/living/:url',
       name: 'Living',
       component: Living
     },
@@ -53,11 +55,10 @@ const router = new Router({
       component: MyLivingList
     },
     {
-      path: '/UserInfo',
-      name: 'UserInfo',
-      component: UserInfo
+      path: '/',
+      name: 'HomePage',
+      component: HomePage
     }
-
   ]
 })
 

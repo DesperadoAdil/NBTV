@@ -1,5 +1,8 @@
 <template>
   <div id="login" class="posi">
+    <h1>
+      登录
+    </h1>
     <Form ref="formInline" :model="formInline" :rules="ruleInline">
       <FormItem prop="username">
         <Input type="text" v-model="formInline.username" name="username" v-bind:placeholder="loginway">
@@ -86,11 +89,10 @@ export default {
 }
 </script>
 <style type="text/css">
-
 #login{
   position: absolute;
   width: 100%;
   top: 60px;
-  padding: 0 40%;
+  padding: 15% 40%;
 }
 </style>

@@ -1,6 +1,6 @@
 import json
 from ..models import *
-
+from datetime import datetime
 
 class ClassroomManager:
 	def __init__(self):
@@ -12,21 +12,22 @@ class ClassroomManager:
 		ret['teacher'] = classroom.teacher
 		ret['title'] = classroom.title
 		ret['thumbnail'] = classroom.thumbnail
+		ret['mode'] = classroom.mode
 		ret['password'] = classroom.password
 		ret['url'] = classroom.url
 		ret['rtmpUrl'] = classroom.rtmpUrl
 		ret['studentlist'] = classroom.studentlist
 		ret['teacherlist'] = classroom.teacherlist
-		ret['audiencelist'] = classroom.audiencelist
 		ret['filelist'] = classroom.filelist
 		ret['visible'] = classroom.visible
 		ret['createtime'] = str(classroom.createtime)
+		ret['showtime'] = str(classroom.showtime)
 		return ret
 
-	def insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
+	def insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url, mode):
 		#在调用这个接口之前，需要先判断是否是本用户插入的，需要验证密码
 		try:
-			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = thumbnail, password = passwd, rtmpUrl = rtmpUrl, url = url)
+			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = thumbnail, password = passwd, rtmpUrl = rtmpUrl, url = url, mode = mode)
 			db.session.add(classroomTmp)
 			db.session.commit()
 			return "success"
@@ -65,6 +66,21 @@ class ClassroomManager:
 		except Exception as err:
 			print("update classrooms: ", err)
 			return "error"
+
+	def updateShowTime(self, url):
+		try:
+			tmpClass = Classrooms.query.filter_by(url = url).first()
+			if tmpClass is None:
+				return "error: no such classroom"
+
+			tmpClass.showtime = datetime.now()
+			db.session.add(tmpClass)
+			db.session.commit()
+			return "success"
+		except Exception as err:
+			print("updateShowTime: ", err)
+			return "error"
+
 
 	def search(self, url):
 		return Classrooms.query.filter_by(url = url).first()

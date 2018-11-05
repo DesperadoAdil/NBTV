@@ -1,17 +1,16 @@
 <template>
   <div id="app">
+    <vue-headful
+      title="NBTV"
+      />
     <Menu mode="horizontal" :theme="theme1" active-name="active">
       <MenuItem name="2" class="mylist" @click.native="handleJump('list')">
         <Icon type="ios-people" />
-        教室列表
+        课程广场
       </MenuItem>
       <MenuItem name="3" class="mylist" @click.native="handleJump('myWatchingList')">
         <Icon type="logo-youtube" />
-        我加入的直播间
-      </MenuItem>
-      <MenuItem v-if="isTeacher()" name="4" class="mylist" @click.native="handleJump('myLivingList')">
-        <Icon type="logo-youtube" />
-        我开的直播间
+        我参与的
       </MenuItem>
 
       <MenuItem name="1" style="float:right" @click.native="showInfo = true">
@@ -98,15 +97,19 @@
               </FormItem>
             </Form>
             <div class="demo-drawer-footer">
-              <Button type="primary" @click="handleClose">exit</Button>
-              <Button style="margin: 8px" @click="showInfo = false">Apply</Button>
-              <Button @click="logout">Log out</Button>
+              <Button  @click="handleClose">返回</Button>
+              <Button style="margin: 8px" @click="showInfo = false">更改</Button>
+              <Button type="primary" @click="logout">注销</Button>
             </div>
           </DropdownMenu>
         </Dropdown>
       </MenuItem>
+      <MenuItem v-if="isTeacher()" name="4" style="float:right" @click.native="handleJump('myLivingList')">
+        <Icon type="ios-videocam" />
+        开播
+      </MenuItem>
     </Menu>
-    <router-view/>
+    <router-view class="router"/>
   </div>
 </template>
 
@@ -124,7 +127,7 @@ export default {
       showNewMobile: false,
       // mobile and password
       newMobile: '',
-      newPassword: '******',
+      newPassword: '',
       newRpassword: '',
       oldVerification: '',
       newVerification: '',
@@ -135,11 +138,11 @@ export default {
       theme1: 'light',
       active: '',
       userInfo: {
-        status: '',
+        status: 'success',
         username: '',
         password: '',
         mobile: '',
-        job: ''
+        job: 'teacher'
       },
       // changed this to 已登录 to debug
       LoginOrLogout: '登录',
@@ -320,10 +323,6 @@ export default {
     color: #2c3e50;
   }
   .mylist{
-    margin-right: 20px;
-    font-size: 20px;
-  }
-  .ilogin{
     font-size: 20px;
   }
   .demo-drawer-footer{
@@ -332,5 +331,8 @@ export default {
     padding: 10px 16px;
     text-align: right;
     background: #fff;
+  }
+  .router {
+    padding: 0 5%;
   }
 </style>

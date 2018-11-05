@@ -8,6 +8,7 @@ from ..user.User import usermanager
 from ..models import Classrooms
 
 
+
 polyvManager = polyvAPI.ChannelManager()
 
 @classroom.route('/add_class', methods = ['POST'])
@@ -42,7 +43,7 @@ def addClass():
 	# 在教室列表里插入一个教室
 	# insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
 	ret = {}
-	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], data['thumbnail'], data['class_password'], data['url'])
+	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], data['thumbnail'], data['class_password'], data['url'], data['mode'])
 
 	return json.dumps(ret, ensure_ascii = False)
 
@@ -107,11 +108,11 @@ def updateClass():
 	print(data)
 	data = json.loads(data)
 
+	ret = {}
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
 		ret["status"] = "error:password wrong"
 		return json.dumps(ret, ensure_ascii = False)
 
-	ret = {}
 	# update(self, title, thumbnail, newUrl, passwd, oldUrl):
 	ret['status'] = classroomManager.update(data['title'], data['thumbnail'], data['url'], data['class_password'], data['old_url'])
 	return json.dumps(ret, ensure_ascii = False)
@@ -123,11 +124,11 @@ def getList():
 	print(data)
 	data = json.loads(data)
 
+	ret = {}
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
 		ret["status"] = "error:password wrong"
 		return json.dumps(ret, ensure_ascii = False)
 
-	ret = {}
 	l = usermanager.search("username", data["username"], "teacher").classroom
 	#l = Classrooms.query.filter(Classrooms.teacher == data['username']).all()
 	ans = []
@@ -136,3 +137,55 @@ def getList():
 		ans.append(tmpd)
 	return json.dumps(ans, ensure_ascii = False)
 
+
+
+
+
+@classroom.route('/openliving')
+def openlive():
+	ret = {}
+	data = request.get_data()
+	print('openlive')
+	print(data)
+
+	data = json.loads(data)
+	url = data['url']
+	classroom = classroomManager.search(url)
+	if classroom is None:
+		ret['status'] = "error: no such classroom"
+	else:
+		
+		ret['streamername'] = classroom.rtmpUrl
+		response = polyvAPI.instance.openLive(vid)
+		
+		classroomManager.updateShowTime(url)
+		if response.status == 200:
+			ret['status'] = "error: polyv error"
+		else:
+			ret['status'] = "success"
+
+	return json.dumps(ret, enusure_ascii = False)
+
+@classroom.route('/closeliving')
+def closelive():
+	ret = {}
+	data = request.get_data()
+	print('closelive')
+	print(data)
+
+	data = json.loads(data)
+	url = data['url']
+
+	classroom = classroomManager.search(url)
+	if classroom is None:
+		ret['status'] = "error: no such classroom"
+	else:
+		vid = classroom.vid
+		ret['vid'] = vid
+		response = polyvAPI.instance.closeLive(vid)
+		if response.status == 200:
+			ret['status'] = "error: polyv error"
+		else:
+			ret['status'] = "success"
+
+	return json.dumps(ret, enusure_ascii = False)
