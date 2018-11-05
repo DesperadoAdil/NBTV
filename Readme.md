@@ -206,39 +206,31 @@ commit message都要符合这一个规范：
       - **frontend:** *Hanky*
       - **backend:** *xcjthu*
 
-   - ### 直播间添加学生
-      - **url:** */api/classroom/add_student*
-      - **description:** 教师在直播间中添加学生
-      - **input:** `{ }`
-      - **output:** ???
-      - **frontend:** *???*
-      - **backend:** *???*
-
 - ## 学生直播界面管理
    - ### 根据房间的url获取房间的vid
       - **url:** /api/classroom_stu/urlgetvid
       - **description:** 根据url返回房间的vid
-      - **input:**  `{ url : '' }` //注：username为学生姓名
+      - **input:**  `{ url : '' }`
       - **output:** `{ vid : '' }`
-      - **frontend:** Jamgun
-      - **backend:** ？
+      - **frontend:** *Jamgun*
+      - **backend:** *Adil*
 
 - ## 老师直播界面管理
    - ### xlsx添加学生
       - **url:** /api/user/xlsxaddstudents
       - **description:** 前端给后端xlsx，后端返回学生列表
-      - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为xlsx文件
-      - **output:** `['zsh','xcj',...]`
-      - **frontend:** Jamgun
-      - **backend:** ？
+      - **input:**  `{ url : ''，item:''}` *注：item为xlsx文件*
+      - **output:** `['zsh','xcj',...]` *注：返回的是成功加入的学生username*
+      - **frontend:** *Jamgun*
+      - **backend:** *Adil*
 
    - ### 用户名添加学生
       - **url:** /api/user/aaddstudents
       - **description:** 前端给后端用户名，后端返回学生列表
-      - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为学生用户名
-      - **output:** `['zsh','xcj',...]`
-      - **frontend:** Jamgun
-      - **backend:** ？
+      - **input:**  `{ url : ''，item:''}` *注：item为学生用户名*
+      - **output:** `{ status : 'success/error' }`
+      - **frontend:** *Jamgun*
+      - **backend:** *Adil*
 
    - ### 获取某个学生的做题情况
       - **url:** /api/user/getstudentsti  
@@ -275,18 +267,18 @@ commit message都要符合这一个规范：
    - ### 通知后端：老师要开播
       - **url:**/api/user/openliving
       - **description:** 通知后端：老师要开播，后端返回推流地址
-      - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
-      - **output:**`{ streamername : '' }`
-      - **frontend:** Jamgun
-      - **backend:** ？****
+      - **input:** `{ url : '' }`
+      - **output:** `{ streamername : '', status : 'success/error' }`
+      - **frontend:** *Jamgun*
+      - **backend:** *xcjthu*
 
    - ### 通知后端：老师要关播
       - **url:**/api/user/closeliving
       - **description:** 通知后端：老师要关播，后端通知学生端
-      - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
-      - **output:**暂无
-      - **frontend:** Jamgun
-      - **backend:** ？****
+      - **input:**  `{ url : '' }`
+      - **output:** `{ vid : '', status : 'success/error' }`
+      - **frontend:** *Jamgun*
+      - **backend:** *xcjthu*
 
 ---
 ## 数据库表结构
@@ -308,6 +300,7 @@ vid|保利威视推流vid
 teacher|直播间教师username
 title|直播间标题
 thumbnail|直播间缩略图
+mode|直播间私密模式
 password|直播间密码
 url|直播间url
 rtmpUrl|保利威视推流url
@@ -319,6 +312,7 @@ choicequestion|直播间选择题的类对象列表
 codequestion|直播间代码题的类对象列表
 visible|直播间知否可见
 createtime|直播间创建日期
+showtime|直播间开播时间
 
 students|detail
 :---:|:---:

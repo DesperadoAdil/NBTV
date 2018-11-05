@@ -6,6 +6,7 @@ from ..polyv import polyvAPI
 from .Classroom import *
 from ..user.User import usermanager
 from ..models import Classrooms
+import xlrd
 
 
 polyvManager = polyvAPI.ChannelManager()
@@ -135,3 +136,91 @@ def getList():
 		tmpd = {"title": tmp.title, "thumbnail": tmp.thumbnail, "url": tmp.url, "password": tmp.password}
 		ans.append(tmpd)
 	return json.dumps(ans, ensure_ascii = False)
+
+
+#xlsx添加学生
+@classroom.route('/xlsxaddstudents')
+def xlsxaddstudents():
+	ret = []
+	data = request.get_data()
+    print (data)
+    data = json.loads(data)
+
+	url = data['url']
+	item = data['item']
+
+	classroom = classroomManager.search(url)
+	studentlist = json.loads(classroom.studentlist)
+
+	workbook = xlrd.open_workbook(item)
+	sheet_names = workbook.sheet_names()
+	for sheet_name in sheet_names:
+		sheet = workbook.sheet_by_name(sheet_name)
+		rows = sheet.nrows
+		cols = sheet.ncols
+		for i in range(rows):
+			for j in range(cols):
+				user = sheet.cell_value(i, j)
+				if user is None or user == "":
+					continue
+				student = usermanager.search("username", user, "student")
+				if student is None:
+					print ("Xlsx Add Student Error: " + user + " does not exist")
+					continue
+				#学生classroomlist中加入直播间url
+				classroomlist = json.loads(student.classroomlist)
+				classroomlist.append(url)
+				student.classroomlist = json.dumps(classroomlist)
+				db.session.add(student)
+
+				#直播间studentlist中加入学生username
+				studentlist.append(user)
+
+				ret.append(user)
+
+	classroom.studentlist = json.dumps(studentlist)
+	db.session.add(classroom)
+	db.commit()
+
+	print json.dumps(ret)
+	return json.dumps(ret)
+
+
+#username添加学生
+@classroom.route('/aaddstudents')
+def aaddstudents():
+	ret = {}
+	ret["status"] = 'error'
+
+	data = request.get_data()
+    print (data)
+    data = json.loads(data)
+
+	url = data['url']
+	item = data['item']
+
+	student = usermanager.search("username", item, "student")
+	classroom = classroomManager.search(url)
+	if student is None:
+		print ("Add Student Error: " + item + " does not exist")
+		ret['status'] = 'error: no such student'
+	elif classroom is None:
+		print ("Add Student Error: " + url + " does not exist")
+		ret['status'] = 'error: no such classroom'
+	else:
+		#直播间studentlist中加入学生username
+		studentlist = json.loads(classroom.studentlist)
+		studentlist.append(item)
+		classroom.studentlist = json.dumps(studentlist)
+		db.session.add(classroom)
+
+		#学生classroomlist中加入直播间url
+		classroomlist = json.loads(student.classroomlist)
+		classroomlist.append(url)
+		student.classroomlist = json.dumps(classroomlist)
+		db.session.add(student)
+		db.commit()
+		ret['status'] = "success"
+
+	print json.dumps(ret)
+	return json.dumps(ret)
