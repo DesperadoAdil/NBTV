@@ -10,3 +10,4 @@ pymysql
 flask_wtf
 werkzeug
 xlrd
+flask_socketio

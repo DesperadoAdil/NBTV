@@ -1,3 +1,4 @@
+from flask import *
 from .MultiChoiceQuestion import multiChoiceManager
 from .CodeQuestion import codeQuestionManager
 from .PDFfile import pdfManager
@@ -41,10 +42,11 @@ def addCode():
 def addPDF():
     print('add pdf file')
     try:
-        f = request.files['file']
-        username = request.form['username']
-        pdfManager.insert(f, username)
-        return "success"
+        f = request.files.get('file')
+        username = request.form.to_dict()['username']
+        status = pdfManager.insert(f, username)
+        print (status)
+        return status
     except:
         return "error"
 

@@ -218,7 +218,7 @@
           </div>
           <div class="talker">
             <Input class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
-            <Button class="talker-send" type="success">发送</Button>
+            <Button class="talker-send" type="success" @click="submit">发送</Button>
           </div>
         </div>
       </div>
@@ -377,7 +377,7 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
-    // CHAT.message(this.userInfo.username)
+    CHAT.message(this.userInfo.username)
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -399,19 +399,22 @@ export default{
      * 以下为聊天室使用，请勿改动
      */
     chatingRoomInit () {
-      // CHAT.init(this.userInfo.username)
+      CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
+      console.log('submit')
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
       var obj = {
+        type: 'broadcast',
+        url: this.cururl,
         time: time,
         msg: this.msg,
         toUser: this.username,
         fromUser: this.userInfo.username
       }
       this.msg = ''
-      // CHAT.submit(obj)
+      CHAT.submit(obj)
     },
     /**
      * 以上为聊天室使用，请勿改动
@@ -512,6 +515,20 @@ export default{
     },
     addPDF () {
       // send pdf to backend
+      var formData = new FormData()
+      formData.append('username', this.userInfo['username'])
+      formData.append('file', document.querySelector('input[type=file]').files[0])
+      var options = {
+        url: '/api/resource/add_pdf',
+        data: formData,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+         }
+      }
+      axios(options).then((resp) => {
+        console.log('addPDF success')
+      })
     },
     handleReset (name) {
       this.$refs[name].resetFields()
