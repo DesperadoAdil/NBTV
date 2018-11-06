@@ -73,7 +73,7 @@ def getChoice():
     except Exception as err:
         print(err)
         return "error"
-            
+
 
 @resource.route('/add_code', methods = ['POST', 'GET'])
 def addCode():
@@ -91,6 +91,48 @@ def addCode():
         print(err)
         ret["status"] = "error"
     return json.dumps(ret)
+
+
+@resource.route('/delete_code', methods = ['POST', 'GET'])
+def delete_code():
+    print('delete code question')
+    data = request.get_data()
+    print(data)
+    data = json.loads(data)
+    ret = {}
+    ret['status'] = codeQuestionManager.delete(data['uniqueId'])
+    return json.dumps(ret)
+
+@resource.route('/update_code', methods = ['POST', 'GET'])
+def update_code():
+    print('update code question')
+    data = request.get_data()
+    print(data)
+    data = json.loads(data)
+
+    ret = {}
+    ret['status'] = codeQuestionManager.update(data['uniqueId'], data['statement'], data['language'])
+    return json.dumps(ret)
+
+
+@resource.route('/getcodes', methods = ['POST', 'GET'])
+def get_code():
+    print('get a code')
+    data = request.get_data()
+    print(data)
+    data = json.loads(data)
+    ret = []
+
+    try:
+        username = data['username']
+        teacher = usermanager.search("username", username, "teacher")
+        data = teacher.codeQue
+        for item in data:
+            ret.append({"statement": item.statement, "language": item.language, "uniqueId": item.uniqueId})
+        return json.dumps(ret)
+    except Exception as err:
+        print(err)
+        return "error"
 
 @resource.route('/add_pdf', methods = ['POST'])
 def addPDF():
@@ -159,6 +201,8 @@ def get_pdfs():
     return json.dumps(ret)
 
 
+
+
 #Get_selects
 @resource.route('/getselects', methods = ['POST'])
 def get_selects():
@@ -185,3 +229,6 @@ def get_selects():
 
     print (json.dumps(ret))
     return json.dumps(ret)
+
+
+

@@ -6,7 +6,7 @@ class CodeQuestionObj:
 	def __init__(self):
 		pass
 
-	def insert(self, statement, language, username):
+	def insert(self, username, statement, language):
 		if statement == "" or language == "":
 			return "error"
 		uniqueId = str(uuid.uuid4())
