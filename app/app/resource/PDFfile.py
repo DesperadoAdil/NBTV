@@ -15,8 +15,8 @@ class PDF:
 			filename = '/mnt/NBTV/%s/%s' % (username, f.filename)
 			f.save(filename)
 
-			uniqueId = str(uuid.uuid4())
-			pdf = PDFFile(filePath = filename, uniqueId = uniqueId)
+			# uniqueId = str(uuid.uuid4())
+			pdf = PDFFile(filePath = f.filename, owner = username)
 			db.session.add(pdf)
 			db.session.commit()
 
@@ -26,9 +26,9 @@ class PDF:
 			print(err)
 			return "error"
 
-	def delete(self, uid, username, fname):
+	def delete(self, username, fname):
 		try:
-			pdf = PDFFile.query.filter_by(uniqueId = uid).first()
+			pdf = PDFFile.query.filter_by(owner = username, filename = fname).first()
 			if pdf is None:
 				return "error"
 			db.session.delete(pdf)
@@ -37,6 +37,7 @@ class PDF:
 
 			return "success"
 		except Exception as err:
+			print(err)
 			return "error"
 
 

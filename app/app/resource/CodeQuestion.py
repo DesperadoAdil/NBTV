@@ -6,11 +6,11 @@ class CodeQuestionObj:
 	def __init__(self):
 		pass
 
-	def insert(self, statement, language):
+	def insert(self, statement, language, username):
 		if statement == "" or language == "":
 			return "error"
 		uniqueId = str(uuid.uuid4())
-		que = CodeQuestion(uniqueId = uniqueId, statement = statement, language = language, submitRecord = "[]")
+		que = CodeQuestion(owner = username, uniqueId = uniqueId, statement = statement, language = language, submitRecord = "[]")
 		db.session.add(que)
 		db.session.commit()
 

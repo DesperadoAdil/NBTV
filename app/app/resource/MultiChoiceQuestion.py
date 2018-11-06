@@ -6,7 +6,7 @@ class MultiChoiceQuestion:
 	def __init__(self):
 		pass
 
-	def insert(self, statement, optionList, answer):
+	def insert(self, statement, optionList, answer， username):
 		if statement == "":
 			raise ValueError("your statement can not be null");
 		if optionList == "":
@@ -14,7 +14,7 @@ class MultiChoiceQuestion:
 
 		uniqueId = str(uuid.uuid4())
 
-		que = ChoiceQuestion(uniqueId = uniqueId, statement = statement, optionList = json.dumps(optionList, ensure_ascii = False), answer = answer, submitRecord = "[]")
+		que = ChoiceQuestion(owner = username, uniqueId = uniqueId, statement = statement, optionList = json.dumps(optionList, ensure_ascii = False), answer = answer, submitRecord = "[]")
 		db.session.add(que)
 		db.session.commit()
 

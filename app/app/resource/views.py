@@ -2,6 +2,7 @@ from .MultiChoiceQuestion import multiChoiceManager
 from .CodeQuestion import codeQuestionManager
 from .PDFfile import pdfManager
 from . import resource
+from ..user.User import usermanager
 import json
 
 @resource.route('/add_multiple', methods = ['POST', 'GET'])
@@ -12,13 +13,17 @@ def addMultiChoice():
     data = json.loads(data)
     ret = {}
     try:
-        uniqueId = multiChoiceManager.insert(data['statement'], data['optionList'], data['answer'])
+        # data['optionList']是选择题选项的json字符串，还是一个list
+        uniqueId = multiChoiceManager.insert(data['username'], data['statement'], data['optionList'], data['answer'])
+        
         ret["status"] = "success"
         ret["uniqueId"] = uniqueId
     except Exception as err:
         print(err)
         ret["status"] = "error"
     return json.dumps(ret)
+
+
 
 @resource.route('/add_code', methods = ['POST', 'GET'])
 def addCode():
@@ -29,7 +34,7 @@ def addCode():
         print(data)
         data = json.loads(data)
 
-        uniqueId = codeQuestionManager.insert(data['statement'], data['language'])
+        uniqueId = codeQuestionManager.insert(data['username'], data['statement'], data['language'])
         ret["status"] = "success"
         ret["uniqueId"] = uniqueId
     except Exception as err:
@@ -40,13 +45,32 @@ def addCode():
 @resource.route('/add_pdf', methods = ['POST'])
 def addPDF():
     print('add pdf file')
+    ret = {}
     try:
-        f = request.files['file']
+        f = request.files.get['file']
         username = request.form['username']
-        pdfManager.insert(f, username)
-        return "success"
-    except:
-        return "error"
+        ret['status'] = pdfManager.insert(f, username)
+        
+    except Exception as err:
+        print(err)
+        ret['status'] = "error"
+    return json.dumps(ret, ensure_ascii = False)
+
+@resource.route('/delete_pdf', methods = ['POST'])
+def delete_PDF():
+    print('delet a pdf file')
+    ret = {}
+    try:
+        data = request.get_data()
+        print(data)
+        data = json.loads(data)
+        username = data['username']
+        filename = data['title']
+        ret['status'] = pdfManager.delete(username, filename)
+    except Exception as err:
+        print(err)
+        ret['status'] = "error"
+    return json.dumps(ret, ensure_ascii = False)
 
 
 #Get_pdfs
@@ -59,18 +83,26 @@ def get_pdfs():
     data = json.loads(data)
 
     username = data['username']
-    job = data['job']
-    url = data['url']
-    classroom = classroomManager.search(url)
-    if job == 'teacher' and classroom.teacher != username:
-        print ("Get PDF Error: Wrong Teacher")
-        return ret
+    # job = data['job']
+    # url = data['url']
+    # classroom = classroomManager.search(url)
+    # if job == 'teacher' and classroom.teacher != username:
+    #    print ("Get PDF Error: Wrong Teacher")
+    #    ret['status'] 
+    #    return json.dumps(ret)
+    
+    teacher = usermanager.search("username", username, "teacher")
+    if teacher is None:
+        # ret['status'] = "error"
+        # return json.dumps(ret)
+        return "error"
 
-    data = json.loads(classroom.filelist)
+
+    data = teacher.pdfs
     for item in data:
         dic = {}
-        dic['title'] = item
-        dic['url'] = "/pdf/" + username + "/" + item
+        dic['title'] = item.filename
+        dic['url'] = "/pdf/" + username + "/" + item.filename
         ret.append(dic)
 
     print (json.dumps(ret))
