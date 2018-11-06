@@ -9,3 +9,4 @@ aliyun_python_sdk_dysmsapi==1.0.0
 pymysql
 flask_wtf
 werkzeug
+xlrd
