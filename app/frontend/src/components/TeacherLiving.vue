@@ -418,13 +418,24 @@ export default{
      */
     subxlsx () {
       console.log('dhasjkhda')
-      const data = this.curuser
+      /*const data = this.curuser
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
       data['url'] = this.cururl
       data['item'] = document.querySelector('input[type=file]').files[0]
-      console.log(data['item'])
-      axios.post('/api/classroom/xlsxaddstudents', data).then((resp) => {
+      console.log(data['item'])*/
+      var formData = new FormData()
+      formData.append('url', this.cururl)
+      formData.append('item', document.querySelector('input[type=file]').files[0])
+      var options = {
+        url: '/api/classroom/xlsxaddstudents',
+        data: formData,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+         }
+      }
+      axios(options).then((resp) => {
         this.studentitems = resp.studentitems
       })
     },
@@ -453,7 +464,7 @@ export default{
           data['item'] = this.astu
           console.log('dhasjkhda')
           console.log(this.astu)
-          axios.post('/api/user/aaddstudents', data).then((resp) => {
+          axios.post('/api/classroom/aaddstudents', data).then((resp) => {
             this.studentitems = resp.studentitems
           })
         }
