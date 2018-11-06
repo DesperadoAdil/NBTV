@@ -7,7 +7,9 @@ from .Classroom import *
 from ..user.User import usermanager
 from ..models import Classrooms
 import xlrd
-
+from os.path import join
+from tempfile import mkdtemp
+from shutil import rmtree
 
 
 polyvManager = polyvAPI.ChannelManager()
@@ -144,17 +146,20 @@ def getList():
 @classroom.route('/xlsxaddstudents', methods = ['POST'])
 def xlsxaddstudents():
 	ret = []
-	data = request.get_data()
+	data = request.form.to_dict()
 	print (data)
-	data = json.loads(data)
 
 	url = data['url']
-	item = data['item']
+	item = request.files.get('item')
+	tempdir = mkdtemp()
+	filename = item.filename
+	filepath = join(tempdir, filename)
+	item.save(filepath)
 
 	classroom = classroomManager.search(url)
 	studentlist = json.loads(classroom.studentlist)
 
-	workbook = xlrd.open_workbook(item)
+	workbook = xlrd.open_workbook(filepath)
 	sheet_names = workbook.sheet_names()
 	for sheet_name in sheet_names:
 		sheet = workbook.sheet_by_name(sheet_name)
@@ -165,10 +170,14 @@ def xlsxaddstudents():
 				user = sheet.cell_value(i, j)
 				if user is None or user == "":
 					continue
+				if user in studentlist:
+					print ("Xlsx Add Student Error: " + user + " already in classroom")
+					continue
 				student = usermanager.search("username", user, "student")
 				if student is None:
 					print ("Xlsx Add Student Error: " + user + " does not exist")
 					continue
+
 				#学生classroomlist中加入直播间url
 				classroomlist = json.loads(student.classroomlist)
 				classroomlist.append(url)
@@ -182,7 +191,8 @@ def xlsxaddstudents():
 
 	classroom.studentlist = json.dumps(studentlist)
 	db.session.add(classroom)
-	db.commit()
+	db.session.commit()
+	rmtree(tempdir)
 
 	print (json.dumps(ret))
 	return json.dumps(ret)

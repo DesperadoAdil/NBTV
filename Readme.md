@@ -20,7 +20,7 @@ commit message都要符合这一个规范：
 将commit-msg文件拷贝到 .git/hooks/commit-msg即可
 
 ---
-## API汇总
+# API汇总
 - ## 用户信息管理
    - ### 登录
       - **url:** */api/user/login*  
@@ -299,21 +299,21 @@ commit message都要符合这一个规范：
 ### 加入聊天室
 初始化socket，链接到url
 
-	io.connect(io.connect(url, {'force new connection': true}) //此处需要后端给定url	
+	io.connect(io.connect(url, {'force new connection': true}) //此处需要后端给定url
 链接后端服务器，会调用
-	
+
 	socket.on('open', 随意)	//此处需要后端emit消息
 用来判断是否成功连接聊天室，然后调用
 
 	socket.emit('addUser', username)	//此处需要后端接收消息
-给后端发送消息，用来将当前用户加入聊天室	
+给后端发送消息，用来将当前用户加入聊天室
 ###发送消息
 	socket.emit('sendMsg', obj)
 ###接收消息
 	socket.on('to' + username, obj)
 
-## 数据库表结构
-### NBTV
+# 数据库表结构
+## NBTV
 数据表|功能|
 :---:|:---:
 classrooms|存储教室信息
@@ -324,7 +324,7 @@ choicequestion|存储选择题
 codequestion|存储代码题
 messages|存储短信验证码
 
-### 数据表结构
+## 数据表结构
 classrooms|detail
 :---:|:---:
 vid|保利威视推流vid
