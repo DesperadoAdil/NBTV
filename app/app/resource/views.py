@@ -23,7 +23,57 @@ def addMultiChoice():
         ret["status"] = "error"
     return json.dumps(ret)
 
+@resource.route('/delete_multiple', methods = ['POST', "GET"])
+def deleteMultiple():
+    print('delete choice question')
+    data = resource.get_data()
+    print(data)
+    data = json.loads(data)
+    ret = {}
 
+    try:
+        ret['status'] = multiChoiceManager.delete(data['uniqueId'])
+    except Exception as err:
+        print(err)
+        ret['status'] = "error"
+    return json.dumps(ret)
+
+
+@resource.route('/update_multiple', methods = ['POST', 'GET'])
+def updateMultiple():
+    print('update choice question')
+    data = resource.get_data()
+    print(data)
+    data = json.loads(data)
+    ret = {}
+
+    try:
+        ret['status'] = multiChoiceManager.update(data['uniqueId'], data['statement'], data['optionList'], data['answer'])
+    except Exception as err:
+        print(err)
+        ret['status'] = "error"
+    return json.dumps(ret)
+
+
+@resource.route('/getmultiples')
+def getChoice():
+    print('get a  choice question')
+    data = resource.get_data()
+    print(data)
+    data = json.loads(data)
+    ret = []
+
+    try:
+        username = data['username']
+        teacher = usermanager.search("username", username, "teacher")
+        data = teacher.choiceQue
+        for item in data:
+            ret.append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
+        return json.dumps(ret)
+    except Exception as err:
+        print(err)
+        return "error"
+            
 
 @resource.route('/add_code', methods = ['POST', 'GET'])
 def addCode():

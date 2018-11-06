@@ -6,7 +6,7 @@ class MultiChoiceQuestion:
 	def __init__(self):
 		pass
 
-	def insert(self, statement, optionList, answer， username):
+	def insert(self, username, statement, optionList, answer):
 		if statement == "":
 			raise ValueError("your statement can not be null");
 		if optionList == "":
