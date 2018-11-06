@@ -99,7 +99,7 @@
     data['username'] = this.userInfo['username'];
     data['job'] = this.userInfo['job'];
     data['url'] = this.cururl;
-    axios.post('/api/user/urlgetvid', data).then((resp) => {
+    axios.post('/api/classroom_stu/urlgetvid', data).then((resp) => {
         this.curvid=resp.data.vid ;
     });
     const s = document.createElement('script');
