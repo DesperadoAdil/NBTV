@@ -8,6 +8,10 @@ from .models import *
 import json, os
 import random
 
+import io
+import sys
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf-8')
+
 #Display_pdf
 @app.route('/display', methods = ['GET', 'POST'])
 def dispolay():
