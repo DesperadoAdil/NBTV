@@ -148,20 +148,36 @@ export default {
       })
     },
     addLiving () {
+        var formData = new FormData()
+        formData.append('username', this.$cookies.get('user').username)
+        formData.append('password', this.$cookies.get('user').password)
+        formData.append('job', this.$cookies.get('user').job)
+        formData.append('img', document.querySelector('input[type=file]').files[0])
+          var options = {
+          url: '/api/classroom/add_class',
+          data: formData,
+          method: 'post',
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        axios(options).then((resp) => {
+          this.getMyLivingList()
+      })
       console.log(document.querySelector('input[type=file]').files[0])
       this.addModal = false
-      this.newLiving['username'] = this.$cookies.get('user').username
-      this.newLiving['password'] = this.$cookies.get('user').password
-      this.newLiving['job'] = this.$cookies.get('user').job
-      console.log("1231")
-      this.newLiving['img']=document.querySelector('input[type=file]').files[0]
-      console.log("1231")
+//      this.newLiving['username'] = this.$cookies.get('user').username
+//      this.newLiving['password'] = this.$cookies.get('user').password
+//      this.newLiving['job'] = this.$cookies.get('user').job
+//      console.log("1231")
+//      this.newLiving['img']=document.querySelector('input[type=file]').files[0]
+//      console.log("1231")
       console.log(document.querySelector('input[type=file]').files[0])
-      console.log("4564")
-      const data = this.newLiving
-      axios.post('/api/classroom/add_class', data).then((resp) => {
-        this.getMyLivingList()
-      })
+//      console.log("4564")
+//      const data = this.newLiving
+//      axios.post('/api/classroom/add_class', data).then((resp) => {
+//        this.getMyLivingList()
+//      })
     },
     updateLiving (index) {
       this.myLivingList[index]['username'] = this.$cookies.get('user').username
