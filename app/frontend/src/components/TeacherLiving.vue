@@ -11,7 +11,7 @@
             <Icon type="ios-paper" />
             发布
           </template>
-          <MenuItem @click.native="modal_pdflist = true">PDF</MenuItem>
+          <MenuItem @click.native="showPdfList()">PDF</MenuItem>
           <MenuItem @click.native="modal_multilist = true">Choice</MenuItem>
           <MenuItem @click.native="modal_codelist = true">Code</MenuItem>
         </Submenu>
@@ -75,9 +75,13 @@
       <Card>
         <Split class="demo-split" v-model="split_pdf">
           <div slot="left"  class="demo-split-pane">
-            <Table height="400" border ref="selection" :columns="columns4" :data="data1"></Table>
+            <p>All</p>
+            <br>
+            <Table height="400" border :columns="pdfAll" :data="pdfAllList"></Table>
           </div>
           <div slot="right"  class="demo-split-pane">
+            <p>This Classroom</p>
+            <br>
             Right Pane
           </div>
         </Split>
@@ -331,6 +335,18 @@ export default{
       // pdf, multiple and codes
       split_pdf: 0.5,
       modal_pdflist: false,
+      pdfListInput: {username: ''},
+      pdfAll: [
+        {
+          title: 'Title',
+          key: 'title'
+        },
+        {
+          title: 'Url',
+          key: 'url'
+        }
+      ],
+      pdfAllList: [],
       modal_multilist: false,
       modal_codelist: false,
       testsourcecode: '#include<iostream>\n using namespace std;\n int main(){\n int c;\n cout<<c++<<endl;\n return 0}',
@@ -490,7 +506,87 @@ export default{
       return parseFloat(this.recorder.volume)
     }
   },
+
   methods: {
+    addPDF () {
+      // send pdf to backend
+      var formData = new FormData()
+      formData.append('username', this.userInfo['username'])
+      formData.append('file', document.querySelector('input[type=file]').files[0])
+      var options = {
+        url: '/api/resource/add_pdf',
+        data: formData,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      axios(options).then((resp) => {
+        console.log('addPDF success')
+      })
+    },
+    handleReset (name) {
+      this.$refs[name].resetFields()
+    },
+    handleAdd () {
+      this.index++
+      this.multi_options.push({
+        value: '',
+        index: this.index,
+        status: 1
+      })
+    },
+    handleRemove (index) {
+      this.multi_options[index].status = 0
+    },
+    // receive pdf list
+    showPdfList () {
+      this.modal_pdflist = true
+      this.pdfListInput.username = this.userInfo.username
+      axios.post('/api/resourse/getpdfs', this.pdfListInput).then((resp) => {
+        // resp.data 即是那个列表
+        this.pdfAllList = resp.data
+      })
+    },
+    addMulti () {
+      // send sub_multi should be set by now
+      this.sub_multi.url = this.cururl
+      // 将multi_option这个列表改成可发送的数组
+      for (var i = 0; i < this.index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
+      // post
+      axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 维护选择题列表,此处尚无
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('添加选择题失败')
+        }
+      })
+    },
+    addCode () {
+      // sub_code should be set by now
+      // post
+      axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 应当要维护一下代码题的列表,此处未添加
+          window.location.reload()
+        // 如果失败
+        } else {
+          this.$Message.error('添加代码题失败')
+        }
+      })
+    },
+    // Yuxuan's Methods Stops Here
+
     /**
      * 以下为聊天室使用，请勿改动
      */
@@ -625,46 +721,6 @@ export default{
       })
       this.modal3 = true
     },
-
-    teatext () {
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      axios.post('/api/resourse/getpdfs', data).then((resp) => {
-        this.pdfitems = resp.pdfitems
-      }
-      )
-      this.modal1 = true
-    },
-    addPDF () {
-      // send pdf to backend
-      var formData = new FormData()
-      formData.append('username', this.userInfo['username'])
-      formData.append('file', document.querySelector('input[type=file]').files[0])
-      var options = {
-        url: '/api/resource/add_pdf',
-        data: formData,
-        method: 'post',
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-      axios(options).then((resp) => {
-        console.log('addPDF success')
-      })
-    },
-    handleReset (name) {
-      this.$refs[name].resetFields()
-    },
-    handleAdd () {
-      this.index++
-      this.multi_options.push({
-        value: '',
-        index: this.index,
-        status: 1
-      })
-    },
     teaselect () {
       const data = this.curuser
       data['username'] = this.userInfo['username']
@@ -672,52 +728,19 @@ export default{
       data['url'] = this.cururl
       axios.post('/api/resourse/getselects', data).then((resp) => {
         this.selectitems = resp.selectitems
-      }
-      )
+      })
       this.modal2 = true
     },
-    handleRemove (index) {
-      this.multi_options[index].status = 0
-    },
-    addMulti () {
-      // send sub_multi should be set by now
-      this.sub_multi.url = this.cururl
-      // 将multi_option这个列表改成可发送的数组
-      for (var i = 0; i < this.index; i++) {
-        if (this.multi_options[i].status === 1) {
-          this.sub_multi.optionList.push(this.multi_options[i].value)
-        }
-      }
-      // post
-      axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
-        this.$Message.success(resp.data.status)
-        // 如果成功
-        if (resp.data.status === 'success') {
-          // 维护选择题列表,此处尚无
-          window.location.reload()
-          // 如果失败
-        } else {
-          this.$Message.error('添加选择题失败')
-        }
+    teatext () {
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      axios.post('/api/resourse/getpdfs', data).then((resp) => {
+        this.pdfitems = resp.pdfitems
       })
+      this.modal1 = true
     },
-    addCode () {
-      // sub_code should be set by now
-      // post
-      axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
-        this.$Message.success(resp.data.status)
-        // 如果成功
-        if (resp.data.status === 'success') {
-          // 应当要维护一下代码题的列表,此处未添加
-          window.location.reload()
-        // 如果失败
-        } else {
-          this.$Message.error('添加代码题失败')
-        }
-      })
-    },
-    // Yuxuan's Methods Stops Here
-
     showpdf: function (ipdf) {
       this.$Modal.confirm({
         title: '提示',
@@ -824,11 +847,9 @@ export default{
             data['job'] = this.userInfo['job']
             data['url'] = this.cururl
             axios.post('/api/classroom/openliving', data).then((resp) => {
-
               this.streamername = resp.data.streamername
               console.log(resp.data.streamername)
               console.log(this.streamername)
-
             })
             setSWFIsReady()
             this.streamer000 = document.getElementById('rtmp-streamer1')
@@ -1110,7 +1131,7 @@ export default{
     text-decoration: none;
   }
    .demo-split{
-     height: 400px;
+     height: 430px;
      border: 1px solid #dcdee2;
    }
   .demo-split-pane{
