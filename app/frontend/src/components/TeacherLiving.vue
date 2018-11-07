@@ -242,7 +242,7 @@
                 <div class="talk-content">
                   <div class="talk-self-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
-                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(index)"></audio>
+                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(msgObj)"></audio>
                 </div>
               </div>
               <div v-else></div>
@@ -251,7 +251,7 @@
                 <div class="talk-content">
                   <div class="talk-user-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
-                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(index)"></audio>
+                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(msgObj)"></audio>
                 </div>
               </div>
               <div v-else></div>
@@ -518,8 +518,8 @@ export default{
     volume () {
       return parseFloat(this.recorder.volume)
     },
-    audioSource (index) {
-      let url = CHAT.msgArr[index].msg.url
+    audioSource (msgObj) {
+      let url = msgObj.msg.url
       return url
     }
 
