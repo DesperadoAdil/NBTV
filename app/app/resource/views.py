@@ -141,7 +141,7 @@ def addPDF():
     ret = {}
     try:
         f = request.files.get('file')
-        username = request.form['username']
+        username = request.form.to_dict()['username']
         ret['status'] = pdfManager.insert(f, username)
         
     except Exception as err:
