@@ -50,7 +50,7 @@
           </template>
           <MenuItem name="4-1" class="menuitentea" >
             <a href="javascript:;" class="upf">xlsx添加学生
-              <input type="file" name="fileinput" id="fileinput">
+              <input type="file" name="xlsxinput" id="xlsxinput">
             </a>
             <Button type="primary" @click="subxlsx">submit</Button>
 
@@ -68,7 +68,7 @@
     <!--PDFlist-->
     <Modal
       v-model="modal_pdflist"
-      @on-ok="addPDF()"
+      @on-ok="SOMETHING()"
       @on-cancel="modal_pdflist = false"
       width="720"
     >
@@ -77,7 +77,7 @@
           <div slot="left"  class="demo-split-pane">
             <p>All</p>
             <br>
-            <Table height="400" border :columns="pdfAll" :data="pdfAllList"></Table>
+            <Table height="375" border :columns="pdfAll" :data="pdfAllList"></Table>
           </div>
           <div slot="right"  class="demo-split-pane">
             <p>This Classroom</p>
@@ -94,9 +94,9 @@
         <span>上传课件</span>
       </p>
       <a href="javascript:;" class="upf">pdf upload
-        <input type="file" name="fileinput" id="fileinput">
+        <input type="file" name="pdfinput" id="pdfinput">
       </a>
-      <Button type="primary" @click="addPDF">submit</Button>
+      <Button type="primary" @click="addPDF()">submit</Button>
     </Modal>
 
     <!--设置选择题-->
@@ -512,7 +512,8 @@ export default{
       // send pdf to backend
       var formData = new FormData()
       formData.append('username', this.userInfo['username'])
-      formData.append('file', document.querySelector('input[type=file]').files[0])
+      formData.append('file', document.querySelector('input[id=pdfinput]').files[0])
+      console.log(document.querySelector('input[id=pdfinput]').files[0])
       var options = {
         url: '/api/resource/add_pdf',
         data: formData,
@@ -643,7 +644,7 @@ export default{
       console.log(data['item']) */
       var formData = new FormData()
       formData.append('url', this.cururl)
-      formData.append('item', document.querySelector('input[type=file]').files[0])
+      formData.append('item', document.querySelector('input[id=xlsxinput]').files[0])
       var options = {
         url: '/api/classroom/xlsxaddstudents',
         data: formData,
