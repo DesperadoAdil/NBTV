@@ -3,7 +3,15 @@ const CHAT = {
   msgObj: document.getElementsByClassName('body-wrapper')[0],
   username: null,
   socket: null,
-  msgArr: [],
+  msgArr: [{
+    type: 'broadcast',
+    msgType: 'audio',
+    url: '',
+    time: '',
+    msg: '',
+    toUser: 'all',
+    fromUser: 'system'
+  }],
   logout: function () {
     this.socket.disconnect()
   },

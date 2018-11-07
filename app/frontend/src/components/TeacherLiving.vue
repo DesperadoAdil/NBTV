@@ -242,7 +242,7 @@
                 <div class="talk-content">
                   <div class="talk-self-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
-                  <audio v-if="msgObj.msgType === 'audio'" :src="URL.createObjectURL(msgObj.msg.blob)"></audio>
+                  <audio v-if="msgObj.msgType === 'audio'" :src="getUrl(msgObj.msg)"></audio>
                 </div>
               </div>
               <div v-else></div>
@@ -251,7 +251,7 @@
                 <div class="talk-content">
                   <div class="talk-user-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
-                  <audio v-if="msgObj.msgType === 'audio'" :src="URL.createObjectURL(msgObj.msg.blob)"></audio>
+                  <audio v-if="msgObj.msgType === 'audio'" :src="getUrl(msgObj.msg)"></audio>
                 </div>
               </div>
               <div v-else></div>
@@ -294,7 +294,7 @@ export default{
   props: {
     micFailed: { type: Function },
     startRecord: { type: Function },
-    stopRecord: { type: Function },
+    stopRecord: { type: Function }
   },
   data () {
     return {
@@ -485,7 +485,7 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
-    CHAT.message(this.userInfo.username)
+    // CHAT.message(this.userInfo.username)
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -493,11 +493,11 @@ export default{
   created () {
     this.cururl = this.$route.params.url
     console.log(this.cururl)
-    this.showUserInfo()
+    // this.showUserInfo()
     /**
      * 以下为聊天室使用，请勿改动
      */
-    this.chatingRoomInit()
+    // this.chatingRoomInit()
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -517,10 +517,6 @@ export default{
     },
     volume () {
       return parseFloat(this.recorder.volume)
-    },
-    audioSource (msgObj) {
-      let url = msgObj.msg.url
-      return url
     }
   },
 
@@ -610,6 +606,11 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
+    getUrl (obj) {
+      var b = []
+      b.push(obj.blob)
+      return URL.createObjectURL(new Blob(b, {type: "application/zip"}))
+    },
     chatingRoomInit () {
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
