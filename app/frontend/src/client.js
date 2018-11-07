@@ -51,12 +51,13 @@ const CHAT = {
     })
   },
   init: function (username, url) {
-    this.socket = io.connect(location.protocol+'//'+document.domain+':'+location.port, {'username': username})
+    this.socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port, {'username': username})
     this.socket.on('open', function () {
       console.log('已连接')
     })
     console.log(username, url)
-    this.socket.emit('join', {'username': username, 'url':url})
+    this.socket.emit('join', {'username': username, 'url': url})
+    return this.socket
   }
 }
 export default CHAT
