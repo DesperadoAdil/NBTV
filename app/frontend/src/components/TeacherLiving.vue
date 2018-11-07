@@ -1,13 +1,12 @@
 <template>
   <div class="tealivingmain">
-
     <div  class="cardtea">
-      <Menu name="0" style="width: 100%">
+      <!-- -----------侧边栏----------------- -->
+      <Menu name="sidemenu" style="width: 100%">
 
         <!-- 发布 -->
         <Submenu name="post" class="menuitentea">
-          <template slot="title" >
-            <Icon type="ios-paper" />
+          <template slot="title" ><Icon type="ios-paper" />
             发布
           </template>
           <MenuItem @click.native="showPdfList()">PDF</MenuItem>
@@ -17,9 +16,8 @@
         <!-- 发布 -->
 
         <!-- 添加 -->
-        <Submenu name="1" class="menuitentea">
-          <template slot="title" >
-            <Icon type="ios-paper" />
+        <Submenu name="add" class="menuitentea">
+          <template slot="title" ><Icon type="ios-paper" />
             添加
           </template>
           <MenuItem @click.native="modal_pdf = true">PDF</MenuItem>
@@ -28,37 +26,37 @@
         </Submenu>
         <!-- 添加 -->
 
-        <!-- 使用教学资源 -->
-        <Submenu name="2" class="menuitentea">
-          <template slot="title">
-            <Icon type="ios-people" />
+        <!-- 使用 -->
+        <Submenu name="cancel" class="menuitentea">
+          <template slot="title"><Icon type="ios-people" />
             使用
           </template>
-          <MenuItem name="2-2" class="menuitentea" @click.native="closetext">取消使用</MenuItem>
+          <MenuItem @click.native="closetext()">取消使用</MenuItem>
         </Submenu>
-        <!-- 学生做题情况 -->
-        <Submenu name="3" class="menuitentea"  >
-          <template slot="title">
-            <Icon type="ios-stats" />
-            回馈
-          </template>
-          <MenuItem name="3-1" class="menuitentea" v-for="item in studentitems" @click.native="showstudentti(item)">{{item}}</MenuItem>
-        </Submenu>
-        <Submenu name="4" class="menuitentea"  >
-          <template slot="title">
-            <Icon type="ios-stats" />
+        <!-- 使用 -->
+
+        <!-- 学生 -->
+        <Submenu name="student" class="menuitentea"  >
+          <template slot="title"><Icon type="ios-stats" />
             学生
           </template>
-          <MenuItem name="4-1" class="menuitentea" >
-            <a href="javascript:;" class="upf">xlsx添加学生
+          <MenuItem @click.native="modal_xlsx = true">xlsx文档添加</MenuItem>
+          <MenuItem>
+            <a href="javascript:;" class="upf">
+              添加xlsx
               <input type="file" name="xlsxinput" id="xlsxinput">
             </a>
-            <Button type="primary" @click="subxlsx">submit</Button>
-
           </MenuItem>
-          <MenuItem name="4-2" class="menuitentea" @click.native="addstua">用户名添加学生</MenuItem>
+          <MenuItem>
+            <Button @click="subxlsx">submit</Button>
+          </MenuItem>
+          <MenuItem @click.native="addstua">用户名添加学生</MenuItem>
         </Submenu>
+        <!-- 学生 -->
       </Menu>
+      <!-- -----------侧边栏----------------- -->
+
+      <!-- 底部按钮：开播、关播、关麦 -->
       <Button class="btnopen" type="primary"  v-bind:icon="openclose"  @click="teaopenclose()">
         <span class="menuitentea">{{this.opentext}}</span>
       </Button>
@@ -66,12 +64,11 @@
       <Button type="primary" shape="circle" v-bind:icon="jinshipin" @click="tojinshipin()"></Button>
     </div>
 
+    <!-------------Modal of the menus----------------->
     <!--PDFlist-->
     <Modal
-      v-model="modal_pdflist"
-      @on-ok="modal_pdflist = false"
-      @on-cancel="modal_pdflist = false"
-      width="900"
+      v-model="modal_pdflist" width="900"
+      @on-ok="modal_pdflist = false" @on-cancel="modal_pdflist = false"
     >
       <Card>
         <Split class="demo-split" v-model="split_pdf">
@@ -140,10 +137,14 @@
       <p slot="header" style="font-size: 20px">
         <span>上传课件</span>
       </p>
-      <a href="javascript:;" class="upf">pdf upload
-        <input type="file" name="pdfinput" id="pdfinput">
-      </a>
-      <Button type="primary" @click="addPDF()">submit</Button>
+      <FormItem>
+        <a href="javascript:;" class="upf">pdf upload
+          <input type="file" name="pdfinput" id="pdfinput">
+        </a>
+      </FormItem>
+      <FormItem>
+        <Button type="primary" @click="addPDF()">submit</Button>
+      </FormItem>
     </Modal>
 
     <!--设置选择题-->
@@ -153,29 +154,30 @@
       </p>
       <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
         <FormItem label="Statement">
-          <Input v-model="sub_multi.statement"></Input>
+          <Input type="textarea" v-model="sub_multi.statement" placeholder="Enter your Description"></Input>
         </FormItem>
-        <!-- 以下为可以实现选项的动态添加删除的代码  -->
+        <!-- 以下为选项的动态添加删除  -->
         <FormItem
           v-for="(item, index) in multi_options"
           v-if="item.status"
           :key="index">
           <Row>
             <Col span="18">
-              <Input type="text" placeholder="Enter Your Choice"></Input>
+              <Input type="text" placeholder="Enter Your Choice" v-model="multi_options[index].value"></Input>
             </Col>
             <Col span="4" offset="1">
-              <Button @click="handleRemove(index)">Delete</Button>
+              <Button @click="multi_delChoice(index)">Delete</Button>
             </Col>
           </Row>
         </FormItem>
         <FormItem>
           <Row>
             <Col span="12">
-              <Button type="dashed" long @click="handleAdd" icon="md-add">Add a Choice</Button>
+              <Button type="dashed" long @click="multi_addChoice()" icon="md-add">Add Choice</Button>
             </Col>
           </Row>
         </FormItem>
+        <!-- 答案设置  -->
         <FormItem label="The Answer">
           <Input v-model="sub_multi.answer" placeholder="a number"></Input>
         </FormItem>
@@ -187,7 +189,7 @@
       <p slot="header" style="font-size: 20px">
         <span>设置编程题</span>
       </p>
-      <Form>
+      <Form label-position="top">
         <FormItem label="Text">
           <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
           <Input v-model="sub_code.statement"
@@ -204,21 +206,17 @@
             <Option>Vue.js</Option>
           </Select>
         </FormItem>
+        <FormItem label="Example Code">
+          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
+          <template>
+            <!-------------输入框的代码高亮还没好，现在仅能静态高亮------------>
+            <prism-editor :code="sub_code.example" language="cpp"></prism-editor>
+          </template>
+        </FormItem>
       </Form>
     </Modal>
 
-
-    <Modal   v-model="modal3"    @on-ok=""    @on-cancel="">
-      <p slot="header" style="font-size: 20px">
-        <span>{{curstu}}的做题情况如下：</span>
-      </p>
-      <pre v-highlightjs="testsourcecode"><code class="cpp"></code></pre>
-      <!--
-      <Table stripe border :columns="columns1" :data="curti" ref="table"></Table>
-      <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
-      -->
-    </Modal>
-
+    <!---------main living 部分------------->
     <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
@@ -232,12 +230,15 @@
       </div>
     </div>
 
+    <!---------main pdf 部分------------->
     <div id="mainpdfcard" class="cardtealivingpdf" :style="{display:mainpdfcarddisplay?'block':'none'}">
       <iframe id="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
 
+    <!---------main 选择题 部分 在主界面显示选择题------------->
     <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
       <p class="selecttitle00">{{curtitle}}</p>
+      <!---------TODO: 不能只有四个选项------------->
       <RadioGroup class="radiotea" v-model="ionselect" vertical>
         <Radio v-bind:label="curans[0]" style="font-size: 15px">
           <span>A、{{curans[0]}}</span>
@@ -314,8 +315,8 @@
         </div>
       </div>
     </Card>
-
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
+
   </div>
 </template>
 
@@ -326,6 +327,7 @@ import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 import CHAT from '../client'
 import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
+import PrismEditor from 'vue-prism-editor'
 
 export default{
   name: 'load',
@@ -362,7 +364,10 @@ export default{
       /**
        * 以上为聊天室使用，请勿改动
        */
+
+      // something to do with add student
       astu: '',
+      // stream stuff
       jinmai: 'ios-mic',
       jinshipin: 'ios-eye',
       isjinmai: false,
@@ -373,21 +378,10 @@ export default{
       streamer: '',
       streamername: '7181857ac220181025144543640',
 
-
-
-
-
-
-
-
-
-
-
-
       // pdf, multiple and codes
+      // pdf parameter
       split_pdf: 0.5,
       modal_pdflist: false,
-      pdfListInput: {username: ''},
       // framework to show pdf all
       pdfAll: [{title: 'Title', key: 'title'}],
       pdfThis: [{title: 'Title', key: 'title'},
@@ -399,42 +393,26 @@ export default{
           render: (h, params) => {
             return h('div', [
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
                 on: {
-                  click: () => {
-                    this.usePdf(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.usePdf(params.index) }
                 }
               }, 'Use'),
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
                 on: {
-                  click: () => {
-                    this.show(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.show(params.index) }
                 }
               }, 'View'),
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
+                props: {type: 'text', size: 'small'},
                 on: {
-                  click: () => {
-                    this.remove(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.remove(params.index) }
                 }
               }, 'Del')])
           }
@@ -449,7 +427,8 @@ export default{
           url: '/static/pdf/1-1.pdf'
         }],
       pdfAllList: [{title: 'Slide01', url: 'hide/slide01'}],
-      // multi
+      // MULTI
+      // MULTIPLE CHOICE PARAMETER
       split_multi: 0.5,
       modal_multilist: false,
       // framework to show multi
@@ -463,42 +442,26 @@ export default{
           render: (h, params) => {
             return h('div', [
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
                 on: {
-                  click: () => {
-                    this.useMulti(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.useMulti(params.index) }
                 }
               }, 'Use'),
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
                 on: {
-                  click: () => {
-                    this.show(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.show(params.index) }
                 }
               }, 'View'),
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
+                props: {type: 'text', size: 'small'},
                 on: {
-                  click: () => {
-                    this.remove(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.remove(params.index) }
                 }
               }, 'Del')])
           }
@@ -506,12 +469,12 @@ export default{
       multiAllList: [
         {
           title: 'choice 01',
-          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
+          ans: ['something', 'somewhere', 'somehow', 'somewhat'],
           answer: 'A'
         },
         {
           title: 'choice 02',
-          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
+          ans: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
           answer: 'A'
         }
       ],
@@ -520,9 +483,11 @@ export default{
         ans: ['something', 'somewhere', 'somehow', 'somewhat'],
         answer: 'A'
       }],
-      // code
+      // CODE
+      // CODE PARAMETER
       split_code: 0.5,
       modal_codelist: false,
+      // FRAMEWORK TO SHOW CODE LIST
       codeAll: [{title: 'Title', key: 'title'}],
       codeThis: [{title: 'Title', key: 'title'}],
       codeAllList: [
@@ -536,9 +501,11 @@ export default{
       codeThisList: [{
         title: 'B-Tree'
       }],
-      // framework
-      testsourcecode: '#include<iostream>\n using namespace std;\n int main(){\n int c;\n cout<<c++<<endl;\n return 0}',
+
+      // ADD PDF/MULTI/CODE MODALS
+      // PDF
       modal_pdf: false,
+      // MULTI
       modal_multi: false,
       multi_options: [
         {
@@ -546,7 +513,7 @@ export default{
           index: 1,
           status: 1
         }
-      ],
+      ], // INIT AS SO AND DON'T CHANGE IT
       multi_index: 1,
       sub_multi: {
         statement: '',
@@ -554,24 +521,22 @@ export default{
         answer: '',
         url: '教室url'
       },
-      answer1: '',
-      answer2: '',
-      answer3: '',
-      answer4: '',
+      // CODE
       modal_code: false,
       sub_code: {
         statement: '',
-        language: '' // language 应当是个多选框
+        language: '', // language 是个多选框
+        example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
       },
-      // Shihang
-      modal3: false,
-      modal2: false,
-      modal1: false,
+
+      // Shihang'S PARAMETER
       displayPdfurl: '',
       littlelivingcarddisplay: false,
       mainselectcarddisplay: false,
       mainpdfcarddisplay: false,
       mainlivingcarddisplay: true,
+
+      // COMMON INFO
       userInfo: {
         username: '',
         password: '',
@@ -585,40 +550,19 @@ export default{
         url: '',
         item: ''
       },
+      // STREAM PARAMETERS
       curstream: '',
       vid: '248980',
       cururl: '',
       curvideo: true,
-      theme1: 'light',
       toopen: true,
       openclose: 'ios-videocam-outline',
       opentext: '开播',
-      // 题目数据
-      examOptions: {
-        Description: '',
-        OptionA: '',
-        OptionB: '',
-        OptionC: '',
-        OptionD: ''
-      },
-      columns1: [
-        {
-          title: '题目',
-          key: 'title'
-        },
-        {
-          title: '答案',
-          key: 'ans'
-        }
-      ],
+
+      // SHIHANG'S STUFF
       curstu: 'zsh',
+      // SEEM TO BE ABLE TO SHOW STUDENT CODE, SAVE FOR NOW
       curti: [
-        {
-          title: '1',
-          type: 'select',
-          ans: 'A',
-          standardans: ''
-        },
         {
           title: '4',
           type: 'code',
@@ -631,19 +575,6 @@ export default{
       curtitle: 'xjbx1',
       curans: ['1', '2', '3', '4'],
       curanswer: 'A',
-      selectitems: [
-        {
-          title: 'choice 01',
-          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
-          answer: 'A'
-        },
-        {
-          title: 'choice 02',
-          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
-          answer: 'A'
-        }
-      ],
-      pdfitems: []
     }
   },
   mounted () {
@@ -684,8 +615,13 @@ export default{
       return parseFloat(this.recorder.volume)
     }
   },
-
+  components: {
+    PrismEditor
+  },
   methods: {
+    // ADD METHODS
+    // add a pdf to teacher's and room's file and show
+    // TODO: ADD TO TEACHER & ROOM & SHOW
     addPDF () {
       // send pdf to backend
       var formData = new FormData()
@@ -703,46 +639,67 @@ export default{
       axios(options).then((resp) => {
         console.log('addPDF success')
       })
+      // IF SUCCESS, BACK END: ADD TO TEACHER & ROOM
+      // FRONTEND: JUST SHOW
     },
-    handleReset (name) {
-      this.$refs[name].resetFields()
-    },
-    handleAdd () {
-      this.index++
+    // MULTI
+    // ADD AN OPTION OF MULTIPLE CHOICES
+    multi_addChoice () {
+      this.multi_index++
       this.multi_options.push({
         value: '',
-        index: this.index,
+        index: this.multi_index,
         status: 1
       })
     },
-    handleRemove (index) {
-      this.multi_options[index].status = 0
+    multi_delChoice (i) {
+      this.multi_options[i].status = 0
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // receive pdf list
+    addMulti () {
+      // send sub_multi should be set by now
+      this.sub_multi.url = this.cururl
+      // 将multi_option这个列表改成可发送的数组
+      for (var i = 0; i < this.index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
+      // post
+      axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 维护选择题列表,此处尚无
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('添加选择题失败')
+        }
+      })
+    },
+    // CODE
+    addCode () {
+      // sub_code should be set by now
+      // post
+      axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 应当要维护一下代码题的列表,此处未添加
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('添加代码题失败')
+        }
+      })
+    },
+    // LIST METHODS
+    // RECEIVE PDF LIST
     showPdfList () {
       this.modal_pdflist = true
-      this.pdfListInput.username = this.userInfo.username
-      // need to add all list & this list
+      var pdfListInput = {username: ''}
+      pdfListInput.username = this.userInfo.username
+      // TODO: need to add all list & this list
       axios.post('/api/resourse/getpdfs', this.pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data
@@ -750,7 +707,7 @@ export default{
       })
     },
     usePdf (index) {
-      // to be implemented
+      // TODO: REFINE THIS
       var ipdf = this.pdfThisList[index]
       this.$Modal.confirm({
         title: '提示',
@@ -794,7 +751,6 @@ export default{
         this.multiThisList = resp.data
       })
     },
-    //
     useMulti (index) {
       var iselect = this.multiThisList[index]
       this.$Modal.confirm({
@@ -813,7 +769,6 @@ export default{
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
-          this.liaotianshiheight = 350 + 'px'
           this.curvideo = false
           this.curtitle = iselect.title
           this.curans = iselect.ans
@@ -835,43 +790,6 @@ export default{
         // resp.data 即是那个列表
         this.codeAllList = resp.data
         this.codeThisList = resp.data
-      })
-    },
-    addMulti () {
-      // send sub_multi should be set by now
-      this.sub_multi.url = this.cururl
-      // 将multi_option这个列表改成可发送的数组
-      for (var i = 0; i < this.index; i++) {
-        if (this.multi_options[i].status === 1) {
-          this.sub_multi.optionList.push(this.multi_options[i].value)
-        }
-      }
-      // post
-      axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
-        this.$Message.success(resp.data.status)
-        // 如果成功
-        if (resp.data.status === 'success') {
-          // 维护选择题列表,此处尚无
-          window.location.reload()
-          // 如果失败
-        } else {
-          this.$Message.error('添加选择题失败')
-        }
-      })
-    },
-    addCode () {
-      // sub_code should be set by now
-      // post
-      axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
-        this.$Message.success(resp.data.status)
-        // 如果成功
-        if (resp.data.status === 'success') {
-          // 应当要维护一下代码题的列表,此处未添加
-          window.location.reload()
-        // 如果失败
-        } else {
-          this.$Message.error('添加代码题失败')
-        }
       })
     },
     // Yuxuan's Methods Stops Here
@@ -1010,6 +928,7 @@ export default{
         this.studentitems = resp.studentitems
       })
     },
+    // 用于显示学生的代码
     showstudentti (item) {
       this.curstu = item
       const data = this.curuser
@@ -1020,7 +939,6 @@ export default{
       axios.post('/api/classroom/getstudentsti', data).then((resp) => {
         this.curti = resp.curti
       })
-      this.modal3 = true
     },
     closetext () {
       this.$Modal.confirm({
@@ -1030,7 +948,6 @@ export default{
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
           this.classmain0 = true
-          this.liaotianshiheight = 60 + 'px'
           this.videohei = 700 + 'px'
           this.curvideo = true
           const data = this.curuser
@@ -1267,7 +1184,7 @@ export default{
   }
 
   .menuitentea{
-    font-size: 20px;
+    font-size: 18px;
   }
   .btnopen{
     padding-:5%;

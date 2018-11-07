@@ -11,6 +11,8 @@ import RTMP from 'rtmp-streamer'
 import AudioRecorder from 'vue-audio-recorder'
 import VueHighlightJS from 'vue-highlightjs'
 import 'highlight.js/styles/default.css'
+import 'prismjs'
+import 'prismjs/themes/prism.css'
 
 Vue.component('vue-headful', VueHeadful)
 Vue.use(iView)
