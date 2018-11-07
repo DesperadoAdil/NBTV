@@ -242,7 +242,12 @@
                 <div class="talk-content">
                   <div class="talk-self-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
-                  <audio  :src="getUrl(msgObj.msg.blob)"></audio>
+                  <div v-else></div>
+                  <div v-if="msgObj.msgType === 'audio'">
+                    <audio :src="getUrl(msgObj.msg.blob)"></audio>
+                  </div>
+                  <div v-else></div>
+
                 </div>
               </div>
               <div v-else></div>
@@ -251,7 +256,11 @@
                 <div class="talk-content">
                   <div class="talk-user-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
-                  <audio  :src="getUrl(msgObj.msg.blob)"></audio>
+                  <div v-else></div>
+                  <div v-if="msgObj.msgType === 'audio'">
+                    <audio :src="getUrl(msgObj.msg.blob)"></audio>
+                  </div>
+                  <div v-else></div>
                 </div>
               </div>
               <div v-else></div>
