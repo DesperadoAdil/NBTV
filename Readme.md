@@ -124,7 +124,7 @@ commit message都要符合这一个规范：
       - ### 修改选择题
          - **url:** */api/resourse/update_mutiple*
          - **description:** 教师在教室中修改选择题
-         - **input:** `{ username : '', uniqueId : 'add_multiple中得到的uniqueId', description : '', answer : '[{answer1,},{answer2,},...]', right : '一个数字' }`
+         - **input:** `{ username : '', uniqueId : 'add_multiple中得到的uniqueId', statement : '', answer : '[{answer1,},{answer2,},...]', right : '一个数字' }`
          - **output:** `{ status : 'success/error' }` //修改成功就返回success
          - **frontend:** *???*
          - **backend:** *???*
@@ -133,7 +133,7 @@ commit message都要符合这一个规范：
          - **url:** */api/resourse/getmutiples*
          - **description:** 用户查看选择题
          - **input:** `{ username : '' }`
-         - **output:** `[ '{ title : '', ans : '[ '答案列表', ... ]', answer : '一个数字' }', ... ]`
+         - **output:** `[ '{ statement : '', optionList : '[ '答案列表', ... ]', answer : '一个数字' }', ... ]`
          - **frontend:** *Jamgun*
          - **backend:** *Adil*
 
@@ -157,7 +157,7 @@ commit message都要符合这一个规范：
       - ### 修改代码题
          - **url:** */api/resourse/update_code*
          - **description:** 教师在教室中修改代码题
-         - **input:** `{ username : '', uniqueId : 'add_multiple中得到的uniqueId', description : '', language : '' }`
+         - **input:** `{ username : '', uniqueId : 'add_multiple中得到的uniqueId', statement : '', language : '' }`
          - **output:** `{ status : 'success/error' }` //修改成功就返回success
          - **frontend:** *???*
          - **backend:** *???*
@@ -166,7 +166,7 @@ commit message都要符合这一个规范：
          - **url:** */api/resourse/getcodes*
          - **description:** 用户查看代码题
          - **input:** `{ username : ''}`
-         - **output:** `[ '{ description : '', language : '' , students_work : [{username : '', code : ''}] }', ... ]`  //在每一项中新增学生错题情况的列表
+         - **output:** `[ '{ statement : '', language : '' , students_work : [{username : '', code : ''}] }', ... ]`  //在每一项中新增学生错题情况的列表
          - **frontend:** *???*
          - **backend:** *???*
 
