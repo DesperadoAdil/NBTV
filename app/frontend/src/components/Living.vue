@@ -133,7 +133,6 @@ export default{
     };
   },
   created: function () {
-
     this.cururl = this.$route.params.url
     console.log(this.cururl)
     const data = this.curuser
