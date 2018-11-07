@@ -148,8 +148,11 @@
       <p slot="header" style="font-size: 20px">
         <span>{{curstu}}的做题情况如下：</span>
       </p>
+      <pre v-highlightjs="testsourcecode"><code class="cpp"></code></pre>
+      <!--
       <Table stripe border :columns="columns1" :data="curti" ref="table"></Table>
       <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
+      -->
     </Modal>
 
     <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
@@ -232,6 +235,8 @@ import axios from 'axios'
 import {setSWFIsReady} from '../../static/js/livingrtmp.js'
 import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 import CHAT from '../client'
+import VueHighlightJS from 'vue-highlightjs'
+
 export default{
   name: 'load',
   data () {
@@ -255,6 +260,9 @@ export default{
       stream000: '',
       streamer: '',
       streamername: '7181857ac220181025144543640',
+
+      // multiple and codes
+      testsourcecode: '#include<iostream>\n using namespace std;\n int main(){\n int c;\n cout<<c++<<endl;\n return 0}',
       modal_pdf: false,
       modal_multi: false,
       multi_options: [
