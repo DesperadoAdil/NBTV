@@ -249,7 +249,6 @@ import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 import CHAT from '../client'
 import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
-import VueHighlightJS from 'vue-highlightjs'
 
 export default{
   name: 'load',
@@ -421,7 +420,7 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
-    // CHAT.message(this.userInfo.username)
+    CHAT.message(this.userInfo.username)
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -429,11 +428,11 @@ export default{
   created () {
     this.cururl = this.$route.params.url
     console.log(this.cururl)
-    // this.showUserInfo()
+    this.showUserInfo()
     /**
      * 以下为聊天室使用，请勿改动
      */
-    // this.chatingRoomInit()
+    this.chatingRoomInit()
     /**
      * 以上为聊天室使用，请勿改动
      */
