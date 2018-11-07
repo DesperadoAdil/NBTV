@@ -244,7 +244,7 @@
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
-                    <audio :src="getUrl(msgObj.msg.blob)"></audio>
+                    <audio :src="msgObj.msg.url"></audio>
                   </div>
                   <div v-else></div>
 
@@ -258,7 +258,7 @@
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
-                    <audio :src="getUrl(msgObj.msg.blob)"></audio>
+                    <audio :src="msgObj.msg.url"></audio>
                   </div>
                   <div v-else></div>
                 </div>
