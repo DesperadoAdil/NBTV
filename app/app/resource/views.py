@@ -55,7 +55,7 @@ def updateMultiple():
     return json.dumps(ret)
 
 
-@resource.route('/getmultiples')
+@resource.route('/getmultiples', methods = ['POST', 'GET'])
 def getChoice():
     print('get a  choice question')
     data = resource.get_data()
