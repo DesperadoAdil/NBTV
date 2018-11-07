@@ -50,9 +50,9 @@ class Teachers(db.Model):
     username = db.Column(db.String(50), primary_key=True, unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
     classroomlist = db.Column(db.Text, nullable=False, default = "[]")
-    
+
     classroom = db.relationship('Classrooms', backref='teachers', lazy='dynamic')
-    
+
     pdfs = db.relationship('PDFFile', backref = "teachers", lazy = "dynamic")
     codeQue = db.relationship('CodeQuestion', backref = "teachers", lazy = "dynamic")
     choiceQue = db.relationship('ChoiceQuestion', backref = "teachers", lazy = "dynamic")
@@ -97,8 +97,8 @@ class ChoiceQuestion(db.Model):
     uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
     submitRecord = db.Column(db.Text, nullable = False)
     # classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
-    owner = db.Column(db.String(50), db.ForeignKey('Teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
-    
+    owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
+
     def __repr__(self):
         return '<choiceQuestionId %r>' % self.choiceQuestionId
 
@@ -111,7 +111,7 @@ class CodeQuestion(db.Model):
     uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
     submitRecord = db.Column(db.Text, nullable = False)
     # classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
-    owner = db.Column(db.String(50), db.ForeignKey('Teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
+    owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
     def __repr__(self):
         return '<codequestionId %r>' % self.uniqueId
@@ -120,7 +120,7 @@ class PDFFile(db.Model):
     __tablename__ = 'pdffile'
 
     # uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
-    owner = db.Column(db.String(50), db.ForeignKey('Teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
+    owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
     filename = db.Column(db.String(100), nullable = False)
     uniqueN = db.Column(db.String(150), nullable = False, primary_key = True, default = owner + filename)
     # filePath = db.Column(db.Text, nullable = False)

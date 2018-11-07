@@ -151,6 +151,11 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
+     axios.post('/api/socketserver', {'url': this.cururl}).then((resp) => {
+       if (resp.data.status === 'success') {
+         console.log('create socket')
+       }
+     })
     this.chatingRoomInit()
     /**
      * 以上为聊天室使用，请勿改动

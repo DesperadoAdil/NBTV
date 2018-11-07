@@ -4,35 +4,7 @@ const CHAT = {
   msgObj: document.getElementsByClassName('body-wrapper')[0],
   username: null,
   socket: null,
-  msgArr: [{
-    type: 'broadcast',
-    url: '242544',
-    time: '00:30',
-    msg: 'from God to all',
-    toUser: 'all',
-    fromUser: 'God'
-  }, {
-    type: 'broadcast',
-    url: '242544',
-    time: '00:32',
-    msg: 'from Hanky to all',
-    toUser: 'all',
-    fromUser: 'Hanky'
-  }, {
-    type: 'broadcast',
-    url: '242544',
-    time: '00:34',
-    msg: 'from God to all',
-    toUser: 'all',
-    fromUser: 'God'
-  }, {
-    type: 'broadcast',
-    url: '242544',
-    time: '00:35',
-    msg: 'from Devil to all',
-    toUser: 'all',
-    fromUser: 'Devil'
-  }],
+  msgArr: [],
   logout: function () {
     this.socket.disconnect()
   },
@@ -41,21 +13,6 @@ const CHAT = {
   },
   message: function (username) {
     console.log('message')
-    this.socket.on('message', function (msg) {
-      msg= "[system]: " + msg
-      var date = new Date()
-      var time = date.getHours() + ':' + date.getMinutes()
-      var obj = {
-        type: 'broadcast',
-        url: this.cururl,
-        time: time,
-        msg: msg,
-        toUser: 'all',
-        fromUser: 'system'
-      }
-      CHAT.msgArr.push(obj)
-      console.log('CHAT.msgArr(system)', obj)
-    })
     this.socket.on('whisper', function (obj) {
       obj.msg = obj.fromUser + " whispered to you: " + obj.msg
       CHAT.msgArr.push(obj)
@@ -74,6 +31,21 @@ const CHAT = {
     })
     console.log(username, url)
     this.socket.emit('join', {'username': username, 'url':url})
+    this.socket.on('message', function (msg) {
+      msg= "[system]: " + msg
+      var date = new Date()
+      var time = date.getHours() + ':' + date.getMinutes()
+      var obj = {
+        type: 'broadcast',
+        url: this.cururl,
+        time: time,
+        msg: msg,
+        toUser: 'all',
+        fromUser: 'system'
+      }
+      CHAT.msgArr.push(obj)
+      console.log('CHAT.msgArr(system)', obj)
+    })
   }
 }
 export default CHAT
