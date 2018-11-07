@@ -75,9 +75,13 @@
       <Card>
         <Split class="demo-split" v-model="split_pdf">
           <div slot="left"  class="demo-split-pane">
-            <Table height="400" border ref="selection" :columns="columns4" :data="data1"></Table>
+            <p>All</p>
+            <br>
+            <Table height="400" border :columns="pdfAll" :data="pdfAllList"></Table>
           </div>
           <div slot="right"  class="demo-split-pane">
+            <p>This Classroom</p>
+            <br>
             Right Pane
           </div>
         </Split>
@@ -295,6 +299,40 @@ export default{
       // pdf, multiple and codes
       split_pdf: 0.5,
       modal_pdflist: false,
+      pdfAll: [
+        {
+          title: 'Name',
+          key: 'name'
+        },
+        {
+          title: 'Age',
+          key: 'age'
+        },
+        {
+          title: 'Address',
+          key: 'address'
+        }
+      ],
+      pdfAllList: [
+        {
+          name: 'Jim Green',
+          age: 24,
+          address: 'London No. 1 Lake Park',
+          date: '2016-10-01'
+        },
+        {
+          name: 'Joe Black',
+          age: 30,
+          address: 'Sydney No. 1 Lake Park',
+          date: '2016-10-02'
+        },
+        {
+          name: 'Jon Snow',
+          age: 26,
+          address: 'Ottawa No. 2 Lake Park',
+          date: '2016-10-04'
+        }
+      ],
       modal_multilist: false,
       modal_codelist: false,
       testsourcecode: '#include<iostream>\n using namespace std;\n int main(){\n int c;\n cout<<c++<<endl;\n return 0}',
@@ -1024,7 +1062,7 @@ export default{
     text-decoration: none;
   }
    .demo-split{
-     height: 400px;
+     height: 430px;
      border: 1px solid #dcdee2;
    }
   .demo-split-pane{
