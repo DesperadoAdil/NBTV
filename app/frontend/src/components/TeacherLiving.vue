@@ -4,10 +4,10 @@
       <!-- -----------侧边栏----------------- -->
       <Menu name="sidemenu" style="width: 100%">
 
-        <!-- 发布 -->
+        <!-- 资源 -->
         <Submenu name="post" class="menuitentea">
           <template slot="title" ><Icon type="ios-paper" />
-            发布
+            资源
           </template>
           <MenuItem @click.native="showPdfList()">PDF</MenuItem>
           <MenuItem @click.native="showMultiList()">Choice</MenuItem>
@@ -40,17 +40,8 @@
           <template slot="title"><Icon type="ios-stats" />
             学生
           </template>
-          <MenuItem @click.native="modal_xlsx = true">xlsx文档添加</MenuItem>
-          <MenuItem>
-            <a href="javascript:;" class="upf">
-              添加xlsx
-              <input type="file" name="xlsxinput" id="xlsxinput">
-            </a>
-          </MenuItem>
-          <MenuItem>
-            <Button @click="subxlsx">submit</Button>
-          </MenuItem>
-          <MenuItem @click.native="addstua">用户名添加学生</MenuItem>
+          <MenuItem @click.native="modal_student_xlsx = true">xlsx文档添加</MenuItem>
+          <MenuItem @click.native="addStudent()">用户名添加</MenuItem>
         </Submenu>
         <!-- 学生 -->
       </Menu>
@@ -212,6 +203,24 @@
             <!-------------输入框的代码高亮还没好，现在仅能静态高亮------------>
             <prism-editor :code="sub_code.example" language="cpp"></prism-editor>
           </template>
+        </FormItem>
+      </Form>
+    </Modal>
+
+    <!--上传学生名单-->
+    <Modal v-model="modal_student_xlsx" @on-ok="modal_student_xlsx = false" @on-cancel="modal_student_xlsx = false">
+      <p slot="header" style="font-size: 20px">
+        <span>上传学生名单</span>
+      </p>
+      <Form>
+        <FormItem>
+          <a href="javascript:;" class="upf">
+            添加xlsx
+            <input type="file" name="xlsxinput" id="xlsxinput">
+          </a>
+        </FormItem>
+        <FormItem>
+          <Button @click="subxlsx()">submit</Button>
         </FormItem>
       </Form>
     </Modal>
@@ -529,6 +538,8 @@ export default{
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
       },
 
+      // ADD STUDENT LIST
+      modal_student_xlsx: false,
       // Shihang'S PARAMETER
       displayPdfurl: '',
       littlelivingcarddisplay: false,
@@ -574,7 +585,7 @@ export default{
       ionselect: '111',
       curtitle: 'xjbx1',
       curans: ['1', '2', '3', '4'],
-      curanswer: 'A',
+      curanswer: 'A'
     }
   },
   mounted () {
@@ -881,7 +892,7 @@ export default{
         this.studentitems = resp.studentitems
       })
     },
-    addstua () {
+    addStudent () {
       console.log('dhasjkhda')
       this.$Modal.confirm({
         render: (h) => {
