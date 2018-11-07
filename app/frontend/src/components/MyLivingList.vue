@@ -65,7 +65,7 @@ export default {
         job: '',
         title: '',
         thumbnail: '',
-        img:'',
+        img: '',
         url: '',
         class_password: '',
         mode: ''
@@ -96,7 +96,7 @@ export default {
         thumbnail: '../assets/logo.png',
         url: '1',
         class_password: ''
-      },{},{},{},{}],
+      }, {}, {}, {}, {}],
       userInfo: {
         username: '',
         password: '',
@@ -148,20 +148,24 @@ export default {
       })
     },
     addLiving () {
-      console.log(document.querySelector('input[type=file]').files[0])
-      this.addModal = false
-      this.newLiving['username'] = this.$cookies.get('user').username
-      this.newLiving['password'] = this.$cookies.get('user').password
-      this.newLiving['job'] = this.$cookies.get('user').job
-      console.log("1231")
-      this.newLiving['img']=document.querySelector('input[type=file]').files[0]
-      console.log("1231")
-      console.log(document.querySelector('input[type=file]').files[0])
-      console.log("4564")
-      const data = this.newLiving
-      axios.post('/api/classroom/add_class', data).then((resp) => {
+      var formData = new FormData()
+      formData.append('username', this.$cookies.get('user').username)
+      formData.append('password', this.$cookies.get('user').password)
+      formData.append('job', this.$cookies.get('user').job)
+      formData.append('img', document.querySelector('input[type=file]').files[0])
+      var options = {
+        url: '/api/classroom/add_class',
+        data: formData,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      axios(options).then((resp) => {
         this.getMyLivingList()
       })
+      console.log(document.querySelector('input[type=file]').files[0])
+      this.addModal = false
     },
     updateLiving (index) {
       this.myLivingList[index]['username'] = this.$cookies.get('user').username

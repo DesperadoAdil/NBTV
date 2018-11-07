@@ -19,93 +19,8 @@ commit message都要符合这一个规范：
 ## 增加脚本来控制commit message符合规范
 将commit-msg文件拷贝到 .git/hooks/commit-msg即可
 
-## API汇总
-
-- ### 学生直播界面管理
-
-  - ####  根据房间的url获取房间的vid
-
-    - **url:** /api/classroom_stu/urlgetvid 
-    - **description:** 根据url返回房间的vid
-    - **input:**  `{ username : '', job : '', url : ''}`注：username为学生姓名
-    - **output:** `{ vid : ''}`
-    - **frontend:** Jamgun
-    - **backend:** ？
-
-- ### 老师直播界面管理
-
-  - #### xlsx添加学生
-
-    - **url:** /api/classroom/xlsxaddstudents
-    - **description:** 前端给后端xlsx，后端返回学生列表
-    - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为xlsx文件
-    - **output:** `['zsh','xcj',...]`
-    - **frontend:** Jamgun
-    - **backend:** ？
-
-  - #### 用户名添加学生
-
-    - **url:** /api/classroom/aaddstudents
-    - **description:** 前端给后端用户名，后端返回学生列表
-    - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为学生用户名
-    - **output:** `['zsh','xcj',...]`
-    - **frontend:** Jamgun
-    - **backend:** ？
-
-  - #### 获取某个学生的做题情况
-
-    - **url:** /api/classroom/getstudentsti  
-    - **description:** 返回某学生的做题情况 
-    - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为学生姓名
-    - **output:** `[{ title : '',type : 'select/code', ans : '',standardans : '' },...]`
-    - **frontend:** Jamgun
-    - **backend:** ？
-
-  - #### 通知后端：老师要展示某个PDF文件
-
-    - **url:** /api/classroom/showpdfs  
-    - **description:** 通知后端：老师要展示某个PDF文件，后端再通知学生端 
-    - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为PDF的title
-    - **output:** 暂无
-    - **frontend:** Jamgun
-    - **backend:** ？****
-
-  - #### 通知后端：老师要展示某选择题
-
-    - **url:**/api/classroom/showselect 
-    - **description:** 通知后端：老师要展示某个选择题，后端再通知学生端 
-    - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为选择题的title
-    - **output:** 暂无
-    - **frontend:** Jamgun
-    - **backend:** ？****
-
-  - #### 通知后端：老师要退出教学资源
-
-    - **url:**/api/classroom/closepdfsec
-    - **description:** 通知后端：老师要退出教学资源，后端再通知学生端 
-    - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
-    - **output:** 暂无
-    - **frontend:** Jamgun
-    - **backend:** ？****
-
-  - #### 通知后端：老师要开播
-
-    - **url:**/api/classroom/openliving
-    - **description:** 通知后端：老师要开播，后端返回推流地址 
-    - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
-    - **output:**`{ streamername : '' }`
-    - **frontend:** Jamgun
-    - **backend:** ？****
-
-  - #### 通知后端：老师要关播
-
-    - **url:**/api/classroom/closeliving
-    - **description:** 通知后端：老师要关播，后端通知学生端 
-    - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
-    - **output:**暂无
-    - **frontend:** Jamgun
-    - **backend:** ？****
-
+---
+# API汇总
 - ## 用户信息管理
    - ### 登录
       - **url:** */api/user/login*  
@@ -297,39 +212,31 @@ commit message都要符合这一个规范：
       - **frontend:** *Hanky*
       - **backend:** *xcjthu*
 
-   - ### 直播间添加学生
-      - **url:** */api/classroom/add_student*
-      - **description:** 教师在直播间中添加学生
-      - **input:** `{ }`
-      - **output:** ???
-      - **frontend:** *???*
-      - **backend:** *???*
-
 - ## 学生直播界面管理
    - ### 根据房间的url获取房间的vid
       - **url:** /api/classroom_stu/urlgetvid
       - **description:** 根据url返回房间的vid
-      - **input:**  `{ url : '' }` //注：username为学生姓名
+      - **input:**  `{ url : '' }`
       - **output:** `{ vid : '' }`
-      - **frontend:** Jamgun
-      - **backend:** ？
+      - **frontend:** *Jamgun*
+      - **backend:** *Adil*
 
 - ## 老师直播界面管理
    - ### xlsx添加学生
       - **url:** /api/user/xlsxaddstudents
       - **description:** 前端给后端xlsx，后端返回学生列表
-      - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为xlsx文件
-      - **output:** `['zsh','xcj',...]`
-      - **frontend:** Jamgun
-      - **backend:** ？
+      - **input:**  `{ url : ''，item:''}` *注：item为xlsx文件*
+      - **output:** `['zsh','xcj',...]` *注：返回的是成功加入的学生username*
+      - **frontend:** *Jamgun*
+      - **backend:** *Adil*
 
    - ### 用户名添加学生
       - **url:** /api/user/aaddstudents
       - **description:** 前端给后端用户名，后端返回学生列表
-      - **input:**  `{ username : '', job : '', url : ''，item:''}`注：username为老师姓名，item为学生用户名
-      - **output:** `['zsh','xcj',...]`
-      - **frontend:** Jamgun
-      - **backend:** ？
+      - **input:**  `{ url : ''，item:''}` *注：item为学生用户名*
+      - **output:** `{ status : 'success/error' }`
+      - **frontend:** *Jamgun*
+      - **backend:** *Adil*
 
    - ### 获取某个学生的做题情况
       - **url:** /api/user/getstudentsti  
@@ -366,18 +273,18 @@ commit message都要符合这一个规范：
    - ### 通知后端：老师要开播
       - **url:**/api/user/openliving
       - **description:** 通知后端：老师要开播，后端返回推流地址
-      - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
-      - **output:**`{ streamername : '' }`
-      - **frontend:** Jamgun
-      - **backend:** ？****
+      - **input:** `{ url : '' }`
+      - **output:** `{ streamername : '', status : 'success/error' }`
+      - **frontend:** *Jamgun*
+      - **backend:** *xcjthu*
 
    - ### 通知后端：老师要关播
       - **url:**/api/user/closeliving
       - **description:** 通知后端：老师要关播，后端通知学生端
-      - **input:**  `{ username : '', job : '', url : ''}`注：username为老师姓名
-      - **output:**暂无
-      - **frontend:** Jamgun
-      - **backend:** ？****
+      - **input:**  `{ url : '' }`
+      - **output:** `{ vid : '', status : 'success/error' }`
+      - **frontend:** *Jamgun*
+      - **backend:** *xcjthu*
 
 ---
 ##Socket通信
@@ -392,21 +299,21 @@ commit message都要符合这一个规范：
 ### 加入聊天室
 初始化socket，链接到url
 
-	io.connect(io.connect(url, {'force new connection': true}) //此处需要后端给定url	
+	io.connect(io.connect(url, {'force new connection': true}) //此处需要后端给定url
 链接后端服务器，会调用
-	
+
 	socket.on('open', 随意)	//此处需要后端emit消息
 用来判断是否成功连接聊天室，然后调用
 
 	socket.emit('addUser', username)	//此处需要后端接收消息
-给后端发送消息，用来将当前用户加入聊天室	
+给后端发送消息，用来将当前用户加入聊天室
 ###发送消息
 	socket.emit('sendMsg', obj)
 ###接收消息
 	socket.on('to' + username, obj)
 
-## 数据库表结构
-### NBTV
+# 数据库表结构
+## NBTV
 数据表|功能|
 :---:|:---:
 classrooms|存储教室信息
@@ -417,13 +324,14 @@ choicequestion|存储选择题
 codequestion|存储代码题
 messages|存储短信验证码
 
-### 数据表结构
+## 数据表结构
 classrooms|detail
 :---:|:---:
 vid|保利威视推流vid
 teacher|直播间教师username
 title|直播间标题
 thumbnail|直播间缩略图
+mode|直播间私密模式
 password|直播间密码
 url|直播间url
 rtmpUrl|保利威视推流url
@@ -435,6 +343,7 @@ choicequestion|直播间选择题的类对象列表
 codequestion|直播间代码题的类对象列表
 visible|直播间知否可见
 createtime|直播间创建日期
+showtime|直播间开播时间
 
 students|detail
 :---:|:---:

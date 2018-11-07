@@ -218,7 +218,7 @@
           </div>
           <div class="talker">
             <Input class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
-            <Button class="talker-send" type="success">发送</Button>
+            <Button class="talker-send" type="success" @click="submit">发送</Button>
           </div>
         </div>
       </div>
@@ -377,7 +377,7 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
-    // CHAT.message(this.userInfo.username)
+    CHAT.message(this.userInfo.username)
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -399,32 +399,45 @@ export default{
      * 以下为聊天室使用，请勿改动
      */
     chatingRoomInit () {
-      // CHAT.init(this.userInfo.username)
+      CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
       var obj = {
+        type: 'broadcast',
+        url: this.cururl,
         time: time,
         msg: this.msg,
         toUser: this.username,
         fromUser: this.userInfo.username
       }
       this.msg = ''
-      // CHAT.submit(obj)
+      CHAT.submit(obj)
     },
     /**
      * 以上为聊天室使用，请勿改动
      */
     subxlsx () {
       console.log('dhasjkhda')
-      const data = this.curuser
+      /* const data = this.curuser
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
       data['url'] = this.cururl
       data['item'] = document.querySelector('input[type=file]').files[0]
-      console.log(data['item'])
-      axios.post('/api/classroom/xlsxaddstudents', data).then((resp) => {
+      console.log(data['item']) */
+      var formData = new FormData()
+      formData.append('url', this.cururl)
+      formData.append('item', document.querySelector('input[type=file]').files[0])
+      var options = {
+        url: '/api/classroom/xlsxaddstudents',
+        data: formData,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      axios(options).then((resp) => {
         this.studentitems = resp.studentitems
       })
     },
@@ -453,7 +466,7 @@ export default{
           data['item'] = this.astu
           console.log('dhasjkhda')
           console.log(this.astu)
-          axios.post('/api/user/aaddstudents', data).then((resp) => {
+          axios.post('/api/classroom/aaddstudents', data).then((resp) => {
             this.studentitems = resp.studentitems
           })
         }
@@ -501,6 +514,20 @@ export default{
     },
     addPDF () {
       // send pdf to backend
+      var formData = new FormData()
+      formData.append('username', this.userInfo['username'])
+      formData.append('file', document.querySelector('input[type=file]').files[0])
+      var options = {
+        url: '/api/resource/add_pdf',
+        data: formData,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      axios(options).then((resp) => {
+        console.log('addPDF success')
+      })
     },
     handleReset (name) {
       this.$refs[name].resetFields()

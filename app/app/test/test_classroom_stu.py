@@ -2,7 +2,7 @@ from app.test.BaseTestCase import BaseTestCase
 import unittest
 import json
 
-class ClassroomTest(BaseTestCase):
+class Classroom_stuTest(BaseTestCase):
     data_urlgetvid = { "url" : "242544" }
     dataerror_urlgetvid = { "url" : "242545" }
 
