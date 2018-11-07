@@ -6,7 +6,7 @@
       <Menu name="0" style="width: 100%">
 
         <!-- 发布 -->
-        <Submenu name="1" class="menuitentea">
+        <Submenu name="post" class="menuitentea">
           <template slot="title" >
             <Icon type="ios-paper" />
             发布
@@ -82,7 +82,7 @@
           <div slot="right"  class="demo-split-pane">
             <p>This Classroom</p>
             <br>
-            Right Pane
+            <Table height="375" border :columns="pdfThis" :data="pdfThisList"></Table>
           </div>
         </Split>
       </Card>
@@ -346,7 +346,18 @@ export default{
           key: 'url'
         }
       ],
-      pdfAllList: [],
+      pdfThis: [
+        {
+          title: 'Title',
+          key: 'title'
+        },
+        {
+          title: 'Url',
+          key: 'url'
+        }
+      ],
+      pdfThisList: [],
+      pdfAllList: [{title: 'Slide01', url: 'hide/slide01'}],
       modal_multilist: false,
       modal_codelist: false,
       testsourcecode: '#include<iostream>\n using namespace std;\n int main(){\n int c;\n cout<<c++<<endl;\n return 0}',
@@ -464,7 +475,6 @@ export default{
           title: 'pdf2',
           url: '/static/pdf/1-1.pdf'
         }
-
       ]
     }
   },
@@ -544,9 +554,11 @@ export default{
     showPdfList () {
       this.modal_pdflist = true
       this.pdfListInput.username = this.userInfo.username
+      // need to add all list & this list
       axios.post('/api/resourse/getpdfs', this.pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data
+        this.pdfThisList = resp.data
       })
     },
     addMulti () {
