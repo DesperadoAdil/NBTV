@@ -1,3 +1,4 @@
+from flask import *
 from .MultiChoiceQuestion import multiChoiceManager
 from .CodeQuestion import codeQuestionManager
 from .PDFfile import pdfManager
@@ -163,6 +164,7 @@ def delete_PDF():
         print(err)
         ret['status'] = "error"
     return json.dumps(ret, ensure_ascii = False)
+
 
 
 #Get_pdfs
