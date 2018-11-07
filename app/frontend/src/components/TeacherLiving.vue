@@ -4,7 +4,18 @@
     <div  class="cardtea">
       <p slot="title" style="font-size: 20px">选项</p>
       <Menu name="0" style="width: 100%">
-        <!-- 添加教学资源 -->
+
+        <!-- 发布 -->
+        <Submenu name="1" class="menuitentea">
+          <template slot="title" >
+            <Icon type="ios-paper" />
+            发布
+          </template>
+          <MenuItem @click.native="modal_pdflist = true">PDF</MenuItem>
+          <MenuItem @click.native="modal_multilist = true">Choice</MenuItem>
+          <MenuItem @click.native="modal_codelist = true">Code</MenuItem>
+        </Submenu>
+        <!-- 教学资源 -->
         <Submenu name="1" class="menuitentea">
           <template slot="title" >
             <Icon type="ios-paper" />
@@ -54,14 +65,34 @@
       <Button type="primary" shape="circle" v-bind:icon="jinshipin" @click="tojinshipin()"></Button>
     </div>
 
+    <!--PDFlist-->
+    <Modal
+      v-model="modal_pdflist"
+      @on-ok="addPDF()"
+      @on-cancel="modal_pdflist = false"
+      width="720"
+    >
+      <Card>
+        <Split class="demo-split" v-model="split_pdf">
+          <div slot="left"  class="demo-split-pane">
+            <Table height="400" border ref="selection" :columns="columns4" :data="data1"></Table>
+          </div>
+          <div slot="right"  class="demo-split-pane">
+            Right Pane
+          </div>
+        </Split>
+      </Card>
+    </Modal>
+
     <!--上传-->
     <Modal v-model="modal_pdf" @on-ok="addPDF()" @on-cancel="modal_pdf = false">
       <p slot="header" style="font-size: 20px">
         <span>上传课件</span>
       </p>
-      <Upload action="上传的地址" headers="设置上传的请求头部">
-        <Button icon="ios-cloud-upload-outline">Upload files</Button>
-      </Upload>
+      <a href="javascript:;" class="upf">pdf upload
+        <input type="file" name="fileinput" id="fileinput">
+      </a>
+      <Button type="primary" @click="addPDF">submit</Button>
     </Modal>
 
     <!--设置选择题-->
@@ -190,6 +221,7 @@
       </RadioGroup>
       <p class="anstea00">本题目答案：{{curanswer}}</p>
     </div>
+
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
     <Card id="chatingRoom">
       <div class="talk-contents">
@@ -296,7 +328,11 @@ export default{
       streamer: '',
       streamername: '7181857ac220181025144543640',
 
-      // multiple and codes
+      // pdf, multiple and codes
+      split_pdf: 0.5,
+      modal_pdflist: false,
+      modal_multilist: false,
+      modal_codelist: false,
       testsourcecode: '#include<iostream>\n using namespace std;\n int main(){\n int c;\n cout<<c++<<endl;\n return 0}',
       modal_pdf: false,
       modal_multi: false,
@@ -795,10 +831,10 @@ export default{
 
             })
             setSWFIsReady()
-            this.streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
+            this.streamer000 = document.getElementById('rtmp-streamer1')
             this.streamer000.setScreenPosition(-100, 0)
             this.streamer000.setScreenSize(700, 380)
-            this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+            this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
           },
           onCancel: () => {
           }
@@ -833,7 +869,7 @@ export default{
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setMicRate(0)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       } else {
         this.jinmai = 'ios-mic-off'
         this.isjinmai = true
@@ -841,7 +877,7 @@ export default{
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setMicRate(0)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       }
     },
     tojinshipin () {
@@ -852,7 +888,7 @@ export default{
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setCamFrameInterval(15)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       } else {
         this.jinshipin = 'ios-eye-off'
         this.isjinshipin = true
@@ -860,7 +896,7 @@ export default{
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setCamFrameInterval(100000)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       }
     }
 
@@ -1072,5 +1108,12 @@ export default{
     border-color: #78C3F3;
     color: #004974;
     text-decoration: none;
+  }
+   .demo-split{
+     height: 400px;
+     border: 1px solid #dcdee2;
+   }
+  .demo-split-pane{
+    padding: 10px;
   }
 </style>
