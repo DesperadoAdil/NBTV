@@ -139,7 +139,7 @@ def addPDF():
     print('add pdf file')
     ret = {}
     try:
-        f = request.files.get['file']
+        f = request.files.get('file')
         username = request.form['username']
         ret['status'] = pdfManager.insert(f, username)
         
