@@ -2,7 +2,6 @@
   <div class="tealivingmain">
 
     <div  class="cardtea">
-      <p slot="title" style="font-size: 20px">选项</p>
       <Menu name="0" style="width: 100%">
 
         <!-- 发布 -->
@@ -12,14 +11,14 @@
             发布
           </template>
           <MenuItem @click.native="showPdfList()">PDF</MenuItem>
-          <MenuItem @click.native="modal_multilist = true">Choice</MenuItem>
-          <MenuItem @click.native="modal_codelist = true">Code</MenuItem>
+          <MenuItem @click.native="showChoiceList()">Choice</MenuItem>
+          <MenuItem @click.native="showCodeList()">Code</MenuItem>
         </Submenu>
         <!-- 教学资源 -->
         <Submenu name="1" class="menuitentea">
           <template slot="title" >
             <Icon type="ios-paper" />
-            添加教学资源
+            添加
           </template>
           <MenuItem @click.native="modal_pdf = true">添加课件</MenuItem>
           <MenuItem @click.native="modal_multi = true">添加选择题</MenuItem>
@@ -68,9 +67,9 @@
     <!--PDFlist-->
     <Modal
       v-model="modal_pdflist"
-      @on-ok="SOMETHING()"
+      @on-ok="modal_pdflist = false"
       @on-cancel="modal_pdflist = false"
-      width="720"
+      width="900"
     >
       <Card>
         <Split class="demo-split" v-model="split_pdf">
@@ -83,6 +82,70 @@
             <p>This Classroom</p>
             <br>
             <Table height="375" border :columns="pdfThis" :data="pdfThisList"></Table>
+          </div>
+        </Split>
+      </Card>
+    </Modal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--multi_list-->
+    <Modal
+      v-model="modal_multilist"
+      @on-ok="modal_multilist = false"
+      @on-cancel="modal_multilist = false"
+      width="900"
+    >
+      <Card>
+        <Split class="demo-split" v-model="split_multi">
+          <div slot="left"  class="demo-split-pane">
+            <p>All</p>
+            <br>
+            <Table height="375" border :columns="multiAll" :data="multiAllList"></Table>
+          </div>
+          <div slot="right"  class="demo-split-pane">
+            <p>This Classroom</p>
+            <br>
+            <Table height="375" border :columns="multiThis" :data="multiThisList"></Table>
+          </div>
+        </Split>
+      </Card>
+    </Modal>
+
+    <!--code_list-->
+    <Modal
+      v-model="modal_codelist"
+      @on-ok="modal_codelist = false"
+      @on-cancel="modal_codelist = false"
+      width="900"
+    >
+      <Card>
+        <Split class="demo-split" v-model="split_code">
+          <div slot="left"  class="demo-split-pane">
+            <p>All</p>
+            <br>
+            <Table height="375" border :columns="codeAll" :data="codeAllList"></Table>
+          </div>
+          <div slot="right"  class="demo-split-pane">
+            <p>This Classroom</p>
+            <br>
+            <Table height="375" border :columns="codeThis" :data="codeThisList"></Table>
           </div>
         </Split>
       </Card>
@@ -294,7 +357,7 @@ export default{
   props: {
     micFailed: { type: Function },
     startRecord: { type: Function },
-    stopRecord: { type: Function },
+    stopRecord: { type: Function }
   },
   data () {
     return {
@@ -335,34 +398,108 @@ export default{
       streamer: '',
       streamername: '7181857ac220181025144543640',
 
+
+
+
+
+
+
+
+
+
+
+
       // pdf, multiple and codes
       split_pdf: 0.5,
       modal_pdflist: false,
       pdfListInput: {username: ''},
-      pdfAll: [
+      // framework to show pdf all
+      pdfAll: [{title: 'Title', key: 'title'}, {title: 'Url', key: 'url'}],
+      pdfThis: [{title: 'Title', key: 'title'}, {title: 'Url', key: 'url'},
         {
-          title: 'Title',
-          key: 'title'
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 120,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.show(params.index)
+                  }
+                }
+              }, 'View'),
+              h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.remove(params.index)
+                  }
+                }
+              }, 'Del')])
+          }
+        }],
+      pdfThisList: [
+        {
+          title: 'pdf1',
+          url: '/static/pdf/1-1.pdf'
         },
         {
-          title: 'Url',
-          key: 'url'
-        }
-      ],
-      pdfThis: [
-        {
-          title: 'Title',
-          key: 'title'
-        },
-        {
-          title: 'Url',
-          key: 'url'
-        }
-      ],
-      pdfThisList: [],
+          title: 'pdf2',
+          url: '/static/pdf/1-1.pdf'
+        }],
       pdfAllList: [{title: 'Slide01', url: 'hide/slide01'}],
+      // multi
+      split_multi: 0.5,
       modal_multilist: false,
+      // framework to show multi
+      multiAll: [{title: 'Title', key: 'title'}],
+      multiThis: [{title: 'Title', key: 'title'}],
+      multiAllList: [
+        {
+          title: 'choice 01',
+          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
+          answer: 'A'
+        },
+        {
+          title: 'choice 02',
+          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
+          answer: 'A'
+        }
+      ],
+      multiThisList: [{
+        title: 'choice 02',
+        ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
+        answer: 'A'
+      }],
+      // code
+      split_code: 0.5,
       modal_codelist: false,
+      codeAll: [{title: 'Title', key: 'title'}],
+      codeThis: [{title: 'Title', key: 'title'}],
+      codeAllList: [
+        {
+          title: 'Eight Queens'
+        },
+        {
+          title: 'B-Tree'
+        }
+      ],
+      codeThisList: [{
+        title: 'B-Tree'
+      }],
+      // framework
       testsourcecode: '#include<iostream>\n using namespace std;\n int main(){\n int c;\n cout<<c++<<endl;\n return 0}',
       modal_pdf: false,
       modal_multi: false,
@@ -459,26 +596,17 @@ export default{
       curanswer: 'A',
       selectitems: [
         {
-          title: 'xjbx1',
-          ans: ['1', '2', '3', '4'],
+          title: 'choice 01',
+          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
           answer: 'A'
         },
         {
-          title: 'xjbx2',
-          ans: ['1', '2', '3', '4'],
+          title: 'choice 02',
+          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
           answer: 'A'
         }
       ],
-      pdfitems: [
-        {
-          title: 'pdf1',
-          url: '/static/pdf/1-1.pdf'
-        },
-        {
-          title: 'pdf2',
-          url: '/static/pdf/1-1.pdf'
-        }
-      ]
+      pdfitems: []
     }
   },
   mounted () {
@@ -558,6 +686,26 @@ export default{
     handleRemove (index) {
       this.multi_options[index].status = 0
     },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // receive pdf list
     showPdfList () {
       this.modal_pdflist = true
@@ -567,6 +715,30 @@ export default{
         // resp.data 即是那个列表
         this.pdfAllList = resp.data
         this.pdfThisList = resp.data
+      })
+    },
+    // receive choice list
+    showChoiceList () {
+      this.modal_multilist = true
+      var multiListInput = {username: ''}
+      multiListInput.username = this.userInfo.username
+      // need to add all list & this list
+      axios.post('/api/resourse/getmutiples', multiListInput).then((resp) => {
+        // resp.data 即是那个列表
+        this.multiAllList = resp.data
+        this.multiThisList = resp.data
+      })
+    },
+    // receive code list
+    showCodeList () {
+      this.modal_codelist = true
+      var codeListInput = {username: ''}
+      codeListInput.username = this.userInfo.username
+      // need to add all list & this list
+      axios.post('/api/resourse/getmutiples', codeListInput).then((resp) => {
+        // resp.data 即是那个列表
+        this.codeAllList = resp.data
+        this.codeThisList = resp.data
       })
     },
     addMulti () {
