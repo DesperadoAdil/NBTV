@@ -233,12 +233,11 @@
           </div>
           <div class="content">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
-              <div class="talk-space self-talk"
+              <div  class="talk-space self-talk"
                     v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
                 <div class="talk-content">
                   <div class="talk-self-name">{{ msgObj.fromUser }}</div>
-                  <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
-                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(index)"></audio>
+                  <div class="talk-word talk-word-self">{{ msgObj.msg }}</div>
                 </div>
               </div>
               <div v-else></div>
@@ -246,8 +245,7 @@
                     v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username">
                 <div class="talk-content">
                   <div class="talk-user-name">{{ msgObj.fromUser }}</div>
-                  <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
-                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(index)"></audio>
+                  <div class="talk-word talk-word-user">{{ msgObj.msg }}</div>
                 </div>
               </div>
               <div v-else></div>
@@ -289,7 +287,7 @@ export default{
   props: {
     micFailed: { type: Function },
     startRecord: { type: Function },
-    stopRecord: { type: Function }
+    stopRecord: { type: Function },
   },
   data () {
     return {
@@ -305,7 +303,6 @@ export default{
       recorder: new Recorder({
         afterStop: () => {
           this.audio = this.recorder.audio
-          console.log(this.audio)
           if (this.stopRecord) {
             this.stopRecord('stop record')
           }
@@ -315,6 +312,8 @@ export default{
       }),
       audio: {},
       selected: {},
+      uploadStatus: null,
+      uploaderOptions: {},
       /**
        * 以上为聊天室使用，请勿改动
        */
@@ -489,10 +488,6 @@ export default{
     },
     volume () {
       return parseFloat(this.recorder.volume)
-    },
-    audioSource (index) {
-      let url = CHAT.msgArr[index].msg.url
-      return url
     }
   },
   methods: {
@@ -503,13 +498,11 @@ export default{
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
-      var date = new Date()
-      var time = date.getHours() + ':' + date.getMinutes()
-      var obj = {}
       if (this.msgType === 'text') {
-        obj = {
+        var date = new Date()
+        var time = date.getHours() + ':' + date.getMinutes()
+        var obj = {
           type: 'broadcast',
-          msgType: 'text',
           url: this.cururl,
           time: time,
           msg: this.msg,
@@ -519,17 +512,8 @@ export default{
         this.msg = ''
         CHAT.submit(obj)
       } else if (this.msgType === 'audio') {
-        obj = {
-          type: 'broadcast',
-          msgType: 'audio',
-          url: this.cururl,
-          time: time,
-          msg: this.audio,
-          toUser: this.username,
-          fromUser: this.userInfo.username
-        }
-        console.log(obj)
-        CHAT.submit(obj)
+        this.socket.emit('sendMsg', this.audio)
+        console.log(this.audio)
       }
     },
     toggleRecorder () {
@@ -847,10 +831,10 @@ export default{
 
             })
             setSWFIsReady()
-            this.streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
+            this.streamer000 = document.getElementById('rtmp-streamer1')
             this.streamer000.setScreenPosition(-100, 0)
             this.streamer000.setScreenSize(700, 380)
-            this.streamer000.publish('rtmp://push2.videocc.net/recordfe/', this.streamername)
+            this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
           },
           onCancel: () => {
           }
