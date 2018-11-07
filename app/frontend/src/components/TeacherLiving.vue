@@ -148,8 +148,11 @@
       <p slot="header" style="font-size: 20px">
         <span>{{curstu}}的做题情况如下：</span>
       </p>
+      <pre v-highlightjs="testsourcecode"><code class="cpp"></code></pre>
+      <!--
       <Table stripe border :columns="columns1" :data="curti" ref="table"></Table>
       <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
+      -->
     </Modal>
 
     <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
@@ -216,9 +219,21 @@
               <div v-else></div>
             </div>
           </div>
+
           <div class="talker">
-            <Input class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
+            <Input v-if="msgType === 'text'" class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
+            <div v-if="msgType === 'audio'" class="recorder">
+              <button @click="toggleRecorder()">录音</button>
+              <button @click="stopRecorder">停止</button>
+
+                <button
+                  class="record-audio"
+                  @click="removeRecord(idx)">删除</button>
+                <div class="record-text">{{audio.duration}}</div>
+
+            </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
+            <Button class="talker-send" @click="msgType = 'audio'">语音</Button>
           </div>
         </div>
       </div>
@@ -232,16 +247,41 @@ import axios from 'axios'
 import {setSWFIsReady} from '../../static/js/livingrtmp.js'
 import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 import CHAT from '../client'
+import { convertTimeMMSS } from '../utils'
+import Recorder from '../recorder'
+
 export default{
   name: 'load',
+  props: {
+    micFailed: { type: Function },
+    startRecord: { type: Function },
+    stopRecord: { type: Function },
+  },
   data () {
     return {
       /**
        * 以下为聊天室使用，请勿改动
        */
+      socket: null,
+      msgType: 'text',
       msg: '',
       CHAT,
       username: 'all',
+      isUploading: false,
+      recorder: new Recorder({
+        afterStop: () => {
+          this.audio = this.recorder.audio
+          if (this.stopRecord) {
+            this.stopRecord('stop record')
+          }
+        },
+        attempts: this.attempts,
+        time: this.time
+      }),
+      audio: {},
+      selected: {},
+      uploadStatus: null,
+      uploaderOptions: {},
       /**
        * 以上为聊天室使用，请勿改动
        */
@@ -255,6 +295,9 @@ export default{
       stream000: '',
       streamer: '',
       streamername: '7181857ac220181025144543640',
+
+      // multiple and codes
+      testsourcecode: '#include<iostream>\n using namespace std;\n int main(){\n int c;\n cout<<c++<<endl;\n return 0}',
       modal_pdf: false,
       modal_multi: false,
       multi_options: [
@@ -394,26 +437,72 @@ export default{
      * 以上为聊天室使用，请勿改动
      */
   },
+  computed: {
+    isPause () {
+      return this.recorder.isPause
+    },
+    isRecording () {
+      return this.recorder.isRecording
+    },
+    message () {
+      return this.uploadStatus === 'success' ? this.successfulUploadMsg : this.failedUploadMsg
+    },
+    recordedTime () {
+      return convertTimeMMSS(this.recorder.duration)
+    },
+    volume () {
+      return parseFloat(this.recorder.volume)
+    }
+  },
   methods: {
     /**
      * 以下为聊天室使用，请勿改动
      */
     chatingRoomInit () {
-      CHAT.init(this.userInfo.username, this.cururl)
+      this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
-      var date = new Date()
-      var time = date.getHours() + ':' + date.getMinutes()
-      var obj = {
-        type: 'broadcast',
-        url: this.cururl,
-        time: time,
-        msg: this.msg,
-        toUser: this.username,
-        fromUser: this.userInfo.username
+      if (this.msgType === 'text') {
+        var date = new Date()
+        var time = date.getHours() + ':' + date.getMinutes()
+        var obj = {
+          type: 'broadcast',
+          url: this.cururl,
+          time: time,
+          msg: this.msg,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        this.msg = ''
+        CHAT.submit(obj)
+      } else if (this.msgType === 'audio') {
+        this.socket.emit('sendMsg', this.audio)
+        console.log(this.audio)
       }
-      this.msg = ''
-      CHAT.submit(obj)
+    },
+    toggleRecorder () {
+      if (!this.isRecording || (this.isRecording && this.isPause)) {
+        this.recorder.start()
+        if (this.startRecord) {
+          this.startRecord('start record')
+        }
+      } else {
+        this.recorder.pause()
+        if (this.startRecord) {
+          this.startRecord('pause record')
+        }
+      }
+    },
+    stopRecorder () {
+      if (!this.isRecording) {
+        return
+      }
+      this.recorder.stop()
+    },
+    removeRecord (idx) {
+      this.audio = {}
+      this.$set(this.selected, 'url', null)
+      this.$eventBus.$emit('remove-record')
     },
     /**
      * 以上为聊天室使用，请勿改动
@@ -699,7 +788,11 @@ export default{
             data['job'] = this.userInfo['job']
             data['url'] = this.cururl
             axios.post('/api/classroom/openliving', data).then((resp) => {
-              this.streamername = resp.streamername
+
+              this.streamername = resp.data.streamername
+              console.log(resp.data.streamername)
+              console.log(this.streamername)
+
             })
             setSWFIsReady()
             this.streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
