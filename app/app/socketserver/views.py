@@ -25,7 +25,7 @@ def on_join(data):
 
 @socketio.on('sendMsg')
 def sendMsg(data):
-    print (data)
+    #print (data)
     type = data['type']
     if type == "broadcast":
         emit('broadcast', data, room = data['url'])
