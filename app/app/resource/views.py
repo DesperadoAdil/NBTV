@@ -56,7 +56,7 @@ def updateMultiple():
     return json.dumps(ret)
 
 
-@resource.route('/getmultiples')
+@resource.route('/getmultiples', methods = ['POST', 'GET'])
 def getChoice():
     print('get a  choice question')
     data = resource.get_data()
@@ -140,6 +140,7 @@ def addPDF():
     print('add pdf file')
     ret = {}
     try:
+
         f = request.files.get['file']
         username = request.form['username']
         ret['status'] = pdfManager.insert(f, username)
@@ -164,6 +165,7 @@ def delete_PDF():
         print(err)
         ret['status'] = "error"
     return json.dumps(ret, ensure_ascii = False)
+
 
 
 #Get_pdfs
