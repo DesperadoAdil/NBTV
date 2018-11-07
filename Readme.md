@@ -6,13 +6,13 @@ commit message都要符合这一个规范：
 **Type #\d+：description**  
 
 1. Type包括  
-  1) **Feat**: 新功能（feature）  
-  2) **Fix**: 修复bug  
-  3) **Docs**: 文档  
-  4) **Style**: 格式（不影响代码运行的变动）  
-  5) **Refactor**: 重构  
-  6) **Test**: 增加测试  
-  7) **Chore**: 构建过程或辅助工具变动  
+    1) **Feat**: 新功能（feature）  
+    2) **Fix**: 修复bug  
+    3) **Docs**: 文档  
+    4) **Style**: 格式（不影响代码运行的变动）  
+    5) **Refactor**: 重构  
+    6) **Test**: 增加测试  
+    7) **Chore**: 构建过程或辅助工具变动  
 
 2. \#\d+: 为该commit关联的issue，每一个commit都应该关联至一个issue
 
@@ -132,6 +132,15 @@ commit message都要符合这一个规范：
       - ### 查看选择题
          - **url:** */api/resourse/getmutiples*
          - **description:** 用户查看选择题
+         - **input:** `{ username : '' }`
+         - **output:** `[ '{ statement : '', optionList : '[ '答案列表', ... ]', answer : '一个数字' }', ... ]`
+         - **frontend:** *Jamgun*
+         - **backend:** *Adil*
+
+      - ### 查看选择题列表
+
+         - **url:** */api/resourse/get_muti_list*
+         - **description:** 用户获取该老师出过的选择题列表
          - **input:** `{ username : '' }`
          - **output:** `[ '{ statement : '', optionList : '[ '答案列表', ... ]', answer : '一个数字' }', ... ]`
          - **frontend:** *Jamgun*
@@ -308,9 +317,9 @@ commit message都要符合这一个规范：
 	socket.emit('addUser', username)	//此处需要后端接收消息
 给后端发送消息，用来将当前用户加入聊天室
 ###发送消息
-	socket.emit('sendMsg', obj)
+​	socket.emit('sendMsg', obj)
 ###接收消息
-	socket.on('to' + username, obj)
+​	socket.on('to' + username, obj)
 
 # 数据库表结构
 ## NBTV
