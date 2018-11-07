@@ -1,7 +1,6 @@
 from flask import request
 from flask_socketio import join_room, leave_room, emit, send
 from . import socketserver
-from .namespace import MyCustomNamespace
 from .. import socketio
 import json
 
