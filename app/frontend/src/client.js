@@ -44,7 +44,8 @@ const CHAT = {
       console.log('已连接')
     })
     console.log(username, url)
-    this.socket.emit('join', {'username': username, 'url':url})
+    this.socket.emit('join', {'username': username, 'url': url})
+    return this.socket
   }
 }
 export default CHAT
