@@ -264,7 +264,12 @@
                 <div class="talk-content">
                   <div class="talk-self-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
-                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(index)"></audio>
+                  <div v-else></div>
+                  <div v-if="msgObj.msgType === 'audio'">
+                    <audio :src="msgObj.msg.url"></audio>
+                  </div>
+                  <div v-else></div>
+
                 </div>
               </div>
               <div v-else></div>
@@ -273,7 +278,11 @@
                 <div class="talk-content">
                   <div class="talk-user-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
-                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(index)"></audio>
+                  <div v-else></div>
+                  <div v-if="msgObj.msgType === 'audio'">
+                    <audio :src="msgObj.msg.url"></audio>
+                  </div>
+                  <div v-else></div>
                 </div>
               </div>
               <div v-else></div>
@@ -666,12 +675,7 @@ export default{
     },
     volume () {
       return parseFloat(this.recorder.volume)
-    },
-    audioSource (index) {
-      let url = CHAT.msgArr[index].msg.url
-      return url
     }
-
   },
 
   methods: {
@@ -868,6 +872,11 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
+    getUrl (obj) {
+      var blob = obj
+      var url = URL.createObjectURL(blob)
+      return url
+    },
     chatingRoomInit () {
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
@@ -886,6 +895,7 @@ export default{
           fromUser: this.userInfo.username
         }
         this.msg = ''
+        CHAT.submit(obj)
       } else if (this.msgType === 'audio') {
         obj = {
           type: 'broadcast',

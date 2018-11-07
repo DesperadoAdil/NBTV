@@ -18,6 +18,7 @@ const CHAT = {
       var time = date.getHours() + ':' + date.getMinutes()
       var obj = {
         type: 'broadcast',
+        msgType: 'text',
         url: this.cururl,
         time: time,
         msg: msg,
