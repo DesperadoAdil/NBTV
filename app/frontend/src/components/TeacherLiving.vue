@@ -399,11 +399,6 @@ export default{
      * 以下为聊天室使用，请勿改动
      */
     chatingRoomInit () {
-      axios.post('/api/socketserver', {'url': this.cururl}).then((resp) => {
-        if (resp.data.status === 'success') {
-          console.log('create socket')
-        }
-      })
       CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {

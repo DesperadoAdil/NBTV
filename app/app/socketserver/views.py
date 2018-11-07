@@ -1,10 +1,6 @@
-from flask import request
 from flask_socketio import join_room, leave_room, emit, send
-from . import socketserver
 from .. import socketio
-import json
 
-url = '/242544'
 
 @socketio.on('connect')
 def on_connect():

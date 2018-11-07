@@ -26,6 +26,6 @@ from .classroom_stu import classroom_stu as classroom_stu_blueprint
 app.register_blueprint(classroom_stu_blueprint, url_prefix = '/api/classroom_stu')
 
 from .socketserver import socketserver as socketserver_blueprint
-app.register_blueprint(socketserver_blueprint, url_prefix = '/api/socketserver')
+app.register_blueprint(socketserver_blueprint)
 
 from app import views, models
