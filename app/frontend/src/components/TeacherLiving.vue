@@ -402,7 +402,6 @@ export default{
       CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
-      console.log('submit')
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
       var obj = {
@@ -421,12 +420,12 @@ export default{
      */
     subxlsx () {
       console.log('dhasjkhda')
-      /*const data = this.curuser
+      /* const data = this.curuser
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
       data['url'] = this.cururl
       data['item'] = document.querySelector('input[type=file]').files[0]
-      console.log(data['item'])*/
+      console.log(data['item']) */
       var formData = new FormData()
       formData.append('url', this.cururl)
       formData.append('item', document.querySelector('input[type=file]').files[0])
@@ -436,7 +435,7 @@ export default{
         method: 'post',
         headers: {
           'Content-Type': 'multipart/form-data'
-         }
+        }
       }
       axios(options).then((resp) => {
         this.studentitems = resp.studentitems
@@ -524,7 +523,7 @@ export default{
         method: 'post',
         headers: {
           'Content-Type': 'multipart/form-data'
-         }
+        }
       }
       axios(options).then((resp) => {
         console.log('addPDF success')
