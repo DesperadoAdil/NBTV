@@ -214,7 +214,8 @@
                     v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username">
                 <div class="talk-content">
                   <div class="talk-user-name">{{ msgObj.fromUser }}</div>
-                  <div class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+                  <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(index)"></audio>
                 </div>
               </div>
               <div v-else></div>
