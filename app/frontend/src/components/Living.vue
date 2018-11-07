@@ -143,6 +143,7 @@ export default{
     axios.post('/api/classroom_stu/urlgetvid', data).then((resp) => {
       this.curvid = resp.data.vid
       console.log("vid:"+resp.data.vid)
+      console.log("vid:"+this.curvid)
     })
     const s = document.createElement('script')
     s.type = 'text/javascript'

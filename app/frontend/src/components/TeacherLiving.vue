@@ -798,7 +798,7 @@ export default{
             this.streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
             this.streamer000.setScreenPosition(-100, 0)
             this.streamer000.setScreenSize(700, 380)
-            this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
+            this.streamer000.publish('rtmp://push2.videocc.net/recordfe/', this.streamername)
           },
           onCancel: () => {
           }
