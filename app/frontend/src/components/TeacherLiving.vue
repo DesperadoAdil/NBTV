@@ -1,6 +1,7 @@
 <template>
   <div class="tealivingmain">
     <div  class="cardtea">
+      <!-- -----------侧边栏----------------- -->
       <Menu name="sidemenu" style="width: 100%">
 
         <!-- 发布 -->
@@ -16,8 +17,7 @@
 
         <!-- 添加 -->
         <Submenu name="add" class="menuitentea">
-          <template slot="title" >
-            <Icon type="ios-paper" />
+          <template slot="title" ><Icon type="ios-paper" />
             添加
           </template>
           <MenuItem @click.native="modal_pdf = true">PDF</MenuItem>
@@ -27,31 +27,36 @@
         <!-- 添加 -->
 
         <!-- 使用 -->
-        <Submenu name="2" class="menuitentea">
-          <template slot="title">
-            <Icon type="ios-people" />
+        <Submenu name="cancel" class="menuitentea">
+          <template slot="title"><Icon type="ios-people" />
             使用
           </template>
-          <MenuItem name="2-2" class="menuitentea" @click.native="closetext">取消使用</MenuItem>
+          <MenuItem @click.native="closetext()">取消使用</MenuItem>
         </Submenu>
         <!-- 使用 -->
 
         <!-- 学生 -->
-        <Submenu name="4" class="menuitentea"  >
-          <template slot="title">
-            <Icon type="ios-stats" />
+        <Submenu name="student" class="menuitentea"  >
+          <template slot="title"><Icon type="ios-stats" />
             学生
           </template>
-          <MenuItem name="4-1" class="menuitentea" >
-            <a href="javascript:;" class="upf">xlsx添加学生
+          <MenuItem @click.native="modal_xlsx = true">xlsx文档添加</MenuItem>
+          <MenuItem>
+            <a href="javascript:;" class="upf">
+              添加xlsx
               <input type="file" name="xlsxinput" id="xlsxinput">
             </a>
-            <Button type="primary" @click="subxlsx">submit</Button>
-
           </MenuItem>
-          <MenuItem name="4-2" class="menuitentea" @click.native="addstua">用户名添加学生</MenuItem>
+          <MenuItem>
+            <Button @click="subxlsx">submit</Button>
+          </MenuItem>
+          <MenuItem @click.native="addstua">用户名添加学生</MenuItem>
         </Submenu>
+        <!-- 学生 -->
       </Menu>
+      <!-- -----------侧边栏----------------- -->
+
+      <!-- 底部按钮：开播、关播、关麦 -->
       <Button class="btnopen" type="primary"  v-bind:icon="openclose"  @click="teaopenclose()">
         <span class="menuitentea">{{this.opentext}}</span>
       </Button>
@@ -59,12 +64,11 @@
       <Button type="primary" shape="circle" v-bind:icon="jinshipin" @click="tojinshipin()"></Button>
     </div>
 
+    <!-------------Modal of the menus----------------->
     <!--PDFlist-->
     <Modal
-      v-model="modal_pdflist"
-      @on-ok="modal_pdflist = false"
-      @on-cancel="modal_pdflist = false"
-      width="900"
+      v-model="modal_pdflist" width="900"
+      @on-ok="modal_pdflist = false" @on-cancel="modal_pdflist = false"
     >
       <Card>
         <Split class="demo-split" v-model="split_pdf">
@@ -133,10 +137,14 @@
       <p slot="header" style="font-size: 20px">
         <span>上传课件</span>
       </p>
-      <a href="javascript:;" class="upf">pdf upload
-        <input type="file" name="pdfinput" id="pdfinput">
-      </a>
-      <Button type="primary" @click="addPDF()">submit</Button>
+      <FormItem>
+        <a href="javascript:;" class="upf">pdf upload
+          <input type="file" name="pdfinput" id="pdfinput">
+        </a>
+      </FormItem>
+      <FormItem>
+        <Button type="primary" @click="addPDF()">submit</Button>
+      </FormItem>
     </Modal>
 
     <!--设置选择题-->
@@ -146,29 +154,30 @@
       </p>
       <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
         <FormItem label="Statement">
-          <Input v-model="sub_multi.statement"></Input>
+          <Input type="textarea" v-model="sub_multi.statement" placeholder="Enter your Description"></Input>
         </FormItem>
-        <!-- 以下为可以实现选项的动态添加删除的代码  -->
+        <!-- 以下为选项的动态添加删除  -->
         <FormItem
           v-for="(item, index) in multi_options"
           v-if="item.status"
           :key="index">
           <Row>
             <Col span="18">
-              <Input type="text" placeholder="Enter Your Choice"></Input>
+              <Input type="text" placeholder="Enter Your Choice" v-model="multi_options[index].value"></Input>
             </Col>
             <Col span="4" offset="1">
-              <Button @click="handleRemove(index)">Delete</Button>
+              <Button @click="multi_delChoice(index)">Delete</Button>
             </Col>
           </Row>
         </FormItem>
         <FormItem>
           <Row>
             <Col span="12">
-              <Button type="dashed" long @click="handleAdd" icon="md-add">Add a Choice</Button>
+              <Button type="dashed" long @click="multi_addChoice()" icon="md-add">Add Choice</Button>
             </Col>
           </Row>
         </FormItem>
+        <!-- 答案设置  -->
         <FormItem label="The Answer">
           <Input v-model="sub_multi.answer" placeholder="a number"></Input>
         </FormItem>
@@ -180,7 +189,7 @@
       <p slot="header" style="font-size: 20px">
         <span>设置编程题</span>
       </p>
-      <Form>
+      <Form label-position="top">
         <FormItem label="Text">
           <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
           <Input v-model="sub_code.statement"
@@ -197,21 +206,17 @@
             <Option>Vue.js</Option>
           </Select>
         </FormItem>
+        <FormItem label="Example Code">
+          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
+          <template>
+            <!-------------输入框的代码高亮还没好，现在仅能静态高亮------------>
+            <prism-editor :code="sub_code.example" language="cpp"></prism-editor>
+          </template>
+        </FormItem>
       </Form>
     </Modal>
 
-
-    <Modal   v-model="modal3"    @on-ok=""    @on-cancel="">
-      <p slot="header" style="font-size: 20px">
-        <span>{{curstu}}的做题情况如下：</span>
-      </p>
-      <pre v-highlightjs="testsourcecode"><code class="cpp"></code></pre>
-      <!--
-      <Table stripe border :columns="columns1" :data="curti" ref="table"></Table>
-      <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
-      -->
-    </Modal>
-
+    <!---------main living 部分------------->
     <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
@@ -225,10 +230,12 @@
       </div>
     </div>
 
+    <!---------main pdf 部分------------->
     <div id="mainpdfcard" class="cardtealivingpdf" :style="{display:mainpdfcarddisplay?'block':'none'}">
       <iframe id="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
 
+    <!---------main 选择题 部分------------->
     <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
       <p class="selecttitle00">{{curtitle}}</p>
       <RadioGroup class="radiotea" v-model="ionselect" vertical>
@@ -307,8 +314,8 @@
         </div>
       </div>
     </Card>
-
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
+
   </div>
 </template>
 
@@ -319,6 +326,7 @@ import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 import CHAT from '../client'
 import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
+import PrismEditor from 'vue-prism-editor'
 
 export default{
   name: 'load',
@@ -355,7 +363,10 @@ export default{
       /**
        * 以上为聊天室使用，请勿改动
        */
+
+      // something to do with add student
       astu: '',
+      // stream stuff
       jinmai: 'ios-mic',
       jinshipin: 'ios-eye',
       isjinmai: false,
@@ -366,18 +377,8 @@ export default{
       streamer: '',
       streamername: '7181857ac220181025144543640',
 
-
-
-
-
-
-
-
-
-
-
-
       // pdf, multiple and codes
+      // pdf parameter
       split_pdf: 0.5,
       modal_pdflist: false,
       pdfListInput: {username: ''},
@@ -530,7 +531,7 @@ export default{
         title: 'B-Tree'
       }],
       // framework
-      testsourcecode: '#include<iostream>\n using namespace std;\n int main(){\n int c;\n cout<<c++<<endl;\n return 0}',
+      testsourcecode: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}',
       modal_pdf: false,
       modal_multi: false,
       multi_options: [
@@ -554,7 +555,8 @@ export default{
       modal_code: false,
       sub_code: {
         statement: '',
-        language: '' // language 应当是个多选框
+        language: '', // language 是个多选框
+        example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
       },
       // Shihang
       modal3: false,
@@ -677,7 +679,9 @@ export default{
       return parseFloat(this.recorder.volume)
     }
   },
-
+  components: {
+    PrismEditor
+  },
   methods: {
     addPDF () {
       // send pdf to backend
@@ -697,19 +701,16 @@ export default{
         console.log('addPDF success')
       })
     },
-    handleReset (name) {
-      this.$refs[name].resetFields()
-    },
-    handleAdd () {
-      this.index++
+    multi_addChoice () {
+      this.multi_index++
       this.multi_options.push({
         value: '',
-        index: this.index,
+        index: this.multi_index,
         status: 1
       })
     },
-    handleRemove (index) {
-      this.multi_options[index].status = 0
+    multi_delChoice (i) {
+      this.multi_options[i].status = 0
     },
 
 
