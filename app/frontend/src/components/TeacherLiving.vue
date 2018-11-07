@@ -237,11 +237,12 @@
           </div>
           <div class="content">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
-              <div  class="talk-space self-talk"
-                    v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
+              <div class="talk-space self-talk"
+                   v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
                 <div class="talk-content">
                   <div class="talk-self-name">{{ msgObj.fromUser }}</div>
-                  <div class="talk-word talk-word-self">{{ msgObj.msg }}</div>
+                  <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
+                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(index)"></audio>
                 </div>
               </div>
               <div v-else></div>
@@ -249,7 +250,8 @@
                     v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username">
                 <div class="talk-content">
                   <div class="talk-user-name">{{ msgObj.fromUser }}</div>
-                  <div class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+                  <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(index)"></audio>
                 </div>
               </div>
               <div v-else></div>
@@ -262,10 +264,10 @@
               <button @click="toggleRecorder()">录音</button>
               <button @click="stopRecorder">停止</button>
 
-                <button
-                  class="record-audio"
-                  @click="removeRecord(idx)">删除</button>
-                <div class="record-text">{{audio.duration}}</div>
+              <button
+                class="record-audio"
+                @click="removeRecord(idx)">删除</button>
+              <div class="record-text">{{audio.duration}}</div>
 
             </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
@@ -274,6 +276,7 @@
         </div>
       </div>
     </Card>
+
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
   </div>
 </template>
@@ -514,7 +517,12 @@ export default{
     },
     volume () {
       return parseFloat(this.recorder.volume)
+    },
+    audioSource (index) {
+      let url = CHAT.msgArr[index].msg.url
+      return url
     }
+
   },
 
   methods: {
@@ -607,11 +615,13 @@ export default{
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
+      var date = new Date()
+      var time = date.getHours() + ':' + date.getMinutes()
+      var obj = {}
       if (this.msgType === 'text') {
-        var date = new Date()
-        var time = date.getHours() + ':' + date.getMinutes()
-        var obj = {
+        obj = {
           type: 'broadcast',
+          msgType: 'text',
           url: this.cururl,
           time: time,
           msg: this.msg,
@@ -620,10 +630,20 @@ export default{
         }
         this.msg = ''
       } else if (this.msgType === 'audio') {
-        this.socket.emit('sendMsg', this.audio)
-        console.log(this.audio)
+        obj = {
+          type: 'broadcast',
+          msgType: 'audio',
+          url: this.cururl,
+          time: time,
+          msg: this.audio,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        console.log(obj)
+        CHAT.submit(obj)
       }
     },
+
     toggleRecorder () {
       if (!this.isRecording || (this.isRecording && this.isPause)) {
         this.recorder.start()
