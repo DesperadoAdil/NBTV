@@ -683,7 +683,11 @@ export default{
             data['job'] = this.userInfo['job']
             data['url'] = this.cururl
             axios.post('/api/classroom/openliving', data).then((resp) => {
-              this.streamername = resp.streamername
+
+              this.streamername = resp.data.streamername
+              console.log(resp.data.streamername)
+              console.log(this.streamername)
+
             })
             setSWFIsReady()
             this.streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
