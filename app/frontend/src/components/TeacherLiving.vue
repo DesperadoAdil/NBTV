@@ -1,13 +1,11 @@
 <template>
   <div class="tealivingmain">
-
     <div  class="cardtea">
-      <Menu name="0" style="width: 100%">
+      <Menu name="sidemenu" style="width: 100%">
 
         <!-- 发布 -->
         <Submenu name="post" class="menuitentea">
-          <template slot="title" >
-            <Icon type="ios-paper" />
+          <template slot="title" ><Icon type="ios-paper" />
             发布
           </template>
           <MenuItem @click.native="showPdfList()">PDF</MenuItem>
@@ -17,7 +15,7 @@
         <!-- 发布 -->
 
         <!-- 添加 -->
-        <Submenu name="1" class="menuitentea">
+        <Submenu name="add" class="menuitentea">
           <template slot="title" >
             <Icon type="ios-paper" />
             添加
@@ -28,7 +26,7 @@
         </Submenu>
         <!-- 添加 -->
 
-        <!-- 使用教学资源 -->
+        <!-- 使用 -->
         <Submenu name="2" class="menuitentea">
           <template slot="title">
             <Icon type="ios-people" />
@@ -36,14 +34,9 @@
           </template>
           <MenuItem name="2-2" class="menuitentea" @click.native="closetext">取消使用</MenuItem>
         </Submenu>
-        <!-- 学生做题情况 -->
-        <Submenu name="3" class="menuitentea"  >
-          <template slot="title">
-            <Icon type="ios-stats" />
-            回馈
-          </template>
-          <MenuItem name="3-1" class="menuitentea" v-for="item in studentitems" @click.native="showstudentti(item)">{{item}}</MenuItem>
-        </Submenu>
+        <!-- 使用 -->
+
+        <!-- 学生 -->
         <Submenu name="4" class="menuitentea"  >
           <template slot="title">
             <Icon type="ios-stats" />
@@ -1000,6 +993,7 @@ export default{
         this.studentitems = resp.studentitems
       })
     },
+    // 用于显示学生的代码
     showstudentti (item) {
       this.curstu = item
       const data = this.curuser
@@ -1257,7 +1251,7 @@ export default{
   }
 
   .menuitentea{
-    font-size: 20px;
+    font-size: 18px;
   }
   .btnopen{
     padding-:5%;
