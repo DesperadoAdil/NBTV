@@ -629,6 +629,7 @@ export default{
           fromUser: this.userInfo.username
         }
         this.msg = ''
+        CHAT.submit(obj)
       } else if (this.msgType === 'audio') {
         obj = {
           type: 'broadcast',
