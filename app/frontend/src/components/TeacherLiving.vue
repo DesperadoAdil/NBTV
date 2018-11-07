@@ -201,11 +201,12 @@
           </div>
           <div class="content">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
-              <div  class="talk-space self-talk"
+              <div class="talk-space self-talk"
                     v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
                 <div class="talk-content">
                   <div class="talk-self-name">{{ msgObj.fromUser }}</div>
-                  <div class="talk-word talk-word-self">{{ msgObj.msg }}</div>
+                  <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
+                  <audio v-if="msgObj.msgType === 'audio'" :src="audioSource(index)"></audio>
                 </div>
               </div>
               <div v-else></div>
@@ -255,7 +256,7 @@ export default{
   props: {
     micFailed: { type: Function },
     startRecord: { type: Function },
-    stopRecord: { type: Function },
+    stopRecord: { type: Function }
   },
   data () {
     return {
@@ -271,6 +272,7 @@ export default{
       recorder: new Recorder({
         afterStop: () => {
           this.audio = this.recorder.audio
+          console.log(this.audio)
           if (this.stopRecord) {
             this.stopRecord('stop record')
           }
@@ -280,8 +282,6 @@ export default{
       }),
       audio: {},
       selected: {},
-      uploadStatus: null,
-      uploaderOptions: {},
       /**
        * 以上为聊天室使用，请勿改动
        */
@@ -452,6 +452,10 @@ export default{
     },
     volume () {
       return parseFloat(this.recorder.volume)
+    },
+    audioSource (index) {
+      let url = CHAT.msgArr[index].msg.url
+      return url
     }
   },
   methods: {
@@ -462,11 +466,13 @@ export default{
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
+      var date = new Date()
+      var time = date.getHours() + ':' + date.getMinutes()
+      var obj = {}
       if (this.msgType === 'text') {
-        var date = new Date()
-        var time = date.getHours() + ':' + date.getMinutes()
-        var obj = {
+        obj = {
           type: 'broadcast',
+          msgType: 'text',
           url: this.cururl,
           time: time,
           msg: this.msg,
@@ -476,8 +482,17 @@ export default{
         this.msg = ''
         CHAT.submit(obj)
       } else if (this.msgType === 'audio') {
-        this.socket.emit('sendMsg', this.audio)
-        console.log(this.audio)
+        obj = {
+          type: 'broadcast',
+          msgType: 'audio',
+          url: this.cururl,
+          time: time,
+          msg: this.audio,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        console.log(obj)
+        CHAT.submit(obj)
       }
     },
     toggleRecorder () {
