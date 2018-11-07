@@ -256,6 +256,7 @@ def openlive():
 	else:
 
 		ret['streamername'] = classroom.rtmpUrl
+		ret['streamername'] = ret['streamername'].split('/')[-1]
 		vid = classroom.vid
 		response = polyvAPI.instance.openLive(vid)
 

@@ -50,9 +50,9 @@ class Teachers(db.Model):
     username = db.Column(db.String(50), primary_key=True, unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
     classroomlist = db.Column(db.Text, nullable=False, default = "[]")
-    
+
     classroom = db.relationship('Classrooms', backref='teachers', lazy='dynamic')
-    
+
     pdfs = db.relationship('PDFFile', backref = "teachers", lazy = "dynamic")
     codeQue = db.relationship('CodeQuestion', backref = "teachers", lazy = "dynamic")
     choiceQue = db.relationship('ChoiceQuestion', backref = "teachers", lazy = "dynamic")
@@ -98,7 +98,7 @@ class ChoiceQuestion(db.Model):
     submitRecord = db.Column(db.Text, nullable = False)
     # classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
-    
+
     def __repr__(self):
         return '<choiceQuestionId %r>' % self.choiceQuestionId
 
