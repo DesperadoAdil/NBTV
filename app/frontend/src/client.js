@@ -41,7 +41,23 @@ const CHAT = {
   },
   message: function (username) {
     console.log('message')
-    this.socket.on('to' + username, function (obj) {
+    this.socket.on('message', function (msg) {
+      msg= "[system]: " + msg
+      var date = new Date()
+      var time = date.getHours() + ':' + date.getMinutes()
+      var obj = {
+        type: 'broadcast',
+        url: this.cururl,
+        time: time,
+        msg: msg,
+        toUser: 'all',
+        fromUser: 'system'
+      }
+      CHAT.msgArr.push(obj)
+      console.log('CHAT.msgArr(system)', obj)
+    })
+    this.socket.on('whisper', function (obj) {
+      obj.msg = obj.fromUser + " whispered to you: " + obj.msg
       CHAT.msgArr.push(obj)
       console.log('CHAT.msgArr(whisper)', obj)
     })
@@ -51,7 +67,8 @@ const CHAT = {
     })
   },
   init: function (username, url) {
-    this.socket = io.connect(location.protocol+'//'+document.domain+':'+location.port, {'username': username})
+    var namespace = '/'+url
+    this.socket = io.connect(location.protocol+'//'+document.domain+':'+location.port+namespace)
     this.socket.on('open', function () {
       console.log('已连接')
     })
