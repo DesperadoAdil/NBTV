@@ -122,11 +122,12 @@ class PDFFile(db.Model):
     # uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
     owner = db.Column(db.String(50), db.ForeignKey('Teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
     filename = db.Column(db.String(100), nullable = False)
+    uniqueN = db.Column(db.String(150), nullable = False, primary_key = True, default = owner + filename)
     # filePath = db.Column(db.Text, nullable = False)
-    __table_args__ = {
-        'mysql_charset':'utf8',
-        db.Index('filepath', 'owner', 'filename')
-    }
+    __table_args__ = (
+        db.Index('filepath', 'owner', 'filename'),
+        {'mysql_charset':'utf8'}
+    )
 
     def __repr__(self):
         return '<pdfId %r>' % self.owner
