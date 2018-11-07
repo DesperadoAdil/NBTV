@@ -216,9 +216,21 @@
               <div v-else></div>
             </div>
           </div>
+
           <div class="talker">
-            <Input class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
+            <Input v-if="msgType === 'text'" class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
+            <div v-if="msgType === 'audio'" class="recorder">
+              <button @click="toggleRecorder()">录音</button>
+              <button @click="stopRecorder">停止</button>
+
+                <button
+                  class="record-audio"
+                  @click="removeRecord(idx)">删除</button>
+                <div class="record-text">{{audio.duration}}</div>
+
+            </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
+            <Button class="talker-send" @click="msgType = 'audio'">语音</Button>
           </div>
         </div>
       </div>
@@ -232,16 +244,40 @@ import axios from 'axios'
 import {setSWFIsReady} from '../../static/js/livingrtmp.js'
 import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 import CHAT from '../client'
+import { convertTimeMMSS } from '../utils'
+import Recorder from '../recorder'
 export default{
   name: 'load',
+  props: {
+    micFailed: { type: Function },
+    startRecord: { type: Function },
+    stopRecord: { type: Function },
+  },
   data () {
     return {
       /**
        * 以下为聊天室使用，请勿改动
        */
+      socket: null,
+      msgType: 'text',
       msg: '',
       CHAT,
       username: 'all',
+      isUploading: false,
+      recorder: new Recorder({
+        afterStop: () => {
+          this.audio = this.recorder.audio
+          if (this.stopRecord) {
+            this.stopRecord('stop record')
+          }
+        },
+        attempts: this.attempts,
+        time: this.time
+      }),
+      audio: {},
+      selected: {},
+      uploadStatus: null,
+      uploaderOptions: {},
       /**
        * 以上为聊天室使用，请勿改动
        */
@@ -377,7 +413,7 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
-    CHAT.message(this.userInfo.username)
+    // CHAT.message(this.userInfo.username)
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -385,35 +421,81 @@ export default{
   created () {
     this.cururl = this.$route.params.url
     console.log(this.cururl)
-    this.showUserInfo()
+    // this.showUserInfo()
     /**
      * 以下为聊天室使用，请勿改动
      */
-    this.chatingRoomInit()
+    // this.chatingRoomInit()
     /**
      * 以上为聊天室使用，请勿改动
      */
+  },
+  computed: {
+    isPause () {
+      return this.recorder.isPause
+    },
+    isRecording () {
+      return this.recorder.isRecording
+    },
+    message () {
+      return this.uploadStatus === 'success' ? this.successfulUploadMsg : this.failedUploadMsg
+    },
+    recordedTime () {
+      return convertTimeMMSS(this.recorder.duration)
+    },
+    volume () {
+      return parseFloat(this.recorder.volume)
+    }
   },
   methods: {
     /**
      * 以下为聊天室使用，请勿改动
      */
     chatingRoomInit () {
-      CHAT.init(this.userInfo.username, this.cururl)
+      this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
-      var date = new Date()
-      var time = date.getHours() + ':' + date.getMinutes()
-      var obj = {
-        type: 'broadcast',
-        url: this.cururl,
-        time: time,
-        msg: this.msg,
-        toUser: this.username,
-        fromUser: this.userInfo.username
+      if (this.msgType === 'text') {
+        var date = new Date()
+        var time = date.getHours() + ':' + date.getMinutes()
+        var obj = {
+          type: 'broadcast',
+          url: this.cururl,
+          time: time,
+          msg: this.msg,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        this.msg = ''
+        CHAT.submit(obj)
+      } else if (this.msgType === 'audio') {
+        this.socket.emit('sendMsg', this.audio)
+        console.log(this.audio)
       }
-      this.msg = ''
-      CHAT.submit(obj)
+    },
+    toggleRecorder () {
+      if (!this.isRecording || (this.isRecording && this.isPause)) {
+        this.recorder.start()
+        if (this.startRecord) {
+          this.startRecord('start record')
+        }
+      } else {
+        this.recorder.pause()
+        if (this.startRecord) {
+          this.startRecord('pause record')
+        }
+      }
+    },
+    stopRecorder () {
+      if (!this.isRecording) {
+        return
+      }
+      this.recorder.stop()
+    },
+    removeRecord (idx) {
+      this.audio = {}
+      this.$set(this.selected, 'url', null)
+      this.$eventBus.$emit('remove-record')
     },
     /**
      * 以上为聊天室使用，请勿改动

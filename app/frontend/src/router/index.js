@@ -11,6 +11,7 @@ import MyLivingList from '@/components/MyLivingList'
 import MyWatchingList from '@/components/MyWatchinglist'
 import TeacherLiving from '@/components/TeacherLiving'
 import HomePage from '@/components/HomePage'
+import AudioTest from '@/components/AudioTest'
 
 Vue.use(Router)
 Vue.use(VueCookies)
@@ -58,6 +59,11 @@ const router = new Router({
       path: '/',
       name: 'HomePage',
       component: HomePage
+    },
+    {
+      path: '/audiotest',
+      name: 'audiotest',
+      component: AudioTest
     }
   ]
 })
