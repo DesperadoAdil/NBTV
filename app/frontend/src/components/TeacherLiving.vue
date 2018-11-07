@@ -4,7 +4,18 @@
     <div  class="cardtea">
       <p slot="title" style="font-size: 20px">选项</p>
       <Menu name="0" style="width: 100%">
-        <!-- 添加教学资源 -->
+
+        <!-- 发布 -->
+        <Submenu name="post" class="menuitentea">
+          <template slot="title" >
+            <Icon type="ios-paper" />
+            发布
+          </template>
+          <MenuItem @click.native="showPdfList()">PDF</MenuItem>
+          <MenuItem @click.native="modal_multilist = true">Choice</MenuItem>
+          <MenuItem @click.native="modal_codelist = true">Code</MenuItem>
+        </Submenu>
+        <!-- 教学资源 -->
         <Submenu name="1" class="menuitentea">
           <template slot="title" >
             <Icon type="ios-paper" />
@@ -39,7 +50,7 @@
           </template>
           <MenuItem name="4-1" class="menuitentea" >
             <a href="javascript:;" class="upf">xlsx添加学生
-              <input type="file" name="fileinput" id="fileinput">
+              <input type="file" name="xlsxinput" id="xlsxinput">
             </a>
             <Button type="primary" @click="subxlsx">submit</Button>
 
@@ -54,14 +65,38 @@
       <Button type="primary" shape="circle" v-bind:icon="jinshipin" @click="tojinshipin()"></Button>
     </div>
 
+    <!--PDFlist-->
+    <Modal
+      v-model="modal_pdflist"
+      @on-ok="SOMETHING()"
+      @on-cancel="modal_pdflist = false"
+      width="720"
+    >
+      <Card>
+        <Split class="demo-split" v-model="split_pdf">
+          <div slot="left"  class="demo-split-pane">
+            <p>All</p>
+            <br>
+            <Table height="375" border :columns="pdfAll" :data="pdfAllList"></Table>
+          </div>
+          <div slot="right"  class="demo-split-pane">
+            <p>This Classroom</p>
+            <br>
+            <Table height="375" border :columns="pdfThis" :data="pdfThisList"></Table>
+          </div>
+        </Split>
+      </Card>
+    </Modal>
+
     <!--上传-->
     <Modal v-model="modal_pdf" @on-ok="addPDF()" @on-cancel="modal_pdf = false">
       <p slot="header" style="font-size: 20px">
         <span>上传课件</span>
       </p>
-      <Upload action="上传的地址" headers="设置上传的请求头部">
-        <Button icon="ios-cloud-upload-outline">Upload files</Button>
-      </Upload>
+      <a href="javascript:;" class="upf">pdf upload
+        <input type="file" name="pdfinput" id="pdfinput">
+      </a>
+      <Button type="primary" @click="addPDF()">submit</Button>
     </Modal>
 
     <!--设置选择题-->
@@ -148,8 +183,11 @@
       <p slot="header" style="font-size: 20px">
         <span>{{curstu}}的做题情况如下：</span>
       </p>
+      <pre v-highlightjs="testsourcecode"><code class="cpp"></code></pre>
+      <!--
       <Table stripe border :columns="columns1" :data="curti" ref="table"></Table>
       <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
+      -->
     </Modal>
 
     <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
@@ -188,12 +226,55 @@
       <p class="anstea00">本题目答案：{{curanswer}}</p>
     </div>
 
-    <div id="liaotianshi" class="danmuxinxi" :style="{top:liaotianshiheight}">
-      <Card style="height: 800px">
-        <h3>聊天室信息显示部分（待修改）</h3>
-      </Card>
-    </div>
+    <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
+    <Card id="chatingRoom">
+      <div class="talk-contents">
+        <div class="talk-inner">
+          <div class="talk-nav">
+            <div class="talk-title">
+              {{username}}
+            </div>
+          </div>
+          <div class="content">
+            <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
+              <div  class="talk-space self-talk"
+                    v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
+                <div class="talk-content">
+                  <div class="talk-self-name">{{ msgObj.fromUser }}</div>
+                  <div class="talk-word talk-word-self">{{ msgObj.msg }}</div>
+                </div>
+              </div>
+              <div v-else></div>
+              <div  class="talk-space user-talk"
+                    v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username">
+                <div class="talk-content">
+                  <div class="talk-user-name">{{ msgObj.fromUser }}</div>
+                  <div class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+                </div>
+              </div>
+              <div v-else></div>
+            </div>
+          </div>
 
+          <div class="talker">
+            <Input v-if="msgType === 'text'" class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
+            <div v-if="msgType === 'audio'" class="recorder">
+              <button @click="toggleRecorder()">录音</button>
+              <button @click="stopRecorder">停止</button>
+
+                <button
+                  class="record-audio"
+                  @click="removeRecord(idx)">删除</button>
+                <div class="record-text">{{audio.duration}}</div>
+
+            </div>
+            <Button class="talker-send" type="success" @click="submit">发送</Button>
+            <Button class="talker-send" @click="msgType = 'audio'">语音</Button>
+          </div>
+        </div>
+      </div>
+    </Card>
+    <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
   </div>
 </template>
 
@@ -201,20 +282,85 @@
 import axios from 'axios'
 import {setSWFIsReady} from '../../static/js/livingrtmp.js'
 import {RtmpStreamer} from '../../static/js/livingrtmp.js'
+import CHAT from '../client'
+import { convertTimeMMSS } from '../utils'
+import Recorder from '../recorder'
+
 export default{
   name: 'load',
+  props: {
+    micFailed: { type: Function },
+    startRecord: { type: Function },
+    stopRecord: { type: Function },
+  },
   data () {
     return {
-      astu:'',
-      jinmai:'ios-mic',
-      jinshipin:'ios-eye',
-      isjinmai:false,
-      isjinshipin:false,
-      videohei:700+'px',
-      classmain0:true,
+      /**
+       * 以下为聊天室使用，请勿改动
+       */
+      socket: null,
+      msgType: 'text',
+      msg: '',
+      CHAT,
+      username: 'all',
+      isUploading: false,
+      recorder: new Recorder({
+        afterStop: () => {
+          this.audio = this.recorder.audio
+          if (this.stopRecord) {
+            this.stopRecord('stop record')
+          }
+        },
+        attempts: this.attempts,
+        time: this.time
+      }),
+      audio: {},
+      selected: {},
+      uploadStatus: null,
+      uploaderOptions: {},
+      /**
+       * 以上为聊天室使用，请勿改动
+       */
+      astu: '',
+      jinmai: 'ios-mic',
+      jinshipin: 'ios-eye',
+      isjinmai: false,
+      isjinshipin: false,
+      videohei: 700 + 'px',
+      classmain0: true,
       stream000: '',
       streamer: '',
       streamername: '7181857ac220181025144543640',
+
+      // pdf, multiple and codes
+      split_pdf: 0.5,
+      modal_pdflist: false,
+      pdfListInput: {username: ''},
+      pdfAll: [
+        {
+          title: 'Title',
+          key: 'title'
+        },
+        {
+          title: 'Url',
+          key: 'url'
+        }
+      ],
+      pdfThis: [
+        {
+          title: 'Title',
+          key: 'title'
+        },
+        {
+          title: 'Url',
+          key: 'url'
+        }
+      ],
+      pdfThisList: [],
+      pdfAllList: [{title: 'Slide01', url: 'hide/slide01'}],
+      modal_multilist: false,
+      modal_codelist: false,
+      testsourcecode: '#include<iostream>\n using namespace std;\n int main(){\n int c;\n cout<<c++<<endl;\n return 0}',
       modal_pdf: false,
       modal_multi: false,
       multi_options: [
@@ -245,7 +391,6 @@ export default{
       modal2: false,
       modal1: false,
       displayPdfurl: '',
-      liaotianshiheight: 60 + 'px',
       littlelivingcarddisplay: false,
       mainselectcarddisplay: false,
       mainpdfcarddisplay: false,
@@ -293,15 +438,15 @@ export default{
       curti: [
         {
           title: '1',
-          type : 'select',
+          type: 'select',
           ans: 'A',
-          standardans:''
+          standardans: ''
         },
         {
           title: '4',
-          type : 'code',
+          type: 'code',
           ans: '#include<> \n using namespace std; int main(){ int c; cout<<c++<<endl; return 0}',
-          standardans:''
+          standardans: ''
         }
       ],
       studentitems: ['zsh', 'adil', 'zhq', 'hyx', 'xcj'],
@@ -319,7 +464,7 @@ export default{
           title: 'xjbx2',
           ans: ['1', '2', '3', '4'],
           answer: 'A'
-        },
+        }
       ],
       pdfitems: [
         {
@@ -329,104 +474,67 @@ export default{
         {
           title: 'pdf2',
           url: '/static/pdf/1-1.pdf'
-        },
-
+        }
       ]
     }
   },
   mounted () {
+    /**
+     * 以下为聊天室使用，请勿改动
+     */
+    CHAT.message(this.userInfo.username)
+    /**
+     * 以上为聊天室使用，请勿改动
+     */
   },
   created () {
     this.cururl = this.$route.params.url
     console.log(this.cururl)
     this.showUserInfo()
+    /**
+     * 以下为聊天室使用，请勿改动
+     */
+    this.chatingRoomInit()
+    /**
+     * 以上为聊天室使用，请勿改动
+     */
   },
-  methods: {
-    subxlsx(){
-      console.log("dhasjkhda")
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      data['item']=document.querySelector('input[type=file]').files[0]
-      console.log(data['item'])
-      axios.post('/api/classroom/xlsxaddstudents', data).then((resp) => {
-        this.studentitems = resp.studentitems
-    })
+  computed: {
+    isPause () {
+      return this.recorder.isPause
     },
-    addstua(){
-    console.log("dhasjkhda")
-        this.$Modal.confirm({
-              render: (h) => {
-              return h('Input', {
-                props: {
-                  id: 'passinput',
-                  autofocus: true,
-                  placeholder: 'Please enter the username of this student'
-                },
-                on: {
-                  input: (val) => {
-                  this.astu = val
-              }
-            }
-        })
-        },
-        onOk: () => {
-                const data = this.curuser
-                data['username'] = this.userInfo['username']
-                data['job'] = this.userInfo['job']
-                data['url'] = this.cururl
-                data['item']=this.astu
-                console.log("dhasjkhda")
-                console.log(this.astu)
-              axios.post('/api/classroom/aaddstudents', data).then((resp) => {
-              this.studentitems = resp.studentitems
-          })
-        }
-        })
+    isRecording () {
+      return this.recorder.isRecording
     },
-    exportData (type) {
-      if (type === 1) {
-        this.$refs.table.exportCsv({
-          filename: this.curstu + '数据统计'
-        })
-      }
+    message () {
+      return this.uploadStatus === 'success' ? this.successfulUploadMsg : this.failedUploadMsg
     },
-    getstudents () {
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      axios.post('/api/classroom/getstudents', data).then((resp) => {
-        this.studentitems = resp.studentitems
-      })
+    recordedTime () {
+      return convertTimeMMSS(this.recorder.duration)
     },
-    showstudentti (item) {
-      this.curstu = item
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      data['item'] = this.curstu
-      axios.post('/api/classroom/getstudentsti', data).then((resp) => {
-        this.curti = resp.curti
-      })
-      this.modal3 = true
-    },
+    volume () {
+      return parseFloat(this.recorder.volume)
+    }
+  },
 
-    teatext () {
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      axios.post('/api/resourse/getpdfs', data).then((resp) => {
-        this.pdfitems = resp.pdfitems
-      }
-      )
-      this.modal1 = true
-    },
+  methods: {
     addPDF () {
       // send pdf to backend
+      var formData = new FormData()
+      formData.append('username', this.userInfo['username'])
+      formData.append('file', document.querySelector('input[id=pdfinput]').files[0])
+      console.log(document.querySelector('input[id=pdfinput]').files[0])
+      var options = {
+        url: '/api/resource/add_pdf',
+        data: formData,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      axios(options).then((resp) => {
+        console.log('addPDF success')
+      })
     },
     handleReset (name) {
       this.$refs[name].resetFields()
@@ -439,19 +547,19 @@ export default{
         status: 1
       })
     },
-    teaselect () {
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      axios.post('/api/resourse/getselects', data).then((resp) => {
-        this.selectitems = resp.selectitems
-      }
-      )
-      this.modal2 = true
-    },
     handleRemove (index) {
       this.multi_options[index].status = 0
+    },
+    // receive pdf list
+    showPdfList () {
+      this.modal_pdflist = true
+      this.pdfListInput.username = this.userInfo.username
+      // need to add all list & this list
+      axios.post('/api/resourse/getpdfs', this.pdfListInput).then((resp) => {
+        // resp.data 即是那个列表
+        this.pdfAllList = resp.data
+        this.pdfThisList = resp.data
+      })
     },
     addMulti () {
       // send sub_multi should be set by now
@@ -492,6 +600,154 @@ export default{
     },
     // Yuxuan's Methods Stops Here
 
+    /**
+     * 以下为聊天室使用，请勿改动
+     */
+    chatingRoomInit () {
+      this.socket = CHAT.init(this.userInfo.username, this.cururl)
+    },
+    submit () {
+      if (this.msgType === 'text') {
+        var date = new Date()
+        var time = date.getHours() + ':' + date.getMinutes()
+        var obj = {
+          type: 'broadcast',
+          url: this.cururl,
+          time: time,
+          msg: this.msg,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        this.msg = ''
+      } else if (this.msgType === 'audio') {
+        this.socket.emit('sendMsg', this.audio)
+        console.log(this.audio)
+      }
+    },
+    toggleRecorder () {
+      if (!this.isRecording || (this.isRecording && this.isPause)) {
+        this.recorder.start()
+        if (this.startRecord) {
+          this.startRecord('start record')
+        }
+      } else {
+        this.recorder.pause()
+        if (this.startRecord) {
+          this.startRecord('pause record')
+        }
+      }
+    },
+    stopRecorder () {
+      if (!this.isRecording) {
+        return
+      }
+      this.recorder.stop()
+    },
+    /**
+     * 以上为聊天室使用，请勿改动
+     */
+    subxlsx () {
+      console.log('dhasjkhda')
+      /* const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      data['item'] = document.querySelector('input[type=file]').files[0]
+      console.log(data['item']) */
+      var formData = new FormData()
+      formData.append('url', this.cururl)
+      formData.append('item', document.querySelector('input[id=xlsxinput]').files[0])
+      var options = {
+        url: '/api/classroom/xlsxaddstudents',
+        data: formData,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      axios(options).then((resp) => {
+        this.studentitems = resp.studentitems
+      })
+    },
+    addstua () {
+      console.log('dhasjkhda')
+      this.$Modal.confirm({
+        render: (h) => {
+          return h('Input', {
+            props: {
+              id: 'passinput',
+              autofocus: true,
+              placeholder: 'Please enter the username of this student'
+            },
+            on: {
+              input: (val) => {
+                this.astu = val
+              }
+            }
+          })
+        },
+        onOk: () => {
+          const data = this.curuser
+          data['username'] = this.userInfo['username']
+          data['job'] = this.userInfo['job']
+          data['url'] = this.cururl
+          data['item'] = this.astu
+          console.log('dhasjkhda')
+          console.log(this.astu)
+          axios.post('/api/classroom/aaddstudents', data).then((resp) => {
+            this.studentitems = resp.studentitems
+          })
+        }
+      })
+    },
+    exportData (type) {
+      if (type === 1) {
+        this.$refs.table.exportCsv({
+          filename: this.curstu + '数据统计'
+        })
+      }
+    },
+    getstudents () {
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      axios.post('/api/classroom/getstudents', data).then((resp) => {
+        this.studentitems = resp.studentitems
+      })
+    },
+    showstudentti (item) {
+      this.curstu = item
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      data['item'] = this.curstu
+      axios.post('/api/classroom/getstudentsti', data).then((resp) => {
+        this.curti = resp.curti
+      })
+      this.modal3 = true
+    },
+    teaselect () {
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      axios.post('/api/resourse/getselects', data).then((resp) => {
+        this.selectitems = resp.selectitems
+      })
+      this.modal2 = true
+    },
+    teatext () {
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      axios.post('/api/resourse/getpdfs', data).then((resp) => {
+        this.pdfitems = resp.pdfitems
+      })
+      this.modal1 = true
+    },
     showpdf: function (ipdf) {
       this.$Modal.confirm({
         title: '提示',
@@ -506,10 +762,10 @@ export default{
 
           })
           console.log('1321312')
-          this.videohei=260+'px'
+          this.videohei = 260 + 'px'
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
-          this.classmain0=false
+          this.classmain0 = false
           console.log(this.classmain0)
           console.log(document.getElementById('rtmp-streamer1').class)
           this.liaotianshiheight = 350 + 'px'
@@ -517,7 +773,7 @@ export default{
           this.curvideo = false
           this.modal1 = false
           console.log('1321312')
-      },
+        },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
         }
@@ -536,10 +792,10 @@ export default{
           axios.post('/api/classroom/showselect', data).then((resp) => {
 
           })
-          this.videohei=260+'px'
+          this.videohei = 260 + 'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
-          this.classmain0=false
+          this.classmain0 = false
           this.liaotianshiheight = 350 + 'px'
           this.curvideo = false
           this.curtitle = iselect.title
@@ -559,9 +815,9 @@ export default{
         onOk: () => {
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
-          this.classmain0=true
+          this.classmain0 = true
           this.liaotianshiheight = 60 + 'px'
-          this.videohei=700+'px'
+          this.videohei = 700 + 'px'
           this.curvideo = true
           const data = this.curuser
           data['username'] = this.userInfo['username']
@@ -598,13 +854,15 @@ export default{
             data['job'] = this.userInfo['job']
             data['url'] = this.cururl
             axios.post('/api/classroom/openliving', data).then((resp) => {
-              this.streamername = resp.streamername
+              this.streamername = resp.data.streamername
+              console.log(resp.data.streamername)
+              console.log(this.streamername)
             })
-              setSWFIsReady()
-              this.streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
-  this.streamer000.setScreenPosition(-100, 0)
-  this.streamer000.setScreenSize(700, 380)
-  this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+            setSWFIsReady()
+            this.streamer000 = document.getElementById('rtmp-streamer1')
+            this.streamer000.setScreenPosition(-100, 0)
+            this.streamer000.setScreenSize(700, 380)
+            this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
           },
           onCancel: () => {
           }
@@ -631,44 +889,42 @@ export default{
         })
       }
     },
-    tojinmai(){
-      if(this.isjinmai){
-        this.jinmai='ios-mic'
-        this.isjinmai=false
+    tojinmai () {
+      if (this.isjinmai) {
+        this.jinmai = 'ios-mic'
+        this.isjinmai = false
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setMicRate(0)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
-      }else{
-        this.jinmai='ios-mic-off'
-        this.isjinmai=true
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
+      } else {
+        this.jinmai = 'ios-mic-off'
+        this.isjinmai = true
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setMicRate(0)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       }
     },
-    tojinshipin(){
-
-      if(this.isjinshipin){
-        this.jinshipin='ios-eye'
-        this.isjinshipin=false
+    tojinshipin () {
+      if (this.isjinshipin) {
+        this.jinshipin = 'ios-eye'
+        this.isjinshipin = false
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
-        this. streamer000.setCamFrameInterval(15)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
-      }else{
-        this.jinshipin='ios-eye-off'
-        this.isjinshipin=true
+        this.streamer000.setCamFrameInterval(15)
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
+      } else {
+        this.jinshipin = 'ios-eye-off'
+        this.isjinshipin = true
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
-        this. streamer000.setCamFrameInterval(100000)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername )
-
+        this.streamer000.setCamFrameInterval(100000)
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       }
     }
 
@@ -677,6 +933,103 @@ export default{
 
 </script>
 <style>
+  /* 赵汉卿负责的聊天室部分，请勿修改 */
+  #chatingRoom {
+    position:absolute;
+    left: 79%;
+    width: 21%;
+    top:60px;
+    height: 90%;
+  }
+  .talk-contents {
+    height: 100%;
+    margin-left: 10px;
+  }
+  .talk-nav {
+    background-color: #eee;
+    margin-left: 10px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    line-height: 30px;
+  }
+  .talk-title {
+    position: relative;
+    padding: 10px 0;
+    margin: 0 19px;
+    border-bottom: 1px solid #d6d6d6;
+    background-color: #eee;
+    z-index: 1024;
+  }
+  .content {
+    background-color: #eee;
+    position: absolute;
+    bottom: 50px;
+    padding: 0 19px;
+    margin-left: 10px;
+    top: 51px;
+    right: 0;
+    left: 0;
+    overflow: scroll;
+  }
+  .talker {
+    margin-left: 10px;
+    padding-right: 19px;
+    border-top: 1px solid #d6d6d6;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .talk-space {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  .talk-word {
+    display: inline-block;
+    position: relative;
+    background: -webkit-linear-gradient(left top, rgba(246, 94, 84, 1), rgba(218, 43, 101, 1)); /* Safari 5.1 - 6.0 */
+    color: #fff;
+    max-width: 60%;
+    min-height: 25px;
+    line-height: 25px;
+    margin: 0 1%;
+    padding: 4px 12px 2px 11px;
+    border-radius: 5px;
+    font-size: 12px;
+    word-break: break-all;
+  }
+  .talk-word-self {
+    border-bottom-right-radius: 0;
+    margin-right: 10px;
+    text-align: left;
+  }
+  .talk-word-user {
+    background: rgba(243, 243, 243, 1) none;
+    color: rgba(0, 0, 0, 1);
+    border-bottom-left-radius: 0;
+    margin-left: 10px;
+    text-align: right;
+  }
+  .self-talk {
+    margin-top: 10px;
+  }
+  .talk-content {
+    text-align: right;
+    position: relative;
+  }
+  .user-talk {
+    margin-top: 10px;
+  }
+  .talk-content {
+    text-align: left;
+    position: relative;
+    margin-left: 0px;
+  }
+  /* 赵汉卿负责的聊天室部分，请勿修改 */
   .tealivingmain{
     width: 100%;
   }
@@ -686,6 +1039,19 @@ export default{
     top:60px;
     width: 18%;
   }
+  .cardtealiving00{
+    position:absolute;
+    left: 19%;
+    width: 59%;
+    top:60px;
+  }
+  .cardtealittleliving00{
+    position:absolute;
+    left: 79%;
+    width: 21%;
+    top:60px;
+  }
+
   .menuitentea{
     font-size: 20px;
   }
@@ -693,12 +1059,7 @@ export default{
     padding-:5%;
     margin:5%;
   }
-  .cardtealiving00{
-    position:absolute;
-    left: 19%;
-    width: 59%;
-    top:60px;
-  }
+
   .cardtealivingpdf{
     position:absolute;
     left: 19%;
@@ -718,18 +1079,6 @@ export default{
     height: auto;
     text-align: center;
   }
-  .danmuxinxi{
-    position:absolute;
-    left: 79%;
-    width: 21%;
-    top:60px;
-  }
-  .cardtealittleliving00{
-    position:absolute;
-    left: 79%;
-    width: 21%;
-    top:60px;
-  }
   .cardtealivingselect{
     position:absolute;
     left: 19%;
@@ -738,10 +1087,7 @@ export default{
     top:60px;
     display: none;
   }
-  .teamainvedio{
-    width:100%;
-    height:700px;
-  }
+
   .selecttitle00{
     padding-top: 3%;
     position:relative;
@@ -790,5 +1136,12 @@ export default{
     border-color: #78C3F3;
     color: #004974;
     text-decoration: none;
+  }
+   .demo-split{
+     height: 430px;
+     border: 1px solid #dcdee2;
+   }
+  .demo-split-pane{
+    padding: 10px;
   }
 </style>

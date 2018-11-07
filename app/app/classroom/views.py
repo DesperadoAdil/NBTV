@@ -6,7 +6,10 @@ from ..polyv import polyvAPI
 from .Classroom import *
 from ..user.User import usermanager
 from ..models import Classrooms
-
+import xlrd
+from os.path import join
+from tempfile import mkdtemp
+from shutil import rmtree
 
 
 polyvManager = polyvAPI.ChannelManager()
@@ -82,7 +85,7 @@ def deleteClass():
 			classroomlist = json.loads(teacher.classroomlist)
 			classroomlist.remove(data['url'])
 			teacher.classroomlist = json.dumps(classroomlist)
-			db.ssesion.add(teacher)
+			db.session.add(teacher)
 
 		studentlist = json.loads(classroomTmp.studentlist)
 		for studentname in studentlist:
@@ -90,10 +93,10 @@ def deleteClass():
 			classroomlist = json.loads(student.classroomlist)
 			classroomlist.remove(data['url'])
 			student.classroomlist = json.dumps(classroomlist)
-			db.ssesion.add(student)
+			db.session.add(student)
 		db.session.commit()
 	except Exception as err:
-		print(err.encode("utf-8"))
+		print(err)
 		ret['status'] = "error: no such teacher or classroom"
 
 	ret['status'] = classroomManager.delete(data['url'])
@@ -117,6 +120,7 @@ def updateClass():
 	ret['status'] = classroomManager.update(data['title'], data['thumbnail'], data['url'], data['class_password'], data['old_url'])
 	return json.dumps(ret, ensure_ascii = False)
 
+
 @classroom.route('/user_living_list', methods = ['POST'])
 def getList():
 	data = request.get_data()
@@ -138,12 +142,108 @@ def getList():
 	return json.dumps(ans, ensure_ascii = False)
 
 
+#xlsx添加学生
+@classroom.route('/xlsxaddstudents', methods = ['POST'])
+def xlsxaddstudents():
+	ret = []
+	data = request.form.to_dict()
+	print (data)
+
+	url = data['url']
+	item = request.files.get('item')
+	tempdir = mkdtemp()
+	filename = item.filename
+	filepath = join(tempdir, filename)
+	item.save(filepath)
+
+	classroom = classroomManager.search(url)
+	studentlist = json.loads(classroom.studentlist)
+
+	workbook = xlrd.open_workbook(filepath)
+	sheet_names = workbook.sheet_names()
+	for sheet_name in sheet_names:
+		sheet = workbook.sheet_by_name(sheet_name)
+		rows = sheet.nrows
+		cols = sheet.ncols
+		for i in range(rows):
+			for j in range(cols):
+				user = sheet.cell_value(i, j)
+				if user is None or user == "":
+					continue
+				if user in studentlist:
+					print ("Xlsx Add Student Error: " + user + " already in classroom")
+					continue
+				student = usermanager.search("username", user, "student")
+				if student is None:
+					print ("Xlsx Add Student Error: " + user + " does not exist")
+					continue
+
+				#学生classroomlist中加入直播间url
+				classroomlist = json.loads(student.classroomlist)
+				classroomlist.append(url)
+				student.classroomlist = json.dumps(classroomlist)
+				db.session.add(student)
+
+				#直播间studentlist中加入学生username
+				studentlist.append(user)
+
+				ret.append(user)
+
+	classroom.studentlist = json.dumps(studentlist)
+	db.session.add(classroom)
+	db.session.commit()
+	rmtree(tempdir)
+
+	print (json.dumps(ret))
+	return json.dumps(ret)
+
+
+#username添加学生
+@classroom.route('/aaddstudents', methods = ['POST'])
+def aaddstudents():
+	ret = {}
+	ret["status"] = 'error'
+
+	data = request.get_data()
+	print (data)
+	data = json.loads(data)
+
+	url = data['url']
+	item = data['item']
+
+	student = usermanager.search("username", item, "student")
+	classroom = classroomManager.search(url)
+	if student is None:
+		print ("Add Student Error: " + item + " does not exist")
+		ret['status'] = 'error: no such student'
+	elif classroom is None:
+		print ("Add Student Error: " + url + " does not exist")
+		ret['status'] = 'error: no such classroom'
+	else:
+		#直播间studentlist中加入学生username
+		studentlist = json.loads(classroom.studentlist)
+		studentlist.append(item)
+		classroom.studentlist = json.dumps(studentlist)
+		db.session.add(classroom)
+
+		#学生classroomlist中加入直播间url
+		classroomlist = json.loads(student.classroomlist)
+		classroomlist.append(url)
+		student.classroomlist = json.dumps(classroomlist)
+		db.session.add(student)
+		db.session.commit()
+		ret['status'] = "success"
+
+	print (json.dumps(ret))
+	return json.dumps(ret)
 
 
 
-@classroom.route('/openliving')
+@classroom.route('/openliving', methods = ['POST'])
 def openlive():
 	ret = {}
+	ret["status"] = 'error'
+
 	data = request.get_data()
 	print('openlive')
 	print(data)
@@ -154,21 +254,27 @@ def openlive():
 	if classroom is None:
 		ret['status'] = "error: no such classroom"
 	else:
-		
+
 		ret['streamername'] = classroom.rtmpUrl
+		ret['streamername'] = ret['streamername'].split('/')[-1]
+		vid = classroom.vid
 		response = polyvAPI.instance.openLive(vid)
-		
+
 		classroomManager.updateShowTime(url)
-		if response.status == 200:
+		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
 			ret['status'] = "success"
 
-	return json.dumps(ret, enusure_ascii = False)
+	print (json.dumps(ret))
+	return json.dumps(ret)
 
-@classroom.route('/closeliving')
+
+@classroom.route('/closeliving', methods = ['POST'])
 def closelive():
 	ret = {}
+	ret["status"] = 'error'
+
 	data = request.get_data()
 	print('closelive')
 	print(data)
@@ -183,9 +289,10 @@ def closelive():
 		vid = classroom.vid
 		ret['vid'] = vid
 		response = polyvAPI.instance.closeLive(vid)
-		if response.status == 200:
+		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
 			ret['status'] = "success"
 
-	return json.dumps(ret, enusure_ascii = False)
+	print (json.dumps(ret))
+	return json.dumps(ret)
