@@ -798,7 +798,7 @@ export default{
             this.streamer000 = new RtmpStreamer(document.getElementById('rtmp-streamer1'))
             this.streamer000.setScreenPosition(-100, 0)
             this.streamer000.setScreenSize(700, 380)
-            this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+            this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
           },
           onCancel: () => {
           }
@@ -833,7 +833,7 @@ export default{
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setMicRate(0)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       } else {
         this.jinmai = 'ios-mic-off'
         this.isjinmai = true
@@ -841,7 +841,7 @@ export default{
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setMicRate(0)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       }
     },
     tojinshipin () {
@@ -852,7 +852,7 @@ export default{
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setCamFrameInterval(15)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       } else {
         this.jinshipin = 'ios-eye-off'
         this.isjinshipin = true
@@ -860,7 +860,7 @@ export default{
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
         this.streamer000.setCamFrameInterval(100000)
-        this.streamer000.publish('rtmp://push-c1.videocc.net/recordf', this.streamername)
+        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       }
     }
 
