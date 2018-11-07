@@ -13,24 +13,6 @@ const CHAT = {
   },
   message: function (username) {
     console.log('message')
-    this.socket.on('whisper', function (obj) {
-      obj.msg = obj.fromUser + " whispered to you: " + obj.msg
-      CHAT.msgArr.push(obj)
-      console.log('CHAT.msgArr(whisper)', obj)
-    })
-    this.socket.on('broadcast', function (obj) {
-      CHAT.msgArr.push(obj)
-      console.log('CHAT.msgArr(broadcast)', obj)
-    })
-  },
-  init: function (username, url) {
-    var namespace = '/'+url
-    this.socket = io.connect(location.protocol+'//'+document.domain+':'+location.port+namespace)
-    this.socket.on('open', function () {
-      console.log('已连接')
-    })
-    console.log(username, url)
-    this.socket.emit('join', {'username': username, 'url':url})
     this.socket.on('message', function (msg) {
       msg= "[system]: " + msg
       var date = new Date()
@@ -46,6 +28,23 @@ const CHAT = {
       CHAT.msgArr.push(obj)
       console.log('CHAT.msgArr(system)', obj)
     })
+    this.socket.on('whisper', function (obj) {
+      obj.msg = obj.fromUser + " whispered to you: " + obj.msg
+      CHAT.msgArr.push(obj)
+      console.log('CHAT.msgArr(whisper)', obj)
+    })
+    this.socket.on('broadcast', function (obj) {
+      CHAT.msgArr.push(obj)
+      console.log('CHAT.msgArr(broadcast)', obj)
+    })
+  },
+  init: function (username, url) {
+    this.socket = io.connect(location.protocol+'//'+document.domain+':'+location.port)
+    this.socket.on('open', function () {
+      console.log('已连接')
+    })
+    console.log(username, url)
+    this.socket.emit('join', {'username': username, 'url':url})
   }
 }
 export default CHAT
