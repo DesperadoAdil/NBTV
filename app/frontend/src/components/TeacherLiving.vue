@@ -242,7 +242,7 @@
                 <div class="talk-content">
                   <div class="talk-self-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
-                  <audio v-if="msgObj.msgType === 'audio'" :src="getUrl(msgObj.msg)"></audio>
+                  <audio v-if="msgObj.msgType === 'audio'" :src="getUrl(msgObj.msg.blob)"></audio>
                 </div>
               </div>
               <div v-else></div>
@@ -251,7 +251,7 @@
                 <div class="talk-content">
                   <div class="talk-user-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
-                  <audio v-if="msgObj.msgType === 'audio'" :src="getUrl(msgObj.msg)"></audio>
+                  <audio v-if="msgObj.msgType === 'audio'" :src="getUrl(msgObj.msg.blob)"></audio>
                 </div>
               </div>
               <div v-else></div>
@@ -607,9 +607,9 @@ export default{
      * 以下为聊天室使用，请勿改动
      */
     getUrl (obj) {
-      var b = []
-      b.push(obj.blob)
-      return URL.createObjectURL(new Blob(b, {type: "application/zip"}))
+      var blob = obj
+      var url = URL.createObjectURL(blob)
+      return url
     },
     chatingRoomInit () {
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
