@@ -11,41 +11,43 @@
             发布
           </template>
           <MenuItem @click.native="showPdfList()">PDF</MenuItem>
-          <MenuItem @click.native="showChoiceList()">Choice</MenuItem>
+          <MenuItem @click.native="showMultiList()">Choice</MenuItem>
           <MenuItem @click.native="showCodeList()">Code</MenuItem>
         </Submenu>
-        <!-- 教学资源 -->
+        <!-- 发布 -->
+
+        <!-- 添加 -->
         <Submenu name="1" class="menuitentea">
           <template slot="title" >
             <Icon type="ios-paper" />
             添加
           </template>
-          <MenuItem @click.native="modal_pdf = true">添加课件</MenuItem>
-          <MenuItem @click.native="modal_multi = true">添加选择题</MenuItem>
-          <MenuItem @click.native="modal_code = true">添加编程题</MenuItem>
+          <MenuItem @click.native="modal_pdf = true">PDF</MenuItem>
+          <MenuItem @click.native="modal_multi = true">Choice</MenuItem>
+          <MenuItem @click.native="modal_code = true">Code</MenuItem>
         </Submenu>
+        <!-- 添加 -->
+
         <!-- 使用教学资源 -->
         <Submenu name="2" class="menuitentea">
           <template slot="title">
             <Icon type="ios-people" />
-            使用教学资源
+            使用
           </template>
-          <MenuItem name="2-1" class="menuitentea" @click.native="teatext">使用教学课件</MenuItem>
-          <MenuItem name="2-2" class="menuitentea" @click.native="teaselect">布置选择题目</MenuItem>
-          <MenuItem name="2-2" class="menuitentea" @click.native="closetext">退出教学资源</MenuItem>
+          <MenuItem name="2-2" class="menuitentea" @click.native="closetext">取消使用</MenuItem>
         </Submenu>
         <!-- 学生做题情况 -->
         <Submenu name="3" class="menuitentea"  >
           <template slot="title">
             <Icon type="ios-stats" />
-            学生做题情况
+            回馈
           </template>
           <MenuItem name="3-1" class="menuitentea" v-for="item in studentitems" @click.native="showstudentti(item)">{{item}}</MenuItem>
         </Submenu>
         <Submenu name="4" class="menuitentea"  >
           <template slot="title">
             <Icon type="ios-stats" />
-            添加学生
+            学生
           </template>
           <MenuItem name="4-1" class="menuitentea" >
             <a href="javascript:;" class="upf">xlsx添加学生
@@ -86,24 +88,6 @@
         </Split>
       </Card>
     </Modal>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <!--multi_list-->
     <Modal
@@ -223,24 +207,6 @@
       </Form>
     </Modal>
 
-    <!--pdf等课件信息-->
-    <Modal   v-model="modal1"    @on-ok=""    @on-cancel="">
-      <p slot="header" style="font-size: 20px">
-        <span>选择你要展示的课件</span>
-      </p>
-      <CellGroup v-for="item in pdfitems">
-        <Cell style="font-size: 20px" @click.native="showpdf(item)">{{item.title}}</Cell>
-      </CellGroup>
-    </Modal>
-
-    <Modal   v-model="modal2"    @on-ok=""    @on-cancel="">
-      <p slot="header" style="font-size: 20px">
-        <span>选择你要展示的选择题</span>
-      </p>
-      <CellGroup v-for="item in selectitems">
-        <Cell style="font-size: 20px" @click.native="showselect(item)">{{item.title}}</Cell>
-      </CellGroup>
-    </Modal>
 
     <Modal   v-model="modal3"    @on-ok=""    @on-cancel="">
       <p slot="header" style="font-size: 20px">
@@ -414,15 +380,29 @@ export default{
       modal_pdflist: false,
       pdfListInput: {username: ''},
       // framework to show pdf all
-      pdfAll: [{title: 'Title', key: 'title'}, {title: 'Url', key: 'url'}],
-      pdfThis: [{title: 'Title', key: 'title'}, {title: 'Url', key: 'url'},
+      pdfAll: [{title: 'Title', key: 'title'}],
+      pdfThis: [{title: 'Title', key: 'title'},
         {
           title: 'Action',
           key: 'action',
           fixed: 'right',
-          width: 120,
+          width: 180,
           render: (h, params) => {
             return h('div', [
+              h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.usePdf(params.index)
+                  }
+                }
+              }, 'Use'),
               h('Button', {
                 props: {
                   type: 'text',
@@ -465,7 +445,55 @@ export default{
       modal_multilist: false,
       // framework to show multi
       multiAll: [{title: 'Title', key: 'title'}],
-      multiThis: [{title: 'Title', key: 'title'}],
+      multiThis: [{title: 'Title', key: 'title'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.useMulti(params.index)
+                  }
+                }
+              }, 'Use'),
+              h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.show(params.index)
+                  }
+                }
+              }, 'View'),
+              h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.remove(params.index)
+                  }
+                }
+              }, 'Del')])
+          }
+        }],
       multiAllList: [
         {
           title: 'choice 01',
@@ -480,7 +508,7 @@ export default{
       ],
       multiThisList: [{
         title: 'choice 02',
-        ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
+        ans: ['something', 'somewhere', 'somehow', 'somewhat'],
         answer: 'A'
       }],
       // code
@@ -717,8 +745,41 @@ export default{
         this.pdfThisList = resp.data
       })
     },
+    usePdf (index) {
+      // to be implemented
+      var ipdf = this.pdfThisList[index]
+      this.$Modal.confirm({
+        title: '提示',
+        content: '是否展示' + ipdf.title,
+        onOk: () => {
+          const data = this.curuser
+          data['username'] = this.userInfo['username']
+          data['job'] = this.userInfo['job']
+          data['url'] = this.cururl
+          data['item'] = ipdf.title
+          axios.post('/api/classroom/showpdfs', data).then((resp) => {
+
+          })
+          console.log('1321312')
+          this.videohei = 260 + 'px'
+          this.mainselectcarddisplay = false
+          this.mainpdfcarddisplay = true
+          this.classmain0 = false
+          console.log(this.classmain0)
+          console.log(document.getElementById('rtmp-streamer1').class)
+          this.liaotianshiheight = 350 + 'px'
+          this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
+          this.curvideo = false
+          this.modal_pdflist = false
+          console.log('1321312')
+        },
+        onCancel: () => {
+          this.$Message.info('Clicked cancel')
+        }
+      })
+    },
     // receive choice list
-    showChoiceList () {
+    showMultiList () {
       this.modal_multilist = true
       var multiListInput = {username: ''}
       multiListInput.username = this.userInfo.username
@@ -727,6 +788,37 @@ export default{
         // resp.data 即是那个列表
         this.multiAllList = resp.data
         this.multiThisList = resp.data
+      })
+    },
+    //
+    useMulti (index) {
+      var iselect = this.multiThisList[index]
+      this.$Modal.confirm({
+        title: '提示',
+        content: '是否展示: \n ' + iselect.title,
+        onOk: () => {
+          const data = this.curuser
+          data['username'] = this.userInfo['username']
+          data['job'] = this.userInfo['job']
+          data['url'] = this.cururl
+          data['item'] = iselect.title
+          axios.post('/api/classroom/showselect', data).then((resp) => {
+
+          })
+          this.videohei = 260 + 'px'
+          this.mainselectcarddisplay = true
+          this.mainpdfcarddisplay = false
+          this.classmain0 = false
+          this.liaotianshiheight = 350 + 'px'
+          this.curvideo = false
+          this.curtitle = iselect.title
+          this.curans = iselect.ans
+          this.curanswer = iselect.answer
+          this.modal_multilist = false
+        },
+        onCancel: () => {
+          this.$Message.info('Clicked cancel')
+        }
       })
     },
     // receive code list
@@ -919,86 +1011,6 @@ export default{
         this.curti = resp.curti
       })
       this.modal3 = true
-    },
-    teaselect () {
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      axios.post('/api/resourse/getselects', data).then((resp) => {
-        this.selectitems = resp.selectitems
-      })
-      this.modal2 = true
-    },
-    teatext () {
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      axios.post('/api/resourse/getpdfs', data).then((resp) => {
-        this.pdfitems = resp.pdfitems
-      })
-      this.modal1 = true
-    },
-    showpdf: function (ipdf) {
-      this.$Modal.confirm({
-        title: '提示',
-        content: '是否展示' + ipdf.title,
-        onOk: () => {
-          const data = this.curuser
-          data['username'] = this.userInfo['username']
-          data['job'] = this.userInfo['job']
-          data['url'] = this.cururl
-          data['item'] = ipdf.title
-          axios.post('/api/classroom/showpdfs', data).then((resp) => {
-
-          })
-          console.log('1321312')
-          this.videohei = 260 + 'px'
-          this.mainselectcarddisplay = false
-          this.mainpdfcarddisplay = true
-          this.classmain0 = false
-          console.log(this.classmain0)
-          console.log(document.getElementById('rtmp-streamer1').class)
-          this.liaotianshiheight = 350 + 'px'
-          this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
-          this.curvideo = false
-          this.modal1 = false
-          console.log('1321312')
-        },
-        onCancel: () => {
-          this.$Message.info('Clicked cancel')
-        }
-      })
-    },
-    showselect: function (iselect) {
-      this.$Modal.confirm({
-        title: '提示',
-        content: '是否展示: \n ' + iselect.title,
-        onOk: () => {
-          const data = this.curuser
-          data['username'] = this.userInfo['username']
-          data['job'] = this.userInfo['job']
-          data['url'] = this.cururl
-          data['item'] = iselect.title
-          axios.post('/api/classroom/showselect', data).then((resp) => {
-
-          })
-          this.videohei = 260 + 'px'
-          this.mainselectcarddisplay = true
-          this.mainpdfcarddisplay = false
-          this.classmain0 = false
-          this.liaotianshiheight = 350 + 'px'
-          this.curvideo = false
-          this.curtitle = iselect.title
-          this.curans = iselect.ans
-          this.curanswer = iselect.answer
-          this.modal2 = false
-        },
-        onCancel: () => {
-          this.$Message.info('Clicked cancel')
-        }
-      })
     },
     closetext () {
       this.$Modal.confirm({
