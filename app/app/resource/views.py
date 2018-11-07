@@ -1,3 +1,4 @@
+from flask import *
 from .MultiChoiceQuestion import multiChoiceManager
 from .CodeQuestion import codeQuestionManager
 from .PDFfile import pdfManager
@@ -139,6 +140,7 @@ def addPDF():
     print('add pdf file')
     ret = {}
     try:
+<<<<<<< app/app/resource/views.py
         f = request.files.get['file']
         username = request.form['username']
         ret['status'] = pdfManager.insert(f, username)
@@ -163,6 +165,15 @@ def delete_PDF():
         print(err)
         ret['status'] = "error"
     return json.dumps(ret, ensure_ascii = False)
+=======
+        f = request.files.get('file')
+        username = request.form.to_dict()['username']
+        status = pdfManager.insert(f, username)
+        print (status)
+        return status
+    except:
+        return "error"
+>>>>>>> app/app/resource/views.py
 
 
 #Get_pdfs
