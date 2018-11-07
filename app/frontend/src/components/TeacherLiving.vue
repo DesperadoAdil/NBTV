@@ -235,9 +235,10 @@
       <iframe id="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
 
-    <!---------main 选择题 部分------------->
+    <!---------main 选择题 部分 在主界面显示选择题------------->
     <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
       <p class="selecttitle00">{{curtitle}}</p>
+      <!---------TODO: 不能只有四个选项------------->
       <RadioGroup class="radiotea" v-model="ionselect" vertical>
         <Radio v-bind:label="curans[0]" style="font-size: 15px">
           <span>A、{{curans[0]}}</span>
@@ -381,7 +382,6 @@ export default{
       // pdf parameter
       split_pdf: 0.5,
       modal_pdflist: false,
-      pdfListInput: {username: ''},
       // framework to show pdf all
       pdfAll: [{title: 'Title', key: 'title'}],
       pdfThis: [{title: 'Title', key: 'title'},
@@ -393,42 +393,26 @@ export default{
           render: (h, params) => {
             return h('div', [
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
                 on: {
-                  click: () => {
-                    this.usePdf(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.usePdf(params.index) }
                 }
               }, 'Use'),
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
                 on: {
-                  click: () => {
-                    this.show(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.show(params.index) }
                 }
               }, 'View'),
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
+                props: {type: 'text', size: 'small'},
                 on: {
-                  click: () => {
-                    this.remove(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.remove(params.index) }
                 }
               }, 'Del')])
           }
@@ -443,7 +427,8 @@ export default{
           url: '/static/pdf/1-1.pdf'
         }],
       pdfAllList: [{title: 'Slide01', url: 'hide/slide01'}],
-      // multi
+      // MULTI
+      // MULTIPLE CHOICE PARAMETER
       split_multi: 0.5,
       modal_multilist: false,
       // framework to show multi
@@ -457,42 +442,26 @@ export default{
           render: (h, params) => {
             return h('div', [
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
                 on: {
-                  click: () => {
-                    this.useMulti(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.useMulti(params.index) }
                 }
               }, 'Use'),
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
                 on: {
-                  click: () => {
-                    this.show(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.show(params.index) }
                 }
               }, 'View'),
               h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                },
+                props: {type: 'text', size: 'small'},
                 on: {
-                  click: () => {
-                    this.remove(params.index)
-                  }
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.remove(params.index) }
                 }
               }, 'Del')])
           }
@@ -500,12 +469,12 @@ export default{
       multiAllList: [
         {
           title: 'choice 01',
-          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
+          ans: ['something', 'somewhere', 'somehow', 'somewhat'],
           answer: 'A'
         },
         {
           title: 'choice 02',
-          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
+          ans: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
           answer: 'A'
         }
       ],
@@ -514,9 +483,11 @@ export default{
         ans: ['something', 'somewhere', 'somehow', 'somewhat'],
         answer: 'A'
       }],
-      // code
+      // CODE
+      // CODE PARAMETER
       split_code: 0.5,
       modal_codelist: false,
+      // FRAMEWORK TO SHOW CODE LIST
       codeAll: [{title: 'Title', key: 'title'}],
       codeThis: [{title: 'Title', key: 'title'}],
       codeAllList: [
@@ -530,9 +501,11 @@ export default{
       codeThisList: [{
         title: 'B-Tree'
       }],
-      // framework
-      testsourcecode: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}',
+
+      // ADD PDF/MULTI/CODE MODALS
+      // PDF
       modal_pdf: false,
+      // MULTI
       modal_multi: false,
       multi_options: [
         {
@@ -540,7 +513,7 @@ export default{
           index: 1,
           status: 1
         }
-      ],
+      ], // INIT AS SO AND DON'T CHANGE IT
       multi_index: 1,
       sub_multi: {
         statement: '',
@@ -548,25 +521,22 @@ export default{
         answer: '',
         url: '教室url'
       },
-      answer1: '',
-      answer2: '',
-      answer3: '',
-      answer4: '',
+      // CODE
       modal_code: false,
       sub_code: {
         statement: '',
         language: '', // language 是个多选框
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
       },
-      // Shihang
-      modal3: false,
-      modal2: false,
-      modal1: false,
+
+      // Shihang'S PARAMETER
       displayPdfurl: '',
       littlelivingcarddisplay: false,
       mainselectcarddisplay: false,
       mainpdfcarddisplay: false,
       mainlivingcarddisplay: true,
+
+      // COMMON INFO
       userInfo: {
         username: '',
         password: '',
@@ -580,40 +550,19 @@ export default{
         url: '',
         item: ''
       },
+      // STREAM PARAMETERS
       curstream: '',
       vid: '248980',
       cururl: '',
       curvideo: true,
-      theme1: 'light',
       toopen: true,
       openclose: 'ios-videocam-outline',
       opentext: '开播',
-      // 题目数据
-      examOptions: {
-        Description: '',
-        OptionA: '',
-        OptionB: '',
-        OptionC: '',
-        OptionD: ''
-      },
-      columns1: [
-        {
-          title: '题目',
-          key: 'title'
-        },
-        {
-          title: '答案',
-          key: 'ans'
-        }
-      ],
+
+      // SHIHANG'S STUFF
       curstu: 'zsh',
+      // SEEM TO BE ABLE TO SHOW STUDENT CODE, SAVE FOR NOW
       curti: [
-        {
-          title: '1',
-          type: 'select',
-          ans: 'A',
-          standardans: ''
-        },
         {
           title: '4',
           type: 'code',
@@ -626,19 +575,6 @@ export default{
       curtitle: 'xjbx1',
       curans: ['1', '2', '3', '4'],
       curanswer: 'A',
-      selectitems: [
-        {
-          title: 'choice 01',
-          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
-          answer: 'A'
-        },
-        {
-          title: 'choice 02',
-          ans: ['A: something', 'B: somewhere', 'C: somehow', 'D: somewhat'],
-          answer: 'A'
-        }
-      ],
-      pdfitems: []
     }
   },
   mounted () {
@@ -683,6 +619,9 @@ export default{
     PrismEditor
   },
   methods: {
+    // ADD METHODS
+    // add a pdf to teacher's and room's file and show
+    // TODO: ADD TO TEACHER & ROOM & SHOW
     addPDF () {
       // send pdf to backend
       var formData = new FormData()
@@ -700,7 +639,11 @@ export default{
       axios(options).then((resp) => {
         console.log('addPDF success')
       })
+      // IF SUCCESS, BACK END: ADD TO TEACHER & ROOM
+      // FRONTEND: JUST SHOW
     },
+    // MULTI
+    // ADD AN OPTION OF MULTIPLE CHOICES
     multi_addChoice () {
       this.multi_index++
       this.multi_options.push({
@@ -712,31 +655,51 @@ export default{
     multi_delChoice (i) {
       this.multi_options[i].status = 0
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // receive pdf list
+    addMulti () {
+      // send sub_multi should be set by now
+      this.sub_multi.url = this.cururl
+      // 将multi_option这个列表改成可发送的数组
+      for (var i = 0; i < this.index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
+      // post
+      axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 维护选择题列表,此处尚无
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('添加选择题失败')
+        }
+      })
+    },
+    // CODE
+    addCode () {
+      // sub_code should be set by now
+      // post
+      axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 应当要维护一下代码题的列表,此处未添加
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('添加代码题失败')
+        }
+      })
+    },
+    // LIST METHODS
+    // RECEIVE PDF LIST
     showPdfList () {
       this.modal_pdflist = true
-      this.pdfListInput.username = this.userInfo.username
-      // need to add all list & this list
+      var pdfListInput = {username: ''}
+      pdfListInput.username = this.userInfo.username
+      // TODO: need to add all list & this list
       axios.post('/api/resourse/getpdfs', this.pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data
@@ -744,7 +707,7 @@ export default{
       })
     },
     usePdf (index) {
-      // to be implemented
+      // TODO: REFINE THIS
       var ipdf = this.pdfThisList[index]
       this.$Modal.confirm({
         title: '提示',
@@ -788,7 +751,6 @@ export default{
         this.multiThisList = resp.data
       })
     },
-    //
     useMulti (index) {
       var iselect = this.multiThisList[index]
       this.$Modal.confirm({
@@ -807,7 +769,6 @@ export default{
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
-          this.liaotianshiheight = 350 + 'px'
           this.curvideo = false
           this.curtitle = iselect.title
           this.curans = iselect.ans
@@ -829,43 +790,6 @@ export default{
         // resp.data 即是那个列表
         this.codeAllList = resp.data
         this.codeThisList = resp.data
-      })
-    },
-    addMulti () {
-      // send sub_multi should be set by now
-      this.sub_multi.url = this.cururl
-      // 将multi_option这个列表改成可发送的数组
-      for (var i = 0; i < this.index; i++) {
-        if (this.multi_options[i].status === 1) {
-          this.sub_multi.optionList.push(this.multi_options[i].value)
-        }
-      }
-      // post
-      axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
-        this.$Message.success(resp.data.status)
-        // 如果成功
-        if (resp.data.status === 'success') {
-          // 维护选择题列表,此处尚无
-          window.location.reload()
-          // 如果失败
-        } else {
-          this.$Message.error('添加选择题失败')
-        }
-      })
-    },
-    addCode () {
-      // sub_code should be set by now
-      // post
-      axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
-        this.$Message.success(resp.data.status)
-        // 如果成功
-        if (resp.data.status === 'success') {
-          // 应当要维护一下代码题的列表,此处未添加
-          window.location.reload()
-        // 如果失败
-        } else {
-          this.$Message.error('添加代码题失败')
-        }
       })
     },
     // Yuxuan's Methods Stops Here
@@ -1015,7 +939,6 @@ export default{
       axios.post('/api/classroom/getstudentsti', data).then((resp) => {
         this.curti = resp.curti
       })
-      this.modal3 = true
     },
     closetext () {
       this.$Modal.confirm({
@@ -1025,7 +948,6 @@ export default{
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
           this.classmain0 = true
-          this.liaotianshiheight = 60 + 'px'
           this.videohei = 700 + 'px'
           this.curvideo = true
           const data = this.curuser
