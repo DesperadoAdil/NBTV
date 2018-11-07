@@ -481,7 +481,6 @@ export default{
           fromUser: this.userInfo.username
         }
         this.msg = ''
-        CHAT.submit(obj)
       } else if (this.msgType === 'audio') {
         obj = {
           type: 'broadcast',
@@ -514,11 +513,6 @@ export default{
         return
       }
       this.recorder.stop()
-    },
-    removeRecord (idx) {
-      this.audio = {}
-      this.$set(this.selected, 'url', null)
-      this.$eventBus.$emit('remove-record')
     },
     /**
      * 以上为聊天室使用，请勿改动
