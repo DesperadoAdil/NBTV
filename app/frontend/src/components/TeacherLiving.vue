@@ -305,19 +305,36 @@
       <div class="talk-contents">
         <div class="talk-inner">
           <div class="talk-nav">
-            <div class="talk-title" @click.native="whisper('all')">
-              {{username}}
+            <div class="talk-title">
+              <Dropdown>
+                <a href="javascript:void(0)">
+                  聊天对象
+                  <Icon type="ios-arrow-down"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)">{{ student }}</DropdownItem>
+                  <DropdownItem divided @click.native="talkTo('all')">all</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              {{ username }}
             </div>
           </div>
-          <div class="talk-student-list">
-
-          </div>
+          <Dropdown>
+            <a href="javascript:void(0)">
+              下拉菜单
+              <Icon type="ios-arrow-down"></Icon>
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem divided>all</DropdownItem>
+              <DropdownItem v-for="student in CHAT.studentlist">{{ student }}</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
           <div class="content">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
               <div class="talk-space self-talk"
                    v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
                 <div class="talk-content">
-                  <div class="talk-self-name" @click.native="whisper(msgObj.fromUser)">{{ msgObj.fromUser }}</div>
+                  <div class="talk-self-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
@@ -335,7 +352,7 @@
               <div  class="talk-space user-talk"
                     v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username">
                 <div class="talk-content">
-                  <div class="talk-user-name" @click.native="whisper(msgObj.fromUser)">{{ msgObj.fromUser }}</div>
+                  <div class="talk-user-name">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
@@ -400,7 +417,7 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
-      msgTypeInfo: '文字',
+      msgTypeInfo: '语音',
       socket: null,
       msgType: 'text',
       msg: '',
@@ -1118,6 +1135,10 @@ export default{
     imageUrl (obj) {
       var url = window.URL.createObjectURL(new Blob([obj], { type: 'image/png' }))
       return url
+    },
+    talkTo (p) {
+      this.username = p
+      if (p !== 'all') { this.msg = 'to ' + this.username + ': ' }
     },
     /**
      * 以上为聊天室使用，请勿改动
