@@ -28,6 +28,11 @@ class ClassroomTest(BaseTestCase):
 	}
 
 	def test_add_classroom(self):
+		classroom = Classrooms.query.filter_by(url = "123").first()
+		if classroom is not None:
+			db.session.delete(classroom)
+			db.session.commit()
+
 		# 这是可以正确插入的结果
 		response = self.app.post('/api/classroom/add_class', data = json.dumps(self.data, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')

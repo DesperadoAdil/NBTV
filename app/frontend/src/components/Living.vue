@@ -64,11 +64,17 @@
           </div>
           <div class="content">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
-              <div  class="talk-space self-talk"
-                    v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
+              <div class="talk-space self-talk"
+                   v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
                 <div class="talk-content">
                   <div class="talk-self-name">{{ msgObj.fromUser }}</div>
-                  <div class="talk-word talk-word-self">{{ msgObj.msg }}</div>
+                  <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
+                  <div v-else></div>
+                  <div v-if="msgObj.msgType === 'audio'">
+                    <audio :src="msgObj.msg.url"></audio>
+                  </div>
+                  <div v-else></div>
+
                 </div>
               </div>
               <div v-else></div>
@@ -76,15 +82,32 @@
                     v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username">
                 <div class="talk-content">
                   <div class="talk-user-name">{{ msgObj.fromUser }}</div>
-                  <div class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+                  <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+                  <div v-else></div>
+                  <div v-if="msgObj.msgType === 'audio'">
+                    <audio :src="msgObj.msg.url"></audio>
+                  </div>
+                  <div v-else></div>
                 </div>
               </div>
               <div v-else></div>
             </div>
           </div>
+
           <div class="talker">
-            <Input class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
+            <Input v-if="msgType === 'text'" class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
+            <div v-if="msgType === 'audio'" class="recorder">
+              <button @click="toggleRecorder()">录音</button>
+              <button @click="stopRecorder">停止</button>
+
+              <button
+                class="record-audio"
+                @click="removeRecord(idx)">删除</button>
+              <div class="record-text">{{audio.duration}}</div>
+
+            </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
+            <Button class="talker-send" @click="msgType = 'audio'">语音</Button>
           </div>
         </div>
       </div>
@@ -97,8 +120,72 @@
 <script>
 import axios from 'axios'
 import CHAT from '../client'
+import Recorder from '../recorder'
 export default{
   name: 'load',
+  props: {
+    micFailed: { type: Function },
+    startRecord: { type: Function },
+    stopRecord: { type: Function }
+  },
+  data () {
+    return {
+      /**
+       * 以下为聊天室使用，请勿改动
+       */
+      socket: null,
+      msgType: 'text',
+      msg: '',
+      CHAT,
+      username: 'all',
+      isUploading: false,
+      recorder: new Recorder({
+        afterStop: () => {
+          this.audio = this.recorder.audio
+          if (this.stopRecord) {
+            this.stopRecord('stop record')
+          }
+        },
+        attempts: this.attempts,
+        time: this.time
+      }),
+      audio: {},
+      selected: {},
+      uploadStatus: null,
+      uploaderOptions: {},
+      /**
+       * 以上为聊天室使用，请勿改动
+       */
+      maincodecarddisplay: false,
+      curpdfurl: '/static/pdf/1-1.pdf',
+      videohei0: 600 + 'px',
+      classmain11: true,
+      curvid: '',
+      cururl: '',
+      displayPdfurl0: '',
+      liaotianshiheight: 150 + 'px',
+      littlelivingcarddisplay: false,
+      mainselectcarddisplay: false,
+      mainpdfcarddisplay: false,
+      mainlivingcarddisplay: true,
+      curtitle: 'xjbx1',
+      curans: ['1', '2', '3', '4'],
+      curanswer: 'A',
+      userInfo: {
+        username: '',
+        password: '',
+        mobile: '',
+        status: '',
+        job: ''
+      },
+      curuser: {
+        username: '',
+        job: '',
+        url: '',
+        item: ''
+      }
+    }
+  },
   mounted () {
     /**
      * 以下为聊天室使用，请勿改动
@@ -158,68 +245,83 @@ export default{
      * 以上为聊天室使用，请勿改动
      */
   },
-
-  data () {
-    return {
-      /**
-       * 以下为聊天室使用，请勿改动
-       */
-      msg: '',
-      CHAT,
-      username: 'all',
-      /**
-       * 以上为聊天室使用，请勿改动
-       */
-      maincodecarddisplay: false,
-      curpdfurl: '/static/pdf/1-1.pdf',
-      videohei0: 600 + 'px',
-      classmain11: true,
-      curvid: '242522',
-      cururl: '',
-      displayPdfurl0: '',
-      liaotianshiheight: 150 + 'px',
-      littlelivingcarddisplay: false,
-      mainselectcarddisplay: false,
-      mainpdfcarddisplay: false,
-      mainlivingcarddisplay: true,
-      curtitle: 'xjbx1',
-      curans: ['1', '2', '3', '4'],
-      curanswer: 'A',
-      userInfo: {
-        username: '',
-        password: '',
-        mobile: '',
-        status: '',
-        job: ''
-      },
-      curuser: {
-        username: '',
-        job: '',
-        url: '',
-        item: ''
-      }
+  computed: {
+    isPause () {
+      return this.recorder.isPause
+    },
+    isRecording () {
+      return this.recorder.isRecording
+    },
+    message () {
+      return this.uploadStatus === 'success' ? this.successfulUploadMsg : this.failedUploadMsg
+    },
+    recordedTime () {
+      return convertTimeMMSS(this.recorder.duration)
+    },
+    volume () {
+      return parseFloat(this.recorder.volume)
     }
   },
   methods: {
     /**
      * 以下为聊天室使用，请勿改动
      */
+    getUrl (obj) {
+      var blob = obj
+      var url = URL.createObjectURL(blob)
+      return url
+    },
     chatingRoomInit () {
-      CHAT.init(this.userInfo.username, this.cururl)
+      this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
-      var obj = {
-        type: 'broadcast',
-        url: this.cururl,
-        time: time,
-        msg: this.msg,
-        toUser: this.username,
-        fromUser: this.userInfo.username
+      var obj = {}
+      if (this.msgType === 'text') {
+        obj = {
+          type: 'broadcast',
+          msgType: 'text',
+          url: this.cururl,
+          time: time,
+          msg: this.msg,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        this.msg = ''
+        CHAT.submit(obj)
+      } else if (this.msgType === 'audio') {
+        obj = {
+          type: 'broadcast',
+          msgType: 'audio',
+          url: this.cururl,
+          time: time,
+          msg: this.audio,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        console.log(obj)
+        CHAT.submit(obj)
       }
-      this.msg = ''
-      CHAT.submit(obj)
+    },
+    toggleRecorder () {
+      if (!this.isRecording || (this.isRecording && this.isPause)) {
+        this.recorder.start()
+        if (this.startRecord) {
+          this.startRecord('start record')
+        }
+      } else {
+        this.recorder.pause()
+        if (this.startRecord) {
+          this.startRecord('pause record')
+        }
+      }
+    },
+    stopRecorder () {
+      if (!this.isRecording) {
+        return
+      }
+      this.recorder.stop()
     },
     /**
      * 以上为聊天室使用，请勿改动
