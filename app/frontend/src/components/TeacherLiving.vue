@@ -440,14 +440,12 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.addPdfAll(params.index) }
                 }
               }, 'Add'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.delPdfAll(params.index) }
                 }
               }, 'Del')])
@@ -466,14 +464,12 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS FURTHER IMPLEMENTATION
                   click: () => { this.usePdf(params.index) }
                 }
               }, 'Use'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.delPdfClass(params.index) }
                 }
               }, 'Del')])
@@ -506,7 +502,6 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.addMultiAll(params.index) }
                 }
               }, 'add'),
@@ -514,14 +509,12 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.useMultiAll(params.index) }
                 }
               }, 'Use'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.delMultiAll(params.index) }
                 }
               }, 'Del')])
@@ -539,7 +532,6 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.useMulti(params.index) }
                 }
               }, 'Use'),
@@ -547,25 +539,18 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.viewMulti(params.index) }
                 }
               }, 'View'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.delMultiClass(params.index) }
                 }
               }, 'Del')])
           }
         }],
       multiAllList: [
-        {
-          title: 'choice 01',
-          ans: ['something', 'somewhere', 'somehow', 'somewhat'],
-          answer: 'A'
-        },
         {
           title: 'choice 02',
           ans: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
@@ -597,7 +582,6 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.addCodeAll(params.index) }
                 }
               }, 'Add'),
@@ -605,14 +589,12 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.checkCodeAll(params.index) }
                 }
               }, 'View'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.delCodeAll(params.index) }
                 }
               }, 'Del')])
@@ -630,7 +612,6 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.useCode(params.index) }
                 }
               }, 'Use'),
@@ -638,14 +619,12 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.checkCode(params.index) }
                 }
               }, 'View'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.delCodeClass(params.index) }
                 }
               }, 'Del')])
@@ -752,7 +731,7 @@ export default{
   },
   created () {
     this.cururl = this.$route.params.url
-    console.log(this.cururl)
+    // console.log(this.cururl)
     this.showUserInfo()
     /**
      * 以下为聊天室使用，请勿改动
@@ -791,7 +770,7 @@ export default{
       var formData = new FormData()
       formData.append('username', this.userInfo['username'])
       formData.append('file', document.querySelector('input[id=pdfinput]').files[0])
-      console.log(document.querySelector('input[id=pdfinput]').files[0])
+      // console.log(document.querySelector('input[id=pdfinput]').files[0])
       var options = {
         url: '/api/resource/add_pdf',
         data: formData,
@@ -801,7 +780,7 @@ export default{
         }
       }
       axios(options).then((resp) => {
-        console.log('addPDF success')
+        // console.log('addPDF success')
       })
       // IF SUCCESS, BACK END: ADD TO TEACHER & ROOM
       // FRONTEND: JUST SHOW
@@ -829,8 +808,8 @@ export default{
         }
       }
       // test
-      console.log(this.sub_multi.statement)
-      console.log(this.sub_multi.optionList)
+      // console.log(this.sub_multi.statement)
+      // console.log(this.sub_multi.optionList)
       // post
       axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
