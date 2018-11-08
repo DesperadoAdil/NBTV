@@ -1,6 +1,7 @@
 import json
 from ..models import CodeQuestion
 import uuid
+from app import db
 
 class CodeQuestionObj:
 	def __init__(self):

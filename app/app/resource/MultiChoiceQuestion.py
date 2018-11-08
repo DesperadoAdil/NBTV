@@ -1,6 +1,7 @@
 import json
 from ..models import ChoiceQuestion
 import uuid
+from app import db
 
 class MultiChoiceQuestion:
 	def __init__(self):
@@ -27,7 +28,7 @@ class MultiChoiceQuestion:
 			if que is None:
 				return "error:NoSuchQue"
 			que.statement = statement;
-			que.optionList = optionList;
+			que.optionList = json.dumps(optionList, ensure_ascii = False);
 			que.answer = answer;
 			db.session.add(que)
 			db.session.commit()
