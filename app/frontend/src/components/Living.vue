@@ -59,9 +59,29 @@
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              {{username}}
+              <Dropdown>
+                <a href="javascript:void(0)">
+                  聊天对象
+                  <Icon type="ios-arrow-down"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)">{{ student }}</DropdownItem>
+                  <DropdownItem divided @click.native="talkTo('all')">all</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              {{ username }}
             </div>
           </div>
+          <Dropdown>
+            <a href="javascript:void(0)">
+              下拉菜单
+              <Icon type="ios-arrow-down"></Icon>
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem divided>all</DropdownItem>
+              <DropdownItem v-for="student in CHAT.studentlist">{{ student }}</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
           <div class="content">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
               <div class="talk-space self-talk"
@@ -74,7 +94,11 @@
                     <audio :src="audioUrl(msgObj.msg)" controls></audio>
                   </div>
                   <div v-else></div>
-
+                  <div v-if="msgObj.msgType === 'img'">
+                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                    这里是个图
+                  </div>
+                  <div v-else></div>
                 </div>
               </div>
               <div v-else></div>
@@ -86,6 +110,11 @@
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
                     <audio :src="audioUrl(msgObj.msg)" controls></audio>
+                  </div>
+                  <div v-else></div>
+                  <div v-if="msgObj.msgType === 'img'">
+                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                    这里是个图
                   </div>
                   <div v-else></div>
                 </div>
@@ -108,6 +137,9 @@
             </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
             <Button class="talker-send" @click="changeMsgType">{{ msgTypeInfo }}</Button>
+            <a href="javascript:;" class=" upf talker-send" @click.native="submitImg">图片
+              <input type="file" name="fileinput" id="fileinput">
+            </a>
           </div>
         </div>
       </div>
@@ -120,6 +152,7 @@
 <script>
 import axios from 'axios'
 import CHAT from '../client'
+import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
 export default{
   name: 'load',
@@ -300,6 +333,21 @@ export default{
         CHAT.submit(obj)
       }
     },
+    submitImg () {
+      var blob = document.querySelector('input[type=file]').files[0]
+      var date = new Date()
+      var time = date.getHours() + ':' + date.getMinutes()
+      var obj = {
+        type: 'broadcast',
+        msgType: 'img',
+        url: this.cururl,
+        time: time,
+        msg: blob,
+        toUser: this.username,
+        fromUser: this.userInfo.username
+      }
+      CHAT.submit(obj)
+    },
     changeMsgType () {
       if (this.msgType === 'text') {
         this.msgTypeInfo = '语音'
@@ -331,6 +379,14 @@ export default{
     audioUrl (obj) {
       var url = window.URL.createObjectURL(new Blob([obj.blob], { type: 'audio/wav' }))
       return url
+    },
+    imageUrl (obj) {
+      var url = window.URL.createObjectURL(new Blob([obj], { type: 'image/png' }))
+      return url
+    },
+    talkTo (p) {
+      this.username = p
+      if (p !== 'all') { this.msg = 'to ' + this.username + ': ' }
     },
     /**
      * 以上为聊天室使用，请勿改动
