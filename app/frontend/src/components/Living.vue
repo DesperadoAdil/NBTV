@@ -197,14 +197,14 @@ export default{
      */
     var xxx = this.videohei0
     console.log(xxx)
-
+    var yyy = this.curvid
+     console.log(yyy)
     var timer = setTimeout(function () {
       doItPerSecond()
     }, 1000)
     var num = 0
     function doItPerSecond () {
-      var yyy = this.curvid
-      console.log(yyy)
+
       var player = polyvObject('#player').livePlayer({
         'width': '100%',
         'height': xxx,
