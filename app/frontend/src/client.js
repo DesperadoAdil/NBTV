@@ -45,9 +45,6 @@ const CHAT = {
     this.socket.on('list', function (obj) {
       CHAT.studentlist = obj
     })
-    this.socket.on('check', function () {
-      this.socket.emit('check', {'username' : username})
-    })
   },
   init: function (username, url) {
     this.socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port)
@@ -56,6 +53,9 @@ const CHAT = {
     })
     console.log(username, url)
     this.socket.emit('join', {'username': username, 'url': url})
+    this.socket.on('check', function () {
+      this.socket.emit('check', {'username': username})
+    })
     return this.socket
   }
 }
