@@ -59,7 +59,7 @@
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              <Dropdown>
+              <Dropdown @click.native="CHAT.list">
                 <a href="javascript:void(0)">
                   聊天对象
                   <Icon type="ios-arrow-down"></Icon>
@@ -72,16 +72,6 @@
               {{ username }}
             </div>
           </div>
-          <Dropdown>
-            <a href="javascript:void(0)">
-              下拉菜单
-              <Icon type="ios-arrow-down"></Icon>
-            </a>
-            <DropdownMenu slot="list">
-              <DropdownItem divided>all</DropdownItem>
-              <DropdownItem v-for="student in CHAT.studentlist">{{ student }}</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
           <div class="content">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
               <div class="talk-space self-talk"
@@ -122,23 +112,22 @@
               <div v-else></div>
             </div>
           </div>
-
           <div class="talker">
             <Input v-if="msgType === 'text'" class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
             <div v-if="msgType === 'audio'" class="recorder">
               <button @click="toggleRecorder()">录音</button>
               <button @click="stopRecorder">停止</button>
-
               <button
                 class="record-audio"
                 @click="removeRecord(idx)">删除</button>
               <div class="record-text">{{audio.duration}}</div>
-
+            </div>
+            <div v-if="msgType === 'img'" class="talker-image">已添加图片，按发送
             </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
             <Button class="talker-send" @click="changeMsgType">{{ msgTypeInfo }}</Button>
-            <a href="javascript:;" class=" upf talker-send" @click.native="submitImg">图片
-              <input type="file" name="fileinput" id="fileinput">
+            <a href="javascript:;" class=" upf talker-send" @click="chooseImg">图片
+              <input type="file" name="fileinput" id="fileinput"/>
             </a>
           </div>
         </div>
@@ -331,22 +320,24 @@ export default{
         }
         console.log(obj)
         CHAT.submit(obj)
+      } else if (this.msgType === 'img') {
+        var blob = new Blob([document.querySelector('input[type=file]').files[0]], { type: 'image/png' })
+        obj = {
+          type: 'broadcast',
+          msgType: 'img',
+          url: this.cururl,
+          time: time,
+          msg: blob,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        console.log(obj)
+        CHAT.submit(obj)
+        this.msgType = 'text'
       }
     },
-    submitImg () {
-      var blob = document.querySelector('input[type=file]').files[0]
-      var date = new Date()
-      var time = date.getHours() + ':' + date.getMinutes()
-      var obj = {
-        type: 'broadcast',
-        msgType: 'img',
-        url: this.cururl,
-        time: time,
-        msg: blob,
-        toUser: this.username,
-        fromUser: this.userInfo.username
-      }
-      CHAT.submit(obj)
+    chooseImg () {
+      this.msgType = 'img'
     },
     changeMsgType () {
       if (this.msgType === 'text') {
