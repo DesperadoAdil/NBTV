@@ -16,7 +16,7 @@ def addMultiChoice():
     try:
         # data['optionList']是选择题选项的json字符串，还是一个list
         uniqueId = multiChoiceManager.insert(data['username'], data['statement'], data['optionList'], data['answer'])
-
+        
         ret["status"] = "success"
         ret["uniqueId"] = uniqueId
     except Exception as err:
@@ -140,11 +140,10 @@ def addPDF():
     print('add pdf file')
     ret = {}
     try:
-
-        f = request.files.get['file']
-        username = request.form['username']
+        f = request.files.get('file')
+        username = request.form.to_dict()['username']
         ret['status'] = pdfManager.insert(f, username)
-
+        
     except Exception as err:
         print(err)
         ret['status'] = "error"
@@ -183,9 +182,9 @@ def get_pdfs():
     # classroom = classroomManager.search(url)
     # if job == 'teacher' and classroom.teacher != username:
     #    print ("Get PDF Error: Wrong Teacher")
-    #    ret['status']
+    #    ret['status'] 
     #    return json.dumps(ret)
-
+    
     teacher = usermanager.search("username", username, "teacher")
     if teacher is None:
         # ret['status'] = "error"
@@ -232,3 +231,6 @@ def get_selects():
 
     print (json.dumps(ret))
     return json.dumps(ret)
+
+
+

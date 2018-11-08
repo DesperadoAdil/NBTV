@@ -1,5 +1,4 @@
 import io from 'socket.io-client'
-import settings from './settings.js'
 const CHAT = {
   msgObj: document.getElementsByClassName('body-wrapper')[0],
   username: null,
@@ -14,11 +13,12 @@ const CHAT = {
   message: function (username) {
     console.log('message')
     this.socket.on('message', function (msg) {
-      msg= "[system]: " + msg
+      msg = '[system]: ' + msg
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
       var obj = {
         type: 'broadcast',
+        msgType: 'text',
         url: this.cururl,
         time: time,
         msg: msg,
@@ -29,7 +29,7 @@ const CHAT = {
       console.log('CHAT.msgArr(system)', obj)
     })
     this.socket.on('whisper', function (obj) {
-      obj.msg = obj.fromUser + " whispered to you: " + obj.msg
+      obj.msg = obj.fromUser + ' whispered to you: ' + obj.msg
       CHAT.msgArr.push(obj)
       console.log('CHAT.msgArr(whisper)', obj)
     })
@@ -39,7 +39,7 @@ const CHAT = {
     })
   },
   init: function (username, url) {
-    this.socket = io.connect(location.protocol+'//'+document.domain+':'+location.port)
+    this.socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port)
     this.socket.on('open', function () {
       console.log('已连接')
     })

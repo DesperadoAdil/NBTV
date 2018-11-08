@@ -1,6 +1,8 @@
+
 from ..models import PDFFile
 from werkzeug.utils import secure_filename
 import os
+from app import db
 import shutil
 import uuid
 
@@ -42,3 +44,4 @@ class PDF:
 
 
 pdfManager = PDF()
+

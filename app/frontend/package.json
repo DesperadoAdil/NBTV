@@ -26,7 +26,9 @@
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
     "vue-highlightjs": "latest",
-    "highlight.js": "latest"
+    "highlight.js": "latest",
+    "vue-prism-editor": "latest",
+    "prismjs": "latest"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

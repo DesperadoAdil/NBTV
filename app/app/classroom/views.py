@@ -222,16 +222,24 @@ def aaddstudents():
 	else:
 		#直播间studentlist中加入学生username
 		studentlist = json.loads(classroom.studentlist)
-		studentlist.append(item)
-		classroom.studentlist = json.dumps(studentlist)
-		db.session.add(classroom)
+		if item not in studentlist:
+			studentlist.append(item)
+			classroom.studentlist = json.dumps(studentlist)
+			db.session.add(classroom)
+			db.session.commit()
+		else:
+			print ("Add Student Error: " + item + " already in classroom")
 
 		#学生classroomlist中加入直播间url
 		classroomlist = json.loads(student.classroomlist)
-		classroomlist.append(url)
-		student.classroomlist = json.dumps(classroomlist)
-		db.session.add(student)
-		db.session.commit()
+		if url not in classroomlist:
+			classroomlist.append(url)
+			student.classroomlist = json.dumps(classroomlist)
+			db.session.add(student)
+			db.session.commit()
+		else:
+			print ("Add Student Error: " + item + " already in classroom")
+
 		ret['status'] = "success"
 
 	print (json.dumps(ret))
@@ -256,6 +264,7 @@ def openlive():
 	else:
 
 		ret['streamername'] = classroom.rtmpUrl
+		ret['streamername'] = ret['streamername'].split('/')[-1]
 		vid = classroom.vid
 		response = polyvAPI.instance.openLive(vid)
 
