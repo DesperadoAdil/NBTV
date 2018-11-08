@@ -71,7 +71,7 @@
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
-                    <audio :src="msgObj.msg.url"></audio>
+                    <audio :src="audioUrl(msgObj.msg)" style="height=54px;" controls></audio>
                   </div>
                   <div v-else></div>
 
@@ -85,7 +85,7 @@
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
-                    <audio :src="msgObj.msg.url"></audio>
+                    <audio :src="audioUrl(msgObj.msg)" style="height=54px;" controls></audio>
                   </div>
                   <div v-else></div>
                 </div>
@@ -266,11 +266,6 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
-    getUrl (obj) {
-      var blob = obj
-      var url = URL.createObjectURL(blob)
-      return url
-    },
     chatingRoomInit () {
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
@@ -322,6 +317,10 @@ export default{
         return
       }
       this.recorder.stop()
+    },
+    audioUrl (obj) {
+      var url = window.URL.createObjectURL(new Blob([obj.blob], { type: 'audio/wav' }))
+      return url
     },
     /**
      * 以上为聊天室使用，请勿改动
