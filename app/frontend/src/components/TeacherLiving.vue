@@ -191,13 +191,7 @@
           </Input>
         </FormItem>
         <FormItem label="Language">
-          <Select v-model="sub_code.language">
-            <Option>python</Option>
-            <Option>C++</Option>
-            <Option>Java</Option>
-            <Option>JavaScript</Option>
-            <Option>Vue.js</Option>
-          </Select>
+          <Input v-model="sub_code.language" placeholder="Set the language"></Input>
         </FormItem>
         <FormItem label="Example Code">
           <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
