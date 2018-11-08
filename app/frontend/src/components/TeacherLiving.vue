@@ -318,7 +318,7 @@
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
-                    <audio :src="audioUrl(msgObj.msg)" style="height=54px;" controls></audio>
+                    <audio :src="audioUrl(msgObj.msg)" controls></audio>
                   </div>
                   <div v-else></div>
 
@@ -332,7 +332,7 @@
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
-                    <audio :src="audioUrl(msgObj.msg)" style="height=54px;" controls></audio>
+                    <audio :src="audioUrl(msgObj.msg)" controls></audio>
                   </div>
                   <div v-else></div>
                 </div>
@@ -354,7 +354,7 @@
 
             </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
-            <Button class="talker-send" @click="msgType = 'audio'">语音</Button>
+            <Button class="talker-send" @click="changeMsgType">{{ msgTypeInfo }}</Button>
           </div>
         </div>
       </div>
@@ -385,6 +385,7 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
+      msgTypeInfo: '文字',
       socket: null,
       msgType: 'text',
       msg: '',
@@ -1006,7 +1007,15 @@ export default{
         CHAT.submit(obj)
       }
     },
-
+    changeMsgType () {
+      if (this.msgType === 'text') {
+        this.msgTypeInfo = '语音'
+        this.msgType = 'audio'
+      } else if (this.msgType === 'audio') {
+        this.msgTypeInfo = '文字'
+        this.msgType = 'text'
+      }
+    },
     toggleRecorder () {
       if (!this.isRecording || (this.isRecording && this.isPause)) {
         this.recorder.start()
