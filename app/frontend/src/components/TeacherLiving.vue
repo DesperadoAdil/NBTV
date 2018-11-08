@@ -306,7 +306,7 @@
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              <Dropdown>
+              <Dropdown @click.native="CHAT.list">
                 <a href="javascript:void(0)">
                   聊天对象
                   <Icon type="ios-arrow-down"></Icon>
@@ -1086,7 +1086,7 @@ export default{
       }
     },
     submitImg () {
-      var blob = document.querySelector('input[type=file]').files[0]
+      var blob = new Blob([document.querySelector('input[type=file]').files[0]], { type: 'image/png' })
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
       var obj = {
