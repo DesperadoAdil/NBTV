@@ -11,8 +11,9 @@ const CHAT = {
   submit: function (obj) {
     this.socket.emit('sendMsg', obj)
   },
-  list: function () {
-    this.socket.emit('list')
+  list: function (username, url) {
+    console.log('list')
+    this.socket.emit('list', {'username': username, 'url': url})
   },
   message: function (username) {
     console.log('message')
