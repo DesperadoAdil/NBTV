@@ -440,19 +440,20 @@ export default{
                 style: {marginRight: '5px'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.addPdftoClass(params.index) }
+                  click: () => { this.addPdfAll(params.index) }
                 }
               }, 'Add'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.delPdf(params.index) }
+                  click: () => { this.delPdfAll(params.index) }
                 }
               }, 'Del')])
           }
         }],
-      pdfThis: [{title: 'Title', key: 'title'},
+      pdfThis: [
+        {title: 'Title', key: 'title'},
         {
           title: 'Action',
           key: 'action',
@@ -464,7 +465,7 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
+                  // TODO: NEEDS FURTHER IMPLEMENTATION
                   click: () => { this.usePdf(params.index) }
                 }
               }, 'Use'),
@@ -472,7 +473,7 @@ export default{
                 props: {type: 'text', size: 'small'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.delPdffromClass(params.index) }
+                  click: () => { this.delPdfClass(params.index) }
                 }
               }, 'Del')])
           }
@@ -505,7 +506,7 @@ export default{
                 style: {marginRight: '5px'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.addMultitoClass(params.index) }
+                  click: () => { this.addMultiAll(params.index) }
                 }
               }, 'add'),
               h('Button', {
@@ -513,14 +514,14 @@ export default{
                 style: {marginRight: '5px'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.useMultifromAll(params.index) }
+                  click: () => { this.useMultiAll(params.index) }
                 }
               }, 'Use'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.delMulti(params.index) }
+                  click: () => { this.delMultiAll(params.index) }
                 }
               }, 'Del')])
           }
@@ -582,7 +583,8 @@ export default{
       split_codecheck: 0.4,
       modal_codecheck: false,
       // FRAMEWORK TO SHOW CODE LIST
-      codeAll: [{title: 'Title', key: 'title'},
+      codeAll: [
+        {title: 'Title', key: 'title'},
         {
           title: 'Action',
           key: 'action',
@@ -595,7 +597,7 @@ export default{
                 style: {marginRight: '5px'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.addCodetoClass(params.index) }
+                  click: () => { this.addCodeAll(params.index) }
                 }
               }, 'Add'),
               h('Button', {
@@ -643,7 +645,7 @@ export default{
                 props: {type: 'text', size: 'small'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.remove(params.index) }
+                  click: () => { this.delCodeClass(params.index) }
                 }
               }, 'Del')])
           }
@@ -829,7 +831,7 @@ export default{
       console.log(this.sub_multi.statement)
       console.log(this.sub_multi.optionList)
       // post
-      axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
+      axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
@@ -850,7 +852,7 @@ export default{
       console.log(this.sub_code.language)
       console.log(this.sub_code.statement)
       // post
-      axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
+      axios.post('/api/resource/add_code', this.sub_code).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
