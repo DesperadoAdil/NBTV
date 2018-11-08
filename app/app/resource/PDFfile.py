@@ -16,7 +16,7 @@ class PDF:
 			f.save(filename)
 
 			# uniqueId = str(uuid.uuid4())
-			pdf = PDFFile(filePath = f.filename, owner = username, uniqueId = "%s/%s" % (username, f.filename))
+			pdf = PDFFile(filename = f.filename, owner = username, uniqueId = "%s/%s" % (username, f.filename))
 			db.session.add(pdf)
 			db.session.commit()
 
