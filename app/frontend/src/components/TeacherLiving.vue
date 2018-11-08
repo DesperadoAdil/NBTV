@@ -62,13 +62,13 @@
       @on-ok="modal_pdflist = false" @on-cancel="modal_pdflist = false"
     >
       <Card>
-        <Split class="demo-split" v-model="split_pdf">
-          <div slot="left"  class="demo-split-pane">
+        <Split class="teacher-live-split" v-model="split_pdf">
+          <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
             <Table height="375" border :columns="pdfAll" :data="pdfAllList"></Table>
           </div>
-          <div slot="right"  class="demo-split-pane">
+          <div slot="right"  class="teacher-live-split-pane">
             <p>This Classroom</p>
             <br>
             <Table height="375" border :columns="pdfThis" :data="pdfThisList"></Table>
@@ -86,12 +86,12 @@
     >
       <Card>
         <Split class="demo-split" v-model="split_multi">
-          <div slot="left"  class="demo-split-pane">
+          <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
             <Table height="375" border :columns="multiAll" :data="multiAllList"></Table>
           </div>
-          <div slot="right"  class="demo-split-pane">
+          <div slot="right"  class="teacher-live-split-pane">
             <p>This Classroom</p>
             <br>
             <Table height="375" border :columns="multiThis" :data="multiThisList"></Table>
@@ -109,12 +109,12 @@
     >
       <Card>
         <Split class="demo-split" v-model="split_code">
-          <div slot="left"  class="demo-split-pane">
+          <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
             <Table height="375" border :columns="codeAll" :data="codeAllList"></Table>
           </div>
-          <div slot="right"  class="demo-split-pane">
+          <div slot="right"  class="teacher-live-split-pane">
             <p>This Classroom</p>
             <br>
             <Table height="375" border :columns="codeThis" :data="codeThisList"></Table>
@@ -230,7 +230,7 @@
     >
       <Card>
         <Split class="demo-split" v-model="split_codecheck">
-          <div slot="left"  class="demo-split-pane">
+          <div slot="left"  class="teacher-live-split-pane">
             <Form label-position="top">
               <FormItem label="Text">
                 <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
@@ -253,7 +253,7 @@
               </FormItem>
             </Form>
           </div>
-          <div slot="right"  class="demo-split-pane">
+          <div slot="right"  class="teacher-live-split-pane">
             <Form></Form>
           </div>
         </Split>
@@ -455,14 +455,12 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.addPdfAll(params.index) }
                 }
               }, 'Add'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.delPdfAll(params.index) }
                 }
               }, 'Del')])
@@ -481,14 +479,12 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS FURTHER IMPLEMENTATION
                   click: () => { this.usePdf(params.index) }
                 }
               }, 'Use'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.delPdfClass(params.index) }
                 }
               }, 'Del')])
@@ -521,7 +517,6 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.addMultiAll(params.index) }
                 }
               }, 'add'),
@@ -529,14 +524,12 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.useMultiAll(params.index) }
                 }
               }, 'Use'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.delMultiAll(params.index) }
                 }
               }, 'Del')])
@@ -554,7 +547,6 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.useMulti(params.index) }
                 }
               }, 'Use'),
@@ -562,25 +554,18 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.viewMulti(params.index) }
                 }
               }, 'View'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.delMultifromClass(params.index) }
+                  click: () => { this.delMultiClass(params.index) }
                 }
               }, 'Del')])
           }
         }],
       multiAllList: [
-        {
-          title: 'choice 01',
-          ans: ['something', 'somewhere', 'somehow', 'somewhat'],
-          answer: 'A'
-        },
         {
           title: 'choice 02',
           ans: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
@@ -612,7 +597,6 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.addCodeAll(params.index) }
                 }
               }, 'Add'),
@@ -620,14 +604,12 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.checkCodeAll(params.index) }
                 }
               }, 'View'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.delCodeAll(params.index) }
                 }
               }, 'Del')])
@@ -645,7 +627,6 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.useCode(params.index) }
                 }
               }, 'Use'),
@@ -653,14 +634,12 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.checkCode(params.index) }
                 }
               }, 'View'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
-                  // TODO: NEEDS IMPLEMENTATION
                   click: () => { this.delCodeClass(params.index) }
                 }
               }, 'Del')])
@@ -702,7 +681,7 @@ export default{
       sub_code: {
         username: '',
         statement: '',
-        language: '', // language 是个多选框
+        language: '',
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
       },
 
@@ -767,7 +746,7 @@ export default{
   },
   created () {
     this.cururl = this.$route.params.url
-    console.log(this.cururl)
+    // console.log(this.cururl)
     this.showUserInfo()
     /**
      * 以下为聊天室使用，请勿改动
@@ -806,7 +785,7 @@ export default{
       var formData = new FormData()
       formData.append('username', this.userInfo['username'])
       formData.append('file', document.querySelector('input[id=pdfinput]').files[0])
-      console.log(document.querySelector('input[id=pdfinput]').files[0])
+      // console.log(document.querySelector('input[id=pdfinput]').files[0])
       var options = {
         url: '/api/resource/add_pdf',
         data: formData,
@@ -816,7 +795,7 @@ export default{
         }
       }
       axios(options).then((resp) => {
-        console.log('addPDF success')
+        // console.log('addPDF success')
       })
       // IF SUCCESS, BACK END: ADD TO TEACHER & ROOM
       // FRONTEND: JUST SHOW
@@ -844,8 +823,8 @@ export default{
         }
       }
       // test
-      console.log(this.sub_multi.statement)
-      console.log(this.sub_multi.optionList)
+      // console.log(this.sub_multi.statement)
+      // console.log(this.sub_multi.optionList)
       // post
       axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
@@ -887,10 +866,34 @@ export default{
       var pdfListInput = {username: ''}
       pdfListInput.username = this.userInfo.username
       // TODO: need to add all list & this list
-      axios.post('/api/resourse/getpdfs', this.pdfListInput).then((resp) => {
+      axios.post('/api/resource/getpdfs', this.pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data
         this.pdfThisList = resp.data
+      })
+    },
+    // ADD PDF TO CLASS
+    addPdfAll (index) {
+      // var iPdf = this.pdfAllList[index]
+      // iPdf: [{title: 'Slide01', url: 'hide/slide01'}]
+    },
+    // DEL PDF FROM TEACHER'S RESOURCE
+    delPdfAll (index) {
+      var iPdf = this.pdfAllList[index]
+      var delPdfAllInput = {username: '', title: ''}
+      delPdfAllInput.username = this.userInfo.username
+      delPdfAllInput.title = iPdf.title
+      // post
+      axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
+        if (resp.data.status === 'success') {
+          console.log('delete succeeded')
+        }
+      })
+      // UPDATE PDF LIST
+      var pdfListInput = {username: ''}
+      pdfListInput.username = this.userinfo.username
+      axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
+        this.pdfAllList = resp.data
       })
     },
     usePdf (index) {
@@ -926,17 +929,34 @@ export default{
         }
       })
     },
+    // API NOT READY YET
+    delPdfClass (index) {
+      //
+    },
     // receive choice list
     showMultiList () {
       this.modal_multilist = true
       var multiListInput = {username: ''}
       multiListInput.username = this.userInfo.username
       // need to add all list & this list
-      axios.post('/api/resourse/getmutiples', multiListInput).then((resp) => {
+      axios.post('/api/resource/getmutiples', multiListInput).then((resp) => {
         // resp.data 即是那个列表
         this.multiAllList = resp.data
         this.multiThisList = resp.data
       })
+    },
+    // ADD FROM TEACHER TO CLASS
+    addMultiAll (index) {
+      // api not ready yet
+    },
+    useMultiAll (index) {
+      // add to class
+      // useMulti
+    },
+    delMultiAll (index) {
+      var delMultiAllInput = {username: '', uniqueId: ''}
+      delMultiAllInput.username = this.userInfo.username
+      // uniqueId not ready yet
     },
     useMulti (index) {
       var iselect = this.multiThisList[index]
@@ -967,22 +987,48 @@ export default{
         }
       })
     },
+    viewMulti (index) {
+      // able to edit the question
+      // get the student result of it
+    },
+    delMultiClass (index) {
+      // api not ready yet
+    },
     // receive code list
     showCodeList () {
       this.modal_codelist = true
       var codeListInput = {username: ''}
       codeListInput.username = this.userInfo.username
       // need to add all list & this list
-      axios.post('/api/resourse/getmutiples', codeListInput).then((resp) => {
+      axios.post('/api/resource/getmutiples', codeListInput).then((resp) => {
         // resp.data 即是那个列表
         this.codeAllList = resp.data
         this.codeThisList = resp.data
       })
     },
+    // add from teacher to class
+    addCodeAll (index) {
+      // api not ready
+    },
+    checkCodeAll (index) {
+      // show the content of the question only
+    },
+    delCodeAll (index) {
+      var delCodeAllInput = {username: '', uniqueId: ''}
+      delCodeAllInput.username = this.userInfo.username
+      // uniqueId not ready
+    },
+    useCode (index) {
+      // to be implemented
+    },
     // check code
     checkCode (index) {
       this.sub_code = this.codeThisList[index]
       this.modal_codecheck = true
+      // need to list all the student results
+    },
+    delCodeClass (index) {
+      // api not ready
     },
     // Yuxuan's Methods Stops Here
 
@@ -1460,9 +1506,6 @@ export default{
     left:-50px;
     font-size: 15px;
   }
-  .databutton{
-    margin-top: 15px;
-  }
   .upf {
     position: relative;
     display: inline-block;
@@ -1489,11 +1532,11 @@ export default{
     color: #004974;
     text-decoration: none;
   }
-   .demo-split{
+   .teacher-live-split{
      height: 430px;
      border: 1px solid #dcdee2;
    }
-  .demo-split-pane{
+  .teacher-live-split-pane{
     padding: 10px;
   }
 </style>
