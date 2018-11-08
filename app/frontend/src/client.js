@@ -4,6 +4,7 @@ const CHAT = {
   username: null,
   socket: null,
   msgArr: [],
+  studentlist: [],
   logout: function () {
     this.socket.disconnect()
   },
@@ -36,6 +37,12 @@ const CHAT = {
     this.socket.on('broadcast', function (obj) {
       CHAT.msgArr.push(obj)
       console.log('CHAT.msgArr(broadcast)', obj)
+    })
+    this.socket.on('list', function (obj) {
+      CHAT.studentlist = obj
+    })
+    this.socket.on('check', function () {
+      this.socket.emit('check', {'username' : username})
     })
   },
   init: function (username, url) {
