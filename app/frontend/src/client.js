@@ -54,7 +54,7 @@ const CHAT = {
     console.log(username, url)
     this.socket.emit('join', {'username': username, 'url': url})
     this.socket.on('check', function () {
-      this.socket.emit('check', {'username': username})
+      CHAT.socket.emit('check', {'username': username, 'url': url})
     })
     return this.socket
   }
