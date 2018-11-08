@@ -59,6 +59,7 @@
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
+              <button @click="CHAT.socket.emit('refresh', {'url':cururl})">获取最新用户列表</button>
               <Dropdown @click.native="CHAT.list(userInfo.username, cururl)">
                 <a href="javascript:void(0)">
                   聊天对象

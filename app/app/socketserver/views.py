@@ -1,7 +1,7 @@
 from flask_socketio import join_room, leave_room, emit, send
 from .. import socketio
 
-chatingRoom = []
+chatingRoom = {}
 
 @socketio.on('connect')
 def on_connect():
@@ -23,6 +23,11 @@ def on_join(data):
     join_room(url)
     send(username + ' has entered the classroom.', room = url)
 
+    if url not in chatingRoom.keys():
+        chatingRoom[url] = []
+    if username not in chatingRoom[url]:
+        chatingRoom[url].append(username)
+
 
 @socketio.on('sendMsg')
 def sendMsg(data):
@@ -35,12 +40,20 @@ def sendMsg(data):
 
 @socketio.on('list')
 def list(data):
-    chatingRoom.clear()
+    url = data['url']
+    print ("send list :")
+    print (chatingRoom[url])
+    emit('list', chatingRoom[url], room = data['username'])
+
+
+@socketio.on('refresh')
+def refresh(data):
+    chatingRoom[data['url']].clear()
     emit('check', room = data['url'])
-    socketio.sleep(3)
-    emit('list', chatingRoom, room = data['username'])
 
 
 @socketio.on('check')
-def list(data):
-    chatingRoom.append(data['username'])
+def check(data):
+    print ("check : ", data)
+    chatingRoom[data['url']].append(data['username'])
+    print (chatingRoom[data['url']])
