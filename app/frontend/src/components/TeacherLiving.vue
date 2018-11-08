@@ -934,7 +934,10 @@ export default{
         }
       })
     },
-    delPdfClass (index) {},
+    // API NOT READY YET
+    delPdfClass (index) {
+      //
+    },
     // receive choice list
     showMultiList () {
       this.modal_multilist = true
@@ -946,6 +949,19 @@ export default{
         this.multiAllList = resp.data
         this.multiThisList = resp.data
       })
+    },
+    // ADD FROM TEACHER TO CLASS
+    addMultiAll (index) {
+      // api not ready yet
+    },
+    useMultiAll (index) {
+      // add to class
+      // useMulti
+    },
+    delMultiAll (index) {
+      var delMultiAllInput = {username: '', uniqueId: ''}
+      delMultiAllInput.username = this.userInfo.username
+      // uniqueId not ready yet
     },
     useMulti (index) {
       var iselect = this.multiThisList[index]
@@ -976,6 +992,13 @@ export default{
         }
       })
     },
+    viewMulti (index) {
+      // able to edit the question
+      // get the student result of it
+    },
+    delMultiClass (index) {
+      // api not ready yet
+    },
     // receive code list
     showCodeList () {
       this.modal_codelist = true
@@ -988,10 +1011,29 @@ export default{
         this.codeThisList = resp.data
       })
     },
+    // add from teacher to class
+    addCodeAll (index) {
+      // api not ready
+    },
+    checkCodeAll (index) {
+      // show the content of the question only
+    },
+    delCodeAll (index) {
+      var delCodeAllInput = {username: '', uniqueId: ''}
+      delCodeAllInput.username = this.userInfo.username
+      // uniqueId not ready
+    },
+    useCode (index) {
+      // to be implemented
+    },
     // check code
     checkCode (index) {
       this.sub_code = this.codeThisList[index]
       this.modal_codecheck = true
+      // need to list all the student results
+    },
+    delCodeClass (index) {
+      // api not ready
     },
     // Yuxuan's Methods Stops Here
 
