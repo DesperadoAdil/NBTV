@@ -62,13 +62,13 @@
       @on-ok="modal_pdflist = false" @on-cancel="modal_pdflist = false"
     >
       <Card>
-        <Split class="demo-split" v-model="split_pdf">
-          <div slot="left"  class="demo-split-pane">
+        <Split class="teacher-live-split" v-model="split_pdf">
+          <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
             <Table height="375" border :columns="pdfAll" :data="pdfAllList"></Table>
           </div>
-          <div slot="right"  class="demo-split-pane">
+          <div slot="right"  class="teacher-live-split-pane">
             <p>This Classroom</p>
             <br>
             <Table height="375" border :columns="pdfThis" :data="pdfThisList"></Table>
@@ -86,12 +86,12 @@
     >
       <Card>
         <Split class="demo-split" v-model="split_multi">
-          <div slot="left"  class="demo-split-pane">
+          <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
             <Table height="375" border :columns="multiAll" :data="multiAllList"></Table>
           </div>
-          <div slot="right"  class="demo-split-pane">
+          <div slot="right"  class="teacher-live-split-pane">
             <p>This Classroom</p>
             <br>
             <Table height="375" border :columns="multiThis" :data="multiThisList"></Table>
@@ -109,12 +109,12 @@
     >
       <Card>
         <Split class="demo-split" v-model="split_code">
-          <div slot="left"  class="demo-split-pane">
+          <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
             <Table height="375" border :columns="codeAll" :data="codeAllList"></Table>
           </div>
-          <div slot="right"  class="demo-split-pane">
+          <div slot="right"  class="teacher-live-split-pane">
             <p>This Classroom</p>
             <br>
             <Table height="375" border :columns="codeThis" :data="codeThisList"></Table>
@@ -230,7 +230,7 @@
     >
       <Card>
         <Split class="demo-split" v-model="split_codecheck">
-          <div slot="left"  class="demo-split-pane">
+          <div slot="left"  class="teacher-live-split-pane">
             <Form label-position="top">
               <FormItem label="Text">
                 <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
@@ -253,7 +253,7 @@
               </FormItem>
             </Form>
           </div>
-          <div slot="right"  class="demo-split-pane">
+          <div slot="right"  class="teacher-live-split-pane">
             <Form></Form>
           </div>
         </Split>
@@ -1490,9 +1490,6 @@ export default{
     left:-50px;
     font-size: 15px;
   }
-  .databutton{
-    margin-top: 15px;
-  }
   .upf {
     position: relative;
     display: inline-block;
@@ -1519,11 +1516,11 @@ export default{
     color: #004974;
     text-decoration: none;
   }
-   .demo-split{
+   .teacher-live-split{
      height: 430px;
      border: 1px solid #dcdee2;
    }
-  .demo-split-pane{
+  .teacher-live-split-pane{
     padding: 10px;
   }
 </style>
