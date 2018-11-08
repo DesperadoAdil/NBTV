@@ -13,7 +13,7 @@
           <MenuItem @click.native="showMultiList()">Choice</MenuItem>
           <MenuItem @click.native="showCodeList()">Code</MenuItem>
         </Submenu>
-        <!-- 发布 -->
+        <!-- 资源 -->
 
         <!-- 添加 -->
         <Submenu name="add" class="menuitentea">
@@ -128,14 +128,16 @@
       <p slot="header" style="font-size: 20px">
         <span>上传课件</span>
       </p>
-      <FormItem>
-        <a href="javascript:;" class="upf">pdf upload
-          <input type="file" name="pdfinput" id="pdfinput">
-        </a>
-      </FormItem>
-      <FormItem>
-        <Button type="primary" @click="addPDF()">submit</Button>
-      </FormItem>
+      <Form>
+        <FormItem>
+          <a href="javascript:;" class="upf">pdf upload
+            <input type="file" name="pdfinput" id="pdfinput">
+          </a>
+        </FormItem>
+        <FormItem>
+          <Button type="primary" @click="addPDF()">submit</Button>
+        </FormItem>
+      </Form>
     </Modal>
 
     <!--设置选择题-->
@@ -431,7 +433,31 @@ export default{
       split_pdf: 0.5,
       modal_pdflist: false,
       // framework to show pdf all
-      pdfAll: [{title: 'Title', key: 'title'}],
+      pdfAll: [{title: 'Title', key: 'title'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.addPdftoClass(params.index) }
+                }
+              }, 'Add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.delPdf(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
       pdfThis: [{title: 'Title', key: 'title'},
         {
           title: 'Action',
