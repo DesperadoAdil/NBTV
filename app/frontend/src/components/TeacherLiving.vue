@@ -305,16 +305,19 @@
       <div class="talk-contents">
         <div class="talk-inner">
           <div class="talk-nav">
-            <div class="talk-title">
+            <div class="talk-title" @click.native="whisper('all')">
               {{username}}
             </div>
+          </div>
+          <div class="talk-student-list">
+
           </div>
           <div class="content">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
               <div class="talk-space self-talk"
                    v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
                 <div class="talk-content">
-                  <div class="talk-self-name">{{ msgObj.fromUser }}</div>
+                  <div class="talk-self-name" @click.native="whisper(msgObj.fromUser)">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
@@ -332,7 +335,7 @@
               <div  class="talk-space user-talk"
                     v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username">
                 <div class="talk-content">
-                  <div class="talk-user-name">{{ msgObj.fromUser }}</div>
+                  <div class="talk-user-name" @click.native="whisper(msgObj.fromUser)">{{ msgObj.fromUser }}</div>
                   <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
