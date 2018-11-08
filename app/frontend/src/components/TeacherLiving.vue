@@ -555,7 +555,7 @@ export default{
                 props: {type: 'text', size: 'small'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.delMultifromClass(params.index) }
+                  click: () => { this.delMultiClass(params.index) }
                 }
               }, 'Del')])
           }
@@ -687,7 +687,7 @@ export default{
       sub_code: {
         username: '',
         statement: '',
-        language: '', // language 是个多选框
+        language: '',
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
       },
 
@@ -878,6 +878,30 @@ export default{
         this.pdfThisList = resp.data
       })
     },
+    // ADD PDF TO CLASS
+    addPdfAll (index) {
+      // var iPdf = this.pdfAllList[index]
+      // iPdf: [{title: 'Slide01', url: 'hide/slide01'}]
+    },
+    // DEL PDF FROM TEACHER'S RESOURCE
+    delPdfAll (index) {
+      var iPdf = this.pdfAllList[index]
+      var delPdfAllInput = {username: '', title: ''}
+      delPdfAllInput.username = this.userInfo.username
+      delPdfAllInput.title = iPdf.title
+      // post
+      axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
+        if (resp.data.status === 'success') {
+          console.log('delete succeeded')
+        }
+      })
+      // UPDATE PDF LIST
+      var pdfListInput = {username: ''}
+      pdfListInput.username = this.userinfo.username
+      axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
+        this.pdfAllList = resp.data
+      })
+    },
     usePdf (index) {
       // TODO: REFINE THIS
       var ipdf = this.pdfThisList[index]
@@ -911,6 +935,10 @@ export default{
         }
       })
     },
+    // API NOT READY YET
+    delPdfClass (index) {
+      //
+    },
     // receive choice list
     showMultiList () {
       this.modal_multilist = true
@@ -922,6 +950,19 @@ export default{
         this.multiAllList = resp.data
         this.multiThisList = resp.data
       })
+    },
+    // ADD FROM TEACHER TO CLASS
+    addMultiAll (index) {
+      // api not ready yet
+    },
+    useMultiAll (index) {
+      // add to class
+      // useMulti
+    },
+    delMultiAll (index) {
+      var delMultiAllInput = {username: '', uniqueId: ''}
+      delMultiAllInput.username = this.userInfo.username
+      // uniqueId not ready yet
     },
     useMulti (index) {
       var iselect = this.multiThisList[index]
@@ -952,6 +993,13 @@ export default{
         }
       })
     },
+    viewMulti (index) {
+      // able to edit the question
+      // get the student result of it
+    },
+    delMultiClass (index) {
+      // api not ready yet
+    },
     // receive code list
     showCodeList () {
       this.modal_codelist = true
@@ -964,10 +1012,29 @@ export default{
         this.codeThisList = resp.data
       })
     },
+    // add from teacher to class
+    addCodeAll (index) {
+      // api not ready
+    },
+    checkCodeAll (index) {
+      // show the content of the question only
+    },
+    delCodeAll (index) {
+      var delCodeAllInput = {username: '', uniqueId: ''}
+      delCodeAllInput.username = this.userInfo.username
+      // uniqueId not ready
+    },
+    useCode (index) {
+      // to be implemented
+    },
     // check code
     checkCode (index) {
       this.sub_code = this.codeThisList[index]
       this.modal_codecheck = true
+      // need to list all the student results
+    },
+    delCodeClass (index) {
+      // api not ready
     },
     // Yuxuan's Methods Stops Here
 
