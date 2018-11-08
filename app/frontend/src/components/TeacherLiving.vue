@@ -627,11 +627,12 @@ export default{
         statement: '',
         optionList: [],
         answer: '',
-        url: '教室url'
+        username: ''
       },
       // CODE
       modal_code: false,
       sub_code: {
+        username: '',
         statement: '',
         language: '', // language 是个多选框
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
@@ -767,7 +768,7 @@ export default{
     },
     addMulti () {
       // send sub_multi should be set by now
-      this.sub_multi.url = this.cururl
+      this.sub_multi.username = this.userInfo.username
       // 将multi_option这个列表改成可发送的数组
       for (var i = 0; i < this.index; i++) {
         if (this.multi_options[i].status === 1) {
@@ -790,6 +791,7 @@ export default{
     // CODE
     addCode () {
       // sub_code should be set by now
+      this.sub_code.username = this.userInfo.username
       // post
       axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
         this.$Message.success(resp.data.status)
