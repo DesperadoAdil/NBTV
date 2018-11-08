@@ -438,7 +438,7 @@ export default{
           title: 'Action',
           key: 'action',
           fixed: 'right',
-          width: 180,
+          width: 120,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -463,7 +463,7 @@ export default{
           title: 'Action',
           key: 'action',
           fixed: 'right',
-          width: 180,
+          width: 120,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -476,17 +476,9 @@ export default{
               }, 'Use'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
-                style: {marginRight: '5px'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.show(params.index) }
-                }
-              }, 'View'),
-              h('Button', {
-                props: {type: 'text', size: 'small'},
-                on: {
-                  // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.remove(params.index) }
+                  click: () => { this.delPdffromClass(params.index) }
                 }
               }, 'Del')])
           }
@@ -506,7 +498,39 @@ export default{
       split_multi: 0.5,
       modal_multilist: false,
       // framework to show multi
-      multiAll: [{title: 'Title', key: 'title'}],
+      multiAll: [{title: 'Title', key: 'title'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.addMultitoClass(params.index) }
+                }
+              }, 'add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.useMultifromAll(params.index) }
+                }
+              }, 'Use'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.delMulti(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
       multiThis: [{title: 'Title', key: 'title'},
         {
           title: 'Action',
@@ -528,14 +552,14 @@ export default{
                 style: {marginRight: '5px'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.show(params.index) }
+                  click: () => { this.viewMulti(params.index) }
                 }
               }, 'View'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.remove(params.index) }
+                  click: () => { this.delMultifromClass(params.index) }
                 }
               }, 'Del')])
           }
@@ -564,7 +588,39 @@ export default{
       split_codecheck: 0.4,
       modal_codecheck: false,
       // FRAMEWORK TO SHOW CODE LIST
-      codeAll: [{title: 'Title', key: 'title'}],
+      codeAll: [{title: 'Title', key: 'title'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.addCodetoClass(params.index) }
+                }
+              }, 'Add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.checkCodeAll(params.index) }
+                }
+              }, 'View'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.delCodeAll(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
       codeThis: [{title: 'Title', key: 'title'},
         {
           title: 'Action',
@@ -770,7 +826,7 @@ export default{
       // send sub_multi should be set by now
       this.sub_multi.username = this.userInfo.username
       // 将multi_option这个列表改成可发送的数组
-      for (var i = 0; i < this.index; i++) {
+      for (var i = 0; i < this.multi_index; i++) {
         if (this.multi_options[i].status === 1) {
           this.sub_multi.optionList.push(this.multi_options[i].value)
         }
