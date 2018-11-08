@@ -1078,6 +1078,7 @@ export default{
         toUser: this.username,
         fromUser: this.userInfo.username
       }
+      console.log(obj)
       CHAT.submit(obj)
     },
     changeMsgType () {
