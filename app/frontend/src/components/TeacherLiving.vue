@@ -321,7 +321,11 @@
                     <audio :src="audioUrl(msgObj.msg)" controls></audio>
                   </div>
                   <div v-else></div>
-
+                  <div v-if="msgObj.msgType === 'img'">
+                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                    这里是个图
+                  </div>
+                  <div v-else></div>
                 </div>
               </div>
               <div v-else></div>
@@ -333,6 +337,11 @@
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'audio'">
                     <audio :src="audioUrl(msgObj.msg)" controls></audio>
+                  </div>
+                  <div v-else></div>
+                  <div v-if="msgObj.msgType === 'img'">
+                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                    这里是个图
                   </div>
                   <div v-else></div>
                 </div>
@@ -355,6 +364,9 @@
             </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
             <Button class="talker-send" @click="changeMsgType">{{ msgTypeInfo }}</Button>
+            <a href="javascript:;" class=" upf talker-send" @click.native="submitImg">图片
+              <input type="file" name="fileinput" id="fileinput">
+            </a>
           </div>
         </div>
       </div>
@@ -1007,6 +1019,21 @@ export default{
         CHAT.submit(obj)
       }
     },
+    submitImg () {
+      var blob = document.querySelector('input[type=file]').files[0]
+      var date = new Date()
+      var time = date.getHours() + ':' + date.getMinutes()
+      var obj = {
+        type: 'broadcast',
+        msgType: 'img',
+        url: this.cururl,
+        time: time,
+        msg: blob,
+        toUser: this.username,
+        fromUser: this.userInfo.username
+      }
+      CHAT.submit(obj)
+    },
     changeMsgType () {
       if (this.msgType === 'text') {
         this.msgTypeInfo = '语音'
@@ -1037,6 +1064,10 @@ export default{
     },
     audioUrl (obj) {
       var url = window.URL.createObjectURL(new Blob([obj.blob], { type: 'audio/wav' }))
+      return url
+    },
+    imageUrl (obj) {
+      var url = window.URL.createObjectURL(new Blob([obj], { type: 'image/png' }))
       return url
     },
     /**
@@ -1343,6 +1374,9 @@ export default{
     text-align: left;
     position: relative;
     margin-left: 0px;
+  }
+  .talk-image {
+    width: 100px;
   }
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   .tealivingmain{
