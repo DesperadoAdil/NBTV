@@ -13,7 +13,7 @@
           <MenuItem @click.native="showMultiList()">Choice</MenuItem>
           <MenuItem @click.native="showCodeList()">Code</MenuItem>
         </Submenu>
-        <!-- 发布 -->
+        <!-- 资源 -->
 
         <!-- 添加 -->
         <Submenu name="add" class="menuitentea">
@@ -128,14 +128,16 @@
       <p slot="header" style="font-size: 20px">
         <span>上传课件</span>
       </p>
-      <FormItem>
-        <a href="javascript:;" class="upf">pdf upload
-          <input type="file" name="pdfinput" id="pdfinput">
-        </a>
-      </FormItem>
-      <FormItem>
-        <Button type="primary" @click="addPDF()">submit</Button>
-      </FormItem>
+      <Form>
+        <FormItem>
+          <a href="javascript:;" class="upf">pdf upload
+            <input type="file" name="pdfinput" id="pdfinput">
+          </a>
+        </FormItem>
+        <FormItem>
+          <Button type="primary" @click="addPDF()">submit</Button>
+        </FormItem>
+      </Form>
     </Modal>
 
     <!--设置选择题-->
@@ -189,13 +191,7 @@
           </Input>
         </FormItem>
         <FormItem label="Language">
-          <Select v-model="sub_code.language">
-            <Option>python</Option>
-            <Option>C++</Option>
-            <Option>Java</Option>
-            <Option>JavaScript</Option>
-            <Option>Vue.js</Option>
-          </Select>
+          <Input v-model="sub_code.language" placeholder="Set the language"></Input>
         </FormItem>
         <FormItem label="Example Code">
           <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
@@ -431,13 +427,12 @@ export default{
       split_pdf: 0.5,
       modal_pdflist: false,
       // framework to show pdf all
-      pdfAll: [{title: 'Title', key: 'title'}],
-      pdfThis: [{title: 'Title', key: 'title'},
+      pdfAll: [{title: 'Title', key: 'title'},
         {
           title: 'Action',
           key: 'action',
           fixed: 'right',
-          width: 180,
+          width: 120,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -445,22 +440,40 @@ export default{
                 style: {marginRight: '5px'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.addPdfAll(params.index) }
+                }
+              }, 'Add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.delPdfAll(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
+      pdfThis: [
+        {title: 'Title', key: 'title'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 120,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS FURTHER IMPLEMENTATION
                   click: () => { this.usePdf(params.index) }
                 }
               }, 'Use'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
-                style: {marginRight: '5px'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.show(params.index) }
-                }
-              }, 'View'),
-              h('Button', {
-                props: {type: 'text', size: 'small'},
-                on: {
-                  // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.remove(params.index) }
+                  click: () => { this.delPdfClass(params.index) }
                 }
               }, 'Del')])
           }
@@ -480,7 +493,39 @@ export default{
       split_multi: 0.5,
       modal_multilist: false,
       // framework to show multi
-      multiAll: [{title: 'Title', key: 'title'}],
+      multiAll: [{title: 'Title', key: 'title'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.addMultiAll(params.index) }
+                }
+              }, 'add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.useMultiAll(params.index) }
+                }
+              }, 'Use'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.delMultiAll(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
       multiThis: [{title: 'Title', key: 'title'},
         {
           title: 'Action',
@@ -502,14 +547,14 @@ export default{
                 style: {marginRight: '5px'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.show(params.index) }
+                  click: () => { this.viewMulti(params.index) }
                 }
               }, 'View'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.remove(params.index) }
+                  click: () => { this.delMultifromClass(params.index) }
                 }
               }, 'Del')])
           }
@@ -538,7 +583,40 @@ export default{
       split_codecheck: 0.4,
       modal_codecheck: false,
       // FRAMEWORK TO SHOW CODE LIST
-      codeAll: [{title: 'Title', key: 'title'}],
+      codeAll: [
+        {title: 'Title', key: 'title'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.addCodeAll(params.index) }
+                }
+              }, 'Add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.checkCodeAll(params.index) }
+                }
+              }, 'View'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.delCodeAll(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
       codeThis: [{title: 'Title', key: 'title'},
         {
           title: 'Action',
@@ -567,7 +645,7 @@ export default{
                 props: {type: 'text', size: 'small'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.remove(params.index) }
+                  click: () => { this.delCodeClass(params.index) }
                 }
               }, 'Del')])
           }
@@ -601,11 +679,12 @@ export default{
         statement: '',
         optionList: [],
         answer: '',
-        url: '教室url'
+        username: ''
       },
       // CODE
       modal_code: false,
       sub_code: {
+        username: '',
         statement: '',
         language: '', // language 是个多选框
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
@@ -741,15 +820,18 @@ export default{
     },
     addMulti () {
       // send sub_multi should be set by now
-      this.sub_multi.url = this.cururl
+      this.sub_multi.username = this.userInfo.username
       // 将multi_option这个列表改成可发送的数组
-      for (var i = 0; i < this.index; i++) {
+      for (var i = 0; i < this.multi_index; i++) {
         if (this.multi_options[i].status === 1) {
           this.sub_multi.optionList.push(this.multi_options[i].value)
         }
       }
+      // test
+      console.log(this.sub_multi.statement)
+      console.log(this.sub_multi.optionList)
       // post
-      axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
+      axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
@@ -764,8 +846,13 @@ export default{
     // CODE
     addCode () {
       // sub_code should be set by now
+      this.sub_code.username = this.userInfo.username
+      // test
+      console.log(this.sub_code.username)
+      console.log(this.sub_code.language)
+      console.log(this.sub_code.statement)
       // post
-      axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
+      axios.post('/api/resource/add_code', this.sub_code).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
