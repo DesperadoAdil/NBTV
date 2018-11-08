@@ -94,7 +94,7 @@ class ChoiceQuestion(db.Model):
     statement = db.Column(db.String(1000), nullable = False)
     optionList = db.Column(db.String(1000), nullable = False)
     answer = db.Column(db.Integer, nullable = False)
-    uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+    uniqueId = db.Column(db.String(100), primary_key = True, unique = True, nullable = False)
     submitRecord = db.Column(db.Text, nullable = False)
     # classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
@@ -108,7 +108,7 @@ class CodeQuestion(db.Model):
     __table_args__ = { 'mysql_charset':'utf8' }
     statement = db.Column(db.String(1000), nullable = False)
     language = db.Column(db.String(10), nullable = False)
-    uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+    uniqueId = db.Column(db.String(100), primary_key = True, unique = True, nullable = False)
     submitRecord = db.Column(db.Text, nullable = False)
     # classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
