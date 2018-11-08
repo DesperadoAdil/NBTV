@@ -306,7 +306,7 @@
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              <Dropdown>
+              <Dropdown @click.native="CHAT.list">
                 <a href="javascript:void(0)">
                   聊天对象
                   <Icon type="ios-arrow-down"></Icon>
