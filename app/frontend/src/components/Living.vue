@@ -59,7 +59,7 @@
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              <Dropdown @click.native="CHAT.list">
+              <Dropdown @click.native="CHAT.list(userInfo.username, cururl)">
                 <a href="javascript:void(0)">
                   聊天对象
                   <Icon type="ios-arrow-down"></Icon>
@@ -86,7 +86,6 @@
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'img'">
                     <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
-                    这里是个图
                   </div>
                   <div v-else></div>
                 </div>
@@ -104,7 +103,6 @@
                   <div v-else></div>
                   <div v-if="msgObj.msgType === 'img'">
                     <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
-                    这里是个图
                   </div>
                   <div v-else></div>
                 </div>
