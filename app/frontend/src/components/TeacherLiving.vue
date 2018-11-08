@@ -872,7 +872,7 @@ export default{
       var pdfListInput = {username: ''}
       pdfListInput.username = this.userInfo.username
       // TODO: need to add all list & this list
-      axios.post('/api/resourse/getpdfs', this.pdfListInput).then((resp) => {
+      axios.post('/api/resource/getpdfs', this.pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data
         this.pdfThisList = resp.data
@@ -945,7 +945,7 @@ export default{
       var multiListInput = {username: ''}
       multiListInput.username = this.userInfo.username
       // need to add all list & this list
-      axios.post('/api/resourse/getmutiples', multiListInput).then((resp) => {
+      axios.post('/api/resource/getmutiples', multiListInput).then((resp) => {
         // resp.data 即是那个列表
         this.multiAllList = resp.data
         this.multiThisList = resp.data
@@ -1006,7 +1006,7 @@ export default{
       var codeListInput = {username: ''}
       codeListInput.username = this.userInfo.username
       // need to add all list & this list
-      axios.post('/api/resourse/getmutiples', codeListInput).then((resp) => {
+      axios.post('/api/resource/getmutiples', codeListInput).then((resp) => {
         // resp.data 即是那个列表
         this.codeAllList = resp.data
         this.codeThisList = resp.data
