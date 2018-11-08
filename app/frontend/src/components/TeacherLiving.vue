@@ -775,6 +775,9 @@ export default{
           this.sub_multi.optionList.push(this.multi_options[i].value)
         }
       }
+      // test
+      console.log(this.sub_multi.statement)
+      console.log(this.sub_multi.optionList)
       // post
       axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
@@ -792,6 +795,10 @@ export default{
     addCode () {
       // sub_code should be set by now
       this.sub_code.username = this.userInfo.username
+      // test
+      console.log(this.sub_code.username)
+      console.log(this.sub_code.language)
+      console.log(this.sub_code.statement)
       // post
       axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
         this.$Message.success(resp.data.status)
