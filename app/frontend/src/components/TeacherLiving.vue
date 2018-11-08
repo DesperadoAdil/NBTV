@@ -225,6 +225,45 @@
       </Form>
     </Modal>
 
+    <!--code_list-->
+    <Modal
+      v-model="modal_codecheck"
+      @on-ok="modal_codecheck = false"
+      @on-cancel="modal_codecheck = false"
+      width="900"
+    >
+      <Card>
+        <Split class="demo-split" v-model="split_codecheck">
+          <div slot="left"  class="demo-split-pane">
+            <Form label-position="top">
+              <FormItem label="Text">
+                <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
+                <Input v-model="sub_code.statement"
+                       type="textarea" rows="4"
+                       placeholder="Enter Your Statement">
+                </Input>
+              </FormItem>
+              <FormItem label="Language">
+                <Select v-model="sub_code.language">
+                  <Option>python</Option>
+                  <Option>C++</Option>
+                  <Option>Java</Option>
+                  <Option>JavaScript</Option>
+                  <Option>Vue.js</Option>
+                </Select>
+              </FormItem>
+              <FormItem label="Example Code">
+                <pre v-highlightjs="sub_code.example"><code class="cpp"></code></pre>
+              </FormItem>
+            </Form>
+          </div>
+          <div slot="right"  class="demo-split-pane">
+            <Form></Form>
+          </div>
+        </Split>
+      </Card>
+    </Modal>
+
     <!---------main living 部分------------->
     <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
       <div class="topveido">
@@ -496,9 +535,43 @@ export default{
       // CODE PARAMETER
       split_code: 0.5,
       modal_codelist: false,
+      split_codecheck: 0.4,
+      modal_codecheck: false,
       // FRAMEWORK TO SHOW CODE LIST
       codeAll: [{title: 'Title', key: 'title'}],
-      codeThis: [{title: 'Title', key: 'title'}],
+      codeThis: [{title: 'Title', key: 'title'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.useCode(params.index) }
+                }
+              }, 'Use'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.checkCode(params.index) }
+                }
+              }, 'View'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  // TODO: NEEDS IMPLEMENTATION
+                  click: () => { this.remove(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
       codeAllList: [
         {
           title: 'Eight Queens'
@@ -802,6 +875,11 @@ export default{
         this.codeAllList = resp.data
         this.codeThisList = resp.data
       })
+    },
+    // check code
+    checkCode (index) {
+      this.sub_code = this.codeThisList[index]
+      this.modal_codecheck = true
     },
     // Yuxuan's Methods Stops Here
 
