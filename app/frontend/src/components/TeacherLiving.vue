@@ -554,7 +554,7 @@ export default{
                 props: {type: 'text', size: 'small'},
                 on: {
                   // TODO: NEEDS IMPLEMENTATION
-                  click: () => { this.delMultifromClass(params.index) }
+                  click: () => { this.delMultiClass(params.index) }
                 }
               }, 'Del')])
           }
@@ -686,7 +686,7 @@ export default{
       sub_code: {
         username: '',
         statement: '',
-        language: '', // language 是个多选框
+        language: '',
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
       },
 
@@ -877,6 +877,30 @@ export default{
         this.pdfThisList = resp.data
       })
     },
+    // ADD PDF TO CLASS
+    addPdfAll (index) {
+      // var iPdf = this.pdfAllList[index]
+      // iPdf: [{title: 'Slide01', url: 'hide/slide01'}]
+    },
+    // DEL PDF FROM TEACHER'S RESOURCE
+    delPdfAll (index) {
+      var iPdf = this.pdfAllList[index]
+      var delPdfAllInput = {username: '', title: ''}
+      delPdfAllInput.username = this.userInfo.username
+      delPdfAllInput.title = iPdf.title
+      // post
+      axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
+        if (resp.data.status === 'success') {
+          console.log('delete succeeded')
+        }
+      })
+      // UPDATE PDF LIST
+      var pdfListInput = {username: ''}
+      pdfListInput.username = this.userinfo.username
+      axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
+        this.pdfAllList = resp.data
+      })
+    },
     usePdf (index) {
       // TODO: REFINE THIS
       var ipdf = this.pdfThisList[index]
@@ -910,6 +934,7 @@ export default{
         }
       })
     },
+    delPdfClass (index) {},
     // receive choice list
     showMultiList () {
       this.modal_multilist = true
