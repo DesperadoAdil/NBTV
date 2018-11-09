@@ -54,7 +54,7 @@
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
-    <Card id="chatingRoom">
+    <div id="chatingRoom" :style="{height:chathei,top:chattop}">
       <div class="talk-contents">
         <div class="talk-inner">
           <div class="talk-nav">
@@ -131,7 +131,7 @@
           </div>
         </div>
       </div>
-    </Card>
+    </div>
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
 
   </div>
@@ -154,6 +154,8 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
+      chathei: 600+'px',
+        chattop:150+'px',
       socket: null,
       msgType: 'text',
       msgTypeInfo: '文字',
@@ -212,23 +214,35 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
+
     CHAT.message(this.userInfo.username)
     /**
      * 以上为聊天室使用，请勿改动
      */
-    var xxx = this.videohei0
-    console.log(xxx)
-    var yyy = this.curvid
-     console.log(yyy)
-    var timer = setTimeout(function () {
-      doItPerSecond()
-    }, 1000)
-    var num = 0
-    function doItPerSecond () {
-
-      num++
-      console.log(num)
-    };
+//    var xxx = this.videohei0
+//    console.log(xxx)
+//    var yyy = this.curvid
+//     console.log(yyy)
+//    var timer = setTimeout(function () {
+//      doItPerSecond()
+//    }, 1000)
+//    var num = 0
+//    function doItPerSecond () {
+//      var player = polyvObject('#player').livePlayer({
+//        'width': '100%',
+//        'height': 600 + 'px',
+//        'uid': '7181857ac2',
+//        'vid': '250810'
+//      })
+//      var player = polyvObject('#player2').livePlayer({
+//        'width': '100%',
+//        'height': 200 + 'px',
+//        'uid': '7181857ac2',
+//        'vid': '250810'
+//      })
+//      num++
+//      console.log(num)
+//    };
   },
   created: function () {
     const s = document.createElement('script')
@@ -393,6 +407,8 @@ export default{
     showpdf0 () {
       console.log('weqweqwe')
       this.liaotianshiheight = 500 + 'px'
+      this.chattop=400+'px'
+      this.chathei=350+'px'
       this.littlelivingcarddisplay = true
       this.mainselectcarddisplay = false
       this.mainpdfcarddisplay = true
@@ -403,6 +419,8 @@ export default{
     showselect0 () {
       console.log('weqweqwe')
       this.liaotianshiheight = 500 + 'px'
+      this.chattop=400+'px'
+      this.chathei=350+'px'
       this.littlelivingcarddisplay = true
       this.mainselectcarddisplay = true
       this.mainpdfcarddisplay = false
@@ -412,6 +430,8 @@ export default{
     showcode0 () {
       console.log('weqweqwe')
       this.liaotianshiheight = 500 + 'px'
+      this.chattop=400+'px'
+      this.chathei=350+'px'
       this.littlelivingcarddisplay = true
       this.mainselectcarddisplay = false
       this.mainpdfcarddisplay = false
@@ -421,6 +441,8 @@ export default{
     exitliving0 () {
       console.log('weqweqwe')
       this.liaotianshiheight = 150 + 'px'
+      this.chattop=150+'px'
+      this.chathei=600+'px'
       this.littlelivingcarddisplay = false
       this.mainselectcarddisplay = false
       this.mainpdfcarddisplay = false
@@ -435,10 +457,8 @@ export default{
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   #chatingRoom {
     position:absolute;
-    left: 79%;
-    width: 21%;
-    top:60px;
-    height: 90%;
+    left: 70%;
+    width: 20%;
   }
   .talk-contents {
     height: 100%;
