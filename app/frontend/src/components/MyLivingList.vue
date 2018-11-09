@@ -13,7 +13,7 @@
       @on-ok="addLiving()"
       @on-cancel="cancel">
       <Input v-model="newLiving.title" placeholder="课程名称"></Input>
-      <Input v-model="newLiving.thumbnail" placeholder="缩略图（待修改）"></Input>
+      <!--<Input v-model="newLiving.thumbnail" placeholder="缩略图（待修改）"></Input>-->
       <a href="javascript:;" class="upf">上传缩略图
         <input type="file" name="fileinput" id="fileinput">
       </a>
@@ -36,7 +36,10 @@
               @on-ok="updateLiving(index)"
               @on-cancel="cancel">
               <Input v-model="living.title" placeholder="课程名称"></Input>
-              <Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>
+              <!--<Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>-->
+              <a href="javascript:;" class="upf">上传缩略图
+                <input type="file" name="filezsh" id="filezsh2" accept="image/gif, image/jpeg, image/png, image/jpg">
+              </a>
               <Input v-model="living.url" placeholder="课程url"></Input>
               <Input v-model="living.class_password" placeholder="课程密码（可空）"></Input>
             </Modal>
@@ -148,11 +151,16 @@ export default {
       })
     },
     addLiving () {
+      console.log(document.querySelector('input[id=fileinput]').files[0])
       var formData = new FormData()
       formData.append('username', this.$cookies.get('user').username)
       formData.append('password', this.$cookies.get('user').password)
       formData.append('job', this.$cookies.get('user').job)
-      formData.append('img', document.querySelector('input[type=file]').files[0])
+      formData.append('img', document.querySelector('input[id=fileinput]').files[0])
+      formData.append('title', this.newLiving.title)
+      formData.append('url', this.newLiving.url)
+      formData.append('class_password', this.newLiving.class_password)
+      formData.append('mode', this.newLiving.mode)
       var options = {
         url: '/api/classroom/add_class',
         data: formData,
@@ -164,17 +172,34 @@ export default {
       axios(options).then((resp) => {
         this.getMyLivingList()
       })
-      console.log(document.querySelector('input[type=file]').files[0])
+
       this.addModal = false
     },
     updateLiving (index) {
-      this.myLivingList[index]['username'] = this.$cookies.get('user').username
-      this.myLivingList[index]['password'] = this.$cookies.get('user').password
-      this.myLivingList[index]['job'] = this.$cookies.get('user').job
-      const data = this.myLivingList[index]
-      axios.post('/api/classroom/update_class', data).then((resp) => {
-        this.getMyLivingList()
-      })
+        console.log("sa")
+        var    fileInput00 = document.getElementById('filezsh2')
+        console.log(fileInput00.files)
+        console.log(document.querySelector('input[id=filezsh2]').files)
+          var formData = new FormData()
+          formData.append('username', this.$cookies.get('user').username)
+          formData.append('password', this.$cookies.get('user').password)
+          formData.append('job', this.$cookies.get('user').job)
+          formData.append('img', document.querySelector('input[id=filezsh2]').files[0])
+          formData.append('title', this.myLivingList[index]['title'])
+          formData.append('url', this.myLivingList[index]['url'])
+          formData.append('class_password', this.myLivingList[index]['class_password'])
+          formData.append('mode', this.myLivingList[index]['mode'])
+          var options = {
+            url: '/api/classroom/update_class',
+            data: formData,
+            method: 'post',
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+          axios(options).then((resp) => {
+            this.getMyLivingList()
+        })
       this.updateModal = false
     },
     deleteLiving (index) {
