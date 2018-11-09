@@ -79,114 +79,135 @@ commit message都要符合这一个规范：
       - **backend:** *Adil*
 
 - ## 资源管理
-   - ### 新的或者更新的API：
+   - ### 新的或者要更改的API：
 
-      - 从教师的教学资源中添加pdf到教室中
-         - url: ???
-         - description: 为当前教室添加要使用的pdf课件
-         - input: {username: '', title: ''}
-         - output: {status: '', pdfThisList: [{title: '', url: ''}, ...]}
-         - frontend: yuxuan
-         - backend: ???
-      - 从教师的教学资源中删除某个pdf文件
-         - url: ???
-         - description: 删除教学资源中的某个pdf。同时也要从教室能使用的资源中删去
-         - input: {username: '', title: ''}
-         - output: {pdfAllList: [], pdfThisList: []} // 更新后的教师资源列表与教室使用资源列表
-         - frontend：yuxuan
-         - backend：???
-      - 从教室的使用资源中删除某个pdf文件
-         - url: ???
-         - description: 从该教室的使用列表中删除，但不从教师的资源删除
-         - input：{username: '', title: ''}
-         - output: {pdfThisList: []} // 更新后的列表
-         - frontend: yuxuan
-         - backend: ???
-      - 发布pdf
-         - url
-         - description
-         - input
-         - output
-         - frontend
-         - backend
-      - 教师资源中添加选择题到教室中
-         - url: ???
-         - description: 添加已有的选择题到教室
-         - input: ???
-         - output: ???
-         - frontend: ???
-         - backend: ???
-      - 教师资源中删除选择题
-         - url: ???
-         - description:
-         - input: ???
-         - output: ???
-         - frontend: ???
-         - backend: ???
-         - p.s. 应当要更改一下选择题和编程题的API。现在uniqueId和每道题关联不上。可以考虑传入参数传入一个为空的uniqueId，这之后后端赋值再传回来
-      - 教室资源中发布选择题
-         - url
-         - description: 发布选择题给所有学生
-         - input
-         - output
-         - frontend
-         - backend
-      - 查看选择题
-         - url
-         - description：查看并能够编辑某个选择题，获取目前所有的答题情况
-         - input
-         - output
-         - frontend
-         - backend
-      - 教室资源中删除选择题
-         - url
-         - description：教室中删除，教师资源不变
-         - input
-         - output
-         - frontend
-         - backend
-      - 教师资源中添加代码题到教室中
-         - url
-         - description：
-         - input
-         - output
-         - frontend
-         - backend
-      - 代码题预览
-         - url
-         - description：返回该代码题的描述、语言及示例。不能更改
-         - input
-         - output
-         - frontend
-         - backend
-      - 教师资源中删除代码题
-         - url
-         - description：同时从教室的可用资源中删除
-         - input
-         - output
-         - frontend
-         - backend
-      - 教室中发布代码题
-         - url
-         - description：发布题目到所有学生
-         - input
-         - output
-         - frontend
-         - backend
-      - 教室中查看代码题
-         - url
-         - description：可以查看并编辑代码题，并且看到此前所有学生的提交结果
-         - imput
-         - output
-         - frontend
-         - backend
-      - 教室中删除代码题
-         - url:
-         - description：从教室的资源列表中移除该题目，不影响教师资源
-         - input
-         - output
-         - frontend
-         - backend
+- #### 查看pdf文件列表
+
+    - **url:** */api/resource/getpdfs*
+    - **description:** 用户查看pdf文件，返回教师能用的和教室当中的列表 //返回两个pdf文件列表
+    - **input:** `{ username : '', url: '' }`
+    - **output:** `{ pdfAllList: [ '{ title : '', url : 'pdf文件路径(/pdf/username/filename.pdf)' }', ... ], pdfThisList: [...]}`
+    - **frontend:** *yuxuan*
+    - **backend:** *Adil*
+
+- #### 从教师的教学资源中添加pdf到教室中
+
+    - url: /api/resource/pdf_addclass
+    - description: 为当前教室添加要使用的pdf课件
+    - input: `{ username : '', url: '', pdf: {title: '', url: ''} }`
+    - **output:** `{ pdfThisList: [...]}`
+    - **frontend:** *yuxuan*
+    - **backend:** *Adil*
+
+- #### 删除pdf文件
+
+    - **url:** */api/resource/delete_pdf*
+    - **description:** 用户删除pdf文件 //已有api，需要更改的是，不仅要从教师的文件列表中删除，还要从教室的文件列表中删除。返回两个更新后的列表
+    - **input:** `{ username : '', url: '', pdf: {title: '', url: ''} }`
+    - **output:** `{pdfAllList: [...], pdfThisList: [...] }`
+    - **frontend:** *Yuxuan*
+    - **backend:** *Adil*
+
+- #### 从教室的使用资源中删除某个pdf文件
+
+    - url: /api/resource/pdf_delclass
+    - description: 从该教室的使用列表中删除，但不从教师的资源删除
+    - input:** `{ username : '', url: '', pdf: {title: '', url: ''} }`
+    - **output:** `{ pdfThisList: [...] }`
+    - frontend: yuxuan
+    - backend: ???
+
+- #### 查看选择题列表
+
+    - **url:** */api/resource/getmutiples*
+    - **description:** 用户查看选择题 // 输入用户名和当前url， 输出两个列表。一个是教师所有的选择题，一个是当前教室用的选择题。输出的每个选项都有一个uniqueId
+    - **input:** `{username: '', url: ''}`
+    - **output:** `{ multiAllList: [ '{ uniqueId: '', statement : '', optionList : '[ '答案列表', ... ]', answer : '一个数字' }', ... ], multiThisList: [...]}`
+    - **frontend:** *Yuxuan*
+    - **backend:** *Adil*
+
+- #### 教师资源中添加选择题到教室中
+
+    - url: /api/resource/multi_addclass
+    - description: 添加已有的选择题到教室
+    - input: `{username: '', url: '', multi: {}}`
+    - **output:** `{ multiThisList: [ '{ uniqueId: '', statement : '', optionList : '[ '答案列表', ... ]', answer : '一个数字' }', ... ]}`
+    - **frontend:** *Yuxuan*
+    - backend: ???
+
+- #### 删除选择题
+
+    - **url:** */api/resource/delete_mutiple*
+    - **description:** 教师从全部资源中删除选择题
+    - **input:** `{ username: '', url: '', multi: {/* 该选择题 */}}`
+    - **output:** `{ multiAllList: [ '{ uniqueId: '', statement : '', optionList : '[ '答案列表', ... ]', answer : '一个数字' }', ... ], multiThisList: [...]}` // 返回更新后的两个列表
+    - **frontend:** *Yuxuan*
+    - **backend:** *???*
+
+- #### 查看选择题答题情况
+
+    - url: /api/resource/multi_viewclass
+    - description：查看某个选择题目前所有的答题情况
+    - **input:** `{ username: '', url: '', multi: {...}}`
+    - **output:** `{ multiAnswerList: [ '{ student: '', answer : 'A / not answerered' }', ... ]}` // 返回该题目的学生答题列表
+    - **frontend:** *Yuxuan*
+    - backend
+
+- #### 教室资源中删除选择题
+
+    - url: /api/resource/multi_delclass
+    - description：教室中删除，教师资源不变
+    - **input:** `{ username: '', url: '', multi: {...}}`
+    - **output:** `{ multiThisList: [...]}` // 返回更新后的列表
+    - **frontend:** *Yuxuan*
+    - backend
+
+- #### 查看代码题列表 // 要更改
+
+    - **url:** */api/resource/getcodes*
+    - **description:** 用户查看代码题
+    - **input:** `{ username : '', url: ''}`
+    - **output:** `{ codeAllList: [ '{ uniqueId: '', statement : '', language : ''}', ... ], codeThisList: []}`  // 返回两个列表
+    - **frontend:** *Yuxuan*
+    - **backend:** *???*
+
+- #### 教师资源中添加代码题到教室中
+
+    - url：/api/resource/code_addclass
+    - description：添加到教室列表中
+    - **input:** `{ username : '', url: ''， code: {}}`
+    - **output:** `{ codeThisList: [... ], }`  // 返回教室中的列表
+    - **frontend:** *Yuxuan*
+    - backend
+
+- #### 删除代码题
+
+    - **url:** */api/resource/delete_code*
+    - **description:** 教师从全部资源中删除代码题，同时删除教室中该资源
+    - **input:** `{ username : '', url: ''， code: {}}`
+    - **output:** `{ codeAllList: [], codeThisList: [... ], }`  // 返回两个列表
+    - **frontend:** *Yuxuan*
+    - **backend:** *???*
+
+- #### 教室中查看代码题提交结果
+
+    - url: /api/resource/code_viewclass
+    - description：查看代码题中所有学生的提交结果
+    - **input:** `{ username : '', url: ''， code: {}}`
+    - **output:** `{ codeAnswerList: [ '{ student: '', answer : '... / not answerered' }', ... ]}` // 返回该题目的学生答题列表
+    - **frontend:** *Yuxuan*
+    - backend
+
+- #### 教室中删除代码题
+
+    - url: /api/resource/code_delclass
+    - description：教室中删除，教师资源不变
+    - **input:** `{ username: '', url: '', code: {...}}`
+    - **output:** `{ codeThisList: [...]}` // 返回更新后的列表
+    - **frontend:** *Yuxuan*
+    - backend
+
+- ### **新的或者需要更改的API终止于此**
 
    - ### pdf文件
 
