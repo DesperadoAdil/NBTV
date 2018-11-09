@@ -10,13 +10,13 @@ import json
 def addMultiChoice():
     data = request.get_data()
     print("add choice question")
-    print(data)
+    #print(data)
     data = json.loads(data)
     ret = {}
     try:
         # data['optionList']是选择题选项的json字符串，还是一个list
         uniqueId = multiChoiceManager.insert(data['username'], data['statement'], data['optionList'], data['answer'])
-        
+
         ret["status"] = "success"
         ret["uniqueId"] = uniqueId
     except Exception as err:
@@ -28,7 +28,7 @@ def addMultiChoice():
 def deleteMultiple():
     print('delete choice question')
     data = resource.get_data()
-    print(data)
+    #print(data)
     data = json.loads(data)
     ret = {}
 
@@ -44,7 +44,7 @@ def deleteMultiple():
 def updateMultiple():
     print('update choice question')
     data = resource.get_data()
-    print(data)
+    #print(data)
     data = json.loads(data)
     ret = {}
 
@@ -60,7 +60,7 @@ def updateMultiple():
 def getChoice():
     print('get a  choice question')
     data = resource.get_data()
-    print(data)
+    #print(data)
     data = json.loads(data)
     ret = []
 
@@ -82,7 +82,7 @@ def addCode():
     ret = {}
     try:
         data = request.get_data()
-        print(data)
+        #print(data)
         data = json.loads(data)
 
         uniqueId = codeQuestionManager.insert(data['username'], data['statement'], data['language'])
@@ -98,7 +98,7 @@ def addCode():
 def delete_code():
     print('delete code question')
     data = request.get_data()
-    print(data)
+    #print(data)
     data = json.loads(data)
     ret = {}
     ret['status'] = codeQuestionManager.delete(data['uniqueId'])
@@ -108,7 +108,7 @@ def delete_code():
 def update_code():
     print('update code question')
     data = request.get_data()
-    print(data)
+    #print(data)
     data = json.loads(data)
 
     ret = {}
@@ -120,7 +120,7 @@ def update_code():
 def get_code():
     print('get a code')
     data = request.get_data()
-    print(data)
+    #print(data)
     data = json.loads(data)
     ret = []
 
@@ -143,7 +143,7 @@ def addPDF():
         f = request.files.get('file')
         username = request.form.to_dict()['username']
         ret['status'] = pdfManager.insert(f, username)
-        
+
     except Exception as err:
         print(err)
         ret['status'] = "error"
@@ -155,7 +155,7 @@ def delete_PDF():
     ret = {}
     try:
         data = request.get_data()
-        print(data)
+        #print(data)
         data = json.loads(data)
         username = data['username']
         filename = data['title']
@@ -173,7 +173,7 @@ def get_pdfs():
     ret = []
 
     data = request.get_data()
-    print (data)
+    #print (data)
     data = json.loads(data)
 
     username = data['username']
@@ -182,9 +182,9 @@ def get_pdfs():
     # classroom = classroomManager.search(url)
     # if job == 'teacher' and classroom.teacher != username:
     #    print ("Get PDF Error: Wrong Teacher")
-    #    ret['status'] 
+    #    ret['status']
     #    return json.dumps(ret)
-    
+
     teacher = usermanager.search("username", username, "teacher")
     if teacher is None:
         # ret['status'] = "error"
@@ -211,7 +211,7 @@ def get_selects():
     ret = []
 
     data = request.get_data()
-    print (data)
+    #print (data)
     data = json.loads(data)
 
     username = data['username']
@@ -231,6 +231,3 @@ def get_selects():
 
     print (json.dumps(ret))
     return json.dumps(ret)
-
-
-

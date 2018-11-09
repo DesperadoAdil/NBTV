@@ -206,7 +206,6 @@ def aaddstudents():
 	ret["status"] = 'error'
 
 	data = request.get_data()
-	print (data)
 	data = json.loads(data)
 
 	url = data['url']

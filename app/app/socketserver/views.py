@@ -41,8 +41,6 @@ def sendMsg(data):
 @socketio.on('list')
 def list(data):
     url = data['url']
-    print ("send list :")
-    print (chatingRoom[url])
     emit('list', chatingRoom[url], room = data['username'])
 
 
@@ -54,6 +52,4 @@ def refresh(data):
 
 @socketio.on('check')
 def check(data):
-    print ("check : ", data)
     chatingRoom[data['url']].append(data['username'])
-    print (chatingRoom[data['url']])
