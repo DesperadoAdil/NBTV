@@ -223,11 +223,30 @@
       </Form>
     </Modal>
 
-    <!--code_list-->
+    <!--view multi-->
     <Modal
-      v-model="modal_codecheck"
-      @on-ok="modal_codecheck = false"
-      @on-cancel="modal_codecheck = false"
+      v-model="modal_viewmulti"
+      @on-ok="modal_viewmulti = false"
+      @on-cancel="modal_viewmulti = false"
+      width="900">
+      <Card>
+        <Split class="demo-split" v-model="split_codecheck">
+          <div slot="left"  class="teacher-live-split-pane">
+            <Form label-position="top">
+            </Form>
+          </div>
+          <div slot="right"  class="teacher-live-split-pane">
+            <Form></Form>
+          </div>
+        </Split>
+      </Card>
+    </Modal>
+
+    <!--view code-->
+    <Modal
+      v-model="modal_viewcode"
+      @on-ok="modal_viewcode = false"
+      @on-cancel="modal_viewcode = false"
       width="900"
     >
       <Card>
@@ -534,7 +553,7 @@ export default{
       // MULTIPLE CHOICE PARAMETER
       split_multi: 0.5,
       modal_multilist: false,
-      // framework to show multi
+      // FRAMEWORK TO SHOW MULTI
       multiAll: [{title: 'Title', key: 'title'},
         {
           title: 'Action',
@@ -549,14 +568,7 @@ export default{
                 on: {
                   click: () => { this.addMultiAll(params.index) }
                 }
-              }, 'add'),
-              h('Button', {
-                props: {type: 'text', size: 'small'},
-                style: {marginRight: '5px'},
-                on: {
-                  click: () => { this.useMultiAll(params.index) }
-                }
-              }, 'Use'),
+              }, 'Add'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
@@ -595,6 +607,7 @@ export default{
               }, 'Del')])
           }
         }],
+      // MULTI LIST
       multiAllList: [
         {
           title: 'choice 02',
@@ -607,12 +620,16 @@ export default{
         ans: ['something', 'somewhere', 'somehow', 'somewhat'],
         answer: 'A'
       }],
+      // MULTI STUDENT ANSWER LIST
+      multiAnswerList: [{student: 'xcj', answer: 'A'}, {student: 'adil', answer: 'not answered'}],
+      codeAnswerList: [{student: 'xcj', answer: '#include<iostream>'}, {student: 'adil', answer: 'not answered'}],
       // CODE
       // CODE PARAMETER
       split_code: 0.5,
       modal_codelist: false,
       split_codecheck: 0.4,
-      modal_codecheck: false,
+      modal_viewmulti: false,
+      modal_viewcode: false,
       // FRAMEWORK TO SHOW CODE LIST
       codeAll: [
         {title: 'Title', key: 'title'},
@@ -630,13 +647,6 @@ export default{
                   click: () => { this.addCodeAll(params.index) }
                 }
               }, 'Add'),
-              h('Button', {
-                props: {type: 'text', size: 'small'},
-                style: {marginRight: '5px'},
-                on: {
-                  click: () => { this.checkCodeAll(params.index) }
-                }
-              }, 'View'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
@@ -664,7 +674,7 @@ export default{
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
-                  click: () => { this.checkCode(params.index) }
+                  click: () => { this.viewCode(params.index) }
                 }
               }, 'View'),
               h('Button', {
@@ -675,6 +685,7 @@ export default{
               }, 'Del')])
           }
         }],
+      // CODE LIST
       codeAllList: [
         {
           title: 'Eight Queens'
@@ -808,15 +819,14 @@ export default{
   },
   methods: {
     // ADD METHODS
-    // add a pdf to teacher's and room's file and show
-    // TODO: ADD TO TEACHER & ROOM & SHOW
+    // PDF
     addPDF () {
       // send pdf to backend
-      var formData = new FormData()
+      let formData = new FormData()
       formData.append('username', this.userInfo['username'])
       formData.append('file', document.querySelector('input[id=pdfinput]').files[0])
       // console.log(document.querySelector('input[id=pdfinput]').files[0])
-      var options = {
+      let options = {
         url: '/api/resource/add_pdf',
         data: formData,
         method: 'post',
@@ -831,7 +841,6 @@ export default{
       // FRONTEND: JUST SHOW
     },
     // MULTI
-    // ADD AN OPTION OF MULTIPLE CHOICES
     multi_addChoice () {
       this.multi_index++
       this.multi_options.push({
@@ -889,46 +898,54 @@ export default{
         }
       })
     },
+
     // LIST METHODS
-    // RECEIVE PDF LIST
+    // PDF
+    // SHOW LIST
     showPdfList () {
       this.modal_pdflist = true
-      var pdfListInput = {username: ''}
+      // get the input
+      let pdfListInput = {username: '', url: ''}
       pdfListInput.username = this.userInfo.username
-      // TODO: need to add all list & this list
-      axios.post('/api/resource/getpdfs', this.pdfListInput).then((resp) => {
+      pdfListInput.url = this.cururl
+      // post
+      axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
         // resp.data 即是那个列表
-        this.pdfAllList = resp.data
-        this.pdfThisList = resp.data
+        this.pdfAllList = resp.data.pdfAllList
+        this.pdfThisList = resp.data.pdfThisList
       })
     },
     // ADD PDF TO CLASS
     addPdfAll (index) {
-      // var iPdf = this.pdfAllList[index]
-      // iPdf: [{title: 'Slide01', url: 'hide/slide01'}]
+      // iPdf shape as : {title: 'Slide01', url: 'hide/slide01'}
+      let iPdf = this.pdfAllList[index]
+      let input = {username: '', url: '', pdf: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.pdf = iPdf
+      // post
+      axios.post('/api/resource/pdf_addclass', input).then((resp) => {
+        // 接收返回的pdfThisList
+        this.pdfThisList = resp.data.pdfThisList
+      })
     },
-    // DEL PDF FROM TEACHER'S RESOURCE
+    // DEL PDF FROM TEACHER
     delPdfAll (index) {
-      var iPdf = this.pdfAllList[index]
-      var delPdfAllInput = {username: '', title: ''}
+      let iPdf = this.pdfAllList[index]
+      // input
+      let delPdfAllInput = {username: '', url: '', pdf: {}}
       delPdfAllInput.username = this.userInfo.username
-      delPdfAllInput.title = iPdf.title
+      delPdfAllInput.url = this.cururl
+      delPdfAllInput.pdf = iPdf
       // post
       axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
-        if (resp.data.status === 'success') {
-          console.log('delete succeeded')
-        }
-      })
-      // UPDATE PDF LIST
-      var pdfListInput = {username: ''}
-      pdfListInput.username = this.userinfo.username
-      axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
-        this.pdfAllList = resp.data
+        this.pdfAllList = resp.data.pdfAllList
+        this.pdfThisList = resp.data.pdfThisList
       })
     },
+    // USE IT TODO
     usePdf (index) {
-      // TODO: REFINE THIS
-      var ipdf = this.pdfThisList[index]
+      let ipdf = this.pdfThisList[index]
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示' + ipdf.title,
@@ -942,17 +959,17 @@ export default{
 
           })
 
-          var date = new Date()
-          var time = date.getHours() + ':' + date.getMinutes()
-          var  obj = {
-              type: 'pdf',
-              msgType: 'pdf',
-              url: this.cururl,
-              time: time,
-              msg: ipdf.url,
-              toUser: 'stu',
-              fromUser: this.userInfo.username
-            }
+          let date = new Date()
+          let time = date.getHours() + ':' + date.getMinutes()
+          let obj = {
+            type: 'pdf',
+            msgType: 'pdf',
+            url: this.cururl,
+            time: time,
+            msg: ipdf.url,
+            toUser: 'stu',
+            fromUser: this.userInfo.username
+          }
           CHAT.submit(obj)
 
           console.log('1321312')
@@ -962,7 +979,7 @@ export default{
           this.classmain0 = false
           console.log(this.classmain0)
           console.log(document.getElementById('rtmp-streamer1').class)
-          this.liaotianshiheight = 350 + 'px'
+          // this.liaotianshiheight = 350 + 'px'
           this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
           this.curvideo = false
           this.modal_pdflist = false
@@ -973,37 +990,65 @@ export default{
         }
       })
     },
-    // API NOT READY YET
+    // DEL PDF FROM CLASS
     delPdfClass (index) {
-      //
-    },
-    // receive choice list
-    showMultiList () {
-      this.modal_multilist = true
-      var multiListInput = {username: ''}
-      multiListInput.username = this.userInfo.username
-      // need to add all list & this list
-      axios.post('/api/resource/getmutiples', multiListInput).then((resp) => {
-        // resp.data 即是那个列表
-        this.multiAllList = resp.data
-        this.multiThisList = resp.data
+      let iPdf = this.pdfThisList[index]
+      // get input
+      let input = {username: '', url: '', pdf: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.pdf = iPdf
+      // post
+      axios.post('/api/resource/pdf_delclass', input).then((resp) => {
+        this.pdfThisList = resp.data.pdfThisList
       })
     },
-    // ADD FROM TEACHER TO CLASS
+
+    // MULTI
+    // SHOW LIST
+    showMultiList () {
+      this.modal_multilist = true
+      // get input
+      let input = {username: '', url: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      // post
+      axios.post('/api/resource/getmutiples', input).then((resp) => {
+        // resp.data 即是那个列表
+        this.multiAllList = resp.data.multiAllList
+        this.multiThisList = resp.data.multiThisList
+      })
+    },
+    // ADD MULTI TO CLASS
     addMultiAll (index) {
-      // api not ready yet
+      let iMulti = this.multiAllList[index]
+      let input = {username: '', url: '', multi: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.multi = iMulti
+      // post
+      axios.post('/api/resource/multi_addclass', input).then((resp) => {
+        // 接收返回的multiThisList
+        this.multiThisList = resp.data.multiThisList
+      })
     },
-    useMultiAll (index) {
-      // add to class
-      // useMulti
-    },
+    // DEL PDF FROM TEACHER
     delMultiAll (index) {
-      var delMultiAllInput = {username: '', uniqueId: ''}
-      delMultiAllInput.username = this.userInfo.username
-      // uniqueId not ready yet
+      let iMulti = this.multiAllList[index]
+      // input
+      let input = {username: '', url: '', multi: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.multi = iMulti
+      // post
+      axios.post('/api/resource/delete_mutiple', input).then((resp) => {
+        this.multiAllList = resp.data.multiAllList
+        this.multiThisList = resp.data.multiThisList
+      })
     },
+    // USE IT TODO
     useMulti (index) {
-      var iselect = this.multiThisList[index]
+      let iselect = this.multiThisList[index]
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示: \n ' + iselect.title,
@@ -1019,7 +1064,7 @@ export default{
 
           var date = new Date()
           var time = date.getHours() + ':' + date.getMinutes()
-          var  obj = {
+          var obj = {
             type: 'select',
             msgType: 'select',
             url: this.cururl,
@@ -1045,62 +1090,122 @@ export default{
         }
       })
     },
+    // VIEW
     viewMulti (index) {
-      // able to edit the question
-      // get the student result of it
+      let iMulti = this.multiThisList[index]
+      // input
+      let input = {username: '', url: '', multi: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.multi = iMulti
+      // post
+      axios.post('/api/resource/multi_viewclass', input).then((resp) => {
+        this.multiAnswerList = resp.data.multiAnswerList
+      })
+      this.modal_viewmulti = true
     },
+    // DEL MULTI FROM CLASS
     delMultiClass (index) {
-      // api not ready yet
-    },
-    // receive code list
-    showCodeList () {
-      this.modal_codelist = true
-      var codeListInput = {username: ''}
-      codeListInput.username = this.userInfo.username
-      // need to add all list & this list
-      axios.post('/api/resource/getmutiples', codeListInput).then((resp) => {
-        // resp.data 即是那个列表
-        this.codeAllList = resp.data
-        this.codeThisList = resp.data
+      let iMulti = this.multiThisList[index]
+      // input
+      let input = {username: '', url: '', multi: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.multi = iMulti
+      // post
+      axios.post('/api/resource/multi_delclass', input).then((resp) => {
+        this.multiThisList = resp.data.multiThisList
       })
     },
-    // add from teacher to class
-    addCodeAll (index) {
-      // api not ready
-    },
-    checkCodeAll (index) {
-      // show the content of the question only
-    },
-    delCodeAll (index) {
-      var delCodeAllInput = {username: '', uniqueId: ''}
-      delCodeAllInput.username = this.userInfo.username
-      // uniqueId not ready
-    },
-    useCode (index) {
-      // to be implemented
-        var date = new Date()
-        var time = date.getHours() + ':' + date.getMinutes()
-        var  obj = {
-          type: 'code',
-          msgType: 'code',
-          url: this.cururl,
-          time: time,
-          msg: 'code',
-          toUser: 'stu',
-          fromUser: this.userInfo.username
-        }
-        CHAT.submit(obj)
 
+    // CODE
+    // SHOW LIST
+    showCodeList () {
+      this.modal_codelist = true
+      // get input
+      let input = {username: '', url: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      // post
+      axios.post('/api/resource/getcodes', input).then((resp) => {
+        // resp.data 即是那个列表
+        this.codeAllList = resp.data.codeAllList
+        this.codeThisList = resp.data.codeThisList
+      })
     },
-    // check code
-    checkCode (index) {
-      this.sub_code = this.codeThisList[index]
-      this.modal_codecheck = true
-      // need to list all the student results
+    // ADD CODE TO CLASS
+    addCodeAll (index) {
+      let iCode = this.codeAllList[index]
+      let input = {username: '', url: '', code: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.code = iCode
+      // post
+      axios.post('/api/resource/code_addclass', input).then((resp) => {
+        // 接收返回的codeThisList
+        this.codeThisList = resp.data.codeThisList
+      })
     },
+    // DEL CODE FROM TEACHER
+    delCodeAll (index) {
+      let iCode = this.codeAllList[index]
+      // input
+      let input = {username: '', url: '', code: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.code = iCode
+      // post
+      axios.post('/api/resource/delete_code', input).then((resp) => {
+        this.codeAllList = resp.data.codeAllList
+        this.codeThisList = resp.data.codeThisList
+      })
+    },
+    // USE IT TODO
+    useCode (index) {
+      let iCode = this.codeThisList[index]
+      iCode.statement = ''
+      // to be implemented
+      let date = new Date()
+      let time = date.getHours() + ':' + date.getMinutes()
+      let obj = {
+        type: 'code',
+        msgType: 'code',
+        url: this.cururl,
+        time: time,
+        msg: 'code',
+        toUser: 'stu',
+        fromUser: this.userInfo.username
+      }
+      CHAT.submit(obj)
+    },
+    // VIEW
+    viewCode (index) {
+      let iCode = this.codeThisList[index]
+      // input
+      let input = {username: '', url: '', code: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.code = iCode
+      // post
+      axios.post('/api/resource/code_viewclass', input).then((resp) => {
+        this.codeAnswerList = resp.data.codeAnswerList
+      })
+      this.modal_viewcode = true
+    },
+    // DEL CODE FROM CLASS
     delCodeClass (index) {
-      // api not ready
+      let iCode = this.codeThisList[index]
+      // input
+      let input = {username: '', url: '', code: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.code = iCode
+      // post
+      axios.post('/api/resource/code_delclass', input).then((resp) => {
+        this.codeThisList = resp.data.codeThisList
+      })
     },
+
     // Yuxuan's Methods Stops Here
 
     /**
@@ -1199,8 +1304,7 @@ export default{
       if (p !== 'all') {
         this.msg = ''
         this.talkType = 'whisper'
-      }
-      else {
+      } else {
         this.msg = ''
         this.talkType = 'broadcast'
       }
@@ -1310,7 +1414,7 @@ export default{
 
           var date = new Date()
           var time = date.getHours() + ':' + date.getMinutes()
-          var  obj = {
+          var obj = {
             type: 'close',
             msgType: 'close',
             url: this.cururl,
@@ -1320,7 +1424,6 @@ export default{
             fromUser: this.userInfo.username
           }
           CHAT.submit(obj)
-
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -1359,7 +1462,6 @@ export default{
               this.streamer000.setScreenSize(700, 380)
               this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
             })
-
           },
           onCancel: () => {
           }
