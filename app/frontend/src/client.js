@@ -5,7 +5,7 @@ const CHAT = {
   socket: null,
   msgArr: [],
   studentlist: [],
-  frametype:'select',
+  frametype:'close',
   pdfurl:'/static/pdf/1-1.pdf',
   selectall:{
     title: 'choice 02',
