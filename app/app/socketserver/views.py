@@ -21,7 +21,7 @@ def on_join(data):
     url = data['url']
     join_room(username)
     join_room(url)
-    send(username + ' has entered the classroom.', room = url)
+    send(username + '进入房间。', room = url)
 
     if url not in chatingRoom.keys():
         chatingRoom[url] = []
@@ -35,7 +35,18 @@ def sendMsg(data):
     if type == "broadcast":
         emit('broadcast', data, room = data['url'])
     elif type == "whisper":
-        emit('whisper', data, room = data['username'])
+        emit('whisper', data, room = data['fromUser'])
+        emit('whisper', data, room = data['toUser'])
+    elif type == "pdf":
+        emit('pdf', data, room = data['url'])
+    elif type == "page":
+        emit('page', data, room = data['url'])
+    elif type == "code":
+        emit('code', data, room = data['url'])
+    elif type == "select":
+        emit('select', data, room = data['url'])
+    elif type == "close":
+        emit('close', data, room = data['url'])
 
 
 @socketio.on('list')

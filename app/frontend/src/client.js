@@ -25,7 +25,6 @@ const CHAT = {
   message: function (username) {
     console.log('message')
     this.socket.on('message', function (msg) {
-      msg = '[system]: ' + msg
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
       var obj = {
@@ -35,13 +34,12 @@ const CHAT = {
         time: time,
         msg: msg,
         toUser: 'all',
-        fromUser: 'system'
+        fromUser: '[系统]'
       }
       CHAT.msgArr.push(obj)
       console.log('CHAT.msgArr(system)', obj)
     })
     this.socket.on('whisper', function (obj) {
-      obj.msg = obj.fromUser + ' whispered to you: ' + obj.msg
       CHAT.msgArr.push(obj)
       console.log('CHAT.msgArr(whisper)', obj)
     })

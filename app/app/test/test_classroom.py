@@ -57,7 +57,7 @@ class ClassroomTest(BaseTestCase):
 	def test_caaddstudents(self):
 		print ("Test:Addstudents===============================")
 
-		testuser = Students.query.filter_by(username = "test1")
+		testuser = Students.query.filter_by(username = "test1").first()
 		if testuser is None:
 			testuser = Students(phonenumber = "12345678911", username = "test1", password = "123456")
 		else:
