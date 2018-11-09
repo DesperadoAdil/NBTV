@@ -54,12 +54,23 @@
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
-    <Card id="chatingRoom">
+    <div id="chatingRoom" :style="{height:chathei,top:chattop}">
       <div class="talk-contents">
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              {{username}}
+              <button @click="CHAT.socket.emit('refresh', {'url':cururl})">获取最新用户列表</button>
+              <Dropdown @click.native="CHAT.list(userInfo.username, cururl)">
+                <a href="javascript:void(0)">
+                  聊天对象
+                  <Icon type="ios-arrow-down"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)">{{ student }}</DropdownItem>
+                  <DropdownItem divided @click.native="talkTo('all')">all</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              {{ username }}
             </div>
           </div>
           <div class="content">
@@ -74,7 +85,10 @@
                     <audio :src="audioUrl(msgObj.msg)" controls></audio>
                   </div>
                   <div v-else></div>
-
+                  <div v-if="msgObj.msgType === 'img'">
+                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                  </div>
+                  <div v-else></div>
                 </div>
               </div>
               <div v-else></div>
@@ -88,30 +102,36 @@
                     <audio :src="audioUrl(msgObj.msg)" controls></audio>
                   </div>
                   <div v-else></div>
+                  <div v-if="msgObj.msgType === 'img'">
+                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                  </div>
+                  <div v-else></div>
                 </div>
               </div>
               <div v-else></div>
             </div>
           </div>
-
           <div class="talker">
             <Input v-if="msgType === 'text'" class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
             <div v-if="msgType === 'audio'" class="recorder">
               <button @click="toggleRecorder()">录音</button>
               <button @click="stopRecorder">停止</button>
-
               <button
                 class="record-audio"
                 @click="removeRecord(idx)">删除</button>
               <div class="record-text">{{audio.duration}}</div>
-
+            </div>
+            <div v-if="msgType === 'img'" class="talker-image">已添加图片，按发送
             </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
             <Button class="talker-send" @click="changeMsgType">{{ msgTypeInfo }}</Button>
+            <a href="javascript:;" class=" upf talker-send" @click="chooseImg">图片
+              <input type="file" name="fileinput" id="fileinput"/>
+            </a>
           </div>
         </div>
       </div>
-    </Card>
+    </div>
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
 
   </div>
@@ -120,6 +140,7 @@
 <script>
 import axios from 'axios'
 import CHAT from '../client'
+import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
 export default{
   name: 'load',
@@ -133,6 +154,8 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
+      chathei: 600+'px',
+        chattop:150+'px',
       socket: null,
       msgType: 'text',
       msgTypeInfo: '文字',
@@ -161,7 +184,7 @@ export default{
       curpdfurl: '/static/pdf/1-1.pdf',
       videohei0: 600 + 'px',
       classmain11: true,
-      curvid: '',
+      curvid: '250810',
       cururl: '',
       displayPdfurl0: '',
       liaotianshiheight: 150 + 'px',
@@ -191,37 +214,42 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
+
     CHAT.message(this.userInfo.username)
     /**
      * 以上为聊天室使用，请勿改动
      */
-    var xxx = this.videohei0
-    console.log(xxx)
-    var yyy = this.curvid
-     console.log(yyy)
-    var timer = setTimeout(function () {
-      doItPerSecond()
-    }, 1000)
-    var num = 0
-    function doItPerSecond () {
-
-      var player = polyvObject('#player').livePlayer({
-        'width': '100%',
-        'height': xxx,
-        'uid': '7181857ac2',
-        'vid': yyy
-      })
-      var player = polyvObject('#player2').livePlayer({
-        'width': '100%',
-        'height': 200 + 'px',
-        'uid': '7181857ac2',
-        'vid': yyy
-      })
-      num++
-      console.log(num)
-    };
+//    var xxx = this.videohei0
+//    console.log(xxx)
+//    var yyy = this.curvid
+//     console.log(yyy)
+//    var timer = setTimeout(function () {
+//      doItPerSecond()
+//    }, 1000)
+//    var num = 0
+//    function doItPerSecond () {
+//      var player = polyvObject('#player').livePlayer({
+//        'width': '100%',
+//        'height': 600 + 'px',
+//        'uid': '7181857ac2',
+//        'vid': '250810'
+//      })
+//      var player = polyvObject('#player2').livePlayer({
+//        'width': '100%',
+//        'height': 200 + 'px',
+//        'uid': '7181857ac2',
+//        'vid': '250810'
+//      })
+//      num++
+//      console.log(num)
+//    };
   },
   created: function () {
+    const s = document.createElement('script')
+    s.type = 'text/javascript'
+    s.src = 'https://player.polyv.net/livescript/liveplayer.js'
+    document.body.appendChild(s)
+    this.showUserInfo()
     this.cururl = this.$route.params.url
     console.log(this.cururl)
     const data = this.curuser
@@ -232,12 +260,20 @@ export default{
       this.curvid = resp.data.vid
       console.log("vid:"+resp.data.vid)
       console.log("vid:"+this.curvid)
+      var player = polyvObject('#player').livePlayer({
+        'width': '100%',
+        'height': 600 + 'px',
+        'uid': '7181857ac2',
+        'vid': this.curvid
+      })
+      var player = polyvObject('#player2').livePlayer({
+        'width': '100%',
+        'height': 200 + 'px',
+        'uid': '7181857ac2',
+        'vid': this.curvid
+      })
     })
-    const s = document.createElement('script')
-    s.type = 'text/javascript'
-    s.src = 'https://player.polyv.net/livescript/liveplayer.js'
-    document.body.appendChild(s)
-    this.showUserInfo()
+
     /**
      * 以下为聊天室使用，请勿改动
      */
@@ -298,7 +334,24 @@ export default{
         }
         console.log(obj)
         CHAT.submit(obj)
+      } else if (this.msgType === 'img') {
+        var blob = new Blob([document.querySelector('input[type=file]').files[0]], { type: 'image/png' })
+        obj = {
+          type: 'broadcast',
+          msgType: 'img',
+          url: this.cururl,
+          time: time,
+          msg: blob,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        console.log(obj)
+        CHAT.submit(obj)
+        this.msgType = 'text'
       }
+    },
+    chooseImg () {
+      this.msgType = 'img'
     },
     changeMsgType () {
       if (this.msgType === 'text') {
@@ -332,6 +385,14 @@ export default{
       var url = window.URL.createObjectURL(new Blob([obj.blob], { type: 'audio/wav' }))
       return url
     },
+    imageUrl (obj) {
+      var url = window.URL.createObjectURL(new Blob([obj], { type: 'image/png' }))
+      return url
+    },
+    talkTo (p) {
+      this.username = p
+      if (p !== 'all') { this.msg = 'to ' + this.username + ': ' }
+    },
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -346,6 +407,8 @@ export default{
     showpdf0 () {
       console.log('weqweqwe')
       this.liaotianshiheight = 500 + 'px'
+      this.chattop=400+'px'
+      this.chathei=350+'px'
       this.littlelivingcarddisplay = true
       this.mainselectcarddisplay = false
       this.mainpdfcarddisplay = true
@@ -356,6 +419,8 @@ export default{
     showselect0 () {
       console.log('weqweqwe')
       this.liaotianshiheight = 500 + 'px'
+      this.chattop=400+'px'
+      this.chathei=350+'px'
       this.littlelivingcarddisplay = true
       this.mainselectcarddisplay = true
       this.mainpdfcarddisplay = false
@@ -365,6 +430,8 @@ export default{
     showcode0 () {
       console.log('weqweqwe')
       this.liaotianshiheight = 500 + 'px'
+      this.chattop=400+'px'
+      this.chathei=350+'px'
       this.littlelivingcarddisplay = true
       this.mainselectcarddisplay = false
       this.mainpdfcarddisplay = false
@@ -374,6 +441,8 @@ export default{
     exitliving0 () {
       console.log('weqweqwe')
       this.liaotianshiheight = 150 + 'px'
+      this.chattop=150+'px'
+      this.chathei=600+'px'
       this.littlelivingcarddisplay = false
       this.mainselectcarddisplay = false
       this.mainpdfcarddisplay = false
@@ -388,10 +457,8 @@ export default{
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   #chatingRoom {
     position:absolute;
-    left: 79%;
-    width: 21%;
-    top:60px;
-    height: 90%;
+    left: 70%;
+    width: 20%;
   }
   .talk-contents {
     height: 100%;

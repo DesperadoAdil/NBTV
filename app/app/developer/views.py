@@ -19,7 +19,6 @@ def add_user():
     else:
         form = UserForm(formdata=request.form)
         if form.validate():
-            print('Data: ', form.data)
             phonenumber = form.data['phonenumber']
             if form.data['user'] == 1:
                 student = Students.query.filter_by(phonenumber = phonenumber).first()
@@ -29,7 +28,7 @@ def add_user():
                     db.session.commit()
                     return render_template("base.html")
                 else:
-                    print ('用户已存在！')
+                    print ('User already exist!')
             else:
                 teacher = Teachers.query.filter_by(phonenumber = phonenumber).first()
                 if teacher is None:
@@ -38,7 +37,7 @@ def add_user():
                     db.session.commit()
                     return render_template("base.html")
                 else:
-                    print ('用户已存在！')
+                    print ('User already exist!')
         else:
             print(form.errors)
     return render_template("developer.html", form = form)
@@ -54,7 +53,6 @@ def add_classroom():
     else:
         form = ClassForm(formdata=request.form)
         if form.validate():
-            print('Data: ', form.data)
             url = int(form.data['url'])
             classroom = Classrooms.query.filter_by(url = url).first()
             if classroom is None:
@@ -63,7 +61,7 @@ def add_classroom():
                 db.session.commit()
                 return render_template("base.html")
             else:
-                    print ('教室已存在！')
+                    print ('Classroom already exist!')
         else:
             print(form.errors)
     return render_template("developer.html", form = form)

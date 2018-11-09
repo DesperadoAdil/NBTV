@@ -306,7 +306,18 @@
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              {{username}}
+              <button @click="CHAT.socket.emit('refresh', {'url':cururl})">获取最新用户列表</button>
+              <Dropdown @click.native="CHAT.list(userInfo.username, cururl)">
+                <a href="javascript:void(0)">
+                  聊天对象
+                  <Icon type="ios-arrow-down"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)">{{ student }}</DropdownItem>
+                  <DropdownItem divided @click.native="talkTo('all')">all</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              {{ username }}
             </div>
           </div>
           <div class="content">
@@ -321,7 +332,10 @@
                     <audio :src="audioUrl(msgObj.msg)" controls></audio>
                   </div>
                   <div v-else></div>
-
+                  <div v-if="msgObj.msgType === 'img'">
+                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                  </div>
+                  <div v-else></div>
                 </div>
               </div>
               <div v-else></div>
@@ -335,6 +349,10 @@
                     <audio :src="audioUrl(msgObj.msg)" controls></audio>
                   </div>
                   <div v-else></div>
+                  <div v-if="msgObj.msgType === 'img'">
+                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                  </div>
+                  <div v-else></div>
                 </div>
               </div>
               <div v-else></div>
@@ -346,15 +364,18 @@
             <div v-if="msgType === 'audio'" class="recorder">
               <button @click="toggleRecorder()">录音</button>
               <button @click="stopRecorder">停止</button>
-
               <button
                 class="record-audio"
                 @click="removeRecord(idx)">删除</button>
               <div class="record-text">{{audio.duration}}</div>
-
+            </div>
+            <div v-if="msgType === 'img'" class="talker-image">已添加图片，按发送
             </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
             <Button class="talker-send" @click="changeMsgType">{{ msgTypeInfo }}</Button>
+            <a href="javascript:;" class=" upf talker-send" @click="chooseImg">图片
+              <input type="file" name="fileinput" id="fileinput"/>
+            </a>
           </div>
         </div>
       </div>
@@ -385,7 +406,7 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
-      msgTypeInfo: '文字',
+      msgTypeInfo: '语音',
       socket: null,
       msgType: 'text',
       msg: '',
@@ -421,7 +442,7 @@ export default{
       classmain0: true,
       stream000: '',
       streamer: '',
-      streamername: '7181857ac220181025144543640',
+      streamername: '7181857ac220181030221452650',
 
       // pdf, multiple and codes
       // pdf parameter
@@ -1051,7 +1072,24 @@ export default{
         }
         console.log(obj)
         CHAT.submit(obj)
+      } else if (this.msgType === 'img') {
+        var blob = new Blob([document.querySelector('input[type=file]').files[0]], { type: 'image/png' })
+        obj = {
+          type: 'broadcast',
+          msgType: 'img',
+          url: this.cururl,
+          time: time,
+          msg: blob,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        console.log(obj)
+        CHAT.submit(obj)
+        this.msgType = 'text'
       }
+    },
+    chooseImg () {
+      this.msgType = 'img'
     },
     changeMsgType () {
       if (this.msgType === 'text') {
@@ -1084,6 +1122,14 @@ export default{
     audioUrl (obj) {
       var url = window.URL.createObjectURL(new Blob([obj.blob], { type: 'audio/wav' }))
       return url
+    },
+    imageUrl (obj) {
+      var url = window.URL.createObjectURL(new Blob([obj], { type: 'image/png' }))
+      return url
+    },
+    talkTo (p) {
+      this.username = p
+      if (p !== 'all') { this.msg = 'to ' + this.username + ': ' }
     },
     /**
      * 以上为聊天室使用，请勿改动
@@ -1218,12 +1264,14 @@ export default{
               this.streamername = resp.data.streamername
               console.log(resp.data.streamername)
               console.log(this.streamername)
+              console.log(this.streamername)
+              setSWFIsReady()
+              this.streamer000 = document.getElementById('rtmp-streamer1')
+              this.streamer000.setScreenPosition(-100, 0)
+              this.streamer000.setScreenSize(700, 380)
+              this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
             })
-            setSWFIsReady()
-            this.streamer000 = document.getElementById('rtmp-streamer1')
-            this.streamer000.setScreenPosition(-100, 0)
-            this.streamer000.setScreenSize(700, 380)
-            this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
+
           },
           onCancel: () => {
           }
@@ -1389,6 +1437,9 @@ export default{
     text-align: left;
     position: relative;
     margin-left: 0px;
+  }
+  .talk-image {
+    width: 100px;
   }
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   .tealivingmain{
