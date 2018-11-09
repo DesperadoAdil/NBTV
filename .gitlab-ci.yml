@@ -53,6 +53,7 @@ unit-test:
     - if [ $PYTHON_RET \> 0 ]; then exit $PYTHON_RET; fi;
     #- exit $NODE_RET
   after_script:
+    - cp -r .git/ /app/
     - cd /app
     - wget -q "http://10.0.0.11/sonar-scanner.tar.gz"
     - tar -xf sonar-scanner.tar.gz -C /opt
