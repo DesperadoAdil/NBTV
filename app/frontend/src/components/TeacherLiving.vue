@@ -322,40 +322,61 @@
           </div>
           <div class="content">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
-              <div class="talk-space self-talk"
-                   v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
-                <div class="talk-content">
-                  <div class="talk-self-name">{{ msgObj.fromUser }}</div>
-                  <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
-                  <div v-else></div>
-                  <div v-if="msgObj.msgType === 'audio'">
-                    <audio :src="audioUrl(msgObj.msg)" controls></audio>
+              <div v-if="CHAT.msgArr[index].toUser === username && username !== userInfo.username">
+                <div class="talk-space self-talk"
+                  v-if="CHAT.msgArr[index].fromUser === userInfo.username">
+                  <div class="talk-content">
+                    <div class="talk-self-name">{{ msgObj.fromUser }}</div>
+                    <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'audio'">
+                      <audio :src="audioUrl(msgObj.msg)" controls></audio>
+                    </div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'img'">
+                      <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                    </div>
+                    <div v-else></div>
                   </div>
-                  <div v-else></div>
-                  <div v-if="msgObj.msgType === 'img'">
-                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                </div>
+                <div class="talk-space user-talk" v-else>
+                  <div class="talk-content">
+                    <div class="talk-user-name">{{ msgObj.fromUser }}</div>
+                    <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'audio'">
+                      <audio :src="audioUrl(msgObj.msg)" controls></audio>
+                    </div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'img'">
+                      <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                    </div>
+                    <div v-else></div>
                   </div>
-                  <div v-else></div>
                 </div>
               </div>
-              <div v-else></div>
-              <div  class="talk-space user-talk"
-                    v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username">
-                <div class="talk-content">
-                  <div class="talk-user-name">{{ msgObj.fromUser }}</div>
-                  <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
-                  <div v-else></div>
-                  <div v-if="msgObj.msgType === 'audio'">
-                    <audio :src="audioUrl(msgObj.msg)" controls></audio>
+              <div v-else-if="CHAT.msgArr[index].toUser === userInfo.username && username !== userInfo.username">
+                <div  class="talk-space user-talk">
+                  <div class="talk-content">
+                    <div v-if="username === 'all'">
+                      <div class="talk-user-name">[私信]：{{ msgObj.fromUser }}</div>
+                    </div>
+                    <div v-else-if="CHAT.msgArr[index].fromUser === username">
+                      <div class="talk-user-name">{{ msgObj.fromUser }}</div>
+                    </div>
+                    <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'audio'">
+                      <audio :src="audioUrl(msgObj.msg)" controls></audio>
+                    </div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'img'">
+                      <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                    </div>
+                    <div v-else></div>
                   </div>
-                  <div v-else></div>
-                  <div v-if="msgObj.msgType === 'img'">
-                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
-                  </div>
-                  <div v-else></div>
                 </div>
               </div>
-              <div v-else></div>
             </div>
           </div>
 
@@ -409,6 +430,7 @@ export default{
       msgTypeInfo: '语音',
       socket: null,
       msgType: 'text',
+      talkType: 'broadcast',
       msg: '',
       CHAT,
       username: 'all',
@@ -1049,8 +1071,9 @@ export default{
       var time = date.getHours() + ':' + date.getMinutes()
       var obj = {}
       if (this.msgType === 'text') {
+        if (this.msg === '') return
         obj = {
-          type: 'broadcast',
+          type: this.talkType,
           msgType: 'text',
           url: this.cururl,
           time: time,
@@ -1062,7 +1085,7 @@ export default{
         CHAT.submit(obj)
       } else if (this.msgType === 'audio') {
         obj = {
-          type: 'broadcast',
+          type: this.talkType,
           msgType: 'audio',
           url: this.cururl,
           time: time,
@@ -1075,7 +1098,7 @@ export default{
       } else if (this.msgType === 'img') {
         var blob = new Blob([document.querySelector('input[type=file]').files[0]], { type: 'image/png' })
         obj = {
-          type: 'broadcast',
+          type: this.talkType,
           msgType: 'img',
           url: this.cururl,
           time: time,
@@ -1128,8 +1151,16 @@ export default{
       return url
     },
     talkTo (p) {
+      if (p === this.userInfo.username) return
       this.username = p
-      if (p !== 'all') { this.msg = 'to ' + this.username + ': ' }
+      if (p !== 'all') {
+        this.msg = ''
+        this.talkType = 'whisper'
+      }
+      else {
+        this.msg = ''
+        this.talkType = 'broadcast'
+      }
     },
     /**
      * 以上为聊天室使用，请勿改动
@@ -1409,12 +1440,12 @@ export default{
     font-size: 12px;
     word-break: break-all;
   }
-  .talk-word-self {
+  .talk-word-user {
     border-bottom-right-radius: 0;
     margin-right: 10px;
     text-align: left;
   }
-  .talk-word-user {
+  .talk-word-self {
     background: rgba(243, 243, 243, 1) none;
     color: rgba(0, 0, 0, 1);
     border-bottom-left-radius: 0;
