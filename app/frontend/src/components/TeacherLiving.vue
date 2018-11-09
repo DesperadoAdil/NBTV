@@ -79,13 +79,10 @@
 
     <!--multi_list-->
     <Modal
-      v-model="modal_multilist"
-      @on-ok="modal_multilist = false"
-      @on-cancel="modal_multilist = false"
-      width="900"
-    >
+      v-model="modal_multilist" width="900"
+      @on-ok="modal_multilist = false" @on-cancel="modal_multilist = false">
       <Card>
-        <Split class="demo-split" v-model="split_multi">
+        <Split class="teacher-live-split" v-model="split_multi">
           <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
@@ -108,7 +105,7 @@
       width="900"
     >
       <Card>
-        <Split class="demo-split" v-model="split_code">
+        <Split class="teacher-live-split" v-model="split_code">
           <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
@@ -230,7 +227,7 @@
       @on-cancel="modal_viewmulti = false"
       width="900">
       <Card>
-        <Split class="demo-split" v-model="split_codecheck">
+        <Split class="teacher-live-split" v-model="split_codecheck">
           <div slot="left"  class="teacher-live-split-pane">
             <Form label-position="top">
             </Form>
@@ -250,9 +247,9 @@
       width="900"
     >
       <Card>
-        <Split class="demo-split" v-model="split_codecheck">
+        <Split class="teacher-live-split" v-model="split_codecheck">
           <div slot="left"  class="teacher-live-split-pane">
-            <Form label-position="top">
+            <Form label-position="top" height="700">
               <FormItem label="Text">
                 <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
                 <Input v-model="sub_code.statement"
@@ -261,13 +258,9 @@
                 </Input>
               </FormItem>
               <FormItem label="Language">
-                <Select v-model="sub_code.language">
-                  <Option>python</Option>
-                  <Option>C++</Option>
-                  <Option>Java</Option>
-                  <Option>JavaScript</Option>
-                  <Option>Vue.js</Option>
-                </Select>
+                <Input v-model="sub_code.language"
+                       placeholder="Enter Your Language">
+                </Input>
               </FormItem>
               <FormItem label="Example Code">
                 <pre v-highlightjs="sub_code.example"><code class="cpp"></code></pre>
@@ -345,7 +338,7 @@
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
               <div v-if="CHAT.msgArr[index].toUser === username && username !== userInfo.username">
                 <div class="talk-space self-talk"
-                  v-if="CHAT.msgArr[index].fromUser === userInfo.username">
+                     v-if="CHAT.msgArr[index].fromUser === userInfo.username">
                   <div class="talk-content">
                     <div class="talk-self-name">{{ msgObj.fromUser }}</div>
                     <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
@@ -1736,10 +1729,10 @@ export default{
     color: #004974;
     text-decoration: none;
   }
-   .teacher-live-split{
-     height: 430px;
-     border: 1px solid #dcdee2;
-   }
+  .teacher-live-split{
+    height: 430px;
+    border: 1px solid #dcdee2;
+  }
   .teacher-live-split-pane{
     padding: 10px;
   }
