@@ -182,7 +182,7 @@ export default{
       curpdfurl: '/static/pdf/1-1.pdf',
       videohei0: 600 + 'px',
       classmain11: true,
-      curvid: '',
+      curvid: '250810',
       cururl: '',
       displayPdfurl0: '',
       liaotianshiheight: 150 + 'px',
@@ -226,23 +226,16 @@ export default{
     var num = 0
     function doItPerSecond () {
 
-      var player = polyvObject('#player').livePlayer({
-        'width': '100%',
-        'height': xxx,
-        'uid': '7181857ac2',
-        'vid': yyy
-      })
-      var player = polyvObject('#player2').livePlayer({
-        'width': '100%',
-        'height': 200 + 'px',
-        'uid': '7181857ac2',
-        'vid': yyy
-      })
       num++
       console.log(num)
     };
   },
   created: function () {
+    const s = document.createElement('script')
+    s.type = 'text/javascript'
+    s.src = 'https://player.polyv.net/livescript/liveplayer.js'
+    document.body.appendChild(s)
+    this.showUserInfo()
     this.cururl = this.$route.params.url
     console.log(this.cururl)
     const data = this.curuser
@@ -253,12 +246,20 @@ export default{
       this.curvid = resp.data.vid
       console.log("vid:"+resp.data.vid)
       console.log("vid:"+this.curvid)
+      var player = polyvObject('#player').livePlayer({
+        'width': '100%',
+        'height': 600 + 'px',
+        'uid': '7181857ac2',
+        'vid': this.curvid
+      })
+      var player = polyvObject('#player2').livePlayer({
+        'width': '100%',
+        'height': 200 + 'px',
+        'uid': '7181857ac2',
+        'vid': this.curvid
+      })
     })
-    const s = document.createElement('script')
-    s.type = 'text/javascript'
-    s.src = 'https://player.polyv.net/livescript/liveplayer.js'
-    document.body.appendChild(s)
-    this.showUserInfo()
+
     /**
      * 以下为聊天室使用，请勿改动
      */
