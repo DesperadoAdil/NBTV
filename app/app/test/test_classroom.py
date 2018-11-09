@@ -54,11 +54,17 @@ class ClassroomTest(BaseTestCase):
 
 	data_aaddstudents = { "url" : "123", "item" : "test1" }
 	dataerror_aaddstudents = { "url" : "123", "item" : "erroruser" }
-	testuser = Students(phonenumber = "12345678911", username = "test1", password = "123456")
-	db.session.add(testuser)
-	db.session.commit()
 	def test_caaddstudents(self):
 		print ("Test:Addstudents===============================")
+
+		testuser = Students.query.filter_by(username = "test1")
+		if testuser is None:
+			testuser = Students(phonenumber = "12345678911", username = "test1", password = "123456")
+		else:
+			testuser.classroomlist = json.dumps([])
+		db.session.add(testuser)
+		db.session.commit()
+
 
 		# 这是正确的结果
 		response = self.app.post('/api/classroom/aaddstudents', data = json.dumps(self.data_aaddstudents, ensure_ascii = False))

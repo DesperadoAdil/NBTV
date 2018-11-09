@@ -79,7 +79,117 @@ commit message都要符合这一个规范：
       - **backend:** *Adil*
 
 - ## 资源管理
+   - ### 新的或者更新的API：
+
+      - 从教师的教学资源中添加pdf到教室中
+         - url: ???
+         - description: 为当前教室添加要使用的pdf课件
+         - input: {username: '', title: ''}
+         - output: {status: '', pdfThisList: [{title: '', url: ''}, ...]}
+         - frontend: yuxuan
+         - backend: ???
+      - 从教师的教学资源中删除某个pdf文件
+         - url: ???
+         - description: 删除教学资源中的某个pdf。同时也要从教室能使用的资源中删去
+         - input: {username: '', title: ''}
+         - output: {pdfAllList: [], pdfThisList: []} // 更新后的教师资源列表与教室使用资源列表
+         - frontend：yuxuan
+         - backend：???
+      - 从教室的使用资源中删除某个pdf文件
+         - url: ???
+         - description: 从该教室的使用列表中删除，但不从教师的资源删除
+         - input：{username: '', title: ''}
+         - output: {pdfThisList: []} // 更新后的列表
+         - frontend: yuxuan
+         - backend: ???
+      - 发布pdf
+         - url
+         - description
+         - input
+         - output
+         - frontend
+         - backend
+      - 教师资源中添加选择题到教室中
+         - url: ???
+         - description: 添加已有的选择题到教室
+         - input: ???
+         - output: ???
+         - frontend: ???
+         - backend: ???
+      - 教师资源中删除选择题
+         - url: ???
+         - description:
+         - input: ???
+         - output: ???
+         - frontend: ???
+         - backend: ???
+         - p.s. 应当要更改一下选择题和编程题的API。现在uniqueId和每道题关联不上。可以考虑传入参数传入一个为空的uniqueId，这之后后端赋值再传回来
+      - 教室资源中发布选择题
+         - url
+         - description: 发布选择题给所有学生
+         - input
+         - output
+         - frontend
+         - backend
+      - 查看选择题
+         - url
+         - description：查看并能够编辑某个选择题，获取目前所有的答题情况
+         - input
+         - output
+         - frontend
+         - backend
+      - 教室资源中删除选择题
+         - url
+         - description：教室中删除，教师资源不变
+         - input
+         - output
+         - frontend
+         - backend
+      - 教师资源中添加代码题到教室中
+         - url
+         - description：
+         - input
+         - output
+         - frontend
+         - backend
+      - 代码题预览
+         - url
+         - description：返回该代码题的描述、语言及示例。不能更改
+         - input
+         - output
+         - frontend
+         - backend
+      - 教师资源中删除代码题
+         - url
+         - description：同时从教室的可用资源中删除
+         - input
+         - output
+         - frontend
+         - backend
+      - 教室中发布代码题
+         - url
+         - description：发布题目到所有学生
+         - input
+         - output
+         - frontend
+         - backend
+      - 教室中查看代码题
+         - url
+         - description：可以查看并编辑代码题，并且看到此前所有学生的提交结果
+         - imput
+         - output
+         - frontend
+         - backend
+      - 教室中删除代码题
+         - url:
+         - description：从教室的资源列表中移除该题目，不影响教师资源
+         - input
+         - output
+         - frontend
+         - backend
+
    - ### pdf文件
+
       - ### 上传pdf文件
          - **url:** */api/resourse/add_pdf*
          - **description:** 上传pdf文件

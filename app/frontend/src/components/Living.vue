@@ -59,7 +59,18 @@
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              {{username}}
+              <button @click="CHAT.socket.emit('refresh', {'url':cururl})">获取最新用户列表</button>
+              <Dropdown @click.native="CHAT.list(userInfo.username, cururl)">
+                <a href="javascript:void(0)">
+                  聊天对象
+                  <Icon type="ios-arrow-down"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)">{{ student }}</DropdownItem>
+                  <DropdownItem divided @click.native="talkTo('all')">all</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              {{ username }}
             </div>
           </div>
           <div class="content">
@@ -74,7 +85,10 @@
                     <audio :src="audioUrl(msgObj.msg)" controls></audio>
                   </div>
                   <div v-else></div>
-
+                  <div v-if="msgObj.msgType === 'img'">
+                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                  </div>
+                  <div v-else></div>
                 </div>
               </div>
               <div v-else></div>
@@ -88,26 +102,32 @@
                     <audio :src="audioUrl(msgObj.msg)" controls></audio>
                   </div>
                   <div v-else></div>
+                  <div v-if="msgObj.msgType === 'img'">
+                    <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                  </div>
+                  <div v-else></div>
                 </div>
               </div>
               <div v-else></div>
             </div>
           </div>
-
           <div class="talker">
             <Input v-if="msgType === 'text'" class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
             <div v-if="msgType === 'audio'" class="recorder">
               <button @click="toggleRecorder()">录音</button>
               <button @click="stopRecorder">停止</button>
-
               <button
                 class="record-audio"
                 @click="removeRecord(idx)">删除</button>
               <div class="record-text">{{audio.duration}}</div>
-
+            </div>
+            <div v-if="msgType === 'img'" class="talker-image">已添加图片，按发送
             </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
             <Button class="talker-send" @click="changeMsgType">{{ msgTypeInfo }}</Button>
+            <a href="javascript:;" class=" upf talker-send" @click="chooseImg">图片
+              <input type="file" name="fileinput" id="fileinput"/>
+            </a>
           </div>
         </div>
       </div>
@@ -120,6 +140,7 @@
 <script>
 import axios from 'axios'
 import CHAT from '../client'
+import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
 export default{
   name: 'load',
@@ -298,7 +319,24 @@ export default{
         }
         console.log(obj)
         CHAT.submit(obj)
+      } else if (this.msgType === 'img') {
+        var blob = new Blob([document.querySelector('input[type=file]').files[0]], { type: 'image/png' })
+        obj = {
+          type: 'broadcast',
+          msgType: 'img',
+          url: this.cururl,
+          time: time,
+          msg: blob,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        console.log(obj)
+        CHAT.submit(obj)
+        this.msgType = 'text'
       }
+    },
+    chooseImg () {
+      this.msgType = 'img'
     },
     changeMsgType () {
       if (this.msgType === 'text') {
@@ -331,6 +369,14 @@ export default{
     audioUrl (obj) {
       var url = window.URL.createObjectURL(new Blob([obj.blob], { type: 'audio/wav' }))
       return url
+    },
+    imageUrl (obj) {
+      var url = window.URL.createObjectURL(new Blob([obj], { type: 'image/png' }))
+      return url
+    },
+    talkTo (p) {
+      this.username = p
+      if (p !== 'all') { this.msg = 'to ' + this.username + ': ' }
     },
     /**
      * 以上为聊天室使用，请勿改动

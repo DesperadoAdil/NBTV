@@ -17,10 +17,11 @@ polyvManager = polyvAPI.ChannelManager()
 @classroom.route('/add_class', methods = ['POST'])
 def addClass():
 	ret = {}
-	data = request.get_data()
-	print('add a class')
-	print(data)
-	data = json.loads(data)
+	# data = request.get_data()
+	# print('add a class')
+	# print(data)
+	# data = json.loads(data)
+	data = request.form.to_dict()
 	try:
 		if not usermanager.verify(data['username'], data['password'], "teacher"):
 			ret["status"] = "error:password wrong"
@@ -205,7 +206,6 @@ def aaddstudents():
 	ret["status"] = 'error'
 
 	data = request.get_data()
-	print (data)
 	data = json.loads(data)
 
 	url = data['url']
