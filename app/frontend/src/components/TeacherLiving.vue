@@ -209,12 +209,14 @@
         <span>上传学生名单</span>
       </p>
       <Form>
-        <FormItem>
-          <a href="javascript:;" class="upf">
-            添加xlsx
-            <input type="file" name="xlsxinput" id="xlsxinput">
-          </a>
-        </FormItem>
+        <Poptip word-wrap width="200" trigger="hover" title="提示" content="格式要求：xlsx文件的单元格填写一个完整的用户名，否则无效。添加失败可以再次添加或者用户名添加">
+          <FormItem>
+            <a href="javascript:;" class="upf">
+              添加xlsx
+              <input type="file" name="xlsxinput" id="xlsxinput">
+            </a>
+          </FormItem>
+        </Poptip>
         <FormItem>
           <Button @click="subxlsx()">submit</Button>
         </FormItem>
