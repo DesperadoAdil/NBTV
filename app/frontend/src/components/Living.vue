@@ -3,7 +3,7 @@
 
 
 
-    <div v-if="CHAT.frametype === 'close'" id="mainlivingcard" class="cardtealiving11">
+    <div  id="mainlivingcard" class="cardtealiving11" :style="{display:CHAT.frametype === 'close'?'block':'none'}">
       <!--<div id="mainlivingcard" class="cardtealiving11" :style="{display:mainlivingcarddisplay?'block':'none'}">-->
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <div v-if="CHAT.frametype !== 'close'" id="littlelivingcard" class="cardtealittleliving11" >
+    <div  id="littlelivingcard" class="cardtealittleliving11" :style="{display:CHAT.frametype !== 'close'?'block':'none'}">
       <!--<div id="littlelivingcard" class="cardtealittleliving11" :style="{display:littlelivingcarddisplay?'block':'none'}">-->
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
@@ -26,17 +26,17 @@
     </div>
 
     <!--<div id="mainpdfcard" class="cardtealivingpdf11" :style="{display:mainpdfcarddisplay?'block':'none'}">-->
-    <div v-if="CHAT.frametype === 'pdf'" id="mainpdfcard" class="cardtealivingpdf11" >
-      <iframe id="displayPdfIframe" class="pdfframe" :src="CHAT.pdfurl"/>
+    <div  id="mainpdfcard" class="cardtealivingpdf11" :style="{display:CHAT.frametype === 'pdf'?'block':'none'}">
+      <iframe id="displayPdfIframe" class="pdfframe" :src="'/static/pdfjs/web/viewer.html?file='+CHAT.pdfurl"/>
     </div>
 
     <!--<div id="maincodecard" class="cardtealivingcdode00" :style="{display:maincodecarddisplay?'block':'none'}">-->
-    <div v-if="CHAT.frametype === 'code'" id="maincodecard" class="cardtealivingcdode00" >
+    <div  id="maincodecard" class="cardtealivingcdode00"  :style="{display:CHAT.frametype === 'code'?'block':'none'}">
       <h>编程题</h>
     </div>
 
     <!--<div id="mainselectcard" class="cardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
-    <div v-if="CHAT.frametype === 'select'" id="mainselectcard" class="cardtealivingselect00" >
+    <div  id="mainselectcard" class="cardtealivingselect00" :style="{display:CHAT.frametype === 'select'?'block':'none'}">
       <p class="selecttitle00">{{CHAT.selectall.title}}</p>
       <RadioGroup  class="radiotea" v-model="stuans" vertical>
         <Radio label="A" style="font-size: 15px">
