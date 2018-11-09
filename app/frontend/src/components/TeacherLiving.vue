@@ -917,6 +917,20 @@ export default{
           axios.post('/api/classroom/showpdfs', data).then((resp) => {
 
           })
+
+          var date = new Date()
+          var time = date.getHours() + ':' + date.getMinutes()
+          var  obj = {
+              type: 'pdf',
+              msgType: 'pdf',
+              url: this.cururl,
+              time: time,
+              msg: ipdf.url,
+              toUser: 'stu',
+              fromUser: this.userInfo.username
+            }
+          CHAT.submit(obj)
+
           console.log('1321312')
           this.videohei = 260 + 'px'
           this.mainselectcarddisplay = false
@@ -978,6 +992,20 @@ export default{
           axios.post('/api/classroom/showselect', data).then((resp) => {
 
           })
+
+          var date = new Date()
+          var time = date.getHours() + ':' + date.getMinutes()
+          var  obj = {
+            type: 'select',
+            msgType: 'select',
+            url: this.cururl,
+            time: time,
+            msg: iselect,
+            toUser: 'stu',
+            fromUser: this.userInfo.username
+          }
+          CHAT.submit(obj)
+
           this.videohei = 260 + 'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
@@ -1026,6 +1054,19 @@ export default{
     },
     useCode (index) {
       // to be implemented
+        var date = new Date()
+        var time = date.getHours() + ':' + date.getMinutes()
+        var  obj = {
+          type: 'code',
+          msgType: 'code',
+          url: this.cururl,
+          time: time,
+          msg: 'code',
+          toUser: 'stu',
+          fromUser: this.userInfo.username
+        }
+        CHAT.submit(obj)
+
     },
     // check code
     checkCode (index) {
@@ -1233,6 +1274,20 @@ export default{
           axios.post('/api/classroom/closepdfsec', data).then((resp) => {
 
           })
+
+          var date = new Date()
+          var time = date.getHours() + ':' + date.getMinutes()
+          var  obj = {
+            type: 'close',
+            msgType: 'close',
+            url: this.cururl,
+            time: time,
+            msg: 'close',
+            toUser: 'stu',
+            fromUser: this.userInfo.username
+          }
+          CHAT.submit(obj)
+
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -1305,7 +1360,7 @@ export default{
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
-        this.streamer000.setMicRate(0)
+        this.streamer000.setMicRate(10000000000)
         this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       } else {
         this.jinmai = 'ios-mic-off'
@@ -1332,7 +1387,7 @@ export default{
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
-        this.streamer000.setCamFrameInterval(100000)
+        this.streamer000.setCamFrameInterval(1000000000)
         this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       }
     }
