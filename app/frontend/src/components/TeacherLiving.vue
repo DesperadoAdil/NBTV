@@ -421,7 +421,7 @@ export default{
       classmain0: true,
       stream000: '',
       streamer: '',
-      streamername: '7181857ac220181025144543640',
+      streamername: '7181857ac220181030221452650',
 
       // pdf, multiple and codes
       // pdf parameter
@@ -1239,12 +1239,14 @@ export default{
               this.streamername = resp.data.streamername
               console.log(resp.data.streamername)
               console.log(this.streamername)
+              console.log(this.streamername)
+              setSWFIsReady()
+              this.streamer000 = document.getElementById('rtmp-streamer1')
+              this.streamer000.setScreenPosition(-100, 0)
+              this.streamer000.setScreenSize(700, 380)
+              this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
             })
-            setSWFIsReady()
-            this.streamer000 = document.getElementById('rtmp-streamer1')
-            this.streamer000.setScreenPosition(-100, 0)
-            this.streamer000.setScreenSize(700, 380)
-            this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
+
           },
           onCancel: () => {
           }
