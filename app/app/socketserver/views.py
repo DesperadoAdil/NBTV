@@ -37,6 +37,16 @@ def sendMsg(data):
     elif type == "whisper":
         emit('whisper', data, room = data['fromUser'])
         emit('whisper', data, room = data['toUser'])
+    elif type == "pdf":
+        emit('pdf', data, room = data['url'])
+    elif type == "page":
+        emit('page', data, room = data['url'])
+    elif type == "code":
+        emit('code', data, room = data['url'])
+    elif type == "select":
+        emit('select', data, room = data['url'])
+    elif type == "close":
+        emit('close', data, room = data['url'])
 
 
 @socketio.on('list')
