@@ -81,7 +81,7 @@ commit message都要符合这一个规范：
 - ## 资源管理
    - ### 新的或者要更改的API：
 
-  - 查看pdf文件列表
+- #### 查看pdf文件列表
 
     - **url:** */api/resource/getpdfs*
     - **description:** 用户查看pdf文件，返回教师能用的和教室当中的列表 //返回两个pdf文件列表
@@ -90,7 +90,7 @@ commit message都要符合这一个规范：
     - **frontend:** *yuxuan*
     - **backend:** *Adil*
 
-  - 从教师的教学资源中添加pdf到教室中
+- #### 从教师的教学资源中添加pdf到教室中
 
     - url: /api/resource/pdf_addclass
     - description: 为当前教室添加要使用的pdf课件
@@ -99,7 +99,7 @@ commit message都要符合这一个规范：
     - **frontend:** *yuxuan*
     - **backend:** *Adil*
 
-  - 删除pdf文件
+- #### 删除pdf文件
 
     - **url:** */api/resource/delete_pdf*
     - **description:** 用户删除pdf文件 //已有api，需要更改的是，不仅要从教师的文件列表中删除，还要从教室的文件列表中删除。返回两个更新后的列表
@@ -108,7 +108,7 @@ commit message都要符合这一个规范：
     - **frontend:** *Yuxuan*
     - **backend:** *Adil*
 
-  - 从教室的使用资源中删除某个pdf文件
+- #### 从教室的使用资源中删除某个pdf文件
 
     - url: /api/resource/pdf_delclass
     - description: 从该教室的使用列表中删除，但不从教师的资源删除
@@ -117,7 +117,7 @@ commit message都要符合这一个规范：
     - frontend: yuxuan
     - backend: ???
 
-  - 查看选择题列表
+- #### 查看选择题列表
 
     - **url:** */api/resource/getmutiples*
     - **description:** 用户查看选择题 // 输入用户名和当前url， 输出两个列表。一个是教师所有的选择题，一个是当前教室用的选择题。输出的每个选项都有一个uniqueId
@@ -126,7 +126,7 @@ commit message都要符合这一个规范：
     - **frontend:** *Yuxuan*
     - **backend:** *Adil*
 
-  - 教师资源中添加选择题到教室中
+- #### 教师资源中添加选择题到教室中
 
     - url: /api/resource/multi_addclass
     - description: 添加已有的选择题到教室
@@ -135,7 +135,7 @@ commit message都要符合这一个规范：
     - **frontend:** *Yuxuan*
     - backend: ???
 
-  - 删除选择题
+- #### 删除选择题
 
     - **url:** */api/resource/delete_mutiple*
     - **description:** 教师从全部资源中删除选择题
@@ -144,7 +144,7 @@ commit message都要符合这一个规范：
     - **frontend:** *Yuxuan*
     - **backend:** *???*
 
-  - 查看选择题答题情况
+- #### 查看选择题答题情况
 
     - url: /api/resource/multi_viewclass
     - description：查看某个选择题目前所有的答题情况
@@ -153,7 +153,7 @@ commit message都要符合这一个规范：
     - **frontend:** *Yuxuan*
     - backend
 
-  - 教室资源中删除选择题
+- #### 教室资源中删除选择题
 
     - url: /api/resource/multi_delclass
     - description：教室中删除，教师资源不变
@@ -162,7 +162,7 @@ commit message都要符合这一个规范：
     - **frontend:** *Yuxuan*
     - backend
 
-  - 查看代码题列表 // 要更改
+- #### 查看代码题列表 // 要更改
 
     - **url:** */api/resource/getcodes*
     - **description:** 用户查看代码题
@@ -171,7 +171,7 @@ commit message都要符合这一个规范：
     - **frontend:** *Yuxuan*
     - **backend:** *???*
 
-  - 教师资源中添加代码题到教室中
+- #### 教师资源中添加代码题到教室中
 
     - url：/api/resource/code_addclass
     - description：添加到教室列表中
@@ -180,7 +180,7 @@ commit message都要符合这一个规范：
     - **frontend:** *Yuxuan*
     - backend
 
-  - 删除代码题
+- #### 删除代码题
 
     - **url:** */api/resource/delete_code*
     - **description:** 教师从全部资源中删除代码题，同时删除教室中该资源
@@ -189,7 +189,7 @@ commit message都要符合这一个规范：
     - **frontend:** *Yuxuan*
     - **backend:** *???*
 
-  - 教室中查看代码题提交结果
+- #### 教室中查看代码题提交结果
 
     - url: /api/resource/code_viewclass
     - description：查看代码题中所有学生的提交结果
@@ -198,7 +198,7 @@ commit message都要符合这一个规范：
     - **frontend:** *Yuxuan*
     - backend
 
-  - 教室中删除代码题
+- #### 教室中删除代码题
 
     - url: /api/resource/code_delclass
     - description：教室中删除，教师资源不变
