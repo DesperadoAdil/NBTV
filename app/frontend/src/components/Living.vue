@@ -1,12 +1,10 @@
 <template>
   <div class="tealivingmain">
 
-    <Button type="primary" @click="showpdf0">展示pdf</Button>
-    <Button type="primary" @click="showselect0">展示选择题</Button>
-    <Button type="primary" @click="showcode0">展示编程题</Button>
-    <Button type="primary" @click="exitliving0">回退界面</Button>
 
-    <div id="mainlivingcard" class="cardtealiving11" :style="{display:mainlivingcarddisplay?'block':'none'}">
+
+    <div v-if="CHAT.frametype === 'close'" id="mainlivingcard" class="cardtealiving11">
+      <!--<div id="mainlivingcard" class="cardtealiving11" :style="{display:mainlivingcarddisplay?'block':'none'}">-->
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
@@ -16,7 +14,8 @@
       </div>
     </div>
 
-    <div id="littlelivingcard" class="cardtealittleliving11" :style="{display:littlelivingcarddisplay?'block':'none'}">
+    <div v-if="CHAT.frametype !== 'close'" id="littlelivingcard" class="cardtealittleliving11" >
+      <!--<div id="littlelivingcard" class="cardtealittleliving11" :style="{display:littlelivingcarddisplay?'block':'none'}">-->
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
       </div>
@@ -26,35 +25,38 @@
       </div>
     </div>
 
-    <div id="mainpdfcard" class="cardtealivingpdf11" :style="{display:mainpdfcarddisplay?'block':'none'}">
-      <iframe id="displayPdfIframe" class="pdfframe" :src="displayPdfurl0"/>
+    <!--<div id="mainpdfcard" class="cardtealivingpdf11" :style="{display:mainpdfcarddisplay?'block':'none'}">-->
+    <div v-if="CHAT.frametype === 'pdf'" id="mainpdfcard" class="cardtealivingpdf11" >
+      <iframe id="displayPdfIframe" class="pdfframe" :src="CHAT.pdfurl"/>
     </div>
 
-    <div id="maincodecard" class="cardtealivingcdode00" :style="{display:maincodecarddisplay?'block':'none'}">
+    <!--<div id="maincodecard" class="cardtealivingcdode00" :style="{display:maincodecarddisplay?'block':'none'}">-->
+    <div v-if="CHAT.frametype === 'code'" id="maincodecard" class="cardtealivingcdode00" >
       <h>编程题</h>
     </div>
 
-    <div id="mainselectcard" class="cardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">
-      <p class="selecttitle00">{{curtitle}}</p>
-      <RadioGroup class="radiotea" v-model="ionselect" vertical>
-        <Radio v-bind:label="curans[0]" style="font-size: 15px">
-          <span>A、{{curans[0]}}</span>
+    <!--<div id="mainselectcard" class="cardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
+    <div v-if="CHAT.frametype === 'select'" id="mainselectcard" class="cardtealivingselect00" >
+      <p class="selecttitle00">{{CHAT.selectall.title}}</p>
+      <RadioGroup  class="radiotea" v-model="stuans" vertical>
+        <Radio label="A" style="font-size: 15px">
+          <span>A、{{CHAT.selectall.ans[0]}}</span>
         </Radio>
-        <Radio v-bind:label="curans[1]" style="font-size: 15px">
-          <span>B、{{curans[1]}}</span>
+        <Radio label="B" style="font-size: 15px">
+          <span>B、{{CHAT.selectall.ans[1]}}</span>
         </Radio>
-        <Radio v-bind:label="curans[2]" style="font-size: 15px">
-          <span>C、{{curans[2]}}</span>
+        <Radio label="C" style="font-size: 15px">
+          <span>C、{{CHAT.selectall.ans[2]}}</span>
         </Radio>
-        <Radio v-bind:label="curans[3]" style="font-size: 15px">
-          <span>D、{{curans[3]}}</span>
+        <Radio label="D" style="font-size: 15px">
+          <span>D、{{CHAT.selectall.ans[3]}}</span>
         </Radio>
       </RadioGroup>
-      <p class="anstea00">本题目答案：{{curanswer}}</p>
+      <Button class="selectsubmit00" type="primary" @click="selectsubmit">提交答案: {{stuans}}</Button>
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
-    <div id="chatingRoom" :style="{height:chathei,top:chattop}">
+    <div id="chatingRoom2" :style="{height:CHAT.frametype === 'close'? 650+'px':350+'px',top:CHAT.frametype === 'close'? 150+'px':450+'px'}">
       <div class="talk-contents">
         <div class="talk-inner">
           <div class="talk-nav">
@@ -202,6 +204,7 @@ export default{
       /**
        * 以上为聊天室使用，请勿改动
        */
+      stuans:'',
       maincodecarddisplay: false,
       curpdfurl: '/static/pdf/1-1.pdf',
       videohei0: 600 + 'px',
@@ -435,58 +438,24 @@ export default{
       this.userInfo['mobile'] = this.$cookies.get('user').mobile
       this.userInfo['job'] = this.$cookies.get('user').job
     },
-    showpdf0 () {
-      console.log('weqweqwe')
-      this.liaotianshiheight = 500 + 'px'
-      this.chattop=400+'px'
-      this.chathei=350+'px'
-      this.littlelivingcarddisplay = true
-      this.mainselectcarddisplay = false
-      this.mainpdfcarddisplay = true
-      this.mainlivingcarddisplay = false
-      this.maincodecarddisplay = false
-      this.displayPdfurl0 = '/static/pdfjs/web/viewer.html?file=' + this.curpdfurl
+    selectsubmit(){
+      console.log("dasdas")
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      data['item'] = this.stuans
+      axios.post('/api/classroom/selectsubmit', data).then((resp) => {
+
+      })
     },
-    showselect0 () {
-      console.log('weqweqwe')
-      this.liaotianshiheight = 500 + 'px'
-      this.chattop=400+'px'
-      this.chathei=350+'px'
-      this.littlelivingcarddisplay = true
-      this.mainselectcarddisplay = true
-      this.mainpdfcarddisplay = false
-      this.mainlivingcarddisplay = false
-      this.maincodecarddisplay = false
-    },
-    showcode0 () {
-      console.log('weqweqwe')
-      this.liaotianshiheight = 500 + 'px'
-      this.chattop=400+'px'
-      this.chathei=350+'px'
-      this.littlelivingcarddisplay = true
-      this.mainselectcarddisplay = false
-      this.mainpdfcarddisplay = false
-      this.mainlivingcarddisplay = false
-      this.maincodecarddisplay = true
-    },
-    exitliving0 () {
-      console.log('weqweqwe')
-      this.liaotianshiheight = 150 + 'px'
-      this.chattop=150+'px'
-      this.chathei=600+'px'
-      this.littlelivingcarddisplay = false
-      this.mainselectcarddisplay = false
-      this.mainpdfcarddisplay = false
-      this.mainlivingcarddisplay = true
-      this.maincodecarddisplay = false
-    }
   }
 
 }
 </script>
 <style>
   /* 赵汉卿负责的聊天室部分，请勿修改 */
-  #chatingRoom {
+  #chatingRoom2 {
     position:absolute;
     left: 70%;
     width: 20%;
@@ -595,7 +564,7 @@ export default{
     left: 10%;
     width: 59%;
     top:150px;
-    display: none;
+
   }
   .pdfframe{
     width:100% ;
@@ -626,7 +595,7 @@ export default{
     width: 59%;
     height: 800px;
     top:150px;
-    display: none;
+
   }
   .cardtealivingcdode00{
     position:absolute;
@@ -634,13 +603,13 @@ export default{
     width: 59%;
     height: 800px;
     top:150px;
-    display: none;
+
   }
 
   .selecttitle00{
     padding-top: 3%;
     position:relative;
-    left:40px;
+    left:100px;
     float:left;
     font-size: 15px;
   }
@@ -656,6 +625,12 @@ export default{
     top:500px;
     left:-50px;
     font-size: 15px;
+  }
+  .selectsubmit00{
+    float:left;
+    position:relative;
+    top:600px;
+    left:-100px;
   }
 
 </style>

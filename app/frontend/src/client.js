@@ -5,6 +5,13 @@ const CHAT = {
   socket: null,
   msgArr: [],
   studentlist: [],
+  frametype:'close',
+  pdfurl:'/static/pdf/1-1.pdf',
+  selectall:{
+    title: 'choice 02',
+    ans: ['something', 'somewhere', 'somehow', 'somewhat'],
+    answer: 'A'
+  },
   logout: function () {
     this.socket.disconnect()
   },
@@ -42,6 +49,20 @@ const CHAT = {
     })
     this.socket.on('list', function (obj) {
       CHAT.studentlist = obj
+    })
+    this.socket.on('pdf', function (obj) {
+      CHAT.frametype = 'pdf'
+      CHAT.pdfurl=obj.msg
+    })
+    this.socket.on('select', function (obj) {
+      CHAT.frametype = 'select'
+      CHAT.selectall=obj.msg
+    })
+    this.socket.on('code', function (obj) {
+      CHAT.frametype = 'code'
+    })
+    this.socket.on('close', function (obj) {
+      CHAT.frametype = 'close'
     })
   },
   init: function (username, url) {
