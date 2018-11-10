@@ -315,7 +315,7 @@
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
-    <Card id="chatingRoom">
+    <div id="chatingRoom" :style="{top:chatingtop,height:chatinghei}">
       <div class="talk-contents">
         <div class="talk-inner">
           <div class="talk-nav">
@@ -414,7 +414,7 @@
           </div>
         </div>
       </div>
-    </Card>
+    </div>
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
 
   </div>
@@ -441,6 +441,9 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
+
+      chatingtop:60+'px',
+      chatinghei:710+'px',
       msgTypeInfo: '语音',
       socket: null,
       msgType: 'text',
@@ -966,6 +969,8 @@ export default{
           CHAT.submit(obj)
 
           console.log('1321312')
+          this.chatingtop=330+'px'
+            this.chatinghei=440+'px'
           this.videohei = 260 + 'px'
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
@@ -1069,6 +1074,8 @@ export default{
           CHAT.submit(obj)
 
           this.videohei = 260 + 'px'
+          this.chatingtop=330+'px'
+          this.chatinghei=440+'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
@@ -1396,6 +1403,8 @@ export default{
           this.mainpdfcarddisplay = false
           this.classmain0 = true
           this.videohei = 700 + 'px'
+          this.chatingtop=60+'px'
+          this.chatinghei=710+'px'
           this.curvideo = true
           const data = this.curuser
           data['username'] = this.userInfo['username']
@@ -1530,8 +1539,7 @@ export default{
     position:absolute;
     left: 79%;
     width: 21%;
-    top:60px;
-    height: 90%;
+
   }
   .talk-contents {
     height: 100%;

@@ -18,6 +18,7 @@
         </Card>
       </Col>
     </Row>
+
   </div>
 
 </template>
@@ -27,6 +28,7 @@ export default {
   name: 'List',
   data () {
     return {
+      modal1:false,
       userInfo: {
         status: '',
         username: '',
@@ -136,6 +138,8 @@ export default {
         onOk: () => {
           if (this.currentpassword === aab.password) {
             this.$router.push({path: '/living/'+ aab.url})
+            window.location.reload()
+
           }
           else {
             this.$Notice.error({
