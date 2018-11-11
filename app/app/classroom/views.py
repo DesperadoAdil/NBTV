@@ -45,7 +45,7 @@ def addClass():
 	rtmpUrl = responseData['data']['url']
 
 	# 把缩略图给存起来
-	imgfile = request.file.get('file')
+	imgfile = request.files.get('file')
 
 
 	# 在教室列表里插入一个教室
