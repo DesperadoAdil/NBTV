@@ -1,6 +1,7 @@
 import json
 from ..models import *
 from datetime import datetime
+import os
 
 class ClassroomManager:
 	def __init__(self):
@@ -24,10 +25,16 @@ class ClassroomManager:
 		ret['showtime'] = str(classroom.showtime)
 		return ret
 
-	def insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url, mode):
+	def insert(self, vid, rtmpUrl, teacher, title, imgfile, passwd, url, mode):
 		#在调用这个接口之前，需要先判断是否是本用户插入的，需要验证密码
 		try:
-			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = thumbnail, password = passwd, rtmpUrl = rtmpUrl, url = url, mode = mode)
+			if not os.path.exists("/mnt/NBTV_Img/%s" % teacher):
+				os.mkdir("/mnt/NBTV_Img/%s" % teacher)
+			imgpath = "/mnt/NBTV_Img/%s/%s_%s" % (teacher, vid, imgfile.filename)
+			imgfile.save(imgpath)
+
+			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = '/img_class/%s/%s_%s' % (teacher, vid, imgfile.filename), password = passwd, rtmpUrl = rtmpUrl, url = url, mode = mode)
+
 			db.session.add(classroomTmp)
 			db.session.commit()
 			return "success"

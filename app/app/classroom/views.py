@@ -44,10 +44,14 @@ def addClass():
 	vid = responseData['data']['channelId']
 	rtmpUrl = responseData['data']['url']
 
+	# 把缩略图给存起来
+	imgfile = request.file.get('file')
+
+
 	# 在教室列表里插入一个教室
 	# insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
 	ret = {}
-	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], data['thumbnail'], data['class_password'], data['url'], data['mode'])
+	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], imgfile, data['class_password'], data['url'], data['mode'])
 
 	return json.dumps(ret, ensure_ascii = False)
 
