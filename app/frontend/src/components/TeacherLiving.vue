@@ -62,7 +62,7 @@
       @on-ok="modal_pdflist = false" @on-cancel="modal_pdflist = false"
     >
       <Card>
-        <Split class="teacher-live-split" v-model="split_pdf">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_pdf">
           <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
@@ -82,7 +82,7 @@
       v-model="modal_multilist" width="900"
       @on-ok="modal_multilist = false" @on-cancel="modal_multilist = false">
       <Card>
-        <Split class="teacher-live-split" v-model="split_multi">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_multi">
           <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
@@ -105,7 +105,7 @@
       width="900"
     >
       <Card>
-        <Split class="teacher-live-split" v-model="split_code">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_code">
           <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
@@ -227,7 +227,7 @@
       @on-cancel="modal_viewmulti = false"
       width="900">
       <Card>
-        <Split class="teacher-live-split" v-model="split_codecheck">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_codecheck">
           <div slot="left"  class="teacher-live-split-pane">
             <Form label-position="top">
             </Form>
@@ -247,7 +247,7 @@
       width="900"
     >
       <Card>
-        <Split class="teacher-live-split" v-model="split_codecheck">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_codecheck">
           <div slot="left"  class="teacher-live-split-pane">
             <Form label-position="top" height="700">
               <FormItem label="Text">
