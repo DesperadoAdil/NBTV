@@ -176,30 +176,30 @@ export default {
       this.addModal = false
     },
     updateLiving (index) {
-        console.log("sa")
-        var    fileInput00 = document.getElementById('filezsh2')
-        console.log(fileInput00.files)
-        console.log(document.querySelector('input[id=filezsh2]').files)
-          var formData = new FormData()
-          formData.append('username', this.$cookies.get('user').username)
-          formData.append('password', this.$cookies.get('user').password)
-          formData.append('job', this.$cookies.get('user').job)
-          formData.append('img', document.querySelector('input[id=filezsh2]').files[0])
-          formData.append('title', this.myLivingList[index]['title'])
-          formData.append('url', this.myLivingList[index]['url'])
-          formData.append('class_password', this.myLivingList[index]['class_password'])
-          formData.append('mode', this.myLivingList[index]['mode'])
-          var options = {
-            url: '/api/classroom/update_class',
-            data: formData,
-            method: 'post',
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-          axios(options).then((resp) => {
-            this.getMyLivingList()
-        })
+      console.log('sa')
+      var fileInput00 = document.getElementById('filezsh2')
+      console.log(fileInput00.files)
+      console.log(document.querySelector('input[id=filezsh2]').files)
+      var formData = new FormData()
+      formData.append('username', this.$cookies.get('user').username)
+      formData.append('password', this.$cookies.get('user').password)
+      formData.append('job', this.$cookies.get('user').job)
+      formData.append('img', document.querySelector('input[id=filezsh2]').files[0])
+      formData.append('title', this.myLivingList[index]['title'])
+      formData.append('url', this.myLivingList[index]['url'])
+      formData.append('class_password', this.myLivingList[index]['class_password'])
+      formData.append('mode', this.myLivingList[index]['mode'])
+      var options = {
+        url: '/api/classroom/update_class',
+        data: formData,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      axios(options).then((resp) => {
+        this.getMyLivingList()
+      })
       this.updateModal = false
     },
     deleteLiving (index) {
