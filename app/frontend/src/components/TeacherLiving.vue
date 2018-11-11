@@ -1011,7 +1011,7 @@ export default{
       input.username = this.userInfo.username
       input.url = this.cururl
       // post
-      axios.post('/api/resource/getmutiples', input).then((resp) => {
+      axios.post('/api/resource/getmultiples', input).then((resp) => {
         // resp.data 即是那个列表
         this.multiAllList = resp.data.multiAllList
         this.multiThisList = resp.data.multiThisList
