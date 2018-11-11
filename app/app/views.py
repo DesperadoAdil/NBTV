@@ -18,6 +18,10 @@ def dispolay():
 def getPDF(path):
     return send_from_directory('/mnt/NBTV', path)
 
+@app.route('/img_class/<path>')
+def getImg(path):
+	return send_from_directory('/mnt/NBTV_Img', path)
+
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
