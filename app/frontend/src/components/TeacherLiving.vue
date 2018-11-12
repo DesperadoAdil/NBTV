@@ -229,11 +229,54 @@
       <Card>
         <Split class="teacher-live-split" style="height: 430px" v-model="split_codecheck">
           <div slot="left"  class="teacher-live-split-pane">
-            <Form label-position="top">
+            <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
+              <FormItem label="Statement">
+                <Input type="textarea" v-model="sub_multi.statement" placeholder="Enter your Description"></Input>
+              </FormItem>
+              <!-- 以下为选项的动态添加删除  -->
+              <FormItem
+                v-for="(item, index) in multi_options"
+                v-if="item.status"
+                :key="index">
+                <Row>
+                  <Col span="18">
+                    <Input type="text" placeholder="Enter Your Choice" v-model="multi_options[index].value"></Input>
+                  </Col>
+                  <Col span="4" offset="1">
+                    <Button @click="multi_delChoice(index)">Delete</Button>
+                  </Col>
+                </Row>
+              </FormItem>
+              <FormItem>
+                <Row>
+                  <Col span="12">
+                    <Button type="dashed" long @click="multi_addChoice()" icon="md-add">Add Choice</Button>
+                  </Col>
+                </Row>
+              </FormItem>
+              <!-- 答案设置  -->
+              <FormItem label="The Answer">
+                <Input v-model="sub_multi.answer" placeholder="a number"></Input>
+              </FormItem>
             </Form>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
-            <Form></Form>
+            <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
+              <!-- 以下为选项的动态添加删除  -->
+              <FormItem
+                v-for="(item, index) in multiAnswerList"
+                :key="index"
+                >
+                <Row>
+                  <Col span="18">
+                    <Input type="text" placeholder="Enter Your Choice" v-model="item.student"></Input>
+                  </Col>
+                  <Col span="4" offset="1">
+                    <Input type="text" placeholder="Enter Your Choice" v-model="item.answer"></Input>
+                  </Col>
+                </Row>
+              </FormItem>
+            </Form>
           </div>
         </Split>
       </Card>
@@ -555,7 +598,7 @@ export default{
           title: 'Action',
           key: 'action',
           fixed: 'right',
-          width: 180,
+          width: 120,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -633,7 +676,7 @@ export default{
           title: 'Action',
           key: 'action',
           fixed: 'right',
-          width: 180,
+          width: 120,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -705,9 +748,10 @@ export default{
           index: 1,
           status: 1
         }
-      ], // INIT AS SO AND DON'T CHANGE IT
+      ], //
       multi_index: 1,
       sub_multi: {
+        uniqueId: '',
         statement: '',
         optionList: [],
         answer: '',
@@ -716,6 +760,7 @@ export default{
       // CODE
       modal_code: false,
       sub_code: {
+        uniqueId: '',
         username: '',
         statement: '',
         language: '',
@@ -969,8 +1014,8 @@ export default{
           CHAT.submit(obj)
 
           console.log('1321312')
-          this.chatingtop=330+'px'
-            this.chatinghei=440+'px'
+          this.chatingtop = 330 + 'px'
+          this.chatinghei = 440 + 'px'
           this.videohei = 260 + 'px'
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
@@ -1074,8 +1119,8 @@ export default{
           CHAT.submit(obj)
 
           this.videohei = 260 + 'px'
-          this.chatingtop=330+'px'
-          this.chatinghei=440+'px'
+          this.chatingtop = 330 + 'px'
+          this.chatinghei = 440 + 'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
@@ -1102,6 +1147,7 @@ export default{
       axios.post('/api/resource/multi_viewclass', input).then((resp) => {
         this.multiAnswerList = resp.data.multiAnswerList
       })
+      this.sub_multi = iMulti
       this.modal_viewmulti = true
     },
     // DEL MULTI FROM CLASS
