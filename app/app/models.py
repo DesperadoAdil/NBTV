@@ -33,6 +33,8 @@ class Classrooms(db.Model):
     createtime = db.Column(db.DateTime, default=datetime.now())
     #开播时间
     showtime = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    #黑名单
+    blacklist = db.Column(db.Text, nullable = False, default = "[]")
 
     # choicequestion = db.relationship('ChoiceQuestion', backref='classrooms', lazy='dynamic')
     # codequestion = db.relationship('CodeQuestion', backref='classrooms', lazy='dynamic')

@@ -1,5 +1,6 @@
 from flask_socketio import join_room, leave_room, emit, send
 from .. import socketio
+from ..models import *
 
 chatingRoom = {}
 
@@ -64,3 +65,28 @@ def refresh(data):
 @socketio.on('check')
 def check(data):
     chatingRoom[data['url']].append(data['username'])
+
+
+@socketio.on('blacklist')
+def blacklist(data):
+    username = data["username"]
+    url = data["url"]
+
+    classroom = Classrooms.query.filter_by(url = url).first()
+    blacklist = json.loads(classroom.blacklist)
+    blacklist.append(username)
+    classroom.blacklist = json.dumps(blacklist)
+    if classroom.mode is "private":
+        studentlist = json.loads(classroom.studentlist)
+        if username in studentlist:
+            studentlist.remove(username)
+        classroom.studentlist = json.dumps(studentlist)
+    db.session.add(classroom)
+    db.session.commit()
+
+    emit('blacklist', room = username)
+
+
+@socketio.on('shutup')
+def shutup(data):
+    emit('shutup', room = data["username"])
