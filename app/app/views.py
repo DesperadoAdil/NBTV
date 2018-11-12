@@ -20,8 +20,8 @@ def getPDF(path):
 
 @app.route('/img_class/<path:path>')
 def getImg(path):
-	print('get image: ', path)
-	image_data = open(os.path.join('/mnt/NBTV_Img', path), "rb").read()
+    print('get image: ', path)
+    image_data = open(os.path.join('/mnt/NBTV_Img', path), "rb").read()
     response = make_response(image_data)
     if path[-3:] == 'jpg' or path[-4:] == 'jpeg':
         response.headers['Content-Type'] = 'image/jpeg'
