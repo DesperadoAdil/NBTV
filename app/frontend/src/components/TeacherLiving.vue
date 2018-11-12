@@ -1,5 +1,5 @@
 <template>
-  <div class="tealivingmain">
+  <div id="teacherLiving" class="tealivingmain">
     <div  class="cardtea">
       <!-- -----------侧边栏----------------- -->
       <Menu name="sidemenu" style="width: 100%">
@@ -1534,6 +1534,9 @@ export default{
 
 </script>
 <style>
+  #teacherLiving {
+    padding: 0 5%;
+  }
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   #chatingRoom {
     position:absolute;

@@ -162,6 +162,9 @@ export default {
 }
 </script>
 <style>
+#list {
+  padding: 0 5%;
+}
 ul {
   display: flex;
   flex-direction: row;
@@ -175,8 +178,6 @@ li {
   top: 60px;
   width: 100%;
 }
-
-
 .listbtn{
   test-align:left;
   font-style:normal;

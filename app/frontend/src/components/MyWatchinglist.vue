@@ -1,5 +1,5 @@
 <template>
-  <div id="list" class="posi">
+  <div id="myWatchingList" class="posi">
     <h1 class="list-info">
       <Icon type="ios-time" />
       正在播出
@@ -167,6 +167,9 @@ export default {
 }
 </script>
 <style>
+  #myWatchingList {
+    padding: 0 5%;
+  }
   ul {
     display: flex;
     flex-direction: row;

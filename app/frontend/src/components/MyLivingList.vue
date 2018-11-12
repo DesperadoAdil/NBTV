@@ -256,7 +256,9 @@ li {
   width: 30%;
   height: 20%;
 }
-
+#myLivingList {
+  padding: 0 5%;
+}
 .posi{
   position: absolute;
   top: 60px;
