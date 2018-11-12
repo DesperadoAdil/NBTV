@@ -279,11 +279,84 @@
           </div>
           <div slot="right"  class="teacher-live-split-pane">
             <div slot="right"  class="teacher-live-split-pane">
-              <Table height="400" stripe :columns="codeAnswer" :data="codeAnswerList"></Table>
+              <div style="position:relative; height:400px; overflow:auto">
+                <Form :label-width="40">
+                  <FormItem
+                    v-for="(item, index) in codeAnswerList"
+                    :key="index"
+                    :label="item.student"
+                    >
+                    <pre v-highlightjs="item.answer" height="100"><code class="cpp"></code></pre>
+                  </FormItem>
+                </Form>
+              </div>
             </div>
           </div>
         </Split>
       </Card>
+    </Modal>
+
+    <!--Edit 选择题--TODO: SUBMIT MULTI CHANGE-->
+    <Modal   v-model="modal_editmulti"    @on-ok="submitMultiChange()"    @on-cancel="modal_multi = false">
+      <p slot="header" style="font-size: 20px">
+        <span>修改选择题</span>
+      </p>
+      <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
+        <FormItem label="Statement">
+          <Input type="textarea" v-model="sub_multi.statement" placeholder="Enter your Description"></Input>
+        </FormItem>
+        <!-- 以下为选项的动态添加删除  -->
+        <FormItem
+          v-for="(item, index) in multi_options"
+          v-if="item.status"
+          :key="index">
+          <Row>
+            <Col span="18">
+              <Input type="text" placeholder="Enter Your Choice" v-model="multi_options[index].value"></Input>
+            </Col>
+            <Col span="4" offset="1">
+              <Button @click="multi_delChoice(index)">Delete</Button>
+            </Col>
+          </Row>
+        </FormItem>
+        <FormItem>
+          <Row>
+            <Col span="12">
+              <Button type="dashed" long @click="multi_addChoice()" icon="md-add">Add Choice</Button>
+            </Col>
+          </Row>
+        </FormItem>
+        <!-- 答案设置  -->
+        <FormItem label="The Answer">
+          <Input v-model="sub_multi.answer" placeholder="a number"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
+
+    <!--Edit 编程题--TODO: SUBMIT CODE CHANGE-->
+    <Modal   v-model="modal_editcode"    @on-ok="submitCodeChange()"    @on-cancel="modal_code = false">
+      <p slot="header" style="font-size: 20px">
+        <span>设置编程题</span>
+      </p>
+      <Form label-position="top">
+        <FormItem label="Text">
+          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
+          <Input v-model="sub_code.statement"
+                 type="textarea" rows="4"
+                 placeholder="Enter Your Statement">
+          </Input>
+        </FormItem>
+        <FormItem label="Language">
+          <Input v-model="sub_code.language" placeholder="Set the language"></Input>
+        </FormItem>
+        <FormItem label="Example Code">
+          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
+          <template>
+            <!-------------输入框的代码高亮还没好，现在仅能静态高亮------------>
+            <prism-editor :code="sub_code.example" language="cpp"></prism-editor>
+          </template>
+        </FormItem>
+      </Form>
     </Modal>
 
     <!---------main living 部分------------->
@@ -561,6 +634,8 @@ export default{
       // MULTIPLE CHOICE PARAMETER
       split_multi: 0.5,
       split_multicheck: 0.5,
+      modal_viewmulti: false,
+      modal_editmulti: false,
       modal_multilist: false,
       // FRAMEWORK TO SHOW MULTI
       multiAll: [{title: 'Description', key: 'statement'},
@@ -568,7 +643,7 @@ export default{
           title: 'Action',
           key: 'action',
           fixed: 'right',
-          width: 120,
+          width: 180,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -578,6 +653,13 @@ export default{
                   click: () => { this.addMultiAll(params.index) }
                 }
               }, 'Add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.editMultiAll(params.index) }
+                }
+              }, 'Edit'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
@@ -652,8 +734,8 @@ export default{
       split_code: 0.5,
       modal_codelist: false,
       split_codecheck: 0.5,
-      modal_viewmulti: false,
       modal_viewcode: false,
+      modal_editcode: false,
       // FRAMEWORK TO SHOW CODE LIST
       codeAll: [
         {title: 'Title', key: 'title'},
@@ -661,7 +743,7 @@ export default{
           title: 'Action',
           key: 'action',
           fixed: 'right',
-          width: 120,
+          width: 180,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -671,6 +753,13 @@ export default{
                   click: () => { this.addCodeAll(params.index) }
                 }
               }, 'Add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.editCodeAll(params.index) }
+                }
+              }, 'Edit'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
@@ -1047,6 +1136,14 @@ export default{
         this.multiThisList = resp.data.multiThisList
       })
     },
+    // EDIT MULTI
+    editMultiAll (index) {
+      let iMulti = this.multiAllList[index]
+      // give value here
+      this.sub_multi = iMulti
+      // get multi_options
+      this.modal_editmulti = true
+    },
     // ADD MULTI TO CLASS
     addMultiAll (index) {
       let iMulti = this.multiAllList[index]
@@ -1163,6 +1260,12 @@ export default{
         this.codeAllList = resp.data.codeAllList
         this.codeThisList = resp.data.codeThisList
       })
+    },
+    // EDIT CODE ASSIGNMENT
+    editCodeAll (index) {
+      let iCode = this.codeAllList[index]
+      this.sub_code = iCode
+      this.modal_editcode = true
     },
     // ADD CODE TO CLASS
     addCodeAll (index) {
