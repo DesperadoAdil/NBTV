@@ -1,8 +1,5 @@
 <template>
-  <div class="tealivingmain">
-
-
-
+  <div id="living" class="tealivingmain">
     <div  id="mainlivingcard" class="cardtealiving11" :style="{display:CHAT.frametype === 'close'?'block':'none'}">
       <!--<div id="mainlivingcard" class="cardtealiving11" :style="{display:mainlivingcarddisplay?'block':'none'}">-->
       <div class="topveido">
@@ -454,6 +451,9 @@ export default{
 }
 </script>
 <style>
+  #living {
+    padding: 0 5%;
+  }
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   #chatingRoom2 {
     position:absolute;
