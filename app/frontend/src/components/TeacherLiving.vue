@@ -227,56 +227,27 @@
       @on-cancel="modal_viewmulti = false"
       width="900">
       <Card>
-        <Split class="teacher-live-split" style="height: 430px" v-model="split_codecheck">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_multicheck">
           <div slot="left"  class="teacher-live-split-pane">
+            <div style="position:relative; height:400px; overflow:auto">
             <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
               <FormItem label="Statement">
-                <Input type="textarea" v-model="sub_multi.statement" placeholder="Enter your Description"></Input>
+                {{sub_multi.statement}}
               </FormItem>
-              <!-- 以下为选项的动态添加删除  -->
               <FormItem
-                v-for="(item, index) in multi_options"
-                v-if="item.status"
+                v-for="(item, index) in sub_multi.optionList"
                 :key="index">
-                <Row>
-                  <Col span="18">
-                    <Input type="text" placeholder="Enter Your Choice" v-model="multi_options[index].value"></Input>
-                  </Col>
-                  <Col span="4" offset="1">
-                    <Button @click="multi_delChoice(index)">Delete</Button>
-                  </Col>
-                </Row>
-              </FormItem>
-              <FormItem>
-                <Row>
-                  <Col span="12">
-                    <Button type="dashed" long @click="multi_addChoice()" icon="md-add">Add Choice</Button>
-                  </Col>
-                </Row>
+                {{String.fromCharCode(65+index)+" : "+item}}
               </FormItem>
               <!-- 答案设置  -->
               <FormItem label="The Answer">
-                <Input v-model="sub_multi.answer" placeholder="a number"></Input>
+                {{sub_multi.answer}}
               </FormItem>
             </Form>
+            </div>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
-            <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
-              <!-- 以下为选项的动态添加删除  -->
-              <FormItem
-                v-for="(item, index) in multiAnswerList"
-                :key="index"
-                >
-                <Row>
-                  <Col span="18">
-                    <Input type="text" placeholder="Enter Your Choice" v-model="item.student"></Input>
-                  </Col>
-                  <Col span="4" offset="1">
-                    <Input type="text" placeholder="Enter Your Choice" v-model="item.answer"></Input>
-                  </Col>
-                </Row>
-              </FormItem>
-            </Form>
+            <Table height="420" stripe :columns="multiAnswer" :data="multiAnswerList"></Table>
           </div>
         </Split>
       </Card>
@@ -292,29 +263,100 @@
       <Card>
         <Split class="teacher-live-split" style="height: 430px" v-model="split_codecheck">
           <div slot="left"  class="teacher-live-split-pane">
-            <Form label-position="top" height="700">
-              <FormItem label="Text">
-                <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
-                <Input v-model="sub_code.statement"
-                       type="textarea" rows="4"
-                       placeholder="Enter Your Statement">
-                </Input>
-              </FormItem>
-              <FormItem label="Language">
-                <Input v-model="sub_code.language"
-                       placeholder="Enter Your Language">
-                </Input>
-              </FormItem>
-              <FormItem label="Example Code">
-                <pre v-highlightjs="sub_code.example"><code class="cpp"></code></pre>
-              </FormItem>
-            </Form>
+            <div style="position:relative; height:400px; overflow:auto">
+              <Form label-position="top">
+                <FormItem label="Text">
+                  {{sub_code.statement}}
+                </FormItem>
+                <FormItem label="Language">
+                  {{sub_code.language}}
+                </FormItem>
+                <FormItem label="Example Code">
+                  <pre v-highlightjs="sub_code.example" height="100"><code class="cpp"></code></pre>
+                </FormItem>
+              </Form>
+            </div>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
-            <Form></Form>
+            <div slot="right"  class="teacher-live-split-pane">
+              <div style="position:relative; height:400px; overflow:auto">
+                <Form :label-width="40">
+                  <FormItem
+                    v-for="(item, index) in codeAnswerList"
+                    :key="index"
+                    :label="item.student"
+                    >
+                    <pre v-highlightjs="item.answer" height="100"><code class="cpp"></code></pre>
+                  </FormItem>
+                </Form>
+              </div>
+            </div>
           </div>
         </Split>
       </Card>
+    </Modal>
+
+    <!--Edit 选择题--TODO: SUBMIT MULTI CHANGE-->
+    <Modal   v-model="modal_editmulti"    @on-ok="submitMultiChange()"    @on-cancel="modal_multi = false">
+      <p slot="header" style="font-size: 20px">
+        <span>修改选择题</span>
+      </p>
+      <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
+        <FormItem label="Statement">
+          <Input type="textarea" v-model="sub_multi.statement" placeholder="Enter your Description"></Input>
+        </FormItem>
+        <!-- 以下为选项的动态添加删除  -->
+        <FormItem
+          v-for="(item, index) in multi_options"
+          v-if="item.status"
+          :key="index">
+          <Row>
+            <Col span="18">
+              <Input type="text" placeholder="Enter Your Choice" v-model="multi_options[index].value"></Input>
+            </Col>
+            <Col span="4" offset="1">
+              <Button @click="multi_delChoice(index)">Delete</Button>
+            </Col>
+          </Row>
+        </FormItem>
+        <FormItem>
+          <Row>
+            <Col span="12">
+              <Button type="dashed" long @click="multi_addChoice()" icon="md-add">Add Choice</Button>
+            </Col>
+          </Row>
+        </FormItem>
+        <!-- 答案设置  -->
+        <FormItem label="The Answer">
+          <Input v-model="sub_multi.answer" placeholder="a number"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
+
+    <!--Edit 编程题--TODO: SUBMIT CODE CHANGE-->
+    <Modal   v-model="modal_editcode"    @on-ok="submitCodeChange()"    @on-cancel="modal_code = false">
+      <p slot="header" style="font-size: 20px">
+        <span>设置编程题</span>
+      </p>
+      <Form label-position="top">
+        <FormItem label="Text">
+          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
+          <Input v-model="sub_code.statement"
+                 type="textarea" rows="4"
+                 placeholder="Enter Your Statement">
+          </Input>
+        </FormItem>
+        <FormItem label="Language">
+          <Input v-model="sub_code.language" placeholder="Set the language"></Input>
+        </FormItem>
+        <FormItem label="Example Code">
+          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
+          <template>
+            <!-------------输入框的代码高亮还没好，现在仅能静态高亮------------>
+            <prism-editor :code="sub_code.example" language="cpp"></prism-editor>
+          </template>
+        </FormItem>
+      </Form>
     </Modal>
 
     <!---------main living 部分------------->
@@ -591,14 +633,17 @@ export default{
       // MULTI
       // MULTIPLE CHOICE PARAMETER
       split_multi: 0.5,
+      split_multicheck: 0.5,
+      modal_viewmulti: false,
+      modal_editmulti: false,
       modal_multilist: false,
       // FRAMEWORK TO SHOW MULTI
-      multiAll: [{title: 'Title', key: 'title'},
+      multiAll: [{title: 'Description', key: 'statement'},
         {
           title: 'Action',
           key: 'action',
           fixed: 'right',
-          width: 120,
+          width: 180,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -610,13 +655,20 @@ export default{
               }, 'Add'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.editMultiAll(params.index) }
+                }
+              }, 'Edit'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
                 on: {
                   click: () => { this.delMultiAll(params.index) }
                 }
               }, 'Del')])
           }
         }],
-      multiThis: [{title: 'Title', key: 'title'},
+      multiThis: [{title: 'Description', key: 'statement'},
         {
           title: 'Action',
           key: 'action',
@@ -649,26 +701,41 @@ export default{
       // MULTI LIST
       multiAllList: [
         {
-          title: 'choice 02',
-          ans: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+          uniqueId: '',
+          statement: 'Among the following people, who is the most gay one?',
+          optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+          answer: 'A'
+        },
+        {
+          uniqueId: '',
+          statement: 'What do you answer for "I don\'t know"?',
+          optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
           answer: 'A'
         }
       ],
       multiThisList: [{
-        title: 'choice 02',
-        ans: ['something', 'somewhere', 'somehow', 'somewhat'],
+        uniqueId: '',
+        statement: 'Among the following people, who is the most gay one?',
+        optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+        answer: 'A'
+      }, {
+        uniqueId: '',
+        statement: 'What do you answer for "I don\'t know"?',
+        optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
         answer: 'A'
       }],
       // MULTI STUDENT ANSWER LIST
+      multiAnswer: [{title: 'student', key: 'student'}, {title: 'answer', key: 'answer'}],
       multiAnswerList: [{student: 'xcj', answer: 'A'}, {student: 'adil', answer: 'not answered'}],
+      codeAnswer: [{title: 'student', key: 'student'}, {title: 'answer', key: 'answer'}],
       codeAnswerList: [{student: 'xcj', answer: '#include<iostream>'}, {student: 'adil', answer: 'not answered'}],
       // CODE
       // CODE PARAMETER
       split_code: 0.5,
       modal_codelist: false,
-      split_codecheck: 0.4,
-      modal_viewmulti: false,
+      split_codecheck: 0.5,
       modal_viewcode: false,
+      modal_editcode: false,
       // FRAMEWORK TO SHOW CODE LIST
       codeAll: [
         {title: 'Title', key: 'title'},
@@ -676,7 +743,7 @@ export default{
           title: 'Action',
           key: 'action',
           fixed: 'right',
-          width: 120,
+          width: 180,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -686,6 +753,13 @@ export default{
                   click: () => { this.addCodeAll(params.index) }
                 }
               }, 'Add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.editCodeAll(params.index) }
+                }
+              }, 'Edit'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
@@ -752,9 +826,9 @@ export default{
       multi_index: 1,
       sub_multi: {
         uniqueId: '',
-        statement: '',
-        optionList: [],
-        answer: '',
+        statement: 'We Are Going to test it.',
+        optionList: ['something', 'somewhere', 'someplace', 'sometime'],
+        answer: 'A',
         username: ''
       },
       // CODE
@@ -762,8 +836,8 @@ export default{
       sub_code: {
         uniqueId: '',
         username: '',
-        statement: '',
-        language: '',
+        statement: 'Print something in the console',
+        language: 'cpp',
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
       },
 
@@ -1062,6 +1136,14 @@ export default{
         this.multiThisList = resp.data.multiThisList
       })
     },
+    // EDIT MULTI
+    editMultiAll (index) {
+      let iMulti = this.multiAllList[index]
+      // give value here
+      this.sub_multi = iMulti
+      // get multi_options
+      this.modal_editmulti = true
+    },
     // ADD MULTI TO CLASS
     addMultiAll (index) {
       let iMulti = this.multiAllList[index]
@@ -1178,6 +1260,12 @@ export default{
         this.codeAllList = resp.data.codeAllList
         this.codeThisList = resp.data.codeThisList
       })
+    },
+    // EDIT CODE ASSIGNMENT
+    editCodeAll (index) {
+      let iCode = this.codeAllList[index]
+      this.sub_code = iCode
+      this.modal_editcode = true
     },
     // ADD CODE TO CLASS
     addCodeAll (index) {
