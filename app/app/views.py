@@ -28,7 +28,7 @@ def getImg(path):
     else:
         response.headers['Content-Type'] = 'image/png'
     return response
-	# return send_from_directory('/mnt/NBTV_Img', path, as_attachment=True)
+    # return send_from_directory('/mnt/NBTV_Img', path, as_attachment=True)
 
 
 @app.route('/', defaults={'path': ''})
