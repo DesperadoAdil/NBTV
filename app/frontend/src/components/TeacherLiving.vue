@@ -320,14 +320,14 @@
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              <button @click="CHAT.socket.emit('refresh', {'url':cururl})">获取最新用户列表</button>
-              <Dropdown @click.native="CHAT.list(userInfo.username, cururl)">
+              <Dropdown @click.native="CHAT.list(userInfo.username, cururl)" trigger="click">
                 <a href="javascript:void(0)">
                   聊天对象
                   <Icon type="ios-arrow-down"></Icon>
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)">{{ student }}</DropdownItem>
+                  <DropdownItem @click.native="CHAT.socket.emit('refresh', {'url':cururl})">刷新</DropdownItem>
+                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)" :key="student.username">{{ student }}</DropdownItem>
                   <DropdownItem divided @click.native="talkTo('all')">all</DropdownItem>
                 </DropdownMenu>
               </Dropdown>

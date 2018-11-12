@@ -228,11 +228,6 @@ export default {
 }
 </script>
 <style>
-ul {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
 .myLivingList-flex-container {
   padding: 0;
   margin: 0;
