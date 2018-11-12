@@ -14,11 +14,11 @@ def dispolay():
 
 
 #get pdf file
-@app.route('/pdf/<path>')
+@app.route('/pdf/<path:path>')
 def getPDF(path):
     return send_from_directory('/mnt/NBTV', path)
 
-@app.route('/img_class/<path>')
+@app.route('/img_class/<path:path>')
 def getImg(path):
 	print('get image: ', path)
 	image_data = open(os.path.join('/mnt/NBTV_Img', path), "rb").read()
