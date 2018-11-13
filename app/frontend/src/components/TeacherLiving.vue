@@ -967,6 +967,7 @@ export default{
   },
   methods: {
     updatepage(){
+      console.log("updatepage")
       this.curpage=document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value;
       console.log(this.curpage)
 
@@ -1147,7 +1148,7 @@ export default{
           console.log(this.classmain0)
           console.log(document.getElementById('rtmp-streamer1').class)
           // this.liaotianshiheight = 350 + 'px'
-          this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url+'?40'
+          this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
           this.curvideo = false
           this.modal_pdflist = false
           console.log('1321312')

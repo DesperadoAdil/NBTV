@@ -6765,11 +6765,15 @@ var pdfjsWebLibs;
    }
    function webViewerNextPage() {
     PDFViewerApplication.page++;
+    console.log("++")
     parent.methods.updatepage();
+    parent.updatepage();
    }
    function webViewerPreviousPage() {
     PDFViewerApplication.page--;
+    console.log("--")
     parent.methods.updatepage();
+    parent.updatepage();
    }
    function webViewerZoomIn() {
     PDFViewerApplication.zoomIn();
