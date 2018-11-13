@@ -170,14 +170,6 @@ export default {
   #myWatchingList {
     padding: 0 5%;
   }
-  ul {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  li {
-    list-style: none;
-  }
   .posi{
     position: absolute;
     top: 60px;
