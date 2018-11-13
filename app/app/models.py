@@ -1,16 +1,36 @@
 from app import db
 from datetime import datetime
 
+# 作为 教室和选择题资源 的中间表
+classroom_choice = db.Table('classroom_choice',
+            db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url'), primary_key=True),
+            db.Column('choice_id', db.String(100), db.ForeignKey('choicequestion.uniqueId'), primary_key=True)
+            )
+
+# 作为 教室和代码题资源的中间表
+classroom_code = db.Table('classroom_code',
+            db.Column('classroom_url', db.String(100), db.ForeignKey('classroom.url'), primary_key=True),
+            db.Column('code_id', db.String(100), db.ForeignKey('codequestion.uniqueId'), primary_key=True)
+            )
+
+# 作为 教室和pdf文件资源的中间表
+classroom_pdf = db.Table('classroom_pdf',
+            db.Column('classroom_pdf', db.String(100), db.ForeignKey('classroom.url'), primary_key=True),
+            db.Column('pdf_id', db.String(151), db.ForeignKey('pdffile.uniqueId'), primary_key=True)
+            )
+
+
 class Classrooms(db.Model):
     __tablename__ = 'classrooms'
     __table_args__ = {
         'mysql_charset':'utf8'
     }
-    # id = db.Column(db.Integer, primary_key=True,  unique=True, nullable=False)
+    
     vid = db.Column(db.Integer, unique=True, nullable=False)
     teacher = db.Column(db.String(50), db.ForeignKey('teachers.username'), nullable=False)
     title = db.Column(db.String(150), nullable=False)
     thumbnail = db.Column(db.String(100), nullable=False)
+    
     #直播间私密模式
     mode = db.Column(db.String(10), nullable=False, default="private")
 
@@ -25,15 +45,16 @@ class Classrooms(db.Model):
 
     studentlist = db.Column(db.Text, nullable=False, default = "[]")
     teacherlist = db.Column(db.Text, nullable=False, default = "[]")
-    #audiencelist = db.Column(db.Text, nullable=False, default = "[]")
-
-    filelist = db.Column(db.Text, nullable = False, default = "[]")
 
     visible = db.Column(db.String(5), nullable=False, default = "yes")
     createtime = db.Column(db.DateTime, default=datetime.now())
     #开播时间
     showtime = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
+
+    choice = db.relationship('ChoiceQuestion', secondary = classroom_choice, backref = db.backref('classroom'))
+    code = db.relationship('CodeQuestion', secondary = classroom_code, backref = db.backref('classroom'))
+    pdffile = db.relationship('PDFFile', secondary = classroom_pdf, backref = db.backref('classroom'))
     # choicequestion = db.relationship('ChoiceQuestion', backref='classrooms', lazy='dynamic')
     # codequestion = db.relationship('CodeQuestion', backref='classrooms', lazy='dynamic')
 
