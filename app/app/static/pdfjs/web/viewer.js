@@ -6765,16 +6765,16 @@ var pdfjsWebLibs;
    }
    function webViewerNextPage() {
     PDFViewerApplication.page++;
-    alert("++")
-    console.log("++")
-    parent.methods.updatepage();
-    parent.updatepage();
+    window.alert("++")
+    window.console.log("++")
+    window.parent.methods.updatepage();
+    window.parent.updatepage();
    }
    function webViewerPreviousPage() {
     PDFViewerApplication.page--;
-    console.log("--")
-    parent.methods.updatepage();
-    parent.updatepage();
+    window.console.log("--")
+    window.parent.methods.updatepage();
+    window.parent.updatepage();
    }
    function webViewerZoomIn() {
     PDFViewerApplication.zoomIn();
