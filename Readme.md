@@ -104,7 +104,7 @@ commit message都要符合这一个规范：
     - **url:** */api/resource/delete_pdf*
     - **description:** 用户删除pdf文件 //已有api，需要更改的是，不仅要从教师的文件列表中删除，还要从教室的文件列表中删除。返回两个更新后的列表
     - **input:** `{ username : '', url: '', pdf: {title: '', url: ''} }`
-    - **output:** `{pdfAllList: [...], pdfThisList: [...] }`
+    - **output:** `{status: 'success/fail'} // 弃用{pdfAllList: [...], pdfThisList: [...] }`
     - **frontend:** *Yuxuan*
     - **backend:** *Adil*
 
@@ -140,7 +140,7 @@ commit message都要符合这一个规范：
     - **url:** */api/resource/delete_mutiple*
     - **description:** 教师从全部资源中删除选择题
     - **input:** `{ username: '', url: '', multi: {/* 该选择题 */}}`
-    - **output:** `{ multiAllList: [ '{ uniqueId: '', statement : '', optionList : '[ '答案列表', ... ]', answer : '一个数字' }', ... ], multiThisList: [...]}` // 返回更新后的两个列表
+    - **output:** `{status: 'success/fail'} // 弃用{ multiAllList: [ '{ uniqueId: '', statement : '', optionList : '[ '答案列表', ... ]', answer : '一个数字' }', ... ], multiThisList: [...]}` // 返回更新后的两个列表
     - **frontend:** *Yuxuan*
     - **backend:** *???*
 
@@ -185,7 +185,7 @@ commit message都要符合这一个规范：
     - **url:** */api/resource/delete_code*
     - **description:** 教师从全部资源中删除代码题，同时删除教室中该资源
     - **input:** `{ username : '', url: ''， code: {}}`
-    - **output:** `{ codeAllList: [], codeThisList: [... ], }`  // 返回两个列表
+    - **output:** `{status: 'success/fail'} // 弃用{ codeAllList: [], codeThisList: [... ], }`  // 返回两个列表
     - **frontend:** *Yuxuan*
     - **backend:** *???*
 
