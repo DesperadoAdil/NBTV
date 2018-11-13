@@ -373,7 +373,7 @@
 
     <!---------main pdf 部分------------->
     <div id="mainpdfcard" class="cardtealivingpdf" :style="{display:mainpdfcarddisplay?'block':'none'}">
-      <iframe id="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
+      <iframe id="displayPdfIframe" name="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
 
     <!---------main 选择题 部分 在主界面显示选择题------------->
@@ -549,7 +549,7 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
-
+        curpage:'1',
       chatingtop:60+'px',
       chatinghei:710+'px',
       msgTypeInfo: '语音',
@@ -966,6 +966,23 @@ export default{
     PrismEditor
   },
   methods: {
+    updatepage(){
+      this.curpage=document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value;
+      console.log(this.curpage)
+
+      let date = new Date()
+      let time = date.getHours() + ':' + date.getMinutes()
+      let obj = {
+        type: 'page',
+        msgType: 'page',
+        url: this.cururl,
+        time: time,
+        msg: this.curpage,
+        toUser: 'stu',
+        fromUser: this.userInfo.username
+      }
+      CHAT.submit(obj)
+    },
     // ADD METHODS
     // PDF
     addPDF () {
@@ -1074,7 +1091,7 @@ export default{
       axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
-        this.pdfThisList = resp.data.pdfThisList
+  this.pdfThisList = resp.data.pdfThisList
       })
     },
     // ADD PDF TO CLASS
@@ -1088,7 +1105,7 @@ export default{
       // post
       axios.post('/api/resource/pdf_addclass', input).then((resp) => {
         // 接收返回的pdfThisList
-        this.pdfThisList = resp.data.pdfThisList
+       this.pdfThisList = resp.data.pdfThisList
       })
     },
     // DEL PDF FROM TEACHER
@@ -1102,7 +1119,7 @@ export default{
       // post
       axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
         this.pdfAllList = resp.data.pdfAllList
-        this.pdfThisList = resp.data.pdfThisList
+         this.pdfThisList = resp.data.pdfThisList
       })
     },
     // USE IT
@@ -1120,7 +1137,20 @@ export default{
           axios.post('/api/classroom/showpdfs', data).then((resp) => {
 
           })
-
+          console.log('1321312')
+          this.chatingtop = 330 + 'px'
+          this.chatinghei = 440 + 'px'
+          this.videohei = 260 + 'px'
+          this.mainselectcarddisplay = false
+          this.mainpdfcarddisplay = true
+          this.classmain0 = false
+          console.log(this.classmain0)
+          console.log(document.getElementById('rtmp-streamer1').class)
+          // this.liaotianshiheight = 350 + 'px'
+          this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url+'?40'
+          this.curvideo = false
+          this.modal_pdflist = false
+          console.log('1321312')
           let date = new Date()
           let time = date.getHours() + ':' + date.getMinutes()
           let obj = {
@@ -1134,20 +1164,7 @@ export default{
           }
           CHAT.submit(obj)
 
-          console.log('1321312')
-          this.chatingtop = 330 + 'px'
-          this.chatinghei = 440 + 'px'
-          this.videohei = 260 + 'px'
-          this.mainselectcarddisplay = false
-          this.mainpdfcarddisplay = true
-          this.classmain0 = false
-          console.log(this.classmain0)
-          console.log(document.getElementById('rtmp-streamer1').class)
-          // this.liaotianshiheight = 350 + 'px'
-          this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
-          this.curvideo = false
-          this.modal_pdflist = false
-          console.log('1321312')
+
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -1164,7 +1181,7 @@ export default{
       input.pdf = iPdf
       // post
       axios.post('/api/resource/pdf_delclass', input).then((resp) => {
-        this.pdfThisList = resp.data.pdfThisList
+          this.pdfThisList = resp.data.pdfThisList
       })
     },
 
