@@ -21,8 +21,8 @@
             添加
           </template>
           <MenuItem @click.native="modal_pdf = true">PDF</MenuItem>
-          <MenuItem @click.native="modal_multi = true">Choice</MenuItem>
-          <MenuItem @click.native="modal_code = true">Code</MenuItem>
+          <MenuItem @click.native="create_multi()">Choice</MenuItem>
+          <MenuItem @click.native="create_code()">Code</MenuItem>
         </Submenu>
         <!-- 添加 -->
 
@@ -62,7 +62,7 @@
       @on-ok="modal_pdflist = false" @on-cancel="modal_pdflist = false"
     >
       <Card>
-        <Split class="teacher-live-split" v-model="split_pdf">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_pdf">
           <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
@@ -82,7 +82,7 @@
       v-model="modal_multilist" width="900"
       @on-ok="modal_multilist = false" @on-cancel="modal_multilist = false">
       <Card>
-        <Split class="teacher-live-split" v-model="split_multi">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_multi">
           <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
@@ -105,7 +105,7 @@
       width="900"
     >
       <Card>
-        <Split class="teacher-live-split" v-model="split_code">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_code">
           <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
@@ -227,13 +227,26 @@
       @on-cancel="modal_viewmulti = false"
       width="900">
       <Card>
-        <Split class="teacher-live-split" v-model="split_codecheck">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_multicheck">
           <div slot="left"  class="teacher-live-split-pane">
-            <Form label-position="top">
+            <div style="position:relative; height:400px; overflow:auto">
+            <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
+              <FormItem label="Statement">
+                {{sub_multi.statement}}
+              </FormItem>
+              <FormItem
+                v-for="(item, index) in sub_multi.optionList"
+                :key="index">
+                {{String.fromCharCode(65+index)+" : "+item}}
+              </FormItem>
+              <FormItem label="The Answer">
+                {{sub_multi.answer}}
+              </FormItem>
             </Form>
+            </div>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
-            <Form></Form>
+            <Table height="420" stripe :columns="multiAnswer" :data="multiAnswerList"></Table>
           </div>
         </Split>
       </Card>
@@ -247,31 +260,101 @@
       width="900"
     >
       <Card>
-        <Split class="teacher-live-split" v-model="split_codecheck">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_codecheck">
           <div slot="left"  class="teacher-live-split-pane">
-            <Form label-position="top" height="700">
-              <FormItem label="Text">
-                <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
-                <Input v-model="sub_code.statement"
-                       type="textarea" rows="4"
-                       placeholder="Enter Your Statement">
-                </Input>
-              </FormItem>
-              <FormItem label="Language">
-                <Input v-model="sub_code.language"
-                       placeholder="Enter Your Language">
-                </Input>
-              </FormItem>
-              <FormItem label="Example Code">
-                <pre v-highlightjs="sub_code.example"><code class="cpp"></code></pre>
-              </FormItem>
-            </Form>
+            <div style="position:relative; height:400px; overflow:auto">
+              <Form label-position="top">
+                <FormItem label="Text">
+                  {{sub_code.statement}}
+                </FormItem>
+                <FormItem label="Language">
+                  {{sub_code.language}}
+                </FormItem>
+                <FormItem label="Example Code">
+                  <pre v-highlightjs="sub_code.example" height="100"><code class="cpp"></code></pre>
+                </FormItem>
+              </Form>
+            </div>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
-            <Form></Form>
+            <div slot="right"  class="teacher-live-split-pane">
+              <div style="position:relative; height:400px; overflow:auto">
+                <Form :label-width="40">
+                  <FormItem
+                    v-for="(item, index) in codeAnswerList"
+                    :key="index"
+                    :label="item.student"
+                    >
+                    <pre v-highlightjs="item.answer" height="100"><code class="cpp"></code></pre>
+                  </FormItem>
+                </Form>
+              </div>
+            </div>
           </div>
         </Split>
       </Card>
+    </Modal>
+
+    <!--Edit 选择题--TODO: SUBMIT MULTI CHANGE-->
+    <Modal   v-model="modal_editmulti"    @on-ok="submitMultiChange()"    @on-cancel="modal_editmulti = false">
+      <p slot="header" style="font-size: 20px">
+        <span>修改选择题</span>
+      </p>
+      <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
+        <FormItem label="Statement">
+          <Input type="textarea" v-model="sub_multi.statement" placeholder="Enter your Description"></Input>
+        </FormItem>
+        <!-- 以下为选项的动态添加删除  -->
+        <FormItem
+          v-for="(item, index) in multi_options"
+          v-if="item.status"
+          :key="index">
+          <Row>
+            <Col span="18">
+              <Input type="text" placeholder="Enter Your Choice" v-model="multi_options[index].value"></Input>
+            </Col>
+            <Col span="4" offset="1">
+              <Button @click="multi_delChoice(index)">Delete</Button>
+            </Col>
+          </Row>
+        </FormItem>
+        <FormItem>
+          <Row>
+            <Col span="12">
+              <Button type="dashed" long @click="multi_addChoice()" icon="md-add">Add Choice</Button>
+            </Col>
+          </Row>
+        </FormItem>
+        <!-- 答案设置  -->
+        <FormItem label="The Answer">
+          <Input v-model="sub_multi.answer" placeholder="a number"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
+
+    <!--Edit 编程题--TODO: SUBMIT CODE CHANGE-->
+    <Modal   v-model="modal_editcode"    @on-ok="submitCodeChange()"    @on-cancel="modal_editcode = false">
+      <p slot="header" style="font-size: 20px">
+        <span>设置编程题</span>
+      </p>
+      <Form label-position="top">
+        <FormItem label="Text">
+          <Input v-model="sub_code.statement"
+                 type="textarea" rows="4"
+                 placeholder="Enter Your Statement">
+          </Input>
+        </FormItem>
+        <FormItem label="Language">
+          <Input v-model="sub_code.language" placeholder="Set the language"></Input>
+        </FormItem>
+        <FormItem label="Example Code">
+          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
+          <template>
+            <!-------------输入框的代码高亮还没好，现在仅能静态高亮------------>
+            <prism-editor :code="sub_code.example" language="cpp"></prism-editor>
+          </template>
+        </FormItem>
+      </Form>
     </Modal>
 
     <!---------main living 部分------------->
@@ -548,9 +631,12 @@ export default{
       // MULTI
       // MULTIPLE CHOICE PARAMETER
       split_multi: 0.5,
+      split_multicheck: 0.5,
+      modal_viewmulti: false,
+      modal_editmulti: false,
       modal_multilist: false,
       // FRAMEWORK TO SHOW MULTI
-      multiAll: [{title: 'Title', key: 'title'},
+      multiAll: [{title: 'Description', key: 'statement'},
         {
           title: 'Action',
           key: 'action',
@@ -567,13 +653,20 @@ export default{
               }, 'Add'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.editMultiAll(params.index) }
+                }
+              }, 'Edit'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
                 on: {
                   click: () => { this.delMultiAll(params.index) }
                 }
               }, 'Del')])
           }
         }],
-      multiThis: [{title: 'Title', key: 'title'},
+      multiThis: [{title: 'Description', key: 'statement'},
         {
           title: 'Action',
           key: 'action',
@@ -606,29 +699,44 @@ export default{
       // MULTI LIST
       multiAllList: [
         {
-          title: 'choice 02',
-          ans: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+          uniqueId: '',
+          statement: 'Among the following people, who is the most gay one?',
+          optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+          answer: 'A'
+        },
+        {
+          uniqueId: '',
+          statement: 'What do you answer for "I don\'t know"?',
+          optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
           answer: 'A'
         }
       ],
       multiThisList: [{
-        title: 'choice 02',
-        ans: ['something', 'somewhere', 'somehow', 'somewhat'],
+        uniqueId: '',
+        statement: 'Among the following people, who is the most gay one?',
+        optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+        answer: 'A'
+      }, {
+        uniqueId: '',
+        statement: 'What do you answer for "I don\'t know"?',
+        optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
         answer: 'A'
       }],
       // MULTI STUDENT ANSWER LIST
+      multiAnswer: [{title: 'student', key: 'student'}, {title: 'answer', key: 'answer'}],
       multiAnswerList: [{student: 'xcj', answer: 'A'}, {student: 'adil', answer: 'not answered'}],
+      codeAnswer: [{title: 'student', key: 'student'}, {title: 'answer', key: 'answer'}],
       codeAnswerList: [{student: 'xcj', answer: '#include<iostream>'}, {student: 'adil', answer: 'not answered'}],
       // CODE
       // CODE PARAMETER
       split_code: 0.5,
       modal_codelist: false,
-      split_codecheck: 0.4,
-      modal_viewmulti: false,
+      split_codecheck: 0.5,
       modal_viewcode: false,
+      modal_editcode: false,
       // FRAMEWORK TO SHOW CODE LIST
       codeAll: [
-        {title: 'Title', key: 'title'},
+        {title: 'Statement', key: 'statement'},
         {
           title: 'Action',
           key: 'action',
@@ -645,13 +753,20 @@ export default{
               }, 'Add'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.editCodeAll(params.index) }
+                }
+              }, 'Edit'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
                 on: {
                   click: () => { this.delCodeAll(params.index) }
                 }
               }, 'Del')])
           }
         }],
-      codeThis: [{title: 'Title', key: 'title'},
+      codeThis: [{title: 'Statement', key: 'statement'},
         {
           title: 'Action',
           key: 'action',
@@ -684,14 +799,23 @@ export default{
       // CODE LIST
       codeAllList: [
         {
-          title: 'Eight Queens'
+          uniqueId: '',
+          statement: 'Eight Queens',
+          language: 'python',
+          example: 'null'
         },
         {
-          title: 'B-Tree'
+          uniqueId: '',
+          statement: 'B-Tree',
+          language: 'cpp',
+          example: 'cout << "hello world" << endl;'
         }
       ],
       codeThisList: [{
-        title: 'B-Tree'
+        uniqueId: '',
+        statement: 'B-Tree',
+        language: 'cpp',
+        example: 'cout << "hello world" << endl;'
       }],
 
       // ADD PDF/MULTI/CODE MODALS
@@ -705,20 +829,22 @@ export default{
           index: 1,
           status: 1
         }
-      ], // INIT AS SO AND DON'T CHANGE IT
+      ], //
       multi_index: 1,
       sub_multi: {
-        statement: '',
-        optionList: [],
-        answer: '',
+        uniqueId: '',
+        statement: 'We Are Going to test it.',
+        optionList: ['something', 'somewhere', 'someplace', 'sometime'],
+        answer: 'A',
         username: ''
       },
       // CODE
       modal_code: false,
       sub_code: {
+        uniqueId: '',
         username: '',
-        statement: '',
-        language: '',
+        statement: 'Print something in the console',
+        language: 'cpp',
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
       },
 
@@ -848,11 +974,17 @@ export default{
     multi_delChoice (i) {
       this.multi_options[i].status = 0
     },
+    create_multi () {
+      this.sub_multi.statement = ''
+      this.sub_multi.optionList.splice(0, this.sub_multi.optionList.length)
+      this.sub_multi.answer = ''
+      this.modal_multi = true
+    },
     addMulti () {
       // send sub_multi should be set by now
       this.sub_multi.username = this.userInfo.username
       // 将multi_option这个列表改成可发送的数组
-      for (var i = 0; i < this.multi_index; i++) {
+      for (let i = 0; i < this.multi_index; i++) {
         if (this.multi_options[i].status === 1) {
           this.sub_multi.optionList.push(this.multi_options[i].value)
         }
@@ -861,7 +993,7 @@ export default{
       // console.log(this.sub_multi.statement)
       // console.log(this.sub_multi.optionList)
       // post
-      axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
+      axios.post('/api/resource/update_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
@@ -874,6 +1006,12 @@ export default{
       })
     },
     // CODE
+    create_code () {
+      this.sub_code.statement = ''
+      this.sub_code.example = ''
+      this.sub_code.language = ''
+      this.modal_multi = true
+    },
     addCode () {
       // sub_code should be set by now
       this.sub_code.username = this.userInfo.username
@@ -894,6 +1032,8 @@ export default{
         }
       })
     },
+
+    // EDIT METHODS
 
     // LIST METHODS
     // PDF
@@ -939,7 +1079,7 @@ export default{
         this.pdfThisList = resp.data.pdfThisList
       })
     },
-    // USE IT TODO
+    // USE IT
     usePdf (index) {
       let ipdf = this.pdfThisList[index]
       this.$Modal.confirm({
@@ -969,8 +1109,8 @@ export default{
           CHAT.submit(obj)
 
           console.log('1321312')
-          this.chatingtop=330+'px'
-            this.chatinghei=440+'px'
+          this.chatingtop = 330 + 'px'
+          this.chatinghei = 440 + 'px'
           this.videohei = 260 + 'px'
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
@@ -1011,10 +1151,54 @@ export default{
       input.username = this.userInfo.username
       input.url = this.cururl
       // post
-      axios.post('/api/resource/getmutiples', input).then((resp) => {
+      axios.post('/api/resource/getmultiples', input).then((resp) => {
         // resp.data 即是那个列表
         this.multiAllList = resp.data.multiAllList
         this.multiThisList = resp.data.multiThisList
+      })
+    },
+    // EDIT MULTI
+    editMultiAll (index) {
+      let iMulti = this.multiAllList[index]
+      // give value here
+      this.sub_multi.statement = iMulti.statement
+      this.sub_multi.uniqueId = iMulti.uniqueId
+      this.sub_multi.answer = iMulti.answer
+      // multi options
+      this.multi_options.splice(0, this.multi_options.length)
+      // multi_options: [{value: '',index: 1,status: 1}],
+      for (let i = 0; i < iMulti.optionList.length; i++) {
+        let k = {value: '', index: i + 1, status: 1}
+        k.value = iMulti.optionList[i]
+        this.multi_options.push(k)
+      }
+      // get multi_options
+      this.modal_editmulti = true
+    },
+    // MULTI
+    submitMultiChange () {
+      // send sub_multi should be set by now
+      this.sub_multi.username = this.userInfo.username
+      // 将multi_option这个列表改成可发送的数组
+      for (let i = 0; i < this.multi_index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
+      // test
+      // console.log(this.sub_multi.statement)
+      // console.log(this.sub_multi.optionList)
+      // post
+      axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 维护选择题列表,此处尚无
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('Edit failed')
+        }
       })
     },
     // ADD MULTI TO CLASS
@@ -1044,7 +1228,7 @@ export default{
         this.multiThisList = resp.data.multiThisList
       })
     },
-    // USE IT TODO
+    // USE IT
     useMulti (index) {
       let iselect = this.multiThisList[index]
       this.$Modal.confirm({
@@ -1060,9 +1244,9 @@ export default{
 
           })
 
-          var date = new Date()
-          var time = date.getHours() + ':' + date.getMinutes()
-          var obj = {
+          let date = new Date()
+          let time = date.getHours() + ':' + date.getMinutes()
+          let obj = {
             type: 'select',
             msgType: 'select',
             url: this.cururl,
@@ -1074,8 +1258,8 @@ export default{
           CHAT.submit(obj)
 
           this.videohei = 260 + 'px'
-          this.chatingtop=330+'px'
-          this.chatinghei=440+'px'
+          this.chatingtop = 330 + 'px'
+          this.chatinghei = 440 + 'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
@@ -1102,6 +1286,7 @@ export default{
       axios.post('/api/resource/multi_viewclass', input).then((resp) => {
         this.multiAnswerList = resp.data.multiAnswerList
       })
+      this.sub_multi = iMulti
       this.modal_viewmulti = true
     },
     // DEL MULTI FROM CLASS
@@ -1133,6 +1318,37 @@ export default{
         this.codeThisList = resp.data.codeThisList
       })
     },
+    // EDIT CODE ASSIGNMENT
+    editCodeAll (index) {
+      let iCode = this.codeAllList[index]
+      this.sub_code.language = iCode.language
+      this.sub_code.example = iCode.example
+      this.sub_code.statement = iCode.statement
+      this.sub_code.uniqueId = iCode.uniqueId
+      this.sub_code.username = this.userInfo.username
+      this.modal_editcode = true
+    },
+    // CODE
+    submitCodeChange () {
+      // sub_code should be set by now
+      this.sub_code.username = this.userInfo.username
+      // test
+      console.log(this.sub_code.username)
+      console.log(this.sub_code.language)
+      console.log(this.sub_code.statement)
+      // post
+      axios.post('/api/resource/update_code', this.sub_code).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 不用维护列表啦，该用再用
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('添加代码题失败')
+        }
+      })
+    },
     // ADD CODE TO CLASS
     addCodeAll (index) {
       let iCode = this.codeAllList[index]
@@ -1160,7 +1376,7 @@ export default{
         this.codeThisList = resp.data.codeThisList
       })
     },
-    // USE IT TODO
+    // USE IT
     useCode (index) {
       let iCode = this.codeThisList[index]
       iCode.statement = ''
