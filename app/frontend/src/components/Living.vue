@@ -238,6 +238,8 @@ export default{
      */
 
     CHAT.message(this.userInfo.username)
+    CHAT.beenShutUp(this.userInfo.username)
+    CHAT.beenKickOut(this.userInfo.username)
     /**
      * 以上为聊天室使用，请勿改动
      */
