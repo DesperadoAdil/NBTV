@@ -9,13 +9,13 @@ classroom_choice = db.Table('classroom_choice',
 
 # 作为 教室和代码题资源的中间表
 classroom_code = db.Table('classroom_code',
-            db.Column('classroom_url', db.String(100), db.ForeignKey('classroom.url'), primary_key=True),
+            db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url'), primary_key=True),
             db.Column('code_id', db.String(100), db.ForeignKey('codequestion.uniqueId'), primary_key=True)
             )
 
 # 作为 教室和pdf文件资源的中间表
 classroom_pdf = db.Table('classroom_pdf',
-            db.Column('classroom_pdf', db.String(100), db.ForeignKey('classroom.url'), primary_key=True),
+            db.Column('classroom_pdf', db.String(100), db.ForeignKey('classrooms.url'), primary_key=True),
             db.Column('pdf_id', db.String(151), db.ForeignKey('pdffile.uniqueId'), primary_key=True)
             )
 
