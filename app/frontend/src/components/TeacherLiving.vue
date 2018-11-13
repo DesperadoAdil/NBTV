@@ -1048,7 +1048,7 @@ export default{
       axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
-        this.pdfThisList = resp.data.pdfThisList
+  // zsh xiugai this.pdfThisList = resp.data.pdfThisList
       })
     },
     // ADD PDF TO CLASS
@@ -1062,7 +1062,7 @@ export default{
       // post
       axios.post('/api/resource/pdf_addclass', input).then((resp) => {
         // 接收返回的pdfThisList
-        this.pdfThisList = resp.data.pdfThisList
+        // zsh xiugai this.pdfThisList = resp.data.pdfThisList
       })
     },
     // DEL PDF FROM TEACHER
@@ -1076,7 +1076,7 @@ export default{
       // post
       axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
         this.pdfAllList = resp.data.pdfAllList
-        this.pdfThisList = resp.data.pdfThisList
+        // zsh xiugai this.pdfThisList = resp.data.pdfThisList
       })
     },
     // USE IT
@@ -1094,20 +1094,6 @@ export default{
           axios.post('/api/classroom/showpdfs', data).then((resp) => {
 
           })
-
-          let date = new Date()
-          let time = date.getHours() + ':' + date.getMinutes()
-          let obj = {
-            type: 'pdf',
-            msgType: 'pdf',
-            url: this.cururl,
-            time: time,
-            msg: ipdf.url,
-            toUser: 'stu',
-            fromUser: this.userInfo.username
-          }
-          CHAT.submit(obj)
-
           console.log('1321312')
           this.chatingtop = 330 + 'px'
           this.chatinghei = 440 + 'px'
@@ -1122,6 +1108,20 @@ export default{
           this.curvideo = false
           this.modal_pdflist = false
           console.log('1321312')
+          let date = new Date()
+          let time = date.getHours() + ':' + date.getMinutes()
+          let obj = {
+            type: 'pdf',
+            msgType: 'pdf',
+            url: this.cururl,
+            time: time,
+            msg: ipdf.url,
+            toUser: 'stu',
+            fromUser: this.userInfo.username
+          }
+          CHAT.submit(obj)
+
+
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -1138,7 +1138,7 @@ export default{
       input.pdf = iPdf
       // post
       axios.post('/api/resource/pdf_delclass', input).then((resp) => {
-        this.pdfThisList = resp.data.pdfThisList
+        // zsh xiugai  this.pdfThisList = resp.data.pdfThisList
       })
     },
 
