@@ -95,8 +95,8 @@ def shutup(data):
 
 	classroom = Classrooms.query.filter_by(url = url).first()
 	shutuplist = json.loads(classroom.shutuplist)
-    if username not in shutuplist:
-        shutuplist.append(username)
+	if username not in shutuplist:
+		shutuplist.append(username)
 	classroom.shutuplist = json.dumps(shutuplist)
 	db.session.add(classroom)
 	db.session.commit()
