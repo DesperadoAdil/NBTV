@@ -1,4 +1,5 @@
 import io from 'socket.io-client'
+import router from './router'
 const CHAT = {
   msgObj: document.getElementsByClassName('body-wrapper')[0],
   username: null,
@@ -18,9 +19,26 @@ const CHAT = {
   submit: function (obj) {
     this.socket.emit('sendMsg', obj)
   },
+  shutUp: function (obj) {
+    this.socket.emit('shutup', obj)
+  },
+  blackList: function (obj) {
+    this.socket.emit('blacklist', obj)
+  },
   list: function (username, url) {
     console.log('list')
     this.socket.emit('list', {'username': username, 'url': url})
+  },
+  beenShutUp: function (username) {
+    this.socket.on('shutup', function (obj) {
+      this.$Message.warning('您已被禁言')
+    })
+  },
+  beenKickOut: function (username) {
+    this.socket.on('blacklist', function (obj) {
+      router.push('/list')
+      this.$Message.warning('您已被永久踢出房间')
+    })
   },
   message: function (username) {
     console.log('message')

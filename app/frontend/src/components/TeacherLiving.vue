@@ -417,6 +417,7 @@
               {{ username }}
             </div>
           </div>
+
           <div class="content">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
               <div v-if="CHAT.msgArr[index].toUser === username && username !== userInfo.username">
@@ -436,9 +437,18 @@
                     <div v-else></div>
                   </div>
                 </div>
+
                 <div class="talk-space user-talk" v-else>
                   <div class="talk-content">
-                    <div class="talk-user-name">{{ msgObj.fromUser }}</div>
+                    <Poptip v-if="msgObj.fromUser !== '[系统]'" trigger="hover" content="content" placement="right-start">
+                      <div class="talk-user-name">{{ msgObj.fromUser }}</div>
+                      <div class="api" slot="content">
+                        <Button type="warning">禁言</Button>
+                        <Button type="error">踢出</Button>
+                      </div>
+                    </Poptip>
+                    <div v-else class="talk-user-name">{{ msgObj.fromUser }}</div>
+
                     <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
                     <div v-else></div>
                     <div v-if="msgObj.msgType === 'audio'">
@@ -452,14 +462,29 @@
                   </div>
                 </div>
               </div>
+
               <div v-else-if="CHAT.msgArr[index].toUser === userInfo.username && username !== userInfo.username">
                 <div  class="talk-space user-talk">
                   <div class="talk-content">
                     <div v-if="username === 'all'">
-                      <div class="talk-user-name">[私信]：{{ msgObj.fromUser }}</div>
+                      <Poptip v-if="msgObj.fromUser !== '[系统]'" trigger="hover" content="content" placement="right-start">
+                        <div class="talk-user-name">[私信]：{{ msgObj.fromUser }}</div>
+                        <div class="api" slot="content">
+                          <Button type="warning" @click="shutUp(msgObj)">禁言</Button>
+                          <Button type="error" @click="blackList(msgObj)">踢出</Button>
+                        </div>
+                      </Poptip>
+                      <div v-else class="talk-user-name">[私信]：{{ msgObj.fromUser }}</div>
                     </div>
                     <div v-else-if="CHAT.msgArr[index].fromUser === username">
-                      <div class="talk-user-name">{{ msgObj.fromUser }}</div>
+                      <Poptip v-if="msgObj.fromUser !== '[系统]'" trigger="hover" content="content" placement="right-start">
+                        <div class="talk-user-name">{{ msgObj.fromUser }}</div>
+                        <div class="api" slot="content">
+                          <Button type="warning" @click="shutUp(msgObj)">禁言</Button>
+                          <Button type="error" @click="blackList(msgObj)">踢出</Button>
+                        </div>
+                      </Poptip>
+                      <div v-else class="talk-user-name">{{ msgObj.fromUser }}</div>
                     </div>
                     <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
                     <div v-else></div>
@@ -903,6 +928,7 @@ export default{
      * 以下为聊天室使用，请勿改动
      */
     CHAT.message(this.userInfo.username)
+
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -1524,6 +1550,22 @@ export default{
         this.msg = ''
         this.talkType = 'broadcast'
       }
+    },
+    shutUp (m) {
+      var obj = {
+        url: this.cururl,
+        toUser: m.fromUser,
+        fromUser: this.userInfo.username
+      }
+      CHAT.shutUp(obj)
+    },
+    blackList (m) {
+      var obj = {
+        url: this.cururl,
+        toUser: m.fromUser,
+        fromUser: this.userInfo.username
+      }
+      CHAT.blackList(obj)
     },
     /**
      * 以上为聊天室使用，请勿改动
