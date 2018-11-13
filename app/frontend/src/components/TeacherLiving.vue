@@ -21,8 +21,8 @@
             添加
           </template>
           <MenuItem @click.native="modal_pdf = true">PDF</MenuItem>
-          <MenuItem @click.native="modal_multi = true">Choice</MenuItem>
-          <MenuItem @click.native="modal_code = true">Code</MenuItem>
+          <MenuItem @click.native="create_multi()">Choice</MenuItem>
+          <MenuItem @click.native="create_code()">Code</MenuItem>
         </Submenu>
         <!-- 添加 -->
 
@@ -974,11 +974,17 @@ export default{
     multi_delChoice (i) {
       this.multi_options[i].status = 0
     },
+    create_multi () {
+      this.sub_multi.statement = ''
+      this.sub_multi.optionList.splice(0, this.sub_multi.optionList.length)
+      this.sub_multi.answer = ''
+      this.modal_multi = true
+    },
     addMulti () {
       // send sub_multi should be set by now
       this.sub_multi.username = this.userInfo.username
       // 将multi_option这个列表改成可发送的数组
-      for (var i = 0; i < this.multi_index; i++) {
+      for (let i = 0; i < this.multi_index; i++) {
         if (this.multi_options[i].status === 1) {
           this.sub_multi.optionList.push(this.multi_options[i].value)
         }
@@ -1000,6 +1006,12 @@ export default{
       })
     },
     // CODE
+    create_code () {
+      this.sub_code.statement = ''
+      this.sub_code.example = ''
+      this.sub_code.language = ''
+      this.modal_multi = true
+    },
     addCode () {
       // sub_code should be set by now
       this.sub_code.username = this.userInfo.username
