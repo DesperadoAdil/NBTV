@@ -1079,7 +1079,7 @@ export default{
         this.pdfThisList = resp.data.pdfThisList
       })
     },
-    // USE IT TODO
+    // USE IT
     usePdf (index) {
       let ipdf = this.pdfThisList[index]
       this.$Modal.confirm({
@@ -1228,7 +1228,7 @@ export default{
         this.multiThisList = resp.data.multiThisList
       })
     },
-    // USE IT TODO
+    // USE IT
     useMulti (index) {
       let iselect = this.multiThisList[index]
       this.$Modal.confirm({
@@ -1244,9 +1244,9 @@ export default{
 
           })
 
-          var date = new Date()
-          var time = date.getHours() + ':' + date.getMinutes()
-          var obj = {
+          let date = new Date()
+          let time = date.getHours() + ':' + date.getMinutes()
+          let obj = {
             type: 'select',
             msgType: 'select',
             url: this.cururl,
@@ -1376,7 +1376,7 @@ export default{
         this.codeThisList = resp.data.codeThisList
       })
     },
-    // USE IT TODO
+    // USE IT
     useCode (index) {
       let iCode = this.codeThisList[index]
       iCode.statement = ''
