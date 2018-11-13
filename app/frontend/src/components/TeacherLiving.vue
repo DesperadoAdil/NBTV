@@ -373,7 +373,7 @@
 
     <!---------main pdf 部分------------->
     <div id="mainpdfcard" class="cardtealivingpdf" :style="{display:mainpdfcarddisplay?'block':'none'}">
-      <iframe id="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
+      <iframe id="displayPdfIframe" name="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
 
     <!---------main 选择题 部分 在主界面显示选择题------------->
@@ -524,7 +524,7 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
-
+        curpage:'1',
       chatingtop:60+'px',
       chatinghei:710+'px',
       msgTypeInfo: '语音',
@@ -940,6 +940,23 @@ export default{
     PrismEditor
   },
   methods: {
+    updatepage(){
+      this.curpage=document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value;
+      console.log(this.curpage)
+
+      let date = new Date()
+      let time = date.getHours() + ':' + date.getMinutes()
+      let obj = {
+        type: 'page',
+        msgType: 'page',
+        url: this.cururl,
+        time: time,
+        msg: this.curpage,
+        toUser: 'stu',
+        fromUser: this.userInfo.username
+      }
+      CHAT.submit(obj)
+    },
     // ADD METHODS
     // PDF
     addPDF () {

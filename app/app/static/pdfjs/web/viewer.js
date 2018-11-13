@@ -5453,6 +5453,7 @@ var pdfjsWebLibs;
        source: this,
        location: this._location
       });
+      parent.methods.updatepage();
      },
      containsElement: function (element) {
       return this.container.contains(element);
@@ -6764,9 +6765,11 @@ var pdfjsWebLibs;
    }
    function webViewerNextPage() {
     PDFViewerApplication.page++;
+    parent.methods.updatepage();
    }
    function webViewerPreviousPage() {
     PDFViewerApplication.page--;
+    parent.methods.updatepage();
    }
    function webViewerZoomIn() {
     PDFViewerApplication.zoomIn();

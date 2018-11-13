@@ -39,29 +39,33 @@ See https://github.com/adobe-type-tools/cmap-resources
 <link rel="resource" type="application/l10n" href="locale/locale.properties">
 <script src="l10n.js"></script>
 <script src="../build/pdf.js"></script>
+
 <script>
 window.onload = function() {
   setInterval(function() {
       var sHref = location.search
-       //alert(sHref)
+       alert(sHref)
       url = sHref.split("?")[2];
-       //alert(url)             
+       alert(url)             
       var ddd=document.getElementById("pageNumber").value;
-       //alert(ddd)      
+       alert(ddd)      
       if(url!==undefined&&url!==ddd)
       {
-        // alert("diff")
+         alert("diff")
         document.getElementById("pageNumber").value=url;
       }else if(url!==undefined&&url===ddd){
-         //alert("same")
+         alert("same")
       }             
       
     }, 1000);
 }
+alert("das")
+this.PDFViewer_update()
+alert("das")
 </script>
+<script src="viewer.js"></script>
 
-
-    <script src="viewer.js"></script>
+   
 
   </head>
 
