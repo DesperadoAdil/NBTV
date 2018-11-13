@@ -35,6 +35,8 @@ class Classrooms(db.Model):
     showtime = db.Column(db.DateTime, nullable=False, default=datetime.now())
     #黑名单
     blacklist = db.Column(db.Text, nullable = False, default = "[]")
+    #禁言名单
+    shutuplist = db.Column(db.Text, nullable = False, default = "[]")
 
     # choicequestion = db.relationship('ChoiceQuestion', backref='classrooms', lazy='dynamic')
     # codequestion = db.relationship('CodeQuestion', backref='classrooms', lazy='dynamic')
