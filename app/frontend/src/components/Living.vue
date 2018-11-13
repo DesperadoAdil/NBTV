@@ -24,7 +24,7 @@
 
     <!--<div id="mainpdfcard" class="cardtealivingpdf11" :style="{display:mainpdfcarddisplay?'block':'none'}">-->
     <div  id="mainpdfcard" class="cardtealivingpdf11" :style="{display:CHAT.frametype === 'pdf'?'block':'none'}">
-      <iframe id="displayPdfIframe" class="pdfframe" :src="'/static/pdfjs/web/viewer.html?file='+CHAT.pdfurl"/>
+      <iframe id="displayPdfIframe" class="pdfframe" :src="'/static/pdfjs/web/viewer.html?file='+CHAT.pdfurl+'?CHAT.curpage0'"/>
     </div>
 
     <!--<div id="maincodecard" class="cardtealivingcdode00" :style="{display:maincodecarddisplay?'block':'none'}">-->
