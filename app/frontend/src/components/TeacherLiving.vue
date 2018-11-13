@@ -239,7 +239,6 @@
                 :key="index">
                 {{String.fromCharCode(65+index)+" : "+item}}
               </FormItem>
-              <!-- 答案设置  -->
               <FormItem label="The Answer">
                 {{sub_multi.answer}}
               </FormItem>
@@ -297,7 +296,7 @@
     </Modal>
 
     <!--Edit 选择题--TODO: SUBMIT MULTI CHANGE-->
-    <Modal   v-model="modal_editmulti"    @on-ok="submitMultiChange()"    @on-cancel="modal_multi = false">
+    <Modal   v-model="modal_editmulti"    @on-ok="submitMultiChange()"    @on-cancel="modal_editmulti = false">
       <p slot="header" style="font-size: 20px">
         <span>修改选择题</span>
       </p>
@@ -334,13 +333,12 @@
     </Modal>
 
     <!--Edit 编程题--TODO: SUBMIT CODE CHANGE-->
-    <Modal   v-model="modal_editcode"    @on-ok="submitCodeChange()"    @on-cancel="modal_code = false">
+    <Modal   v-model="modal_editcode"    @on-ok="submitCodeChange()"    @on-cancel="modal_editcode = false">
       <p slot="header" style="font-size: 20px">
         <span>设置编程题</span>
       </p>
       <Form label-position="top">
         <FormItem label="Text">
-          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
           <Input v-model="sub_code.statement"
                  type="textarea" rows="4"
                  placeholder="Enter Your Statement">
@@ -738,7 +736,7 @@ export default{
       modal_editcode: false,
       // FRAMEWORK TO SHOW CODE LIST
       codeAll: [
-        {title: 'Title', key: 'title'},
+        {title: 'Statement', key: 'statement'},
         {
           title: 'Action',
           key: 'action',
@@ -768,7 +766,7 @@ export default{
               }, 'Del')])
           }
         }],
-      codeThis: [{title: 'Title', key: 'title'},
+      codeThis: [{title: 'Statement', key: 'statement'},
         {
           title: 'Action',
           key: 'action',
@@ -801,14 +799,23 @@ export default{
       // CODE LIST
       codeAllList: [
         {
-          title: 'Eight Queens'
+          uniqueId: '',
+          statement: 'Eight Queens',
+          language: 'python',
+          example: 'null'
         },
         {
-          title: 'B-Tree'
+          uniqueId: '',
+          statement: 'B-Tree',
+          language: 'cpp',
+          example: 'cout << "hello world" << endl;'
         }
       ],
       codeThisList: [{
-        title: 'B-Tree'
+        uniqueId: '',
+        statement: 'B-Tree',
+        language: 'cpp',
+        example: 'cout << "hello world" << endl;'
       }],
 
       // ADD PDF/MULTI/CODE MODALS
@@ -980,7 +987,7 @@ export default{
       // console.log(this.sub_multi.statement)
       // console.log(this.sub_multi.optionList)
       // post
-      axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
+      axios.post('/api/resource/update_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
@@ -1013,6 +1020,8 @@ export default{
         }
       })
     },
+
+    // EDIT METHODS
 
     // LIST METHODS
     // PDF
@@ -1140,9 +1149,45 @@ export default{
     editMultiAll (index) {
       let iMulti = this.multiAllList[index]
       // give value here
-      this.sub_multi = iMulti
+      this.sub_multi.statement = iMulti.statement
+      this.sub_multi.uniqueId = iMulti.uniqueId
+      this.sub_multi.answer = iMulti.answer
+      // multi options
+      this.multi_options.splice(0, this.multi_options.length)
+      // multi_options: [{value: '',index: 1,status: 1}],
+      for (let i = 0; i < iMulti.optionList.length; i++) {
+        let k = {value: '', index: i + 1, status: 1}
+        k.value = iMulti.optionList[i]
+        this.multi_options.push(k)
+      }
       // get multi_options
       this.modal_editmulti = true
+    },
+    // MULTI
+    submitMultiChange () {
+      // send sub_multi should be set by now
+      this.sub_multi.username = this.userInfo.username
+      // 将multi_option这个列表改成可发送的数组
+      for (let i = 0; i < this.multi_index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
+      // test
+      // console.log(this.sub_multi.statement)
+      // console.log(this.sub_multi.optionList)
+      // post
+      axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 维护选择题列表,此处尚无
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('Edit failed')
+        }
+      })
     },
     // ADD MULTI TO CLASS
     addMultiAll (index) {
@@ -1264,8 +1309,33 @@ export default{
     // EDIT CODE ASSIGNMENT
     editCodeAll (index) {
       let iCode = this.codeAllList[index]
-      this.sub_code = iCode
+      this.sub_code.language = iCode.language
+      this.sub_code.example = iCode.example
+      this.sub_code.statement = iCode.statement
+      this.sub_code.uniqueId = iCode.uniqueId
+      this.sub_code.username = this.userInfo.username
       this.modal_editcode = true
+    },
+    // CODE
+    submitCodeChange () {
+      // sub_code should be set by now
+      this.sub_code.username = this.userInfo.username
+      // test
+      console.log(this.sub_code.username)
+      console.log(this.sub_code.language)
+      console.log(this.sub_code.statement)
+      // post
+      axios.post('/api/resource/update_code', this.sub_code).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 不用维护列表啦，该用再用
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('添加代码题失败')
+        }
+      })
     },
     // ADD CODE TO CLASS
     addCodeAll (index) {
