@@ -1091,7 +1091,7 @@ export default{
       axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
-  this.pdfThisList = resp.data.pdfThisList
+  // zsh this.pdfThisList = resp.data.pdfThisList
       })
     },
     // ADD PDF TO CLASS
@@ -1105,7 +1105,7 @@ export default{
       // post
       axios.post('/api/resource/pdf_addclass', input).then((resp) => {
         // 接收返回的pdfThisList
-       this.pdfThisList = resp.data.pdfThisList
+        // zsh   this.pdfThisList = resp.data.pdfThisList
       })
     },
     // DEL PDF FROM TEACHER
@@ -1119,7 +1119,7 @@ export default{
       // post
       axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
         this.pdfAllList = resp.data.pdfAllList
-         this.pdfThisList = resp.data.pdfThisList
+  // zsh   this.pdfThisList = resp.data.pdfThisList
       })
     },
     // USE IT
@@ -1181,7 +1181,7 @@ export default{
       input.pdf = iPdf
       // post
       axios.post('/api/resource/pdf_delclass', input).then((resp) => {
-          this.pdfThisList = resp.data.pdfThisList
+        // zsh    this.pdfThisList = resp.data.pdfThisList
       })
     },
 
