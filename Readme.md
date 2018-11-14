@@ -130,7 +130,7 @@ commit message都要符合这一个规范：
 
     - url: /api/resource/multi_addclass
     - description: 添加已有的选择题到教室
-    - input: `{username: '', url: '', multi: {}}`
+    - input: `{username: '', url: '', uniqueId: ''}`
     - **output:** `{ status: "error"/"success" }`
     - **frontend:** *Yuxuan*
     - backend: ???
@@ -139,7 +139,7 @@ commit message都要符合这一个规范：
 
     - **url:** */api/resource/delete_mutiple*
     - **description:** 教师从全部资源中删除选择题
-    - **input:** `{ username: '', url: '', multi: {/* 该选择题 */}}`
+    - **input:** `{ username: '', url: '', uniqueId: ''}`
     - **output:** `{ status: "error"/"success" }` 
     - **frontend:** *Yuxuan*
     - **backend:** *???*
@@ -148,7 +148,7 @@ commit message都要符合这一个规范：
 
     - url: /api/resource/multi_viewclass
     - description：查看某个选择题目前所有的答题情况
-    - **input:** `{ username: '', url: '', multi: {...}}`
+    - **input:** `{ username: '', url: '', uniqueId: }`
     - **output:** `{ multiAnswerList: [ '{ student: '', answer : 'A / not answerered' }', ... ]}` // 返回该题目的学生答题列表
     - **frontend:** *Yuxuan*
     - backend
@@ -157,7 +157,7 @@ commit message都要符合这一个规范：
 
     - url: /api/resource/multi_delclass
     - description：教室中删除，教师资源不变
-    - **input:** `{ username: '', url: '', multi: {...}}`
+    - **input:** `{ username: '', url: '', uniqueId: ''}`
     - **output:** `{ multiThisList: [...]}` // 返回更新后的列表
     - **frontend:** *Yuxuan*
     - backend
@@ -175,7 +175,7 @@ commit message都要符合这一个规范：
 
     - url：/api/resource/code_addclass
     - description：添加到教室列表中
-    - **input:** `{ username : '', url: ''， code: {}}`
+    - **input:** `{ username : '', url: ''，uniqueId: ''}`
     - **output:** `{ status: "error"/"success" }`  // 返回教室中的列表
     - **frontend:** *Yuxuan*
     - backend
@@ -184,7 +184,7 @@ commit message都要符合这一个规范：
 
     - **url:** */api/resource/delete_code*
     - **description:** 教师从全部资源中删除代码题，同时删除教室中该资源
-    - **input:** `{ username : '', url: ''， code: {}}`
+    - **input:** `{ username : '', url: ''， uniqueId: ''}`
     - **output:** `{ status: "error"/"success" }`  // 返回两个列表
     - **frontend:** *Yuxuan*
     - **backend:** *???*
@@ -193,7 +193,7 @@ commit message都要符合这一个规范：
 
     - url: /api/resource/code_viewclass
     - description：查看代码题中所有学生的提交结果
-    - **input:** `{ username : '', url: ''， code: {}}`
+    - **input:** `{ username : '', url: ''， uniqueId: '' }`
     - **output:** `{ codeAnswerList: [ '{ student: '', answer : '... / not answerered' }', ... ]}` // 返回该题目的学生答题列表
     - **frontend:** *Yuxuan*
     - backend
@@ -202,7 +202,7 @@ commit message都要符合这一个规范：
 
     - url: /api/resource/code_delclass
     - description：教室中删除，教师资源不变
-    - **input:** `{ username: '', url: '', code: {...}}`
+    - **input:** `{ username: '', url: '', uniqueId: ''}`
     - **output:** `{ status: "error"/"success" }` // 返回更新后的列表
     - **frontend:** *Yuxuan*
     - backend
