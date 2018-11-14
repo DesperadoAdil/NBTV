@@ -6767,7 +6767,7 @@ var pdfjsWebLibs;
     PDFViewerApplication.page++;
     window.alert("++++")
     window.console.log("++++")
-    window.opener.postMessage('super window 接收到了一条消息', '/')    
+    window.parent.postMessage('super window 接收到了一条消息', '/')    
     parent.updatepage()
     parent.methods.updatepage()
    }
