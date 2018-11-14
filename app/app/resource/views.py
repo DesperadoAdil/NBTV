@@ -60,7 +60,7 @@ def updateMultiple():
 @resource.route('/getmultiples', methods = ['POST', 'GET'])
 def getChoice():
     print('get a choice question')
-    data = resource.get_data()
+    data = request.get_data()
     data = json.loads(data)
 
     ret = {'multiAllList': [], 'multiThisList': []}
@@ -329,9 +329,7 @@ def get_pdfs():
         return json.dumps(ret)
         # return "error"
 
-
-    pdfdata = teacher.pdfs
-    for item in pdfdata:
+    for item in teacher.pdfs:
         ret['pdfAllList'].append({
             'title': item.filename,
             'url': "/pdf/%s/%s" % (username, item.filename)
