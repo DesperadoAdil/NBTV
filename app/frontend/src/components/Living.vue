@@ -58,14 +58,14 @@
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              <button @click="CHAT.socket.emit('refresh', {'url':cururl})">获取最新用户列表</button>
-              <Dropdown @click.native="CHAT.list(userInfo.username, cururl)">
+              <Dropdown @click.native="CHAT.list(userInfo.username, cururl)" trigger="click">
                 <a href="javascript:void(0)">
                   聊天对象
                   <Icon type="ios-arrow-down"></Icon>
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)">{{ student }}</DropdownItem>
+                  <DropdownItem @click.native="CHAT.socket.emit('refresh', {'url':cururl})">刷新</DropdownItem>
+                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)" :key="student.username">{{ student }}</DropdownItem>
                   <DropdownItem divided @click.native="talkTo('all')">all</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -175,8 +175,8 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
-      chathei: 600+'px',
-        chattop:150+'px',
+      chathei: 600 + 'px',
+      chattop: 150 + 'px',
       socket: null,
       msgType: 'text',
       msgTypeInfo: '文字',
@@ -197,12 +197,12 @@ export default{
       }),
       audio: {},
       selected: {},
-      uploadStatus: null,
-      uploaderOptions: {},
+      silence: false,
+      shutuplist: [],
       /**
        * 以上为聊天室使用，请勿改动
        */
-      stuans:'',
+      stuans: '',
       maincodecarddisplay: false,
       curpdfurl: '/static/pdf/1-1.pdf',
       videohei0: 600 + 'px',
@@ -246,33 +246,34 @@ export default{
       router.push('/list')
       this.beenKickOut()
     }.bind(this))
+    this.findIfShutUp()
     /**
      * 以上为聊天室使用，请勿改动
      */
-//    var xxx = this.videohei0
-//    console.log(xxx)
-//    var yyy = this.curvid
-//     console.log(yyy)
-//    var timer = setTimeout(function () {
-//      doItPerSecond()
-//    }, 1000)
-//    var num = 0
-//    function doItPerSecond () {
-//      var player = polyvObject('#player').livePlayer({
-//        'width': '100%',
-//        'height': 600 + 'px',
-//        'uid': '7181857ac2',
-//        'vid': '250810'
-//      })
-//      var player = polyvObject('#player2').livePlayer({
-//        'width': '100%',
-//        'height': 200 + 'px',
-//        'uid': '7181857ac2',
-//        'vid': '250810'
-//      })
-//      num++
-//      console.log(num)
-//    };
+    //    var xxx = this.videohei0
+    //    console.log(xxx)
+    //    var yyy = this.curvid
+    //     console.log(yyy)
+    //    var timer = setTimeout(function () {
+    //      doItPerSecond()
+    //    }, 1000)
+    //    var num = 0
+    //    function doItPerSecond () {
+    //      var player = polyvObject('#player').livePlayer({
+    //        'width': '100%',
+    //        'height': 600 + 'px',
+    //        'uid': '7181857ac2',
+    //        'vid': '250810'
+    //      })
+    //      var player = polyvObject('#player2').livePlayer({
+    //        'width': '100%',
+    //        'height': 200 + 'px',
+    //        'uid': '7181857ac2',
+    //        'vid': '250810'
+    //      })
+    //      num++
+    //      console.log(num)
+    //    };
   },
   created: function () {
     const s = document.createElement('script')
@@ -288,8 +289,8 @@ export default{
     data['url'] = this.cururl
     axios.post('/api/classroom_stu/urlgetvid', data).then((resp) => {
       this.curvid = resp.data.vid
-      console.log("vid:"+resp.data.vid)
-      console.log("vid:"+this.curvid)
+      console.log('vid:' + resp.data.vid)
+      console.log('vid:' + this.curvid)
       var player = polyvObject('#player').livePlayer({
         'width': '100%',
         'height': 600 + 'px',
@@ -337,6 +338,10 @@ export default{
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
+      if (this.silence === true || this.shutuplist.includes(this.userInfo.username)) {
+        this.$Message.error('您已被禁言')
+        return
+      }
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
       var obj = {}
@@ -380,6 +385,12 @@ export default{
         CHAT.submit(obj)
         this.msgType = 'text'
       }
+    },
+    findIfShutUp () {
+      axios.post('/api/classroom/shutuplist', {'url': this.cururl}).then((resp) => {
+        console.log(resp.data)
+        this.shutuplist = resp.data
+      })
     },
     chooseImg () {
       this.msgType = 'img'
@@ -426,14 +437,14 @@ export default{
       if (p !== 'all') {
         this.msg = ''
         this.talkType = 'whisper'
-      }
-      else {
+      } else {
         this.msg = ''
         this.talkType = 'broadcast'
       }
     },
     beenShutUp () {
       this.$Message.error('您已被禁言')
+      this.silence = true
     },
     beenKickOut () {
       this.$Message.error('您已被永久踢出房间')
@@ -458,7 +469,7 @@ export default{
       axios.post('/api/classroom/selectsubmit', data).then((resp) => {
 
       })
-    },
+    }
   }
 
 }
@@ -493,7 +504,6 @@ export default{
     margin: 0 19px;
     border-bottom: 1px solid #d6d6d6;
     background-color: #eee;
-    z-index: 1024;
   }
   .content {
     background-color: #eee;

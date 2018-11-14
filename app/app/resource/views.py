@@ -58,22 +58,70 @@ def updateMultiple():
 
 @resource.route('/getmultiples', methods = ['POST', 'GET'])
 def getChoice():
-    print('get a  choice question')
+    print('get a choice question')
     data = resource.get_data()
-    #print(data)
     data = json.loads(data)
-    ret = []
+
+    ret = {'multiAllList': [], 'multiThisList': []}
 
     try:
         username = data['username']
         teacher = usermanager.search("username", username, "teacher")
         data = teacher.choiceQue
         for item in data:
-            ret.append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
-        return json.dumps(ret)
+            ret['multiAllList'].append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
+        clr = classroomManager.search(data['url'])
+        for item in clr.choice:
+            ret['multiThisList'].append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
+        # return json.dumps(ret)
+        ret['status'] = "success"
     except Exception as err:
         print(err)
-        return "error"
+        ret['status'] = "error"
+
+    return json.dumps(ret)
+
+@resource.route('/multi_addclass', methods = ['POST', 'GET'])
+def add_choice_class():
+    print('add choice to class')
+    data = request.get_data()
+    data = json.loads(data)
+    
+    ret = {}
+
+    choice_tmp = multiChoiceManager.search(data['uniqueId'])
+    if choice_tmp is None or choice_tmp.owner != data['username']:
+        print('gg: choice_tmp is None or choice_tmp.owner != username')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+
+    clr = classroomManager.search(data['url'])
+    if clr is None or clr.teacher != data['username']:
+        print('gg : something go wrong with classroom and teacher')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+
+    clr.choice.append(choice_tmp)
+    db.session.add(clr)
+    db.session.commit()
+
+    ret['status'] = 'success'
+    return json.dumps(ret)
+
+@resource.route('/api/resource/multi_viewclass', methods = ['POST', 'GET'])
+def view_choice_class():
+    print('view choice class')
+    data = json.loads(request.get_data())
+
+    ret = {}
+    choice_tmp = multiChoiceManager.search(data['uniqueId'])
+    if choice_tmp is None:
+        print('gg: choice_tmp is None')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+
+    ret['multiAnswerList'] = json.loads(choice_tmp.submitRecord)
+    return json.dumps(ret)
 
 
 @resource.route('/add_code', methods = ['POST', 'GET'])
@@ -115,6 +163,73 @@ def update_code():
     ret['status'] = codeQuestionManager.update(data['uniqueId'], data['statement'], data['language'])
     return json.dumps(ret)
 
+@resource.route('/code_addclass', methods = ['POST', 'GET'])
+def add_code_class():
+    print('add code to class')
+    data = request.get_data()
+    data = json.loads(data)
+
+    ret = {}
+
+    clr = classroomManager.search(data['url'])
+    if clr is None or clr.teacher != data['username']:
+        print('gg: clr is None or clr.teacher != username')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+
+    code_tmp = codeQuestionManager.search(data['uniqueId'])
+    if code_tmp is None or code_tmp.owner != data['username']:
+        print('gg: code is wrong')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+
+    clr.code.append(code_tmp)
+    db.session.add(clr)
+    db.session.commit()
+
+    ret['status'] = 'success'
+    return json.dumps(ret)
+
+@resource.route('/code_viewclass', methods = ['POST', 'GET'])
+def view_code_class():
+    print('view code class')
+    data = json.loads(request.get_data())
+    
+    ret = {}
+    
+    code_tmp = codeQuestionManager.search(data['uniqueId'])
+    if code_tmp is None or code_tmp.owner != data['username']:
+        print('gg: code is wrong')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+
+    ret['codeAnswerList'] = json.loads(code_tmp.submitRecord)
+    ret['status'] = 'success'
+    return json.dumps(ret)
+
+@resource.route('/code_delclass', methods = ['POST', 'GET'])
+def code_delete_class():
+    print('view code class')
+    data = json.loads(request.get_data())
+    ret = {}
+
+    clr = classroomManager.search(data['url'])
+    if clr is None or clr.teacher != data['username']:
+        print('gg: clr is None or clr.teacher != username')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+    code_tmp = codeQuestionManager.search(data['uniqueId'])
+    if code_tmp is None or code_tmp.owner != data['username']:
+        print('gg: code is wrong')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+    clr.code.remove(code_tmp)
+    db.session.add(clr)
+    db.session.commit()
+
+    ret['status'] = 'success'
+    return json.dumps(ret)
+
 
 @resource.route('/getcodes', methods = ['POST', 'GET'])
 def get_code():
@@ -122,18 +237,22 @@ def get_code():
     data = request.get_data()
     #print(data)
     data = json.loads(data)
-    ret = []
+    ret = {'codeAllList': [], 'codeThisList': []}
 
     try:
         username = data['username']
         teacher = usermanager.search("username", username, "teacher")
         data = teacher.codeQue
         for item in data:
-            ret.append({"statement": item.statement, "language": item.language, "uniqueId": item.uniqueId})
-        return json.dumps(ret)
+            ret['codeAllList'].append({"statement": item.statement, "language": item.language, "uniqueId": item.uniqueId})
+        clr = classroomManager.search(data['url'])
+        for item in clr.code:
+            ret['codeThisList'].append({"statement": item.statement, "language": item.language, "uniqueId": item.uniqueId})
+        ret['status'] = 'success'
     except Exception as err:
         print(err)
-        return "error"
+        ret['status'] = 'error'
+    return json.dumps(ret)
 
 @resource.route('/add_pdf', methods = ['POST'])
 def add_PDF():
@@ -149,6 +268,7 @@ def add_PDF():
         ret['status'] = "error"
     return json.dumps(ret, ensure_ascii = False)
 
+
 @resource.route('/delete_pdf', methods = ['POST'])
 def delete_PDF():
     print('delet a pdf file')
@@ -158,7 +278,7 @@ def delete_PDF():
         #print(data)
         data = json.loads(data)
         username = data['username']
-        filename = data['title']
+        filename = data['pdf']['title']
         ret['status'] = pdfManager.delete(username, filename)
     except Exception as err:
         print(err)
@@ -166,6 +286,28 @@ def delete_PDF():
     return json.dumps(ret, ensure_ascii = False)
 
 
+@resource.route('/pdf_delclass', methods = ['POST', 'GET'])
+def delete_class_PDF():
+    print('delete a pdf file from class')
+    data = request.get_data()
+    data = json.loads(data)
+
+    ret = {}
+
+    clr = classroomManager.search(data['url'])
+    if clr is None or clr.teacher != data['username']:
+        print('gg: clr is None or clr.teacher != username')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+
+    pdf_tmp = pdfManager.search(data['username'], data['pdf']['title'])
+    if pdf_tmp is None:
+        print('gg: pdf_tmp is None')
+    clr.pdffile.remove(pdf_tmp)
+
+    ret['status'] = 'success'
+    return json.dumps(ret)
+    
 
 #Get_pdfs
 @resource.route('/getpdfs', methods = ['POST'])
@@ -215,16 +357,10 @@ def add_pdf_class():
     data = request.get_data()
     data = json.lodas(data)
 
-    ret = {'pdfThisList': []}
+    ret = {}
 
     username = data['username']
     url = data['url']
-
-    teacher = usermanager.search("username", username, "teacher")
-    if teacher is None:
-        ret['status'] = 'error'
-        print('gg: no such teacher')
-        return json.dumps(ret)
 
     clr = classroomManager.search(url)
     if clr is None or clr.teacher != username:
@@ -241,12 +377,6 @@ def add_pdf_class():
     clr.pdffile.append(pdffile)
     db.session.add(clr)
     db.session.commit()
-
-    for item in clr.pdffile:
-        ret['pdfThisList'].append({
-            'title': item.filename,
-            'url': "/pdf/%s/%s" % (username, item.filename)
-            })
 
     ret['status'] = 'success'
     return json.dumps(ret)
