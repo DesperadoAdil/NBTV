@@ -1,14 +1,8 @@
 from app import db
 from datetime import datetime
 
-# 作为 教室和选择题资源 的中间表
-'''
-classroom_choice = db.Table('classroom_choice',
-            db.Column('classroom_url', db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE")),
-            db.Column('choice_id', db.ForeignKey('choicequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"))
-            )
-'''
 
+# 作为 教室和选择题资源 的中间表
 class classroom_choice(db.Model):
     __tablename__ = 'classroom_choice'
     
@@ -19,8 +13,8 @@ class classroom_choice(db.Model):
         { 'mysql_charset': 'utf8' }
     )
 
-# 作为 教室和代码题资源的中间表
 
+# 作为 教室和代码题资源的中间表
 class classroom_code(db.Model):
     __tablename__ = 'classroom_code'
     
@@ -31,21 +25,9 @@ class classroom_code(db.Model):
         db.PrimaryKeyConstraint('classroom_url', 'code_id'),
         { 'mysql_charset': 'utf8' }
     )
-'''
-classroom_code = db.Table('classroom_code',
-            db.Column('classroom_url', db.ForeignKey('classrooms.url')),
-            db.Column('code_id', db.ForeignKey('codequestion.uniqueId'))
-            )
-'''
+
 
 # 作为 教室和pdf文件资源的中间表
-'''
-classroom_pdf = db.Table('classroom_pdf',
-            db.Column('classroom_pdf', db.ForeignKey('classrooms.url')),
-            db.Column('pdf_id', db.ForeignKey('pdffile.uniqueId'))
-            )
-'''
-
 class classroom_pdf(db.Model):
     __tablename__ = 'classroom_pdf'
     __table_args__ = (
@@ -54,6 +36,7 @@ class classroom_pdf(db.Model):
     )
     classroom_url = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"))
     pdf_id = db.Column(db.String(100), db.ForeignKey('pdffile.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"))
+
 
 
 class Classrooms(db.Model):
@@ -93,8 +76,6 @@ class Classrooms(db.Model):
     choice = db.relationship('ChoiceQuestion', secondary = classroom_choice, backref = 'classroom', lazy = 'dynamic')
     code = db.relationship('CodeQuestion', secondary = classroom_code, backref = 'classroom', lazy = 'dynamic')
     pdffile = db.relationship('PDFFile', secondary = classroom_pdf, backref = 'classroom', lazy = 'dynamic')
-    # choicequestion = db.relationship('ChoiceQuestion', backref='classrooms', lazy='dynamic')
-    # codequestion = db.relationship('CodeQuestion', backref='classrooms', lazy='dynamic')
 
     def __repr__(self):
         return '<ClassroomUrl %r>' % self.url
@@ -158,7 +139,7 @@ class ChoiceQuestion(db.Model):
     uniqueId = db.Column(db.String(100), primary_key = True, unique = True, nullable = False)
     
     submitRecord = db.Column(db.Text, nullable = False)
-    # classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
+    
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
     def __repr__(self):
@@ -175,7 +156,7 @@ class CodeQuestion(db.Model):
     language = db.Column(db.String(10), nullable = False)
     uniqueId = db.Column(db.String(100), primary_key = True, unique = True, nullable = False)
     submitRecord = db.Column(db.Text, nullable = False)
-    # classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
+    
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
     def __repr__(self):
@@ -184,11 +165,10 @@ class CodeQuestion(db.Model):
 class PDFFile(db.Model):
     __tablename__ = 'pdffile'
 
-    # uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
     filename = db.Column(db.String(100), nullable = False)
     uniqueId = db.Column(db.String(151), nullable = False, primary_key = True)
-    # filePath = db.Column(db.Text, nullable = False)
+    
     __table_args__ = (
         db.Index('filepath', 'owner', 'filename'),
         {'mysql_charset':'utf8', 'mysql_engine': 'InnoDB'}
