@@ -442,7 +442,6 @@ export default{
      * 以上为聊天室使用，请勿改动
      */
     showUserInfo () {
-      console.log('1234567')
       this.userInfo['username'] = this.$cookies.get('user').username
       this.userInfo['status'] = this.$cookies.get('user').status
       this.userInfo['password'] = this.$cookies.get('user').password
