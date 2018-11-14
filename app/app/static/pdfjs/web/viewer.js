@@ -6765,8 +6765,8 @@ var pdfjsWebLibs;
    }
    function webViewerNextPage() {
     PDFViewerApplication.page++;
-    window.alert("++")
-    window.console.log("++")
+    window.alert("++++")
+    window.console.log("++++")
     window.parent.methods.updatepage();
     window.parent.updatepage();
     parent.updatepage()
@@ -6774,8 +6774,8 @@ var pdfjsWebLibs;
    }
    function webViewerPreviousPage() {
     PDFViewerApplication.page--;
-    window.alert("--")
-    window.console.log("--")
+    window.alert("----")
+    window.console.log("----")
     window.parent.methods.updatepage();
     window.parent.updatepage();
     parent.updatepage()
