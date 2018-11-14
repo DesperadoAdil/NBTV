@@ -14,8 +14,8 @@ class classroom_choice(db.Model):
     )'''
 classroom_choice = db.Table(
     'classroom_choice',
-    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True),
-    db.Column('choice_id', db.String(100), db.ForeignKey('choicequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True)
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False),
+    db.Column('choice_id', db.String(100), db.ForeignKey('choicequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False)
 )
 
 '''
@@ -32,8 +32,8 @@ class classroom_code(db.Model):
     )'''
 classroom_code = db.Table(
     'classroom_code',
-    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True),
-    db.Column('code_id', db.String(100), db.ForeignKey('codequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True)
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False),
+    db.Column('code_id', db.String(100), db.ForeignKey('codequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False)
 )
 
 '''
@@ -49,8 +49,8 @@ class classroom_pdf(db.Model):
 '''
 classroom_pdf = db.Table(
     'classroom_pdf',
-    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True),
-    db.Column('pdf_id', db.String(151), db.ForeignKey('pdffile.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True)
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False),
+    db.Column('pdf_id', db.String(151), db.ForeignKey('pdffile.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False)
 )
 
 
