@@ -51,6 +51,9 @@ class CodeQuestionObj:
 		except:
 			return "error"
 
+	def search(self, uniqueId):
+		return CodeQuestion.query.filter_by(uniqueId = uniqueId).first()
+
 	def submitAnswer(self, uniqueId, studentId, ans):
 		try:
 			que = CodeQuestion.query.filter_by(uniqueId = uniqueId).first()
