@@ -58,22 +58,28 @@ def updateMultiple():
 
 @resource.route('/getmultiples', methods = ['POST', 'GET'])
 def getChoice():
-    print('get a  choice question')
+    print('get a choice question')
     data = resource.get_data()
-    #print(data)
     data = json.loads(data)
-    ret = []
+
+    ret = {'multiAllList': [], 'multiThisList': []}
 
     try:
         username = data['username']
         teacher = usermanager.search("username", username, "teacher")
         data = teacher.choiceQue
         for item in data:
-            ret.append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
-        return json.dumps(ret)
+            ret['multiAllList'].append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
+        clr = classroomManager.search(data['url'])
+        for item in clr.choice:
+            ret['multiThisList'].append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
+        # return json.dumps(ret)
+        ret['status'] = "success"
     except Exception as err:
         print(err)
-        return "error"
+        ret['status'] = "error"
+        
+    return json.dumps(ret)
 
 
 @resource.route('/add_code', methods = ['POST', 'GET'])
@@ -149,6 +155,7 @@ def add_PDF():
         ret['status'] = "error"
     return json.dumps(ret, ensure_ascii = False)
 
+
 @resource.route('/delete_pdf', methods = ['POST'])
 def delete_PDF():
     print('delet a pdf file')
@@ -158,7 +165,7 @@ def delete_PDF():
         #print(data)
         data = json.loads(data)
         username = data['username']
-        filename = data['title']
+        filename = data['pdf']['title']
         ret['status'] = pdfManager.delete(username, filename)
     except Exception as err:
         print(err)
@@ -166,6 +173,28 @@ def delete_PDF():
     return json.dumps(ret, ensure_ascii = False)
 
 
+@resource.route('/pdf_delclass', methods = ['POST', 'GET'])
+def delete_class_PDF():
+    print('delete a pdf file from class')
+    data = request.get_data()
+    data = json.loads(data)
+
+    ret = {}
+
+    clr = classroomManager.search(data['url'])
+    if clr is None or clr.teacher != data['username']:
+        print('gg: clr is None or clr.teacher != username')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+
+    pdf_tmp = pdfManager.search(data['username'], data['pdf']['title'])
+    if pdf_tmp is None:
+        print('gg: pdf_tmp is None')
+    clr.pdffile.remove(pdf_tmp)
+
+    ret['status'] = 'success'
+    return json.dumps(ret)
+    
 
 #Get_pdfs
 @resource.route('/getpdfs', methods = ['POST'])
@@ -215,16 +244,10 @@ def add_pdf_class():
     data = request.get_data()
     data = json.lodas(data)
 
-    ret = {'pdfThisList': []}
+    ret = {}
 
     username = data['username']
     url = data['url']
-
-    teacher = usermanager.search("username", username, "teacher")
-    if teacher is None:
-        ret['status'] = 'error'
-        print('gg: no such teacher')
-        return json.dumps(ret)
 
     clr = classroomManager.search(url)
     if clr is None or clr.teacher != username:
@@ -241,12 +264,6 @@ def add_pdf_class():
     clr.pdffile.append(pdffile)
     db.session.add(clr)
     db.session.commit()
-
-    for item in clr.pdffile:
-        ret['pdfThisList'].append({
-            'title': item.filename,
-            'url': "/pdf/%s/%s" % (username, item.filename)
-            })
 
     ret['status'] = 'success'
     return json.dumps(ret)
