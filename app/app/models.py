@@ -14,8 +14,8 @@ class classroom_choice(db.Model):
     )'''
 classroom_choice = db.Table(
     'classroom_choice',
-    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False, primary_key = True),
-    db.Column('choice_id', db.String(100), db.ForeignKey('choicequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False, primary_key = True)
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True),
+    db.Column('choice_id', db.String(100), db.ForeignKey('choicequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True)
 )
 
 '''
@@ -32,8 +32,8 @@ class classroom_code(db.Model):
     )'''
 classroom_code = db.Table(
     'classroom_code',
-    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False, primary_key = True),
-    db.Column('code_id', db.String(100), db.ForeignKey('codequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False, primary_key = True)
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True),
+    db.Column('code_id', db.String(100), db.ForeignKey('codequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True)
 )
 
 '''
@@ -49,8 +49,8 @@ class classroom_pdf(db.Model):
 '''
 classroom_pdf = db.Table(
     'classroom_pdf',
-    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False, primary_key = True),
-    db.Column('pdf_id', db.String(151), db.ForeignKey('pdffile.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False, primary_key = True)
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True),
+    db.Column('pdf_id', db.String(151), db.ForeignKey('pdffile.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), unique=True, nullable=False, primary_key=True)
 )
 
 
@@ -93,9 +93,9 @@ class Classrooms(db.Model):
     shutuplist = db.Column(db.Text, nullable = False, default = "[]")
 
 
-    choice = db.relationship('ChoiceQuestion', secondary = classroom_choice, backref = 'classroom', lazy = 'dynamic')
-    code = db.relationship('CodeQuestion', secondary = classroom_code, backref = 'classroom', lazy = 'dynamic')
-    pdffile = db.relationship('PDFFile', secondary = classroom_pdf, backref = 'classroom', lazy = 'dynamic')
+    choice = db.relationship('ChoiceQuestion', secondary = classroom_choice, backref = db.backref('classroom', lazy='dynamic'), lazy = 'dynamic')
+    code = db.relationship('CodeQuestion', secondary = classroom_code, backref = db.backref('classroom', lazy='dynamic'), lazy = 'dynamic')
+    pdffile = db.relationship('PDFFile', secondary = classroom_pdf, backref = db.backref('classroom', lazy='dynamic'), lazy = 'dynamic')
 
     def __repr__(self):
         return '<ClassroomUrl %r>' % self.url
