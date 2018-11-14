@@ -28,7 +28,7 @@ def addMultiChoice():
 @resource.route('/delete_multiple', methods = ['POST', "GET"])
 def deleteMultiple():
     print('delete choice question')
-    data = resource.get_data()
+    data = request.get_data()
     #print(data)
     data = json.loads(data)
     ret = {}
@@ -44,7 +44,7 @@ def deleteMultiple():
 @resource.route('/update_multiple', methods = ['POST', 'GET'])
 def updateMultiple():
     print('update choice question')
-    data = resource.get_data()
+    data = request.get_data()
     #print(data)
     data = json.loads(data)
     ret = {}
@@ -380,30 +380,3 @@ def add_pdf_class():
     ret['status'] = 'success'
     return json.dumps(ret)
 
-
-#Get_selects
-@resource.route('/getselects', methods = ['POST'])
-def get_selects():
-    ret = []
-
-    data = request.get_data()
-    #print (data)
-    data = json.loads(data)
-
-    username = data['username']
-    job = data['job']
-    url = data['url']
-    classroom = classroomManager.search(url)
-    if job == 'teacher' and classroom.teacher != username:
-        print ("Get Selects Error: Wrong Teacher")
-        return ret
-
-    for item in classroom.choicequestion:
-        dic = {}
-        dic['title'] = item.statement
-        dic['ans'] = item.optionList
-        dic['answer'] = item.answer
-        ret.append(dic)
-
-    print (json.dumps(ret))
-    return json.dumps(ret)
