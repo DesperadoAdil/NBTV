@@ -1318,12 +1318,12 @@ export default{
     delMultiAll (index) {
       let iMulti = this.multiAllList[index]
       // input
-      let input = {username: '', url: '', multi: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.multi = iMulti
+      input.uniqueId = iMulti.uniqueId
       // post
-      axios.post('/api/resource/delete_mutiple', input).then((resp) => {
+      axios.post('/api/resource/delete_multiple', input).then((resp) => {
         if (resp.data.status === 'success') {
           let multiInput = {username: '', url: ''}
           multiInput.username = this.userInfo.username
@@ -1389,10 +1389,10 @@ export default{
     viewMulti (index) {
       let iMulti = this.multiThisList[index]
       // input
-      let input = {username: '', url: '', multi: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.multi = iMulti
+      input.uniqueId = iMulti.uniqueId
       // post
       axios.post('/api/resource/multi_viewclass', input).then((resp) => {
         this.multiAnswerList = resp.data.multiAnswerList
@@ -1404,10 +1404,10 @@ export default{
     delMultiClass (index) {
       let iMulti = this.multiThisList[index]
       // input
-      let input = {username: '', url: '', multi: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.multi = iMulti
+      input.uniqueId = iMulti.uniqueId
       // post
       axios.post('/api/resource/multi_delclass', input).then((resp) => {
         if (resp.data.status === 'success') {
@@ -1500,10 +1500,10 @@ export default{
     delCodeAll (index) {
       let iCode = this.codeAllList[index]
       // input
-      let input = {username: '', url: '', code: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.code = iCode
+      input.uniqueId = iCode.uniqueId
       // post
       axios.post('/api/resource/delete_code', input).then((resp) => {
         if (resp.data.status === 'success') {
@@ -1543,10 +1543,10 @@ export default{
     viewCode (index) {
       let iCode = this.codeThisList[index]
       // input
-      let input = {username: '', url: '', code: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.code = iCode
+      input.uniqueId = iCode.uniqueId
       // post
       axios.post('/api/resource/code_viewclass', input).then((resp) => {
         this.codeAnswerList = resp.data.codeAnswerList
@@ -1557,10 +1557,10 @@ export default{
     delCodeClass (index) {
       let iCode = this.codeThisList[index]
       // input
-      let input = {username: '', url: '', code: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.code = iCode
+      input.uniqueId = iCode.uniqueId
       // post
       axios.post('/api/resource/code_delclass', input).then((resp) => {
         if (resp.data.status === 'success') {
