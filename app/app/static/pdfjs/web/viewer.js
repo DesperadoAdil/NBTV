@@ -6766,9 +6766,7 @@ var pdfjsWebLibs;
    function webViewerNextPage() {
     PDFViewerApplication.page++;
     window.alert("++++")
-    window.console.log("++++")
-    window.parent.methods.updatepage();
-    window.parent.updatepage();
+    window.console.log("++++")    
     parent.updatepage()
     parent.methods.updatepage()
    }
@@ -6776,7 +6774,6 @@ var pdfjsWebLibs;
     PDFViewerApplication.page--;
     window.alert("----")
     window.console.log("----")
-    window.parent.methods.updatepage();
     window.parent.updatepage();
     parent.updatepage()
     parent.methods.updatepage()

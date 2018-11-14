@@ -462,6 +462,8 @@ export default{
     selectsubmit(){
       console.log("dasdas")
       var data={}
+      data['username'] = this.userInfo['username']
+      data['url']=this.cururl
       data['uniqueId'] = this.CHAT.selectall.answer
       data['answer'] = this.stuans
       axios.post('/api/classroom/selectsubmit', data).then((resp) => {
