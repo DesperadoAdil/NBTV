@@ -190,6 +190,45 @@ def add_code_class():
     ret['status'] = 'success'
     return json.dumps(ret)
 
+@resource.route('/code_viewclass', methods = ['POST', 'GET'])
+def view_code_class():
+    print('view code class')
+    data = json.loads(request.get_data())
+    
+    ret = {}
+    
+    code_tmp = codeQuestionManager.search(data['uniqueId'])
+    if code_tmp is None or code_tmp.owner != data['username']:
+        print('gg: code is wrong')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+
+    ret['codeAnswerList'] = json.loads(code_tmp.submitRecord)
+    ret['status'] = 'success'
+    return json.dumps(ret)
+
+@resource.route('/code_delclass', methods = ['POST', 'GET'])
+def code_delete_class():
+    print('view code class')
+    data = json.loads(request.get_data())
+    ret = {}
+
+    clr = classroomManager.search(data['url'])
+    if clr is None or clr.teacher != data['username']:
+        print('gg: clr is None or clr.teacher != username')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+    code_tmp = codeQuestionManager.search(data['uniqueId'])
+    if code_tmp is None or code_tmp.owner != data['username']:
+        print('gg: code is wrong')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+    clr.code.remove(code_tmp)
+    db.session.add(clr)
+    db.session.commit()
+
+    ret['status'] = 'success'
+    return json.dumps(ret)
 
 
 @resource.route('/getcodes', methods = ['POST', 'GET'])

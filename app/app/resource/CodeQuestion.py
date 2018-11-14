@@ -60,7 +60,7 @@ class CodeQuestionObj:
 			if que is None:
 				return "error:NoSuchQue"
 			record = json.loads(que.submitRecord)
-			record.append([studentId, ans])
+			record.append({'student': studentId, 'answer': ans})
 			que.submitRecord = json.dumps(record, ensure_ascii = False)
 			db.session.add(que)
 			db.session.commit()
