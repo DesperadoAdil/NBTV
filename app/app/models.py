@@ -1,32 +1,42 @@
 from app import db
 from datetime import datetime
 
-
+'''
 # 作为 教室和选择题资源 的中间表
 class classroom_choice(db.Model):
     __tablename__ = 'classroom_choice'
-    
+
     classroom_url = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"))
     choice_id = db.Column(db.String(100), db.ForeignKey('choicequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"))
     __table_args__ = (
         db.PrimaryKeyConstraint('classroom_url', 'choice_id'),
         { 'mysql_charset': 'utf8' }
-    )
+    )'''
+classroom_choice = db.Table(
+    'classroom_choice',
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), primary_key = True),
+    db.Column('choice_id', db.String(100), db.ForeignKey('choicequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), primary_key = True)
+)
 
-
+'''
 # 作为 教室和代码题资源的中间表
 class classroom_code(db.Model):
     __tablename__ = 'classroom_code'
-    
+
     classroom_url = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"))
     code_id = db.Column(db.String(100), db.ForeignKey('codequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"))
 
     __table_args__ = (
         db.PrimaryKeyConstraint('classroom_url', 'code_id'),
         { 'mysql_charset': 'utf8' }
-    )
+    )'''
+classroom_code = db.Table(
+    'classroom_code',
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), primary_key = True),
+    db.Column('code_id', db.String(100), db.ForeignKey('codequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), primary_key = True)
+)
 
-
+'''
 # 作为 教室和pdf文件资源的中间表
 class classroom_pdf(db.Model):
     __tablename__ = 'classroom_pdf'
@@ -36,6 +46,12 @@ class classroom_pdf(db.Model):
     )
     classroom_url = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"))
     pdf_id = db.Column(db.String(100), db.ForeignKey('pdffile.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"))
+'''
+classroom_pdf = db.Table(
+    'classroom_pdf',
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), primary_key = True),
+    db.Column('pdf_id', db.String(100), db.ForeignKey('pdffile.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), primary_key = True)
+)
 
 
 
@@ -46,12 +62,12 @@ class Classrooms(db.Model):
         'mysql_engine': 'InnoDB',
         "useexisting": True
     }
-    
+
     vid = db.Column(db.Integer, unique=True, nullable=False)
     teacher = db.Column(db.String(50), db.ForeignKey('teachers.username'), nullable=False)
     title = db.Column(db.String(150), nullable=False)
     thumbnail = db.Column(db.String(100), nullable=False)
-    
+
     #直播间私密模式
     mode = db.Column(db.String(10), nullable=False, default="private")
 
@@ -141,9 +157,9 @@ class ChoiceQuestion(db.Model):
     optionList = db.Column(db.String(1000), nullable = False)
     answer = db.Column(db.Integer, nullable = False)
     uniqueId = db.Column(db.String(100), primary_key = True, unique = True, nullable = False)
-    
+
     submitRecord = db.Column(db.Text, nullable = False)
-    
+
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
     def __repr__(self):
@@ -152,7 +168,7 @@ class ChoiceQuestion(db.Model):
 
 class CodeQuestion(db.Model):
     __tablename__ = 'codequestion'
-    __table_args__ = { 
+    __table_args__ = {
         'mysql_charset':'utf8',
         'mysql_engine': 'InnoDB'
         }
@@ -160,7 +176,7 @@ class CodeQuestion(db.Model):
     language = db.Column(db.String(10), nullable = False)
     uniqueId = db.Column(db.String(100), primary_key = True, unique = True, nullable = False)
     submitRecord = db.Column(db.Text, nullable = False)
-    
+
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
     def __repr__(self):
@@ -172,7 +188,7 @@ class PDFFile(db.Model):
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
     filename = db.Column(db.String(100), nullable = False)
     uniqueId = db.Column(db.String(151), nullable = False, primary_key = True)
-    
+
     __table_args__ = (
         db.Index('filepath', 'owner', 'filename'),
         {'mysql_charset':'utf8', 'mysql_engine': 'InnoDB'}
