@@ -4,6 +4,7 @@ from .CodeQuestion import codeQuestionManager
 from .PDFfile import pdfManager
 from . import resource
 from ..user.User import usermanager
+from ..classroom.Classroom import classroomManager
 import json
 
 @resource.route('/add_multiple', methods = ['POST', 'GET'])
