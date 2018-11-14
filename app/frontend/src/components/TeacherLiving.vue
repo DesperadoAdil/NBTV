@@ -418,7 +418,7 @@
             </div>
           </div>
 
-          <div class="content">
+          <div class="content" id="content-id">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
               <div v-if="CHAT.msgArr[index].toUser === username && username !== userInfo.username">
                 <div class="talk-space self-talk"
@@ -1952,7 +1952,6 @@ export default{
     margin: 0 19px;
     border-bottom: 1px solid #d6d6d6;
     background-color: #eee;
-    z-index: 1024;
   }
   .content {
     background-color: #eee;

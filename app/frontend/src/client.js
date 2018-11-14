@@ -59,6 +59,8 @@ const CHAT = {
         fromUser: '[系统]'
       }
       CHAT.msgArr.push(obj)
+      //let message = document.getElementById('content-id')
+      //message.scrollTop = message.scrollHeight
       console.log('CHAT.msgArr(system)', obj)
     })
     this.socket.on('whisper', function (obj) {
