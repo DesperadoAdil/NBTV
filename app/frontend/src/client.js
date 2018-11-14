@@ -43,6 +43,9 @@ const CHAT = {
       this.$Message.error('您已被永久踢出房间')
     })
   },
+  youCanTalk: function (username, url) {
+    this.socket.emit('noShutUp', {'username': username, 'url': url})
+  },
   message: function (username) {
     console.log('message')
     this.socket.on('message', function (msg) {
@@ -90,6 +93,7 @@ const CHAT = {
     this.socket.on('page', function (obj) {
       CHAT.curpage0 = obj.msg
     })
+
   },
   init: function (username, url) {
     this.socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port)

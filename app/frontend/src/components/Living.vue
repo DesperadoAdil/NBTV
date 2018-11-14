@@ -246,6 +246,11 @@ export default{
       router.push('/list')
       this.beenKickOut()
     }.bind(this))
+    CHAT.socket.on('noShutUp', function () {
+      this.$Message.success('你现在可以说话了！')
+      this.silence = false
+      this.findIfShutUp()
+    }.bind(this))
     this.findIfShutUp()
     /**
      * 以上为聊天室使用，请勿改动
