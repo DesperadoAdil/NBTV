@@ -1044,7 +1044,7 @@ export default{
       // console.log(this.sub_multi.statement)
       // console.log(this.sub_multi.optionList)
       // post
-      axios.post('/api/resource/update_multiple', this.sub_multi).then((resp) => {
+      axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
@@ -1061,7 +1061,7 @@ export default{
       this.sub_code.statement = ''
       this.sub_code.example = ''
       this.sub_code.language = ''
-      this.modal_multi = true
+      this.modal_code = true
     },
     addCode () {
       // sub_code should be set by now

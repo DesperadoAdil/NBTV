@@ -4,6 +4,7 @@ from .CodeQuestion import codeQuestionManager
 from .PDFfile import pdfManager
 from . import resource
 from ..user.User import usermanager
+from ..classroom.Classroom import classroomManager
 import json
 
 @resource.route('/add_multiple', methods = ['POST', 'GET'])
@@ -27,7 +28,7 @@ def addMultiChoice():
 @resource.route('/delete_multiple', methods = ['POST', "GET"])
 def deleteMultiple():
     print('delete choice question')
-    data = resource.get_data()
+    data = request.get_data()
     #print(data)
     data = json.loads(data)
     ret = {}
@@ -43,7 +44,7 @@ def deleteMultiple():
 @resource.route('/update_multiple', methods = ['POST', 'GET'])
 def updateMultiple():
     print('update choice question')
-    data = resource.get_data()
+    data = request.get_data()
     #print(data)
     data = json.loads(data)
     ret = {}
@@ -59,7 +60,7 @@ def updateMultiple():
 @resource.route('/getmultiples', methods = ['POST', 'GET'])
 def getChoice():
     print('get a choice question')
-    data = resource.get_data()
+    data = request.get_data()
     data = json.loads(data)
 
     ret = {'multiAllList': [], 'multiThisList': []}
@@ -67,8 +68,8 @@ def getChoice():
     try:
         username = data['username']
         teacher = usermanager.search("username", username, "teacher")
-        data = teacher.choiceQue
-        for item in data:
+        
+        for item in teacher.choiceQue:
             ret['multiAllList'].append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
         clr = classroomManager.search(data['url'])
         for item in clr.choice:
@@ -242,8 +243,8 @@ def get_code():
     try:
         username = data['username']
         teacher = usermanager.search("username", username, "teacher")
-        data = teacher.codeQue
-        for item in data:
+        
+        for item in teacher.codeQue:
             ret['codeAllList'].append({"statement": item.statement, "language": item.language, "uniqueId": item.uniqueId})
         clr = classroomManager.search(data['url'])
         for item in clr.code:
@@ -328,9 +329,7 @@ def get_pdfs():
         return json.dumps(ret)
         # return "error"
 
-
-    data = teacher.pdfs
-    for item in data:
+    for item in teacher.pdfs:
         ret['pdfAllList'].append({
             'title': item.filename,
             'url': "/pdf/%s/%s" % (username, item.filename)
@@ -381,30 +380,3 @@ def add_pdf_class():
     ret['status'] = 'success'
     return json.dumps(ret)
 
-
-#Get_selects
-@resource.route('/getselects', methods = ['POST'])
-def get_selects():
-    ret = []
-
-    data = request.get_data()
-    #print (data)
-    data = json.loads(data)
-
-    username = data['username']
-    job = data['job']
-    url = data['url']
-    classroom = classroomManager.search(url)
-    if job == 'teacher' and classroom.teacher != username:
-        print ("Get Selects Error: Wrong Teacher")
-        return ret
-
-    for item in classroom.choicequestion:
-        dic = {}
-        dic['title'] = item.statement
-        dic['ans'] = item.optionList
-        dic['answer'] = item.answer
-        ret.append(dic)
-
-    print (json.dumps(ret))
-    return json.dumps(ret)
