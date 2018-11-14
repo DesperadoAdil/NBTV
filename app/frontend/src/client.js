@@ -6,6 +6,7 @@ const CHAT = {
   socket: null,
   msgArr: [],
   studentlist: [],
+  curpage0:'1',
   frametype: 'close',
   pdfurl: '/static/pdf/1-1.pdf',
   selectall: {
@@ -83,6 +84,9 @@ const CHAT = {
     })
     this.socket.on('close', function (obj) {
       CHAT.frametype = 'close'
+    })
+    this.socket.on('page', function (obj) {
+      CHAT.curpage0 = obj.msg
     })
   },
   init: function (username, url) {
