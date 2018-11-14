@@ -1293,10 +1293,10 @@ export default{
     // ADD MULTI TO CLASS
     addMultiAll (index) {
       let iMulti = this.multiAllList[index]
-      let input = {username: '', url: '', multi: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.multi = iMulti
+      input.uniqueId = iMulti.uniqueId
       // post
       axios.post('/api/resource/multi_addclass', input).then((resp) => {
         if (resp.data.status === 'success') {
@@ -1475,10 +1475,10 @@ export default{
     // ADD CODE TO CLASS
     addCodeAll (index) {
       let iCode = this.codeAllList[index]
-      let input = {username: '', url: '', code: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.code = iCode
+      input.uniqueId = iCode.uniqueId
       // post
       axios.post('/api/resource/code_addclass', input).then((resp) => {
         if (resp.data.status === 'success') {
