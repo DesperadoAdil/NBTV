@@ -30,9 +30,19 @@
     <!--<div id="maincodecard" class="cardtealivingcdode00" :style="{display:maincodecarddisplay?'block':'none'}">-->
     <div  id="maincodecard" class="cardtealivingcdode00"  :style="{display:CHAT.frametype === 'code'?'block':'none'}">
       <h>编程题</h>
+      <Form>
+        <!---->
+        <FormItem label="Description" >
+          {{CHAT.codeall.statement}}
+        </FormItem>
+        <FormItem label="Language">
+          {{CHAT.codeall.language}}
+        </FormItem>
+        <FormItem label="Your Answer"></FormItem>
+      </Form>
     </div>
 
-    <!--<div id="mainselectcard" class="cardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
+    <!--<div id="mainselectcard" class="celeardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
     <div  id="mainselectcard" class="cardtealivingselect00" :style="{display:CHAT.frametype === 'select'?'block':'none'}">
       <p class="selecttitle00">{{CHAT.selectall.statement}}</p>
       <RadioGroup  class="radiotea" v-model="stuans" vertical>
