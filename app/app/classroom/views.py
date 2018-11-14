@@ -147,6 +147,14 @@ def getList():
 	return json.dumps(ans, ensure_ascii = False)
 
 
+@classroom.route('/shutuplist', methods = ['POST'])
+def shutuplist():
+	data = request.get_data()
+	data = json.loads(data)
+	classroom = classroomManager.search(data['url'])
+	return classroom.shutuplist
+
+
 #xlsx添加学生
 @classroom.route('/xlsxaddstudents', methods = ['POST'])
 def xlsxaddstudents():
