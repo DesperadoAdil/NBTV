@@ -1557,6 +1557,7 @@ export default{
         toUser: m.fromUser,
         fromUser: this.userInfo.username
       }
+      console.log(m)
       CHAT.shutUp(obj)
     },
     blackList (m) {
@@ -1565,6 +1566,7 @@ export default{
         toUser: m.fromUser,
         fromUser: this.userInfo.username
       }
+      console.log(m)
       CHAT.blackList(obj)
     },
     /**
