@@ -6765,19 +6765,19 @@ var pdfjsWebLibs;
    }
    function webViewerNextPage() {
     PDFViewerApplication.page++;
-    window.alert("++")
-    window.console.log("++")
-    window.parent.methods.updatepage();
-    window.parent.updatepage();
+    window.alert("++++")
+    window.console.log("++++")
+    window.opener.postMessage('super window 接收到了一条消息', '/')    
     parent.updatepage()
     parent.methods.updatepage()
    }
    function webViewerPreviousPage() {
     PDFViewerApplication.page--;
-    window.alert("--")
-    window.console.log("--")
-    window.parent.methods.updatepage();
-    window.parent.updatepage();
+    window.alert("----")
+    window.console.log("----")
+    window.opener.postMessage('super window 接收到了一条消息', '/')
+    window.console("dsajd")  
+    window.parent.updatepage()
     parent.updatepage()
     parent.methods.updatepage()
    }

@@ -30,23 +30,33 @@
     <!--<div id="maincodecard" class="cardtealivingcdode00" :style="{display:maincodecarddisplay?'block':'none'}">-->
     <div  id="maincodecard" class="cardtealivingcdode00"  :style="{display:CHAT.frametype === 'code'?'block':'none'}">
       <h>编程题</h>
+      <Form>
+        <!---->
+        <FormItem label="Description" >
+          {{CHAT.codeall.statement}}
+        </FormItem>
+        <FormItem label="Language">
+          {{CHAT.codeall.language}}
+        </FormItem>
+        <FormItem label="Your Answer"></FormItem>
+      </Form>
     </div>
 
-    <!--<div id="mainselectcard" class="cardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
+    <!--<div id="mainselectcard" class="celeardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
     <div  id="mainselectcard" class="cardtealivingselect00" :style="{display:CHAT.frametype === 'select'?'block':'none'}">
-      <p class="selecttitle00">{{CHAT.selectall.title}}</p>
+      <p class="selecttitle00">{{CHAT.selectall.statement}}</p>
       <RadioGroup  class="radiotea" v-model="stuans" vertical>
         <Radio label="A" style="font-size: 15px">
-          <span>A、{{CHAT.selectall.ans[0]}}</span>
+          <span>A、{{CHAT.selectall.optionList[0]}}</span>
         </Radio>
         <Radio label="B" style="font-size: 15px">
-          <span>B、{{CHAT.selectall.ans[1]}}</span>
+          <span>B、{{CHAT.selectall.optionList[1]}}</span>
         </Radio>
         <Radio label="C" style="font-size: 15px">
-          <span>C、{{CHAT.selectall.ans[2]}}</span>
+          <span>C、{{CHAT.selectall.optionList[2]}}</span>
         </Radio>
         <Radio label="D" style="font-size: 15px">
-          <span>D、{{CHAT.selectall.ans[3]}}</span>
+          <span>D、{{CHAT.selectall.optionList[3]}}</span>
         </Radio>
       </RadioGroup>
       <Button class="selectsubmit00" type="primary" @click="selectsubmit">提交答案: {{stuans}}</Button>
@@ -464,13 +474,13 @@ export default{
       this.userInfo['mobile'] = this.$cookies.get('user').mobile
       this.userInfo['job'] = this.$cookies.get('user').job
     },
-    selectsubmit () {
-      console.log('dasdas')
-      const data = this.curuser
+    selectsubmit(){
+      console.log("dasdas")
+      var data={}
       data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      data['item'] = this.stuans
+      data['url']=this.cururl
+      data['uniqueId'] = this.CHAT.selectall.answer
+      data['answer'] = this.stuans
       axios.post('/api/classroom/selectsubmit', data).then((resp) => {
 
       })

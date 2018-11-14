@@ -9,9 +9,16 @@ const CHAT = {
   curpage0:'1',
   frametype: 'close',
   pdfurl: '/static/pdf/1-1.pdf',
+  codeall: {
+    uniqueId: '',
+    statement: 'B-Tree',
+    language: 'cpp',
+    example: 'cout << "hello world" << endl;'
+  },
   selectall: {
-    title: 'choice 02',
-    ans: ['something', 'somewhere', 'somehow', 'somewhat'],
+    uniqueId: '1',
+    statement: 'choice 02',
+    optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
     answer: 'A'
   },
   logout: function () {
