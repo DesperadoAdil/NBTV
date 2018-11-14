@@ -149,7 +149,7 @@ export default {
         job: 'teacher'
       },
       // changed this to 已登录 to debug
-      LoginOrLogout: 'yi登录',
+      LoginOrLogout: '登录',
       // Password Submit
       passSub: {
         status: 'login/logout',
