@@ -418,7 +418,7 @@
             </div>
           </div>
 
-          <div class="content">
+          <div class="content" id="content-id">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
               <div v-if="CHAT.msgArr[index].toUser === username && username !== userInfo.username">
                 <div class="talk-space self-talk"
@@ -937,6 +937,9 @@ export default{
     this.cururl = this.$route.params.url
     // console.log(this.cururl)
     this.showUserInfo()
+    window['updatepage'] = () => {
+      this.updatepage();
+    };
     /**
      * 以下为聊天室使用，请勿改动
      */
@@ -1952,7 +1955,6 @@ export default{
     margin: 0 19px;
     border-bottom: 1px solid #d6d6d6;
     background-color: #eee;
-    z-index: 1024;
   }
   .content {
     background-color: #eee;

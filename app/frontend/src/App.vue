@@ -13,7 +13,7 @@
         我参与的
       </MenuItem>
 
-      <MenuItem name="1" style="float:right" @click.native="showInfo = true">
+      <MenuItem name="1" style="float:right">
 
         <Dropdown trigger="custom" :visible="visible" placement="bottom-end" style="">
           <a href="javascript:void(0)" trigger="click" @click="handleOpen">
@@ -43,22 +43,22 @@
                   </Col>
                 </Row>
               </FormItem>
+              <!-- 设置旧手机的验证码 -->
+              <FormItem v-if="showVerificationOld" label="Verification" label-position="left" label-width="80">
+                <Row>
+                  <Col span="14">
+                    <Input v-model="oldVerification" placeholder="Old Verification Code Here"></Input>
+                  </Col>
+                  <Col span="10">
+                    <Button @click="sendVerificationOld()">Send</Button>
+                  </Col>
+                </Row>
+              </FormItem>
               <!-- 用户的新手机号 -->
               <FormItem v-if="showNewMobile" label="New Mobile" label-position="left" label-width="80">
                 <Row>
                   <Col span="14">
                       <Input type="text" v-model="this.newMobile" placeholder="New Phone Number Here"></Input>
-                  </Col>
-                  <Col span="10">
-                      <Button @click="sendVerification()">Send</Button>
-                  </Col>
-                </Row>
-              </FormItem>
-              <!-- 设置旧手机的验证码 -->
-              <FormItem v-if="showNewMobile" label="Verification" label-position="left" label-width="80">
-                <Row>
-                  <Col span="14">
-                     <Input v-model="oldVerification" placeholder="Old Verification Code Here"></Input>
                   </Col>
                 </Row>
               </FormItem>
@@ -69,9 +69,13 @@
                      <Input v-model="newVerification" placeholder="New Verification Code Here"></Input>
                   </Col>
                   <Col span="10">
-                    <Button @click="submitMobileChange()">Verify</Button>
+                    <Button @click="sendVerificationNew()">Send</Button>
                   </Col>
                 </Row>
+              </FormItem>
+              <!-- Confirm / Cancel -->
+              <FormItem v-if="showMobileChange" style="alignment: right">
+                <Button @click="submitMobileChange()">Verify</Button>
               </FormItem>
               <!-- 用户密码 -->
               <FormItem label="Current Password" label-position="left" label-width="80">
@@ -98,8 +102,7 @@
             </Form>
             <div class="demo-drawer-footer">
               <Button  @click="handleClose">返回</Button>
-              <Button style="margin: 8px" @click="showInfo = false">更改</Button>
-              <Button type="primary" @click="logout">注销</Button>
+              <Button type="primary" @click="logout">登出</Button>
             </div>
           </DropdownMenu>
         </Dropdown>
@@ -122,8 +125,9 @@ export default {
     return {
       visible: false,
       // boolean to show or not
-      showInfo: false,
       showRpass: false,
+      showMobileChange: false,
+      showVerificationOld: false,
       showNewMobile: false,
       // mobile and password
       newMobile: '',
@@ -145,7 +149,7 @@ export default {
         job: 'teacher'
       },
       // changed this to 已登录 to debug
-      LoginOrLogout: '登录',
+      LoginOrLogout: 'yi登录',
       // Password Submit
       passSub: {
         status: 'login/logout',
@@ -181,6 +185,14 @@ export default {
     handleClose () {
       this.visible = false
     },
+    cancelMobileChange () {
+      this.showVerificationOld = false
+      this.showNewMobile = false
+      this.showMobileChange = false
+      this.newMobile = ''
+      this.oldVerification = ''
+      this.newVerification = ''
+    },
     submitMobileChange () {
       // set input variable
       this.mobileSub.old_mobile = this.userInfo.mobile
@@ -198,12 +210,16 @@ export default {
           // 需要更改一下Cookie 现在还没好
           // this.$cookies.set('user', resp.data)
           window.location.reload()
+          this.showVerificationOld = false
+          this.showNewMobile = false
+          this.showMobileChange = false
+          this.newMobile = ''
+          this.oldVerification = ''
+          this.newVerification = ''
         } else { // 如果失败
           this.$Message.error('更改失败')
         }
       })
-      // Hide the bars
-      this.showNewMobile = false
     },
     submitPassChange () {
       // set input variable
@@ -228,16 +244,20 @@ export default {
       // Hide the bars
       this.showRpass = false
     },
-    sendVerification () {
-      // send verification to both phones
+    // SEND TO OLD MOBILE
+    sendVerificationOld () {
       this.verificationSub.mobile = this.userInfo.mobile
-
       axios.post('/api/user/request_verification', this.verificationSub).then((resp) => {
         if (resp.data.status === 'success') {
           this.$.message('原手机验证码发送成功')
+          this.showNewMobile = true
         }
       })
-
+      // this shouldn't appear here, but anyway...
+      this.showNewMobile = true
+    },
+    // SEND TO NEW MOBILE
+    sendVerificationNew () {
       // send to new phone
       this.verificationSub.mobile = this.newMobile
       axios.post('/api/user/request_verification', this.verificationSub).then((resp) => {
@@ -247,11 +267,12 @@ export default {
       })
     },
     changeMobile () {
-      if (this.showNewMobile === false) {
-        this.showNewMobile = true
+      if (this.mobileButton === 'Edit') {
+        this.showMobileChange = true
+        this.showVerificationOld = true
         this.mobileButton = 'Cancel'
       } else {
-        this.showNewMobile = false
+        this.cancelMobileChange()
         this.mobileButton = 'Edit'
       }
     },
