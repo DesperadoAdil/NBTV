@@ -443,8 +443,8 @@
                     <Poptip v-if="msgObj.fromUser !== '[系统]'" trigger="hover" content="content" placement="right-start">
                       <div class="talk-user-name">{{ msgObj.fromUser }}</div>
                       <div class="api" slot="content">
-                        <Button type="warning">禁言</Button>
-                        <Button type="error">踢出</Button>
+                        <Button type="warning" @click="shutUp(msgObj)">禁言</Button>
+                        <Button type="error" @click="blackList(msgObj)">踢出</Button>
                       </div>
                     </Poptip>
                     <div v-else class="talk-user-name">{{ msgObj.fromUser }}</div>

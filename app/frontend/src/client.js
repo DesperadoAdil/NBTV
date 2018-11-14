@@ -34,13 +34,13 @@ const CHAT = {
   },
   beenShutUp: function (username) {
     this.socket.on('shutup', function () {
-      this.$Message.warning('您已被禁言')
+      this.$Message.error('您已被禁言')
     })
   },
   beenKickOut: function (username) {
     this.socket.on('blacklist', function () {
       router.push('/list')
-      this.$Message.warning('您已被永久踢出房间')
+      this.$Message.error('您已被永久踢出房间')
     })
   },
   message: function (username) {
