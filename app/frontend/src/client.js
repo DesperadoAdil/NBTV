@@ -22,23 +22,25 @@ const CHAT = {
   },
   shutUp: function (obj) {
     this.socket.emit('shutup', obj)
+    console.log('shut up')
   },
   blackList: function (obj) {
     this.socket.emit('blacklist', obj)
+    console.log('black list')
   },
   list: function (username, url) {
     console.log('list')
     this.socket.emit('list', {'username': username, 'url': url})
   },
   beenShutUp: function (username) {
-    this.socket.on('shutup', function (obj) {
-      this.$Message.warning('您已被禁言')
+    this.socket.on('shutup', function () {
+      this.$Message.error('您已被禁言')
     })
   },
   beenKickOut: function (username) {
-    this.socket.on('blacklist', function (obj) {
+    this.socket.on('blacklist', function () {
       router.push('/list')
-      this.$Message.warning('您已被永久踢出房间')
+      this.$Message.error('您已被永久踢出房间')
     })
   },
   message: function (username) {

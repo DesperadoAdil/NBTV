@@ -19,7 +19,6 @@ class ClassroomManager:
 		ret['rtmpUrl'] = classroom.rtmpUrl
 		ret['studentlist'] = classroom.studentlist
 		ret['teacherlist'] = classroom.teacherlist
-		ret['filelist'] = classroom.filelist
 		ret['visible'] = classroom.visible
 		ret['createtime'] = str(classroom.createtime)
 		ret['showtime'] = str(classroom.showtime)

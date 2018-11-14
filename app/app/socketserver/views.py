@@ -1,6 +1,7 @@
 from flask_socketio import join_room, leave_room, emit, send
 from .. import socketio
 from ..models import *
+import json
 
 chatingRoom = {}
 
@@ -69,6 +70,7 @@ def check(data):
 
 @socketio.on('blacklist')
 def blacklist(data):
+	print ("BlackList!")
 	username = data["toUser"]
 	url = data["url"]
 
@@ -90,6 +92,7 @@ def blacklist(data):
 
 @socketio.on('shutup')
 def shutup(data):
+	print ("ShutupList!")
 	username = data["toUser"]
 	url = data["url"]
 
