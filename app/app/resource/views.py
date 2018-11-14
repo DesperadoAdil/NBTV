@@ -136,7 +136,7 @@ def get_code():
         return "error"
 
 @resource.route('/add_pdf', methods = ['POST'])
-def addPDF():
+def add_PDF():
     print('add pdf file')
     ret = {}
     try:
@@ -170,39 +170,86 @@ def delete_PDF():
 #Get_pdfs
 @resource.route('/getpdfs', methods = ['POST'])
 def get_pdfs():
-    ret = []
+    print('get pdf list')
+
+    ret = {'pdfAllList': [], 'pdfThisList': []}
 
     data = request.get_data()
-    #print (data)
+    # print (data)
     data = json.loads(data)
 
     username = data['username']
-    # job = data['job']
-    # url = data['url']
-    # classroom = classroomManager.search(url)
-    # if job == 'teacher' and classroom.teacher != username:
-    #    print ("Get PDF Error: Wrong Teacher")
-    #    ret['status']
-    #    return json.dumps(ret)
 
     teacher = usermanager.search("username", username, "teacher")
     if teacher is None:
-        # ret['status'] = "error"
-        # return json.dumps(ret)
-        return "error"
+        ret['status'] = "error"
+        return json.dumps(ret)
+        # return "error"
 
 
     data = teacher.pdfs
     for item in data:
-        dic = {}
-        dic['title'] = item.filename
-        dic['url'] = "/pdf/" + username + "/" + item.filename
-        ret.append(dic)
+        ret['pdfAllList'].append({
+            'title': item.filename,
+            'url': "/pdf/%s/%s" % (username, item.filename)
+            })
 
+    url = data['url']
+    clr = classroomManager.search(url)
+    if clr is None:
+        ret['status'] = "error"
+        return json.dumps(ret)
+    for item in data:
+        ret['pdfThisList'].append({
+            'title': item.filename,
+            'url': "/pdf/%s/%s" % (username, item.filename)
+            })
+
+    ret['status'] = 'success'
     print (json.dumps(ret))
     return json.dumps(ret)
 
+@resource.route('/pdf_addclass', methods = ['POST', 'GET'])
+def add_pdf_class():
+    print('add pdf to class')
+    data = request.get_data()
+    data = json.lodas(data)
 
+    ret = {'pdfThisList': []}
+
+    username = data['username']
+    url = data['url']
+
+    teacher = usermanager.search("username", username, "teacher")
+    if teacher is None:
+        ret['status'] = 'error'
+        print('gg: no such teacher')
+        return json.dumps(ret)
+
+    clr = classroomManager.search(url)
+    if clr is None or clr.teacher != username:
+        ret['status'] = 'error'
+        print('the classroom do not belong to the teacher or no such classroom')
+        return json.dumps(ret)
+
+    pdffile = pdfManager.search(data['pdf']['url'][5:])
+    if pdffile is None:
+        ret['status'] = 'error'
+        print('gg: no such pdffile')
+        return json.dumps(ret)
+
+    clr.pdffile.append(pdffile)
+    db.session.add(clr)
+    db.session.commit()
+
+    for item in clr.pdffile:
+        ret['pdfThisList'].append({
+            'title': item.filename,
+            'url': "/pdf/%s/%s" % (username, item.filename)
+            })
+
+    ret['status'] = 'success'
+    return json.dumps(ret)
 
 
 #Get_selects
