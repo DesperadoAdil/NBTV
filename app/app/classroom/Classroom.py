@@ -31,10 +31,10 @@ class ClassroomManager:
 		try:
 			if not os.path.exists("/mnt/NBTV_Img/%s" % teacher):
 				os.mkdir("/mnt/NBTV_Img/%s" % teacher)
-			imgpath = "/mnt/NBTV_Img/%s/%s_%s" % (teacher, vid, imgfile.filename)
+			imgpath = "/mnt/NBTV_Img/%s/%s.%s" % (teacher, vid, imgfile.filename.split('.')[-1])
 			imgfile.save(imgpath)
 
-			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = '/img_class/%s/%s_%s' % (teacher, vid, imgfile.filename), password = passwd, rtmpUrl = rtmpUrl, url = url, mode = mode)
+			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = '/img_class/%s/%s.%s' % (teacher, vid, imgfile.filename.split('.')[-1]), password = passwd, rtmpUrl = rtmpUrl, url = url, mode = mode)
 
 			db.session.add(classroomTmp)
 			db.session.commit()
@@ -56,15 +56,18 @@ class ClassroomManager:
 			print("delete classroom: ", err)
 			return "error"
 
-	def update(self, title, thumbnail, newUrl, passwd, oldUrl):
+	def update(self, title, imgfile, newUrl, passwd, oldUrl):
 		#在调用这个接口之前，需要先判断是否是本用户删除的，需要验证密码
 		try:
 			tmpClass = Classrooms.query.filter_by(url = oldUrl).first()
 			if tmpClass is None:
 				return "error:NoSuchClassroom"
 
+			imgpath = "/mnt/NBTV_Img/%s/%s.%s" % (tmpClass.teacher, tmpClass.vid, imgfile.filename.split('.')[-1])
+			imgfile.save(imgpath)
+
 			tmpClass.title = title
-			tmpClass.thumbnail = thumbnail
+			# tmpClass.thumbnail = thumbnail
 			tmpClass.url = newUrl
 			tmpClass.password = passwd
 			db.session.add(tmpClass)

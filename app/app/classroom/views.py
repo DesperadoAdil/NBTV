@@ -111,7 +111,7 @@ def deleteClass():
 
 @classroom.route('/update_class', methods = ['POST'])
 def updateClass():
-	data = request.get_data()
+	data = request.form.to_dict()
 	print('update a classroom')
 	print(data)
 	data = json.loads(data)
@@ -121,8 +121,9 @@ def updateClass():
 		ret["status"] = "error:password wrong"
 		return json.dumps(ret, ensure_ascii = False)
 
+	imgfile = request.files.get('img')
 	# update(self, title, thumbnail, newUrl, passwd, oldUrl):
-	ret['status'] = classroomManager.update(data['title'], data['thumbnail'], data['url'], data['class_password'], data['old_url'])
+	ret['status'] = classroomManager.update(data['title'], imgfile, data['url'], data['class_password'], data['old_url'])
 	return json.dumps(ret, ensure_ascii = False)
 
 
