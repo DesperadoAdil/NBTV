@@ -10,8 +10,9 @@ const CHAT = {
   frametype: 'close',
   pdfurl: '/static/pdf/1-1.pdf',
   selectall: {
-    title: 'choice 02',
-    ans: ['something', 'somewhere', 'somehow', 'somewhat'],
+    uniqueId: '1',
+    statement: 'choice 02',
+    optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
     answer: 'A'
   },
   logout: function () {

@@ -51,13 +51,16 @@ class CodeQuestionObj:
 		except:
 			return "error"
 
+	def search(self, uniqueId):
+		return CodeQuestion.query.filter_by(uniqueId = uniqueId).first()
+
 	def submitAnswer(self, uniqueId, studentId, ans):
 		try:
 			que = CodeQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 			record = json.loads(que.submitRecord)
-			record.append([studentId, ans])
+			record.append({'student': studentId, 'answer': ans})
 			que.submitRecord = json.dumps(record, ensure_ascii = False)
 			db.session.add(que)
 			db.session.commit()
