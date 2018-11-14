@@ -117,7 +117,11 @@ export default {
       })
     },
 
-    skip: function (aab) {
+    skip: function (item) {
+      if (item.blacklist.includes(this.userInfo.username)) {
+        this.$Message.error('您已被永久移出教室')
+        return
+      }
       this.$Modal.confirm({
         render: (h) => {
           return h('Input', {
@@ -137,8 +141,8 @@ export default {
           })
         },
         onOk: () => {
-          if (this.currentpassword === aab.password) {
-            this.$router.push({path: '/living/' + aab.url})
+          if (this.currentpassword === item.password) {
+            this.$router.push({path: '/living/' + item.url})
             window.location.reload()
           } else {
             this.$Notice.error({
