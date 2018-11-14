@@ -1,13 +1,15 @@
 import io from 'socket.io-client'
+import router from './router'
 const CHAT = {
   msgObj: document.getElementsByClassName('body-wrapper')[0],
   username: null,
   socket: null,
   msgArr: [],
   studentlist: [],
-  frametype:'close',
-  pdfurl:'/static/pdf/1-1.pdf',
-  selectall:{
+  curpage0:'1',
+  frametype: 'close',
+  pdfurl: '/static/pdf/1-1.pdf',
+  selectall: {
     title: 'choice 02',
     ans: ['something', 'somewhere', 'somehow', 'somewhat'],
     answer: 'A'
@@ -18,9 +20,26 @@ const CHAT = {
   submit: function (obj) {
     this.socket.emit('sendMsg', obj)
   },
+  shutUp: function (obj) {
+    this.socket.emit('shutup', obj)
+  },
+  blackList: function (obj) {
+    this.socket.emit('blacklist', obj)
+  },
   list: function (username, url) {
     console.log('list')
     this.socket.emit('list', {'username': username, 'url': url})
+  },
+  beenShutUp: function (username) {
+    this.socket.on('shutup', function (obj) {
+      this.$Message.warning('您已被禁言')
+    })
+  },
+  beenKickOut: function (username) {
+    this.socket.on('blacklist', function (obj) {
+      router.push('/list')
+      this.$Message.warning('您已被永久踢出房间')
+    })
   },
   message: function (username) {
     console.log('message')
@@ -52,17 +71,20 @@ const CHAT = {
     })
     this.socket.on('pdf', function (obj) {
       CHAT.frametype = 'pdf'
-      CHAT.pdfurl=obj.msg
+      CHAT.pdfurl = obj.msg
     })
     this.socket.on('select', function (obj) {
       CHAT.frametype = 'select'
-      CHAT.selectall=obj.msg
+      CHAT.selectall = obj.msg
     })
     this.socket.on('code', function (obj) {
       CHAT.frametype = 'code'
     })
     this.socket.on('close', function (obj) {
       CHAT.frametype = 'close'
+    })
+    this.socket.on('page', function (obj) {
+      CHAT.curpage0 = obj.msg
     })
   },
   init: function (username, url) {
