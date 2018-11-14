@@ -940,6 +940,10 @@ export default{
     window['updatepage'] = () => {
       this.updatepage();
     };
+    window.addEventListener('message', function (e) { console.log(e)   } )
+
+
+
     /**
      * 以下为聊天室使用，请勿改动
      */
