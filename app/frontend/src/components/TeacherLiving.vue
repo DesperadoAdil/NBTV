@@ -42,6 +42,7 @@
           </template>
           <MenuItem @click.native="modal_student_xlsx = true">xlsx文档添加</MenuItem>
           <MenuItem @click.native="addStudent()">用户名添加</MenuItem>
+          <MenuItem @click.native="getShutUpList()">解除禁言</MenuItem>
         </Submenu>
         <!-- 学生 -->
       </Menu>
@@ -357,6 +358,16 @@
       </Form>
     </Modal>
 
+    <Modal v-model="shutUpModal" @on-ok="shutUpModal = false">
+      <p slot="header">
+        <span>禁言名单</span>
+      </p>
+      <div v-for="student in shutuplist">
+        {{ student }}
+        <button type="success" @click="noShutUp(student)">解禁</button>
+      </div>
+    </Modal>
+
     <!---------main living 部分------------->
     <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
       <div class="topveido">
@@ -366,7 +377,7 @@
         <embed id="rtmp-streamer1" src="/static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
                width="100%" :style="{height:videohei}"  allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
       </object>
-      <div class="bottomveido">
+      <div class="bottomve`ido">
         <h3>礼物等其他显示部分（待修改）</h3>
       </div>
     </div>
@@ -549,9 +560,9 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
-        curpage:'1',
-      chatingtop:60+'px',
-      chatinghei:710+'px',
+      curpage: '1',
+      chatingtop: 60 + 'px',
+      chatinghei: 710 + 'px',
       msgTypeInfo: '语音',
       socket: null,
       msgType: 'text',
@@ -572,8 +583,8 @@ export default{
       }),
       audio: {},
       selected: {},
-      uploadStatus: null,
-      uploaderOptions: {},
+      shutUpModal: false,
+      shutuplist: [],
       /**
        * 以上为聊天室使用，请勿改动
        */
@@ -928,7 +939,7 @@ export default{
      * 以下为聊天室使用，请勿改动
      */
     CHAT.message(this.userInfo.username)
-
+    this.findIfShutUp()
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -973,9 +984,9 @@ export default{
     PrismEditor
   },
   methods: {
-    updatepage(){
-      console.log("updatepage")
-      this.curpage=document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value;
+    updatepage () {
+      console.log('updatepage')
+      this.curpage = document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value
       console.log(this.curpage)
 
       let date = new Date()
@@ -1099,6 +1110,7 @@ export default{
       axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
+
        //zsh this.pdfThisList = resp.data.pdfThisList
       })
     },
@@ -1140,6 +1152,7 @@ export default{
       delPdfAllInput.pdf = iPdf
       // post
       axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
+
         if (resp.data.status === 'success') {
           let pdfInput = {username: '', url: ''}
           pdfInput.username = this.userInfo.username
@@ -1694,6 +1707,21 @@ export default{
       console.log(m)
       CHAT.blackList(obj)
     },
+    findIfShutUp () {
+      axios.post('/api/classroom/shutuplist', {'url': this.cururl}).then((resp) => {
+        console.log(resp.data)
+        this.shutuplist = resp.data
+      })
+    },
+    getShutUpList () {
+      this.shutUpModal = true
+      this.findIfShutUp()
+    },
+    noShutUp (student) {
+      CHAT.youCanTalk(student, this.cururl)
+      var index = this.shutuplist.indexOf(student)
+      this.shutuplist.splice(index, 1)
+    },
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -1788,8 +1816,8 @@ export default{
           this.mainpdfcarddisplay = false
           this.classmain0 = true
           this.videohei = 700 + 'px'
-          this.chatingtop=60+'px'
-          this.chatinghei=710+'px'
+          this.chatingtop = 60 + 'px'
+          this.chatinghei = 710 + 'px'
           this.curvideo = true
           const data = this.curuser
           data['username'] = this.userInfo['username']
