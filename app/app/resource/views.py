@@ -67,8 +67,8 @@ def getChoice():
     try:
         username = data['username']
         teacher = usermanager.search("username", username, "teacher")
-        data = teacher.choiceQue
-        for item in data:
+        
+        for item in teacher.choiceQue:
             ret['multiAllList'].append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
         clr = classroomManager.search(data['url'])
         for item in clr.choice:
@@ -242,8 +242,8 @@ def get_code():
     try:
         username = data['username']
         teacher = usermanager.search("username", username, "teacher")
-        data = teacher.codeQue
-        for item in data:
+        
+        for item in teacher.codeQue:
             ret['codeAllList'].append({"statement": item.statement, "language": item.language, "uniqueId": item.uniqueId})
         clr = classroomManager.search(data['url'])
         for item in clr.code:
@@ -329,8 +329,8 @@ def get_pdfs():
         # return "error"
 
 
-    data = teacher.pdfs
-    for item in data:
+    pdfdata = teacher.pdfs
+    for item in pdfdata:
         ret['pdfAllList'].append({
             'title': item.filename,
             'url': "/pdf/%s/%s" % (username, item.filename)

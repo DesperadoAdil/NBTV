@@ -4,7 +4,7 @@ from flask_socketio import SocketIO
 
 app = Flask(__name__)
 app.config.from_object('config')
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, use_native_unicode="utf8")
 socketio = SocketIO(app)
 
 from .user import user as user_blueprint
