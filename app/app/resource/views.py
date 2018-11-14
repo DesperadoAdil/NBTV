@@ -340,7 +340,7 @@ def get_pdfs():
     if clr is None:
         ret['status'] = "error"
         return json.dumps(ret)
-    for item in clr.pdfs:
+    for item in clr.pdffile:
         ret['pdfThisList'].append({
             'title': item.filename,
             'url': "/pdf/%s/%s" % (username, item.filename)
