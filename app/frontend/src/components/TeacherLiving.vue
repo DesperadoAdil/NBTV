@@ -1095,7 +1095,7 @@ export default{
       axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
-        this.pdfThisList = resp.data.pdfThisList
+       //zsh this.pdfThisList = resp.data.pdfThisList
       })
     },
     // ADD PDF TO CLASS
@@ -1115,7 +1115,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
+      //zsh  this.pdfThisList = resp.data.pdfThisList
               window.location.reload()
             } else {
               this.$.message('wrong')
@@ -1143,7 +1143,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
+      //zsh   this.pdfThisList = resp.data.pdfThisList
               window.location.reload()
             } else {
               this.$.message('wrong')
@@ -1210,7 +1210,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
+      //zsh   this.pdfThisList = resp.data.pdfThisList
               window.location.reload()
             } else {
               this.$.message('wrong')
