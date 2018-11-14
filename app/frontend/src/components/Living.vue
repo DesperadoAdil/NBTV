@@ -1,8 +1,5 @@
 <template>
-  <div class="tealivingmain">
-
-
-
+  <div id="living" class="tealivingmain">
     <div  id="mainlivingcard" class="cardtealiving11" :style="{display:CHAT.frametype === 'close'?'block':'none'}">
       <!--<div id="mainlivingcard" class="cardtealiving11" :style="{display:mainlivingcarddisplay?'block':'none'}">-->
       <div class="topveido">
@@ -27,7 +24,7 @@
 
     <!--<div id="mainpdfcard" class="cardtealivingpdf11" :style="{display:mainpdfcarddisplay?'block':'none'}">-->
     <div  id="mainpdfcard" class="cardtealivingpdf11" :style="{display:CHAT.frametype === 'pdf'?'block':'none'}">
-      <iframe id="displayPdfIframe" class="pdfframe" :src="'/static/pdfjs/web/viewer.html?file='+CHAT.pdfurl"/>
+      <iframe id="displayPdfIframe" class="pdfframe" :src="'/static/pdfjs/web/viewer.html?file='+CHAT.pdfurl+'?'+CHAT.curpage0"/>
     </div>
 
     <!--<div id="maincodecard" class="cardtealivingcdode00" :style="{display:maincodecarddisplay?'block':'none'}">-->
@@ -241,6 +238,8 @@ export default{
      */
 
     CHAT.message(this.userInfo.username)
+    CHAT.beenShutUp(this.userInfo.username)
+    CHAT.beenKickOut(this.userInfo.username)
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -454,6 +453,9 @@ export default{
 }
 </script>
 <style>
+  #living {
+    padding: 0 5%;
+  }
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   #chatingRoom2 {
     position:absolute;

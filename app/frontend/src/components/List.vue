@@ -162,11 +162,10 @@ export default {
 }
 </script>
 <style>
-ul {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+#list {
+  padding: 0 5%;
 }
+
 li {
   list-style: none;
 }
@@ -175,8 +174,6 @@ li {
   top: 60px;
   width: 100%;
 }
-
-
 .listbtn{
   test-align:left;
   font-style:normal;

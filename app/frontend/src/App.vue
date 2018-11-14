@@ -109,7 +109,7 @@
         开播
       </MenuItem>
     </Menu>
-    <router-view class="router"/>
+    <router-view/>
   </div>
 </template>
 

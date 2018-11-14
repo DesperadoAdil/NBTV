@@ -13,54 +13,55 @@
       @on-ok="addLiving()"
       @on-cancel="cancel">
       <Input v-model="newLiving.title" placeholder="课程名称"></Input>
-      <!--<Input v-model="newLiving.thumbnail" placeholder="缩略图（待修改）"></Input>-->
       <a href="javascript:;" class="upf">上传缩略图
         <input type="file" name="fileinput" id="fileinput">
       </a>
-      <!--<input  type="file" value="上传图片" placeholder="缩略图（待修改）"></input>-->
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
       <Input v-model="newLiving.class_password" placeholder="课程密码（可空）"></Input>
       <Select v-model="newLiving.mode">课程Mode
         <Option v-for="item in modeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
     </Modal>
-    <Row>
-      <Col span="8" v-for="(living, index) in myLivingList" :key="living.url">
-          <Card class="living-card">
-            <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
-            <p class="title">{{ living.title }}</p>
-            <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
-            <Modal
-              v-model="updateModal"
-              title="更新课程"
-              @on-ok="updateLiving(index)"
-              @on-cancel="cancel">
-              <Input v-model="living.title" placeholder="课程名称"></Input>
-              <!--<Input v-model="living.thumbnail" placeholder="缩略图（待修改）"></Input>-->
-              <a href="javascript:;" class="upf">上传缩略图
-                <input type="file" name="filezsh" id="filezsh2" accept="image/gif, image/jpeg, image/png, image/jpg">
-              </a>
-              <Input v-model="living.url" placeholder="课程url"></Input>
-              <Input v-model="living.class_password" placeholder="课程密码（可空）"></Input>
-            </Modal>
-            <span><Button type="error" @click="deleteModal = true">DELETE</Button></span>
-            <Modal
-              v-model="deleteModal"
-              title="删除课程"
-              @on-ok="deleteLiving(index)"
-              @on-cancel="cancel">
-              <Input v-model="validate" placeholder="确认删除请输入yes"></Input>
-            </Modal>
-          </Card>
-      </Col>
-    </Row>
+    <ul class="myLivingList-flex-container">
+        <li class="myLivingList-flex-item" v-for="(living, index) in myLivingList" :key="living.url">
+          <card>
+          <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
+          <p class="title">{{ living.title }}</p>
+          <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
+          <Modal
+            v-model="updateModal"
+            title="更新课程"
+            @on-ok="updateLiving(index)"
+            @on-cancel="cancel">
+            <Input v-model="myLivingList[modalIndex].title" placeholder="课程名称"></Input>
+            <a href="javascript:;" class="upf">上传缩略图
+              <input type="file" name="filezsh" id="filezsh2" accept="image/gif, image/jpeg, image/png, image/jpg">
+            </a>
+            <Input v-model="myLivingList[modalIndex].url" placeholder="课程url"></Input>
+            <Input v-model="myLivingList[modalIndex].class_password" placeholder="课程密码（可空）"></Input>
+          </Modal>
+          <span><Button type="error" @click="deleteModal = true">DELETE</Button></span>
+          <Modal
+            v-model="deleteModal"
+            title="删除课程"
+            @on-ok="deleteLiving(index)"
+            @on-cancel="cancel">
+            <Input v-model="validate" placeholder="确认删除请输入yes"></Input>
+          </Modal>
+          </card>
+        </li>
+    </ul>
   </div>
 </template>
 <script>
 import axios from 'axios'
 export default {
+  props: {
+
+  },
   data () {
     return {
+      modalIndex: 0,
       validate: '',
       newLiving: {
         username: '',
@@ -127,6 +128,7 @@ export default {
       })
     },
     getBackUp (index) {
+      this.modalIndex = index
       this.updateModal = true
       this.myLivingList[index]['old_url'] = this.myLivingList[index]['url']
     },
@@ -139,15 +141,17 @@ export default {
       const data = this.userInfo
       axios.post('/api/classroom/user_living_list', data).then((resp) => {
         this.myLivingList = []
-        for (var i = 0; i < resp.data.length; i++) {
-          var living = {}
+        for (let i = 0; i < resp.data.length; i++) {
+          const living = {}
           living['title'] = resp.data[i]['title']
           living['url'] = resp.data[i]['url']
           living['thumbnail'] = resp.data[i]['thumbnail']
           living['class_password'] = resp.data[i]['password']
           living['mode'] = resp.data[i]['mode']
+          console.log(living)
           this.myLivingList.push(living)
         }
+        console.log(this.myLivingList)
       })
     },
     addLiving () {
@@ -176,30 +180,30 @@ export default {
       this.addModal = false
     },
     updateLiving (index) {
-        console.log("sa")
-        var    fileInput00 = document.getElementById('filezsh2')
-        console.log(fileInput00.files)
-        console.log(document.querySelector('input[id=filezsh2]').files)
-          var formData = new FormData()
-          formData.append('username', this.$cookies.get('user').username)
-          formData.append('password', this.$cookies.get('user').password)
-          formData.append('job', this.$cookies.get('user').job)
-          formData.append('img', document.querySelector('input[id=filezsh2]').files[0])
-          formData.append('title', this.myLivingList[index]['title'])
-          formData.append('url', this.myLivingList[index]['url'])
-          formData.append('class_password', this.myLivingList[index]['class_password'])
-          formData.append('mode', this.myLivingList[index]['mode'])
-          var options = {
-            url: '/api/classroom/update_class',
-            data: formData,
-            method: 'post',
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-          axios(options).then((resp) => {
-            this.getMyLivingList()
-        })
+
+      var fileInput00 = document.getElementById('filezsh2')
+      console.log(fileInput00.files)
+      console.log(document.querySelector('input[id=filezsh2]').files)
+      var formData = new FormData()
+      formData.append('username', this.$cookies.get('user').username)
+      formData.append('password', this.$cookies.get('user').password)
+      formData.append('job', this.$cookies.get('user').job)
+      formData.append('img', document.querySelector('input[id=filezsh2]').files[0])
+      formData.append('title', this.myLivingList[index]['title'])
+      formData.append('url', this.myLivingList[index]['url'])
+      formData.append('class_password', this.myLivingList[index]['class_password'])
+      formData.append('mode', this.myLivingList[index]['mode'])
+      var options = {
+        url: '/api/classroom/update_class',
+        data: formData,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      axios(options).then((resp) => {
+        this.getMyLivingList()
+      })
       this.updateModal = false
     },
     deleteLiving (index) {
@@ -224,17 +228,31 @@ export default {
 }
 </script>
 <style>
-ul {
+.myLivingList-flex-container {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+
+  -webkit-flex-flow: row wrap;
 }
 li {
   list-style: none;
+
 }
-.living-card {
-  padding: 3%;
-  margin: 6%;
+.myLivingList-flex-item {
+  padding: 20px;
+  margin: 5% 5%;
+  width: 30%;
+  height: 20%;
+}
+#myLivingList {
+  padding: 0 5%;
 }
 .posi{
   position: absolute;
