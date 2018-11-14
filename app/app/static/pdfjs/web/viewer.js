@@ -6767,7 +6767,8 @@ var pdfjsWebLibs;
     PDFViewerApplication.page++;
     window.alert("++++")
     window.console.log("++++")
-    window.parent.postMessage('super window 接收到了一条消息', '/')    
+    window.parent.postMessage('super window 接收到了一条消息', '/')  
+    window.console.log(window.location.href)  
     parent.updatepage()
     parent.methods.updatepage()
    }
@@ -6775,8 +6776,8 @@ var pdfjsWebLibs;
     PDFViewerApplication.page--;
     window.alert("----")
     window.console.log("----")
-    window.opener.postMessage('super window 接收到了一条消息', '/')
-    window.console("dsajd")  
+    window.postMessage('super window 接收到了一条消息', '/')
+    window.console.log("dsajd")  
     window.parent.updatepage()
     parent.updatepage()
     parent.methods.updatepage()
