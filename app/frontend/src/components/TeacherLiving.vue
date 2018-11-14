@@ -937,6 +937,9 @@ export default{
     this.cururl = this.$route.params.url
     // console.log(this.cururl)
     this.showUserInfo()
+    window['updatepage'] = () => {
+      this.updatepage();
+    };
     /**
      * 以下为聊天室使用，请勿改动
      */
