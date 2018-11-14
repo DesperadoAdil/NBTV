@@ -1095,7 +1095,7 @@ export default{
       axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
-        this.pdfThisList = resp.data.pdfThisList
+       //zsh this.pdfThisList = resp.data.pdfThisList
       })
     },
     // ADD PDF TO CLASS
@@ -1115,7 +1115,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
+      //zsh  this.pdfThisList = resp.data.pdfThisList
               window.location.reload()
             } else {
               this.$.message('wrong')
@@ -1143,7 +1143,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
+      //zsh   this.pdfThisList = resp.data.pdfThisList
               window.location.reload()
             } else {
               this.$.message('wrong')
@@ -1210,7 +1210,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
+      //zsh   this.pdfThisList = resp.data.pdfThisList
               window.location.reload()
             } else {
               this.$.message('wrong')
@@ -1344,17 +1344,8 @@ export default{
       let iselect = this.multiThisList[index]
       this.$Modal.confirm({
         title: '提示',
-        content: '是否展示: \n ' + iselect.title,
+        content: '是否展示: \n ' + iselect.statement,
         onOk: () => {
-          const data = this.curuser
-          data['username'] = this.userInfo['username']
-          data['job'] = this.userInfo['job']
-          data['url'] = this.cururl
-          data['item'] = iselect.title
-          axios.post('/api/classroom/showselect', data).then((resp) => {
-
-          })
-
           let date = new Date()
           let time = date.getHours() + ':' + date.getMinutes()
           let obj = {
@@ -1375,8 +1366,7 @@ export default{
           this.mainpdfcarddisplay = false
           this.classmain0 = false
           this.curvideo = false
-          this.curtitle = iselect.title
-          this.curans = iselect.ans
+          this.curtitle = iselect.statement
           this.curanswer = iselect.answer
           this.modal_multilist = false
         },
