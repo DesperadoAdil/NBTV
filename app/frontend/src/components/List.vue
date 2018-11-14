@@ -28,7 +28,7 @@ export default {
   name: 'List',
   data () {
     return {
-      modal1:false,
+      modal1: false,
       userInfo: {
         status: '',
         username: '',
@@ -48,12 +48,14 @@ export default {
           url: 'zsh',
           studentlist: '',
           teacherlist: '',
-          audiencelist: [1,5,6,21,321,43],
+          audiencelist: [1, 5, 6, 21, 321, 43],
           visible: '',
-          vid:'242544',
-          createtime:'2018-10-18 13:37:05',
-          showtime:'2018-10-18 13:37:05'
-        },
+          vid: '242544',
+          createtime: '2018-10-18 13:37:05',
+          showtime: '2018-10-18 13:37:05',
+          shutuplist: [],
+          blacklist: []
+        }
 
       ]
     }
@@ -77,14 +79,14 @@ export default {
       var compare = function (obj1, obj2) {
         var val1 = obj1.showtime
         var val2 = obj2.showtime
-        var date1=new Date(val1.replace(/-/g,"\/"));
-        var date2=new Date(val2.replace(/-/g,"\/"));
+        var date1 = new Date(val1.replace(/-/g, '\/'))
+        var date2 = new Date(val2.replace(/-/g, '\/'))
         console.log(date1)
-        if(date1>date2){
+        if (date1 > date2) {
           return -1
-        }else if(date2>date1){
+        } else if (date2 > date1) {
           return 1
-        }else{
+        } else {
           return 0
         }
       }
@@ -98,16 +100,15 @@ export default {
       var compare = function (obj1, obj2) {
         var val1 = obj1.createtime
         var val2 = obj2.createtime
-        var date1=new Date(val1.replace(/-/g,"\/"));
-        var date2=new Date(val2.replace(/-/g,"\/"));
-        if(date1>date2){
+        var date1 = new Date(val1.replace(/-/g, '\/'))
+        var date2 = new Date(val2.replace(/-/g, '\/'))
+        if (date1 > date2) {
           return -1
-        }else if(date2>date1){
+        } else if (date2 > date1) {
           return 1
-        }else{
+        } else {
           return 0
         }
-
       }
       this.items.sort(compare)
       this.$Notice.success({
@@ -116,7 +117,11 @@ export default {
       })
     },
 
-    skip: function (aab) {
+    skip: function (item) {
+      if (item.blacklist.includes(this.userInfo.username)) {
+        this.$Message.error('您已被永久移出教室')
+        return
+      }
       this.$Modal.confirm({
         render: (h) => {
           return h('Input', {
@@ -136,12 +141,10 @@ export default {
           })
         },
         onOk: () => {
-          if (this.currentpassword === aab.password) {
-            this.$router.push({path: '/living/'+ aab.url})
+          if (this.currentpassword === item.password) {
+            this.$router.push({path: '/living/' + item.url})
             window.location.reload()
-
-          }
-          else {
+          } else {
             this.$Notice.error({
               title: '消息提示',
               desc: '您输入的密码错误，请仔细检查 '
