@@ -69,6 +69,7 @@ def check(data):
 
 @socketio.on('blacklist')
 def blacklist(data):
+	print ("BlackList!")
 	username = data["toUser"]
 	url = data["url"]
 
@@ -90,6 +91,7 @@ def blacklist(data):
 
 @socketio.on('shutup')
 def shutup(data):
+	print ("ShutupList!")
 	username = data["toUser"]
 	url = data["url"]
 
