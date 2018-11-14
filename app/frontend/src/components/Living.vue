@@ -162,6 +162,7 @@ import axios from 'axios'
 import CHAT from '../client'
 import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
+import router from '../router'
 export default{
   name: 'load',
   props: {
@@ -238,8 +239,13 @@ export default{
      */
 
     CHAT.message(this.userInfo.username)
-    CHAT.beenShutUp(this.userInfo.username)
-    CHAT.beenKickOut(this.userInfo.username)
+    CHAT.socket.on('shutup', function () {
+      this.beenShutUp()
+    }.bind(this))
+    CHAT.socket.on('blacklist', function () {
+      router.push('/list')
+      this.beenKickOut()
+    }.bind(this))
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -426,11 +432,16 @@ export default{
         this.talkType = 'broadcast'
       }
     },
+    beenShutUp () {
+      this.$Message.error('您已被禁言')
+    },
+    beenKickOut () {
+      this.$Message.error('您已被永久踢出房间')
+    },
     /**
      * 以上为聊天室使用，请勿改动
      */
     showUserInfo () {
-      console.log('1234567')
       this.userInfo['username'] = this.$cookies.get('user').username
       this.userInfo['status'] = this.$cookies.get('user').status
       this.userInfo['password'] = this.$cookies.get('user').password

@@ -95,7 +95,7 @@ commit message都要符合这一个规范：
     - url: /api/resource/pdf_addclass
     - description: 为当前教室添加要使用的pdf课件
     - input: `{ username : '', url: '', pdf: {title: '', url: ''} }`
-    - **output:** `{ pdfThisList: [...]}`
+    - **output:** `{ status: "error"/"success"}`
     - **frontend:** *yuxuan*
     - **backend:** *Adil*
 
@@ -104,7 +104,7 @@ commit message都要符合这一个规范：
     - **url:** */api/resource/delete_pdf*
     - **description:** 用户删除pdf文件 //已有api，需要更改的是，不仅要从教师的文件列表中删除，还要从教室的文件列表中删除。返回两个更新后的列表
     - **input:** `{ username : '', url: '', pdf: {title: '', url: ''} }`
-    - **output:** `{status: 'success/fail'} // 弃用{pdfAllList: [...], pdfThisList: [...] }`
+    - **output:** `{ status: "error"/"success" }`
     - **frontend:** *Yuxuan*
     - **backend:** *Adil*
 
@@ -113,7 +113,7 @@ commit message都要符合这一个规范：
     - url: /api/resource/pdf_delclass
     - description: 从该教室的使用列表中删除，但不从教师的资源删除
     - input:** `{ username : '', url: '', pdf: {title: '', url: ''} }`
-    - **output:** `{ pdfThisList: [...] }`
+    - **output:** `{ status: "error"/"success" }`
     - frontend: yuxuan
     - backend: ???
 
@@ -130,8 +130,8 @@ commit message都要符合这一个规范：
 
     - url: /api/resource/multi_addclass
     - description: 添加已有的选择题到教室
-    - input: `{username: '', url: '', multi: {}}`
-    - **output:** `{ multiThisList: [ '{ uniqueId: '', statement : '', optionList : '[ '答案列表', ... ]', answer : '一个数字' }', ... ]}`
+    - input: `{username: '', url: '', uniqueId: ''}`
+    - **output:** `{ status: "error"/"success" }`
     - **frontend:** *Yuxuan*
     - backend: ???
 
@@ -139,8 +139,8 @@ commit message都要符合这一个规范：
 
     - **url:** */api/resource/delete_mutiple*
     - **description:** 教师从全部资源中删除选择题
-    - **input:** `{ username: '', url: '', multi: {/* 该选择题 */}}`
-    - **output:** `{status: 'success/fail'} // 弃用{ multiAllList: [ '{ uniqueId: '', statement : '', optionList : '[ '答案列表', ... ]', answer : '一个数字' }', ... ], multiThisList: [...]}` // 返回更新后的两个列表
+    - **input:** `{ username: '', url: '', uniqueId: ''}`
+    - **output:** `{ status: "error"/"success" }` 
     - **frontend:** *Yuxuan*
     - **backend:** *???*
 
@@ -148,7 +148,7 @@ commit message都要符合这一个规范：
 
     - url: /api/resource/multi_viewclass
     - description：查看某个选择题目前所有的答题情况
-    - **input:** `{ username: '', url: '', multi: {...}}`
+    - **input:** `{ username: '', url: '', uniqueId: }`
     - **output:** `{ multiAnswerList: [ '{ student: '', answer : 'A / not answerered' }', ... ]}` // 返回该题目的学生答题列表
     - **frontend:** *Yuxuan*
     - backend
@@ -157,7 +157,7 @@ commit message都要符合这一个规范：
 
     - url: /api/resource/multi_delclass
     - description：教室中删除，教师资源不变
-    - **input:** `{ username: '', url: '', multi: {...}}`
+    - **input:** `{ username: '', url: '', uniqueId: ''}`
     - **output:** `{ multiThisList: [...]}` // 返回更新后的列表
     - **frontend:** *Yuxuan*
     - backend
@@ -175,8 +175,8 @@ commit message都要符合这一个规范：
 
     - url：/api/resource/code_addclass
     - description：添加到教室列表中
-    - **input:** `{ username : '', url: ''， code: {}}`
-    - **output:** `{ codeThisList: [... ], }`  // 返回教室中的列表
+    - **input:** `{ username : '', url: ''，uniqueId: ''}`
+    - **output:** `{ status: "error"/"success" }`  // 返回教室中的列表
     - **frontend:** *Yuxuan*
     - backend
 
@@ -184,8 +184,8 @@ commit message都要符合这一个规范：
 
     - **url:** */api/resource/delete_code*
     - **description:** 教师从全部资源中删除代码题，同时删除教室中该资源
-    - **input:** `{ username : '', url: ''， code: {}}`
-    - **output:** `{status: 'success/fail'} // 弃用{ codeAllList: [], codeThisList: [... ], }`  // 返回两个列表
+    - **input:** `{ username : '', url: ''， uniqueId: ''}`
+    - **output:** `{ status: "error"/"success" }`  // 返回两个列表
     - **frontend:** *Yuxuan*
     - **backend:** *???*
 
@@ -193,7 +193,7 @@ commit message都要符合这一个规范：
 
     - url: /api/resource/code_viewclass
     - description：查看代码题中所有学生的提交结果
-    - **input:** `{ username : '', url: ''， code: {}}`
+    - **input:** `{ username : '', url: ''， uniqueId: '' }`
     - **output:** `{ codeAnswerList: [ '{ student: '', answer : '... / not answerered' }', ... ]}` // 返回该题目的学生答题列表
     - **frontend:** *Yuxuan*
     - backend
@@ -202,8 +202,8 @@ commit message都要符合这一个规范：
 
     - url: /api/resource/code_delclass
     - description：教室中删除，教师资源不变
-    - **input:** `{ username: '', url: '', code: {...}}`
-    - **output:** `{ codeThisList: [...]}` // 返回更新后的列表
+    - **input:** `{ username: '', url: '', uniqueId: ''}`
+    - **output:** `{ status: "error"/"success" }` // 返回更新后的列表
     - **frontend:** *Yuxuan*
     - backend
 
@@ -430,27 +430,27 @@ commit message都要符合这一个规范：
 ##Socket通信
 通信的消息都是下面的obj
 
-	obj = {
-		time: '', //小时:分钟
-		msg: '',	//消息内容
-		toUser: '',	//目前为all，即群聊，之后加入私聊功能会用username
-		fromUser: ''	//发消息的用户名
-	}
+  obj = {
+    time: '', //小时:分钟
+    msg: '',  //消息内容
+    toUser: '', //目前为all，即群聊，之后加入私聊功能会用username
+    fromUser: ''  //发消息的用户名
+  }
 ### 加入聊天室
 初始化socket，链接到url
 
-	io.connect(io.connect(url, {'force new connection': true}) //此处需要后端给定url
+  io.connect(io.connect(url, {'force new connection': true}) //此处需要后端给定url
 链接后端服务器，会调用
 
-	socket.on('open', 随意)	//此处需要后端emit消息
+  socket.on('open', 随意) //此处需要后端emit消息
 用来判断是否成功连接聊天室，然后调用
 
-	socket.emit('addUser', username)	//此处需要后端接收消息
+  socket.emit('addUser', username)  //此处需要后端接收消息
 给后端发送消息，用来将当前用户加入聊天室
 ###发送消息
-​	socket.emit('sendMsg', obj)
+​ socket.emit('sendMsg', obj)
 ###接收消息
-​	socket.on('to' + username, obj)
+​ socket.on('to' + username, obj)
 
 # 数据库表结构
 ## NBTV
