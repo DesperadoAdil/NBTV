@@ -1321,8 +1321,19 @@ export default{
       input.multi = iMulti
       // post
       axios.post('/api/resource/delete_mutiple', input).then((resp) => {
-        this.multiAllList = resp.data.multiAllList
-        this.multiThisList = resp.data.multiThisList
+        if (resp.data.status === 'success') {
+          let multiInput = {username: '', url: ''}
+          multiInput.username = this.userInfo.username
+          multiInput.url = this.cururl
+          // post
+          axios.post('/api/resource/getmultiples', multiInput).then((resp) => {
+            // resp.data 即是那个列表
+            this.multiAllList = resp.data.multiAllList
+            this.multiThisList = resp.data.multiThisList
+          })
+        } else {
+          this.$.message('something wrong')
+        }
       })
     },
     // USE IT
@@ -1396,7 +1407,19 @@ export default{
       input.multi = iMulti
       // post
       axios.post('/api/resource/multi_delclass', input).then((resp) => {
-        this.multiThisList = resp.data.multiThisList
+        if (resp.data.status === 'success') {
+          let multiInput = {username: '', url: ''}
+          multiInput.username = this.userInfo.username
+          multiInput.url = this.cururl
+          // post
+          axios.post('/api/resource/getmultiples', multiInput).then((resp) => {
+            // resp.data 即是那个列表
+            this.multiAllList = resp.data.multiAllList
+            this.multiThisList = resp.data.multiThisList
+          })
+        } else {
+          this.$.message('something wrong')
+        }
       })
     },
 
@@ -1455,8 +1478,19 @@ export default{
       input.code = iCode
       // post
       axios.post('/api/resource/code_addclass', input).then((resp) => {
-        // 接收返回的codeThisList
-        this.codeThisList = resp.data.codeThisList
+        if (resp.data.status === 'success') {
+          let codeInput = {username: '', url: ''}
+          codeInput.username = this.userInfo.username
+          codeInput.url = this.cururl
+          // post
+          axios.post('/api/resource/getcodes', codeInput).then((resp) => {
+            // resp.data 即是那个列表
+            this.codeAllList = resp.data.codeAllList
+            this.codeThisList = resp.data.codeThisList
+          })
+        } else {
+          this.$.message('something wrong')
+        }
       })
     },
     // DEL CODE FROM TEACHER
@@ -1469,8 +1503,19 @@ export default{
       input.code = iCode
       // post
       axios.post('/api/resource/delete_code', input).then((resp) => {
-        this.codeAllList = resp.data.codeAllList
-        this.codeThisList = resp.data.codeThisList
+        if (resp.data.status === 'success') {
+          let codeInput = {username: '', url: ''}
+          codeInput.username = this.userInfo.username
+          codeInput.url = this.cururl
+          // post
+          axios.post('/api/resource/getcodes', codeInput).then((resp) => {
+            // resp.data 即是那个列表
+            this.codeAllList = resp.data.codeAllList
+            this.codeThisList = resp.data.codeThisList
+          })
+        } else {
+          this.$.message('something wrong')
+        }
       })
     },
     // USE IT
@@ -1515,7 +1560,19 @@ export default{
       input.code = iCode
       // post
       axios.post('/api/resource/code_delclass', input).then((resp) => {
-        this.codeThisList = resp.data.codeThisList
+        if (resp.data.status === 'success') {
+          let codeInput = {username: '', url: ''}
+          codeInput.username = this.userInfo.username
+          codeInput.url = this.cururl
+          // post
+          axios.post('/api/resource/getcodes', codeInput).then((resp) => {
+            // resp.data 即是那个列表
+            this.codeAllList = resp.data.codeAllList
+            this.codeThisList = resp.data.codeThisList
+          })
+        } else {
+          this.$.message('something wrong')
+        }
       })
     },
 
