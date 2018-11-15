@@ -13,7 +13,10 @@ import VueHighlightJS from 'vue-highlightjs'
 import 'highlight.js/styles/default.css'
 import 'prismjs'
 import 'prismjs/themes/prism.css'
+import VueCodemirror from 'vue-codemirror'
+import 'codemirror/lib/codemirror.css'
 
+Vue.use(VueCodemirror)
 Vue.component('vue-headful', VueHeadful)
 Vue.use(iView)
 Vue.use(VueCookies)

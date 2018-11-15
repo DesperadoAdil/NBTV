@@ -194,7 +194,10 @@
           <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
           <template>
             <!-------------输入框的代码高亮还没好，现在仅能静态高亮------------>
-            <prism-editor :code="sub_code.example" language="cpp"></prism-editor>
+            <codemirror
+              v-model="sub_code.example"
+              :options="cmOption">
+            </codemirror>
           </template>
         </FormItem>
       </Form>
@@ -536,6 +539,27 @@ import CHAT from '../client'
 import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
 import PrismEditor from 'vue-prism-editor'
+import VueCodemirror from 'codemirror/lib/codemirror'
+import 'codemirror/lib/codemirror.css' // css，必要
+import 'codemirror/mode/python/python.js'
+// language
+import 'codemirror/mode/python/python.js'
+// theme css
+import 'codemirror/theme/base16-light.css'
+
+// require active-line.js
+import'codemirror/addon/selection/active-line.js'
+// closebrackets
+import'codemirror/addon/edit/closebrackets.js'
+// keyMap
+import'codemirror/mode/clike/clike.js'
+import'codemirror/addon/edit/matchbrackets.js'
+import'codemirror/addon/comment/comment.js'
+import'codemirror/addon/dialog/dialog.js'
+import'codemirror/addon/dialog/dialog.css'
+import'codemirror/addon/search/searchcursor.js'
+import'codemirror/addon/search/search.js'
+import'codemirror/keymap/emacs.js'
 
 export default{
   name: 'load',
@@ -872,7 +896,17 @@ export default{
         language: 'cpp',
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
       },
-
+      // CODE EDITOR
+      cmOption: {
+        autoCloseBrackets: true,
+        tabSize: 4,
+        styleActiveLine: true,
+        lineNumbers: true,
+        line: true,
+        mode: 'text/x-clike',
+        theme: 'base16-light',
+        keyMap: 'emacs'
+      },
       // ADD STUDENT LIST
       modal_student_xlsx: false,
       // Shihang'S PARAMETER
@@ -966,7 +1000,8 @@ export default{
     }
   },
   components: {
-    PrismEditor
+    PrismEditor,
+    VueCodemirror
   },
   methods: {
     updatepage(){
@@ -1055,7 +1090,7 @@ export default{
     // CODE
     create_code () {
       this.sub_code.statement = ''
-      this.sub_code.example = ''
+      // this.sub_code.example = ''
       this.sub_code.language = ''
       this.modal_code = true
     },
