@@ -982,7 +982,8 @@ export default{
     window['updatepage'] = () => {
       this.updatepage();
     };
-    window.addEventListener('message', function (e) { console.log(e)   } )
+    window.addEventListener('message', function (e) { alert("djasljdks");
+      console.log(e.data)   } )
 
 
 
