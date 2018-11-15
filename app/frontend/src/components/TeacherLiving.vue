@@ -1288,6 +1288,8 @@ export default{
         // resp.data 即是那个列表
         this.multiAllList = resp.data.multiAllList
         this.multiThisList = resp.data.multiThisList
+        console.log(this.multiAllList)
+        console.log(this.multiThisList)
       })
     },
     // EDIT MULTI
