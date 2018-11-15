@@ -44,11 +44,11 @@ class ClassroomTest(BaseTestCase):
 
 	def test_bupdate_classroom(self):
 		# 这是可以正确插入的结果
-		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.data, ensure_ascii = False))
+		response = self.app.post('/api/classroom/update_class', data = self.data)
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
 
 		# 这是不可以正确插入的结果
-		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.dataerror, ensure_ascii = False))
+		response = self.app.post('/api/classroom/update_class', data = self.dataerror)
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
 
 
