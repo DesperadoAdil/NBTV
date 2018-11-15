@@ -1442,6 +1442,7 @@ export default{
       axios.post('/api/resource/multi_viewclass', input).then((resp) => {
         this.multiAnswerList = resp.data.multiAnswerList
       })
+      console.log(this.sub_multi.optionList)
       this.sub_multi.optionList = iMulti.optionList
       this.sub_multi.statement = iMulti.statement
       this.sub_multi.answer = iMulti.answer
