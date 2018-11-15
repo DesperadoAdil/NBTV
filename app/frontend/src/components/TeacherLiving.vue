@@ -1356,11 +1356,13 @@ export default{
           let multiInput = {username: '', url: ''}
           multiInput.username = this.userInfo.username
           multiInput.url = this.cururl
+          console.log('succeeded in post add class')
           // post
           axios.post('/api/resource/getmultiples', multiInput).then((resp) => {
             // resp.data 即是那个列表
             this.multiAllList = resp.data.multiAllList
             this.multiThisList = resp.data.multiThisList
+            console.log('response data get, although do not know what')
           })
         } else {
           this.$.message('something wrong')
