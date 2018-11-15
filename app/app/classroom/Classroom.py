@@ -29,12 +29,16 @@ class ClassroomManager:
 	def insert(self, vid, rtmpUrl, teacher, title, imgfile, passwd, url, mode):
 		#在调用这个接口之前，需要先判断是否是本用户插入的，需要验证密码
 		try:
-			if not os.path.exists("/mnt/NBTV_Img/%s" % teacher):
-				os.mkdir("/mnt/NBTV_Img/%s" % teacher)
-			imgpath = "/mnt/NBTV_Img/%s/%s.%s" % (teacher, vid, imgfile.filename.split('.')[-1])
-			imgfile.save(imgpath)
+			if not imgfile is None:
+				if not os.path.exists("/mnt/NBTV_Img/%s" % teacher):
+					os.mkdir("/mnt/NBTV_Img/%s" % teacher)
+				imgpath = "/mnt/NBTV_Img/%s/%s.%s" % (teacher, vid, imgfile.filename.split('.')[-1])
+				imgfile.save(imgpath)
+				imgUrl = '/img_class/%s/%s.%s' % (teacher, vid, imgfile.filename.split('.')[-1])
+			else:
+				imgUrl = '/static/image/test.jpg'
 
-			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = '/img_class/%s/%s.%s' % (teacher, vid, imgfile.filename.split('.')[-1]), password = passwd, rtmpUrl = rtmpUrl, url = url, mode = mode)
+			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = imgUrl, password = passwd, rtmpUrl = rtmpUrl, url = url, mode = mode)
 
 			db.session.add(classroomTmp)
 			db.session.commit()
@@ -63,8 +67,9 @@ class ClassroomManager:
 			if tmpClass is None:
 				return "error:NoSuchClassroom"
 
-			imgpath = "/mnt/NBTV_Img/%s/%s.%s" % (tmpClass.teacher, tmpClass.vid, imgfile.filename.split('.')[-1])
-			imgfile.save(imgpath)
+			if not imgfile is None:
+				imgpath = "/mnt/NBTV_Img/%s/%s.%s" % (tmpClass.teacher, tmpClass.vid, imgfile.filename.split('.')[-1])
+				imgfile.save(imgpath)
 
 			tmpClass.title = title
 			# tmpClass.thumbnail = thumbnail
