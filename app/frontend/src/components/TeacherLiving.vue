@@ -182,14 +182,17 @@
       </p>
       <Form label-position="top">
         <FormItem label="Text">
-          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
           <Input v-model="sub_code.statement"
                  type="textarea" rows="4"
                  placeholder="Enter Your Statement">
           </Input>
         </FormItem>
         <FormItem label="Language">
-          <Input v-model="sub_code.language" placeholder="Set the language"></Input>
+          <Select v-model="sub_code.language">
+            <Option value="python">python</Option>
+            <Option value="clike">cpp</Option>
+            <Option value="javascript">javascript</Option>
+          </Select>
         </FormItem>
         <FormItem label="Example Code">
           <template>
