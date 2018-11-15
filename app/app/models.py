@@ -153,15 +153,20 @@ class CodeQuestion(db.Model):
 
 class PDFFile(db.Model):
     __tablename__ = 'pdffile'
+    __table_args__ = {
+        'mysql_charset':'utf8',
+        'mysql_engine': 'InnoDB'
+        }
 
     filename = db.Column(db.String(100), nullable = False)
     uniqueId = db.Column(db.String(151), nullable = False, primary_key = True)
+    
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
-    __table_args__ = (
-        # db.Index('filepath', 'owner', 'filename'),
-        {'mysql_charset':'utf8', 'mysql_engine': 'InnoDB'}
-    )
+    #__table_args__ = (
+    # db.Index('filepath', 'owner', 'filename'),
+    #    {'mysql_charset':'utf8', 'mysql_engine': 'InnoDB'}
+    #)
 
     def __repr__(self):
         return '<pdfId %r>' % self.owner

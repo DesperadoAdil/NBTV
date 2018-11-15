@@ -114,7 +114,6 @@ def updateClass():
 	data = request.form.to_dict()
 	print('update a classroom')
 	print(data)
-	data = json.loads(data)
 
 	ret = {}
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):

@@ -9,6 +9,12 @@ const CHAT = {
   curpage0:'1',
   frametype: 'close',
   pdfurl: '/static/pdf/1-1.pdf',
+  codeall: {
+    uniqueId: '',
+    statement: 'B-Tree',
+    language: 'cpp',
+    example: 'cout << "hello world" << endl;'
+  },
   selectall: {
     uniqueId: '1',
     statement: 'choice 02',
@@ -43,6 +49,9 @@ const CHAT = {
       router.push('/list')
       this.$Message.error('您已被永久踢出房间')
     })
+  },
+  youCanTalk: function (username, url) {
+    this.socket.emit('noShutUp', {'username': username, 'url': url})
   },
   message: function (username) {
     console.log('message')
@@ -91,6 +100,7 @@ const CHAT = {
     this.socket.on('page', function (obj) {
       CHAT.curpage0 = obj.msg
     })
+
   },
   init: function (username, url) {
     this.socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port)

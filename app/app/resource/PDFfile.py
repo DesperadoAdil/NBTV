@@ -42,8 +42,8 @@ class PDF:
             return "error"
 
 
-    def search(self, username, fname):
-        return PDFFile.query.filter_by(uniqueId = "%s/%s" % (username, fname)).first()
+    def search(self, uniqueId):
+        return PDFFile.query.filter_by(uniqueId = uniqueId).first()
 
 
 

@@ -8,7 +8,7 @@ class DeveloperTest(BaseTestCase):
     data_add_user = {}
 
     def test_add_user(self):
-        print ("Test:Add_user===============================")
+        print ("Test:Developer_add_user===============================")
 
         # 这是可以插入用户的结果
         response = self.app.get('/developer/add_user')
@@ -16,7 +16,7 @@ class DeveloperTest(BaseTestCase):
 
 
     def test_add_classroom(self):
-        print ("Test:Add_classroom===============================")
+        print ("Test:Developer_add_classroom===============================")
 
         # 这是可以插入教室的结果
         response = self.app.get('/developer/add_classroom')

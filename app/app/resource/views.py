@@ -6,6 +6,7 @@ from . import resource
 from ..user.User import usermanager
 from ..classroom.Classroom import classroomManager
 import json
+from app import db
 
 @resource.route('/add_multiple', methods = ['POST', 'GET'])
 def addMultiChoice():
@@ -109,7 +110,30 @@ def add_choice_class():
     ret['status'] = 'success'
     return json.dumps(ret)
 
-@resource.route('/api/resource/multi_viewclass', methods = ['POST', 'GET'])
+@resource.route('/multi_delclass', methods = ['POST', 'GET'])
+def del_choice_class():
+    print('del choice in class')
+    data = json.loads(request.get_data())
+
+    ret = {}
+
+    choice_tmp = multiChoiceManager.search(data['uniqueId'])
+    if choice_tmp is None or choice_tmp.owner != data['username']:
+        print('gg: choice_tmp is None')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+    clroom = classroomManager.search(data['url'])
+    if clroom is None or clroom.teacher != data['username']:
+        print('gg : classroom is wrong')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+    clroom.choice.remove(choice_tmp)
+    db.session.add(clroom)
+    db.session.commit()
+    ret['status'] = 'success'
+    return json.dumps(ret)
+
+@resource.route('/multi_viewclass', methods = ['POST', 'GET'])
 def view_choice_class():
     print('view choice class')
     data = json.loads(request.get_data())
@@ -340,7 +364,7 @@ def get_pdfs():
     if clr is None:
         ret['status'] = "error"
         return json.dumps(ret)
-    for item in data:
+    for item in clr.pdffile:
         ret['pdfThisList'].append({
             'title': item.filename,
             'url': "/pdf/%s/%s" % (username, item.filename)
@@ -354,7 +378,7 @@ def get_pdfs():
 def add_pdf_class():
     print('add pdf to class')
     data = request.get_data()
-    data = json.lodas(data)
+    data = json.loads(data)
 
     ret = {}
 

@@ -42,6 +42,7 @@
           </template>
           <MenuItem @click.native="modal_student_xlsx = true">xlsx文档添加</MenuItem>
           <MenuItem @click.native="addStudent()">用户名添加</MenuItem>
+          <MenuItem @click.native="getShutUpList()">解除禁言</MenuItem>
         </Submenu>
         <!-- 学生 -->
       </Menu>
@@ -191,10 +192,12 @@
           <Input v-model="sub_code.language" placeholder="Set the language"></Input>
         </FormItem>
         <FormItem label="Example Code">
-          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
           <template>
-            <!-------------输入框的代码高亮还没好，现在仅能静态高亮------------>
-            <prism-editor :code="sub_code.example" language="cpp"></prism-editor>
+            <!-------------输入框的代码高亮----------------------->
+            <codemirror
+              v-model="sub_code.example"
+              :options="cmOption">
+            </codemirror>
           </template>
         </FormItem>
       </Form>
@@ -357,6 +360,16 @@
       </Form>
     </Modal>
 
+    <Modal v-model="shutUpModal" @on-ok="shutUpModal = false">
+      <p slot="header">
+        <span>禁言名单</span>
+      </p>
+      <div v-for="student in shutuplist">
+        {{ student }}
+        <button type="success" @click="noShutUp(student)">解禁</button>
+      </div>
+    </Modal>
+
     <!---------main living 部分------------->
     <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
       <div class="topveido">
@@ -366,7 +379,7 @@
         <embed id="rtmp-streamer1" src="/static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
                width="100%" :style="{height:videohei}"  allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
       </object>
-      <div class="bottomveido">
+      <div class="bottomve`ido">
         <h3>礼物等其他显示部分（待修改）</h3>
       </div>
     </div>
@@ -536,6 +549,27 @@ import CHAT from '../client'
 import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
 import PrismEditor from 'vue-prism-editor'
+import VueCodemirror from 'codemirror/lib/codemirror'
+import 'codemirror/lib/codemirror.css' // css，必要
+
+// language
+import 'codemirror/mode/python/python.js'
+import 'codemirror/mode/clike/clike.js'
+
+// theme css
+import 'codemirror/theme/base16-light.css'
+// require active-line.js
+import 'codemirror/addon/selection/active-line.js'
+// closebrackets
+import 'codemirror/addon/edit/closebrackets.js'
+// keyMap
+import 'codemirror/addon/edit/matchbrackets.js'
+import 'codemirror/addon/comment/comment.js'
+import 'codemirror/addon/dialog/dialog.js'
+import 'codemirror/addon/dialog/dialog.css'
+import 'codemirror/addon/search/searchcursor.js'
+import 'codemirror/addon/search/search.js'
+import 'codemirror/keymap/emacs.js'
 
 export default{
   name: 'load',
@@ -549,9 +583,9 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
-        curpage:'1',
-      chatingtop:60+'px',
-      chatinghei:710+'px',
+      curpage: '1',
+      chatingtop: 60 + 'px',
+      chatinghei: 710 + 'px',
       msgTypeInfo: '语音',
       socket: null,
       msgType: 'text',
@@ -572,8 +606,8 @@ export default{
       }),
       audio: {},
       selected: {},
-      uploadStatus: null,
-      uploaderOptions: {},
+      shutUpModal: false,
+      shutuplist: [],
       /**
        * 以上为聊天室使用，请勿改动
        */
@@ -870,9 +904,17 @@ export default{
         username: '',
         statement: 'Print something in the console',
         language: 'cpp',
-        example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
+        example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0;\n}'
       },
-
+      // CODE EDITOR
+      cmOption: {
+        autoCloseBrackets: true,
+        tabSize: 4,
+        lineNumbers: true,
+        line: true,
+        mode: 'python',
+        theme: 'base16-light'
+      },
       // ADD STUDENT LIST
       modal_student_xlsx: false,
       // Shihang'S PARAMETER
@@ -928,7 +970,7 @@ export default{
      * 以下为聊天室使用，请勿改动
      */
     CHAT.message(this.userInfo.username)
-
+    this.findIfShutUp()
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -970,12 +1012,13 @@ export default{
     }
   },
   components: {
-    PrismEditor
+    PrismEditor,
+    VueCodemirror
   },
   methods: {
-    updatepage(){
-      console.log("updatepage")
-      this.curpage=document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value;
+    updatepage () {
+      console.log('updatepage')
+      this.curpage = document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value
       console.log(this.curpage)
 
       let date = new Date()
@@ -1059,7 +1102,7 @@ export default{
     // CODE
     create_code () {
       this.sub_code.statement = ''
-      this.sub_code.example = ''
+      // this.sub_code.example = ''
       this.sub_code.language = ''
       this.modal_code = true
     },
@@ -1099,6 +1142,7 @@ export default{
       axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
+
        //zsh this.pdfThisList = resp.data.pdfThisList
       })
     },
@@ -1140,6 +1184,7 @@ export default{
       delPdfAllInput.pdf = iPdf
       // post
       axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
+
         if (resp.data.status === 'success') {
           let pdfInput = {username: '', url: ''}
           pdfInput.username = this.userInfo.username
@@ -1297,10 +1342,10 @@ export default{
     // ADD MULTI TO CLASS
     addMultiAll (index) {
       let iMulti = this.multiAllList[index]
-      let input = {username: '', url: '', multi: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.multi = iMulti
+      input.uniqueId = iMulti.uniqueId
       // post
       axios.post('/api/resource/multi_addclass', input).then((resp) => {
         if (resp.data.status === 'success') {
@@ -1322,12 +1367,12 @@ export default{
     delMultiAll (index) {
       let iMulti = this.multiAllList[index]
       // input
-      let input = {username: '', url: '', multi: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.multi = iMulti
+      input.uniqueId = iMulti.uniqueId
       // post
-      axios.post('/api/resource/delete_mutiple', input).then((resp) => {
+      axios.post('/api/resource/delete_multiple', input).then((resp) => {
         if (resp.data.status === 'success') {
           let multiInput = {username: '', url: ''}
           multiInput.username = this.userInfo.username
@@ -1383,10 +1428,10 @@ export default{
     viewMulti (index) {
       let iMulti = this.multiThisList[index]
       // input
-      let input = {username: '', url: '', multi: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.multi = iMulti
+      input.uniqueId = iMulti.uniqueId
       // post
       axios.post('/api/resource/multi_viewclass', input).then((resp) => {
         this.multiAnswerList = resp.data.multiAnswerList
@@ -1398,10 +1443,10 @@ export default{
     delMultiClass (index) {
       let iMulti = this.multiThisList[index]
       // input
-      let input = {username: '', url: '', multi: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.multi = iMulti
+      input.uniqueId = iMulti.uniqueId
       // post
       axios.post('/api/resource/multi_delclass', input).then((resp) => {
         if (resp.data.status === 'success') {
@@ -1469,10 +1514,10 @@ export default{
     // ADD CODE TO CLASS
     addCodeAll (index) {
       let iCode = this.codeAllList[index]
-      let input = {username: '', url: '', code: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.code = iCode
+      input.uniqueId = iCode.uniqueId
       // post
       axios.post('/api/resource/code_addclass', input).then((resp) => {
         if (resp.data.status === 'success') {
@@ -1494,10 +1539,10 @@ export default{
     delCodeAll (index) {
       let iCode = this.codeAllList[index]
       // input
-      let input = {username: '', url: '', code: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.code = iCode
+      input.uniqueId = iCode.uniqueId
       // post
       axios.post('/api/resource/delete_code', input).then((resp) => {
         if (resp.data.status === 'success') {
@@ -1537,10 +1582,10 @@ export default{
     viewCode (index) {
       let iCode = this.codeThisList[index]
       // input
-      let input = {username: '', url: '', code: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.code = iCode
+      input.uniqueId = iCode.uniqueId
       // post
       axios.post('/api/resource/code_viewclass', input).then((resp) => {
         this.codeAnswerList = resp.data.codeAnswerList
@@ -1551,10 +1596,10 @@ export default{
     delCodeClass (index) {
       let iCode = this.codeThisList[index]
       // input
-      let input = {username: '', url: '', code: {}}
+      let input = {username: '', url: '', uniqueId: ''}
       input.username = this.userInfo.username
       input.url = this.cururl
-      input.code = iCode
+      input.uniqueId = iCode.uniqueId
       // post
       axios.post('/api/resource/code_delclass', input).then((resp) => {
         if (resp.data.status === 'success') {
@@ -1694,6 +1739,21 @@ export default{
       console.log(m)
       CHAT.blackList(obj)
     },
+    findIfShutUp () {
+      axios.post('/api/classroom/shutuplist', {'url': this.cururl}).then((resp) => {
+        console.log(resp.data)
+        this.shutuplist = resp.data
+      })
+    },
+    getShutUpList () {
+      this.shutUpModal = true
+      this.findIfShutUp()
+    },
+    noShutUp (student) {
+      CHAT.youCanTalk(student, this.cururl)
+      var index = this.shutuplist.indexOf(student)
+      this.shutuplist.splice(index, 1)
+    },
     /**
      * 以上为聊天室使用，请勿改动
      */
@@ -1788,8 +1848,8 @@ export default{
           this.mainpdfcarddisplay = false
           this.classmain0 = true
           this.videohei = 700 + 'px'
-          this.chatingtop=60+'px'
-          this.chatinghei=710+'px'
+          this.chatingtop = 60 + 'px'
+          this.chatinghei = 710 + 'px'
           this.curvideo = true
           const data = this.curuser
           data['username'] = this.userInfo['username']
