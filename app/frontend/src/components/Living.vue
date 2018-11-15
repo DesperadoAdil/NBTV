@@ -30,15 +30,22 @@
     <!--<div id="maincodecard" class="cardtealivingcdode00" :style="{display:maincodecarddisplay?'block':'none'}">-->
     <div  id="maincodecard" class="cardtealivingcdode00"  :style="{display:CHAT.frametype === 'code'?'block':'none'}">
       <h>编程题</h>
-      <Form>
-        <!---->
-        <FormItem label="Description" >
+      <Form label-position="top">
+        <FormItem label="Description">
           {{CHAT.codeall.statement}}
         </FormItem>
         <FormItem label="Language">
           {{CHAT.codeall.language}}
         </FormItem>
-        <FormItem label="Your Answer"></FormItem>
+        <FormItem label="Code">
+          <template>
+            <!-------------输入框的代码高亮----------------------->
+            <codemirror
+              v-model="codeAns"
+              :options="cmOption">
+            </codemirror>
+          </template>
+        </FormItem>
       </Form>
     </div>
 
@@ -173,6 +180,29 @@ import CHAT from '../client'
 import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
 import router from '../router'
+import VueCodemirror from 'codemirror/lib/codemirror'
+import 'codemirror/lib/codemirror.css' // css，必要
+
+// language
+import 'codemirror/mode/python/python.js'
+import 'codemirror/mode/clike/clike.js'
+import 'codemirror/mode/javascript/javascript.js'
+
+// theme css
+import 'codemirror/theme/base16-light.css'
+// require active-line.js
+import 'codemirror/addon/selection/active-line.js'
+// closebrackets
+import 'codemirror/addon/edit/closebrackets.js'
+// keyMap
+import 'codemirror/addon/edit/matchbrackets.js'
+import 'codemirror/addon/comment/comment.js'
+import 'codemirror/addon/dialog/dialog.js'
+import 'codemirror/addon/dialog/dialog.css'
+import 'codemirror/addon/search/searchcursor.js'
+import 'codemirror/addon/search/search.js'
+import 'codemirror/keymap/emacs.js'
+
 export default{
   name: 'load',
   props: {
@@ -240,7 +270,18 @@ export default{
         job: '',
         url: '',
         item: ''
-      }
+      },
+      // CODE EDITOR
+      cmOption: {
+        autoCloseBrackets: true,
+        tabSize: 4,
+        lineNumbers: true,
+        line: true,
+        mode: 'python',
+        theme: 'base16-light'
+      },
+      // CODE
+      codeAns: '#include <iostream>\nint main(){\n\treturn 0;\n}'
     }
   },
   mounted () {
@@ -319,7 +360,8 @@ export default{
         'vid': this.curvid
       })
     })
-
+    // for code highlight
+    this.cmOption.mode = CHAT.codeall.language
     /**
      * 以下为聊天室使用，请勿改动
      */
