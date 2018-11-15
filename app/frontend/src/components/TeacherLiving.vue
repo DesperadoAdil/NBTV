@@ -1442,7 +1442,10 @@ export default{
       axios.post('/api/resource/multi_viewclass', input).then((resp) => {
         this.multiAnswerList = resp.data.multiAnswerList
       })
-      this.sub_multi = iMulti
+      this.sub_multi.optionList = iMulti.optionList
+      this.sub_multi.statement = iMulti.statement
+      this.sub_multi.answer = iMulti.answer
+      this.sub_multi.uniqueId = iMulti.uniqueId
       this.modal_viewmulti = true
     },
     // DEL MULTI FROM CLASS
