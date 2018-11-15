@@ -6,6 +6,7 @@ from . import resource
 from ..user.User import usermanager
 from ..classroom.Classroom import classroomManager
 import json
+from app import db
 
 @resource.route('/add_multiple', methods = ['POST', 'GET'])
 def addMultiChoice():
@@ -340,7 +341,7 @@ def get_pdfs():
     if clr is None:
         ret['status'] = "error"
         return json.dumps(ret)
-    for item in clr.pdffile:
+    for item in clr.pdfs:
         ret['pdfThisList'].append({
             'title': item.filename,
             'url': "/pdf/%s/%s" % (username, item.filename)
@@ -354,7 +355,7 @@ def get_pdfs():
 def add_pdf_class():
     print('add pdf to class')
     data = request.get_data()
-    data = json.lodas(data)
+    data = json.loads(data)
 
     ret = {}
 
