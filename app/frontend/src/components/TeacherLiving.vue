@@ -191,9 +191,8 @@
           <Input v-model="sub_code.language" placeholder="Set the language"></Input>
         </FormItem>
         <FormItem label="Example Code">
-          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
           <template>
-            <!-------------输入框的代码高亮还没好，现在仅能静态高亮------------>
+            <!-------------输入框的代码高亮----------------------->
             <codemirror
               v-model="sub_code.example"
               :options="cmOption">
@@ -541,25 +540,25 @@ import Recorder from '../recorder'
 import PrismEditor from 'vue-prism-editor'
 import VueCodemirror from 'codemirror/lib/codemirror'
 import 'codemirror/lib/codemirror.css' // css，必要
-import 'codemirror/mode/python/python.js'
+
 // language
 import 'codemirror/mode/python/python.js'
+import 'codemirror/mode/clike/clike.js'
+
 // theme css
 import 'codemirror/theme/base16-light.css'
-
 // require active-line.js
-import'codemirror/addon/selection/active-line.js'
+import 'codemirror/addon/selection/active-line.js'
 // closebrackets
-import'codemirror/addon/edit/closebrackets.js'
+import 'codemirror/addon/edit/closebrackets.js'
 // keyMap
-import'codemirror/mode/clike/clike.js'
-import'codemirror/addon/edit/matchbrackets.js'
-import'codemirror/addon/comment/comment.js'
-import'codemirror/addon/dialog/dialog.js'
-import'codemirror/addon/dialog/dialog.css'
-import'codemirror/addon/search/searchcursor.js'
-import'codemirror/addon/search/search.js'
-import'codemirror/keymap/emacs.js'
+import 'codemirror/addon/edit/matchbrackets.js'
+import 'codemirror/addon/comment/comment.js'
+import 'codemirror/addon/dialog/dialog.js'
+import 'codemirror/addon/dialog/dialog.css'
+import 'codemirror/addon/search/searchcursor.js'
+import 'codemirror/addon/search/search.js'
+import 'codemirror/keymap/emacs.js'
 
 export default{
   name: 'load',
@@ -894,18 +893,16 @@ export default{
         username: '',
         statement: 'Print something in the console',
         language: 'cpp',
-        example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0\n}'
+        example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0;\n}'
       },
       // CODE EDITOR
       cmOption: {
         autoCloseBrackets: true,
         tabSize: 4,
-        styleActiveLine: true,
         lineNumbers: true,
         line: true,
-        mode: 'text/x-clike',
-        theme: 'base16-light',
-        keyMap: 'emacs'
+        mode: 'python',
+        theme: 'base16-light'
       },
       // ADD STUDENT LIST
       modal_student_xlsx: false,
