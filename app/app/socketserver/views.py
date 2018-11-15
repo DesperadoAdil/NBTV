@@ -105,3 +105,21 @@ def shutup(data):
 	db.session.commit()
 
 	emit('shutup', room = username)
+
+
+@socketio.on('noShutUp')
+def noShutUp(data):
+	print ("You Can Talk!")
+	username = data['username']
+	url = data['url']
+	print (username, url)
+
+	classroom = Classrooms.query.filter_by(url = url).first()
+	shutuplist = json.loads(classroom.shutuplist)
+	if username in shutuplist:
+		shutuplist.remove(username)
+	classroom.shutuplist = json.dumps(shutuplist)
+	db.session.add(classroom)
+	db.session.commit()
+
+	emit('noShutUp', room = username)
