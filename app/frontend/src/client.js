@@ -89,6 +89,7 @@ const CHAT = {
     })
     this.socket.on('select', function (obj) {
       CHAT.frametype = 'select'
+      console.log(obj.msg)
       CHAT.selectall = obj.msg
     })
     this.socket.on('code', function (obj) {

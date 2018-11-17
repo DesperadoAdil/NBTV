@@ -985,6 +985,14 @@ export default{
     window['updatepage'] = () => {
       this.updatepage();
     };
+  if(window.addEventListener){
+    window.addEventListener('message', function (e) { alert("djasljdks");
+      console.log(e.data)   } ,false);
+  }else if(window.attachEvent){
+    window.attachEvent('onmessage',function (e) { alert("djasljdks");
+      console.log(e.data)   })
+  }
+
     window.addEventListener('message', function (e) { alert("djasljdks");
       console.log(e.data)   } )
 
