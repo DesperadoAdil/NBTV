@@ -1,15 +1,18 @@
 <template>
-  <div id="homePage">
-    欢迎来到NB直播
-    <br>
-    登录观看NB内容
+  <div id="HomePage">
+    <iframe id="framepage" src="/static/welcome/welcome.html" frameborder="0" scrolling="no"></iframe>
   </div>
 </template>
 <script>
 </script>
 <style>
-  #homePage {
-    margin: 20% 40%;
-    font-size: 32px;
+  #HomePage {
+    width: 100%;
+    height: 800px;
+    margin: 0 auto;
+  }
+  #framepage {
+    width: 100%;
+    height: 100%;
   }
 </style>
