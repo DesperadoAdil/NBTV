@@ -1095,8 +1095,8 @@ export default{
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
-          // 维护选择题列表,此处尚无
-          window.location.reload()
+          // 不用维护选择题列表
+          console.log('Add Multiple Succeeded')
           // 如果失败
         } else {
           this.$Message.error('添加选择题失败')
@@ -1122,8 +1122,8 @@ export default{
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
-          // 应当要维护一下代码题的列表,此处未添加
-          window.location.reload()
+          // 不用维护列表
+          console.log('Add Code Succeeded')
           // 如果失败
         } else {
           this.$Message.error('添加代码题失败')
@@ -1167,8 +1167,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-      //zsh  this.pdfThisList = resp.data.pdfThisList
-              window.location.reload()
+              this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$.message('wrong')
             }
@@ -1196,8 +1195,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-      //zsh   this.pdfThisList = resp.data.pdfThisList
-              window.location.reload()
+              this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$.message('wrong')
             }
@@ -1263,8 +1261,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-      //zsh   this.pdfThisList = resp.data.pdfThisList
-              window.location.reload()
+              this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$.message('wrong')
             }
@@ -1338,7 +1335,6 @@ export default{
             this.multiAllList = resp.data.multiAllList
             this.multiThisList = resp.data.multiThisList
           })
-          window.location.reload()
           // 如果失败
         } else {
           this.$Message.error('Edit failed')
@@ -1515,8 +1511,7 @@ export default{
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
-          // 不用维护列表啦，该用再用
-          window.location.reload()
+          console.log('Edit Code Succeeded')
           // 如果失败
         } else {
           this.$Message.error('添加代码题失败')
