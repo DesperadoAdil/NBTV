@@ -1297,7 +1297,7 @@ export default{
       this.sub_multi.uniqueId = iMulti.uniqueId
       this.sub_multi.answer = iMulti.answer
       // multi options
-      this.multi_options.splice(0, this.multi_options.length)
+      this.multi_options = []
       // multi_options: [{value: '',index: 1,status: 1}],
       for (let i = 0; i < iMulti.optionList.length; i++) {
         let k = {value: '', index: i + 1, status: 1}
