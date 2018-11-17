@@ -1,63 +1,54 @@
 <template>
-  <div class="tealivingmain">
-
+  <div id="teacherLiving" class="tealivingmain">
     <div  class="cardtea">
-      <p slot="title" style="font-size: 20px">选项</p>
-      <Menu name="0" style="width: 100%">
+      <!-- -----------侧边栏----------------- -->
+      <Menu name="sidemenu" style="width: 100%">
 
-        <!-- 发布 -->
+        <!-- 资源 -->
         <Submenu name="post" class="menuitentea">
-          <template slot="title" >
-            <Icon type="ios-paper" />
-            发布
+          <template slot="title" ><Icon type="ios-paper" />
+            资源
           </template>
           <MenuItem @click.native="showPdfList()">PDF</MenuItem>
-          <MenuItem @click.native="modal_multilist = true">Choice</MenuItem>
-          <MenuItem @click.native="modal_codelist = true">Code</MenuItem>
+          <MenuItem @click.native="showMultiList()">Choice</MenuItem>
+          <MenuItem @click.native="showCodeList()">Code</MenuItem>
         </Submenu>
-        <!-- 教学资源 -->
-        <Submenu name="1" class="menuitentea">
-          <template slot="title" >
-            <Icon type="ios-paper" />
-            添加教学资源
-          </template>
-          <MenuItem @click.native="modal_pdf = true">添加课件</MenuItem>
-          <MenuItem @click.native="modal_multi = true">添加选择题</MenuItem>
-          <MenuItem @click.native="modal_code = true">添加编程题</MenuItem>
-        </Submenu>
-        <!-- 使用教学资源 -->
-        <Submenu name="2" class="menuitentea">
-          <template slot="title">
-            <Icon type="ios-people" />
-            使用教学资源
-          </template>
-          <MenuItem name="2-1" class="menuitentea" @click.native="teatext">使用教学课件</MenuItem>
-          <MenuItem name="2-2" class="menuitentea" @click.native="teaselect">布置选择题目</MenuItem>
-          <MenuItem name="2-2" class="menuitentea" @click.native="closetext">退出教学资源</MenuItem>
-        </Submenu>
-        <!-- 学生做题情况 -->
-        <Submenu name="3" class="menuitentea"  >
-          <template slot="title">
-            <Icon type="ios-stats" />
-            学生做题情况
-          </template>
-          <MenuItem name="3-1" class="menuitentea" v-for="item in studentitems" @click.native="showstudentti(item)">{{item}}</MenuItem>
-        </Submenu>
-        <Submenu name="4" class="menuitentea"  >
-          <template slot="title">
-            <Icon type="ios-stats" />
-            添加学生
-          </template>
-          <MenuItem name="4-1" class="menuitentea" >
-            <a href="javascript:;" class="upf">xlsx添加学生
-              <input type="file" name="xlsxinput" id="xlsxinput">
-            </a>
-            <Button type="primary" @click="subxlsx">submit</Button>
+        <!-- 资源 -->
 
-          </MenuItem>
-          <MenuItem name="4-2" class="menuitentea" @click.native="addstua">用户名添加学生</MenuItem>
+        <!-- 添加 -->
+        <Submenu name="add" class="menuitentea">
+          <template slot="title" ><Icon type="ios-paper" />
+            添加
+          </template>
+          <MenuItem @click.native="modal_pdf = true">PDF</MenuItem>
+          <MenuItem @click.native="create_multi()">Choice</MenuItem>
+          <MenuItem @click.native="create_code()">Code</MenuItem>
         </Submenu>
+        <!-- 添加 -->
+
+        <!-- 使用 -->
+        <Submenu name="cancel" class="menuitentea">
+          <template slot="title"><Icon type="ios-people" />
+            使用
+          </template>
+          <MenuItem @click.native="closetext()">取消使用</MenuItem>
+        </Submenu>
+        <!-- 使用 -->
+
+        <!-- 学生 -->
+        <Submenu name="student" class="menuitentea"  >
+          <template slot="title"><Icon type="ios-stats" />
+            学生
+          </template>
+          <MenuItem @click.native="modal_student_xlsx = true">xlsx文档添加</MenuItem>
+          <MenuItem @click.native="addStudent()">用户名添加</MenuItem>
+          <MenuItem @click.native="getShutUpList()">解除禁言</MenuItem>
+        </Submenu>
+        <!-- 学生 -->
       </Menu>
+      <!-- -----------侧边栏----------------- -->
+
+      <!-- 底部按钮：开播、关播、关麦 -->
       <Button class="btnopen" type="primary"  v-bind:icon="openclose"  @click="teaopenclose()">
         <span class="menuitentea">{{this.opentext}}</span>
       </Button>
@@ -65,24 +56,66 @@
       <Button type="primary" shape="circle" v-bind:icon="jinshipin" @click="tojinshipin()"></Button>
     </div>
 
+    <!-------------Modal of the menus----------------->
     <!--PDFlist-->
     <Modal
-      v-model="modal_pdflist"
-      @on-ok="SOMETHING()"
-      @on-cancel="modal_pdflist = false"
-      width="720"
+      v-model="modal_pdflist" width="900"
+      @on-ok="modal_pdflist = false" @on-cancel="modal_pdflist = false"
     >
       <Card>
-        <Split class="demo-split" v-model="split_pdf">
-          <div slot="left"  class="demo-split-pane">
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_pdf">
+          <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
             <br>
             <Table height="375" border :columns="pdfAll" :data="pdfAllList"></Table>
           </div>
-          <div slot="right"  class="demo-split-pane">
+          <div slot="right"  class="teacher-live-split-pane">
             <p>This Classroom</p>
             <br>
             <Table height="375" border :columns="pdfThis" :data="pdfThisList"></Table>
+          </div>
+        </Split>
+      </Card>
+    </Modal>
+
+    <!--multi_list-->
+    <Modal
+      v-model="modal_multilist" width="900"
+      @on-ok="modal_multilist = false" @on-cancel="modal_multilist = false">
+      <Card>
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_multi">
+          <div slot="left"  class="teacher-live-split-pane">
+            <p>All</p>
+            <br>
+            <Table height="375" border :columns="multiAll" :data="multiAllList"></Table>
+          </div>
+          <div slot="right"  class="teacher-live-split-pane">
+            <p>This Classroom</p>
+            <br>
+            <Table height="375" border :columns="multiThis" :data="multiThisList"></Table>
+          </div>
+        </Split>
+      </Card>
+    </Modal>
+
+    <!--code_list-->
+    <Modal
+      v-model="modal_codelist"
+      @on-ok="modal_codelist = false"
+      @on-cancel="modal_codelist = false"
+      width="900"
+    >
+      <Card>
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_code">
+          <div slot="left"  class="teacher-live-split-pane">
+            <p>All</p>
+            <br>
+            <Table height="375" border :columns="codeAll" :data="codeAllList"></Table>
+          </div>
+          <div slot="right"  class="teacher-live-split-pane">
+            <p>This Classroom</p>
+            <br>
+            <Table height="375" border :columns="codeThis" :data="codeThisList"></Table>
           </div>
         </Split>
       </Card>
@@ -93,10 +126,16 @@
       <p slot="header" style="font-size: 20px">
         <span>上传课件</span>
       </p>
-      <a href="javascript:;" class="upf">pdf upload
-        <input type="file" name="pdfinput" id="pdfinput">
-      </a>
-      <Button type="primary" @click="addPDF()">submit</Button>
+      <Form>
+        <FormItem>
+          <a href="javascript:;" class="upf">pdf upload
+            <input type="file" name="pdfinput" id="pdfinput">
+          </a>
+        </FormItem>
+        <FormItem>
+          <Button type="primary" @click="addPDF()">submit</Button>
+        </FormItem>
+      </Form>
     </Modal>
 
     <!--设置选择题-->
@@ -106,29 +145,30 @@
       </p>
       <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
         <FormItem label="Statement">
-          <Input v-model="sub_multi.statement"></Input>
+          <Input type="textarea" v-model="sub_multi.statement" placeholder="Enter your Description"></Input>
         </FormItem>
-        <!-- 以下为可以实现选项的动态添加删除的代码  -->
+        <!-- 以下为选项的动态添加删除  -->
         <FormItem
           v-for="(item, index) in multi_options"
           v-if="item.status"
           :key="index">
           <Row>
             <Col span="18">
-              <Input type="text" placeholder="Enter Your Choice"></Input>
+              <Input type="text" placeholder="Enter Your Choice" v-model="multi_options[index].value"></Input>
             </Col>
             <Col span="4" offset="1">
-              <Button @click="handleRemove(index)">Delete</Button>
+              <Button @click="multi_delChoice(index)">Delete</Button>
             </Col>
           </Row>
         </FormItem>
         <FormItem>
           <Row>
             <Col span="12">
-              <Button type="dashed" long @click="handleAdd" icon="md-add">Add a Choice</Button>
+              <Button type="dashed" long @click="multi_addChoice()" icon="md-add">Add Choice</Button>
             </Col>
           </Row>
         </FormItem>
+        <!-- 答案设置  -->
         <FormItem label="The Answer">
           <Input v-model="sub_multi.answer" placeholder="a number"></Input>
         </FormItem>
@@ -140,9 +180,8 @@
       <p slot="header" style="font-size: 20px">
         <span>设置编程题</span>
       </p>
-      <Form>
+      <Form label-position="top">
         <FormItem label="Text">
-          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
           <Input v-model="sub_code.statement"
                  type="textarea" rows="4"
                  placeholder="Enter Your Statement">
@@ -150,46 +189,191 @@
         </FormItem>
         <FormItem label="Language">
           <Select v-model="sub_code.language">
-            <Option>python</Option>
-            <Option>C++</Option>
-            <Option>Java</Option>
-            <Option>JavaScript</Option>
-            <Option>Vue.js</Option>
+            <Option value="python">python</Option>
+            <Option value="clike">cpp</Option>
+            <Option value="javascript">javascript</Option>
           </Select>
+        </FormItem>
+        <FormItem label="Example Code">
+          <template>
+            <!-------------输入框的代码高亮----------------------->
+            <codemirror
+              v-model="sub_code.example"
+              :options="cmOption">
+            </codemirror>
+          </template>
         </FormItem>
       </Form>
     </Modal>
 
-    <!--pdf等课件信息-->
-    <Modal   v-model="modal1"    @on-ok=""    @on-cancel="">
+    <!--上传学生名单-->
+    <Modal v-model="modal_student_xlsx" @on-ok="modal_student_xlsx = false" @on-cancel="modal_student_xlsx = false">
       <p slot="header" style="font-size: 20px">
-        <span>选择你要展示的课件</span>
+        <span>上传学生名单</span>
       </p>
-      <CellGroup v-for="item in pdfitems">
-        <Cell style="font-size: 20px" @click.native="showpdf(item)">{{item.title}}</Cell>
-      </CellGroup>
+      <Form>
+        <Poptip word-wrap width="200" trigger="hover" title="提示" content="格式要求：xlsx文件的单元格填写一个完整的用户名，否则无效。添加失败可以再次添加或者用户名添加">
+          <FormItem>
+            <a href="javascript:;" class="upf">
+              添加xlsx
+              <input type="file" name="xlsxinput" id="xlsxinput">
+            </a>
+          </FormItem>
+        </Poptip>
+        <FormItem>
+          <Button @click="subxlsx()">submit</Button>
+        </FormItem>
+      </Form>
     </Modal>
 
-    <Modal   v-model="modal2"    @on-ok=""    @on-cancel="">
-      <p slot="header" style="font-size: 20px">
-        <span>选择你要展示的选择题</span>
-      </p>
-      <CellGroup v-for="item in selectitems">
-        <Cell style="font-size: 20px" @click.native="showselect(item)">{{item.title}}</Cell>
-      </CellGroup>
+    <!--view multi-->
+    <Modal
+      v-model="modal_viewmulti"
+      @on-ok="modal_viewmulti = false"
+      @on-cancel="modal_viewmulti = false"
+      width="900">
+      <Card>
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_multicheck">
+          <div slot="left"  class="teacher-live-split-pane">
+            <div style="position:relative; height:400px; overflow:auto">
+            <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
+              <FormItem label="Statement">
+                {{sub_multi.statement}}
+              </FormItem>
+              <FormItem
+                v-for="(item, index) in sub_multi.optionList"
+                :key="index">
+                {{String.fromCharCode(65+index)+" : "+item}}
+              </FormItem>
+              <FormItem label="The Answer">
+                {{sub_multi.answer}}
+              </FormItem>
+            </Form>
+            </div>
+          </div>
+          <div slot="right"  class="teacher-live-split-pane">
+            <Table height="420" stripe :columns="multiAnswer" :data="multiAnswerList"></Table>
+          </div>
+        </Split>
+      </Card>
     </Modal>
 
-    <Modal   v-model="modal3"    @on-ok=""    @on-cancel="">
-      <p slot="header" style="font-size: 20px">
-        <span>{{curstu}}的做题情况如下：</span>
-      </p>
-      <pre v-highlightjs="testsourcecode"><code class="cpp"></code></pre>
-      <!--
-      <Table stripe border :columns="columns1" :data="curti" ref="table"></Table>
-      <Button class="databutton" type="primary" size="large" @click.native="exportData(1)"><Icon type="ios-download-outline"></Icon>导出原始数据</Button>
-      -->
+    <!--view code-->
+    <Modal
+      v-model="modal_viewcode"
+      @on-ok="modal_viewcode = false"
+      @on-cancel="modal_viewcode = false"
+      width="900"
+    >
+      <Card>
+        <Split class="teacher-live-split" style="height: 430px" v-model="split_codecheck">
+          <div slot="left"  class="teacher-live-split-pane">
+            <div style="position:relative; height:400px; overflow:auto">
+              <Form label-position="top">
+                <FormItem label="Text">
+                  {{sub_code.statement}}
+                </FormItem>
+                <FormItem label="Language">
+                  {{sub_code.language}}
+                </FormItem>
+                <FormItem label="Example Code">
+                  <pre v-highlightjs="sub_code.example" height="100"><code class="cpp"></code></pre>
+                </FormItem>
+              </Form>
+            </div>
+          </div>
+          <div slot="right"  class="teacher-live-split-pane">
+            <div slot="right"  class="teacher-live-split-pane">
+              <div style="position:relative; height:400px; overflow:auto">
+                <Form :label-width="40">
+                  <FormItem
+                    v-for="(item, index) in codeAnswerList"
+                    :key="index"
+                    :label="item.student"
+                    >
+                    <pre v-highlightjs="item.answer" height="100"><code class="cpp"></code></pre>
+                  </FormItem>
+                </Form>
+              </div>
+            </div>
+          </div>
+        </Split>
+      </Card>
     </Modal>
 
+    <!--Edit 选择题--TODO: SUBMIT MULTI CHANGE-->
+    <Modal   v-model="modal_editmulti"    @on-ok="submitMultiChange()"    @on-cancel="modal_editmulti = false">
+      <p slot="header" style="font-size: 20px">
+        <span>修改选择题</span>
+      </p>
+      <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
+        <FormItem label="Statement">
+          <Input type="textarea" v-model="sub_multi.statement" placeholder="Enter your Description"></Input>
+        </FormItem>
+        <!-- 以下为选项的动态添加删除  -->
+        <FormItem
+          v-for="(item, index) in multi_options"
+          v-if="item.status"
+          :key="index">
+          <Row>
+            <Col span="18">
+              <Input type="text" placeholder="Enter Your Choice" v-model="multi_options[index].value"></Input>
+            </Col>
+            <Col span="4" offset="1">
+              <Button @click="multi_delChoice(index)">Delete</Button>
+            </Col>
+          </Row>
+        </FormItem>
+        <FormItem>
+          <Row>
+            <Col span="12">
+              <Button type="dashed" long @click="multi_addChoice()" icon="md-add">Add Choice</Button>
+            </Col>
+          </Row>
+        </FormItem>
+        <!-- 答案设置  -->
+        <FormItem label="The Answer">
+          <Input v-model="sub_multi.answer" placeholder="a number"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
+
+    <!--Edit 编程题--TODO: SUBMIT CODE CHANGE-->
+    <Modal   v-model="modal_editcode"    @on-ok="submitCodeChange()"    @on-cancel="modal_editcode = false">
+      <p slot="header" style="font-size: 20px">
+        <span>设置编程题</span>
+      </p>
+      <Form label-position="top">
+        <FormItem label="Text">
+          <Input v-model="sub_code.statement"
+                 type="textarea" rows="4"
+                 placeholder="Enter Your Statement">
+          </Input>
+        </FormItem>
+        <FormItem label="Language">
+          <Input v-model="sub_code.language" placeholder="Set the language"></Input>
+        </FormItem>
+        <FormItem label="Example Code">
+          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
+          <template>
+            <!-------------输入框的代码高亮还没好，现在仅能静态高亮------------>
+            <prism-editor :code="sub_code.example" language="cpp"></prism-editor>
+          </template>
+        </FormItem>
+      </Form>
+    </Modal>
+
+    <Modal v-model="shutUpModal" @on-ok="shutUpModal = false">
+      <p slot="header">
+        <span>禁言名单</span>
+      </p>
+      <div v-for="student in shutuplist">
+        {{ student }}
+        <button type="success" @click="noShutUp(student)">解禁</button>
+      </div>
+    </Modal>
+
+    <!---------main living 部分------------->
     <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
       <div class="topveido">
         <h3>教室信息显示部分（待修改）</h3>
@@ -198,17 +382,20 @@
         <embed id="rtmp-streamer1" src="/static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
                width="100%" :style="{height:videohei}"  allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
       </object>
-      <div class="bottomveido">
+      <div class="bottomve`ido">
         <h3>礼物等其他显示部分（待修改）</h3>
       </div>
     </div>
 
+    <!---------main pdf 部分------------->
     <div id="mainpdfcard" class="cardtealivingpdf" :style="{display:mainpdfcarddisplay?'block':'none'}">
-      <iframe id="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
+      <iframe id="displayPdfIframe" name="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
 
+    <!---------main 选择题 部分 在主界面显示选择题------------->
     <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
       <p class="selecttitle00">{{curtitle}}</p>
+      <!---------TODO: 不能只有四个选项------------->
       <RadioGroup class="radiotea" v-model="ionselect" vertical>
         <Radio v-bind:label="curans[0]" style="font-size: 15px">
           <span>A、{{curans[0]}}</span>
@@ -227,32 +414,107 @@
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
-    <Card id="chatingRoom">
+    <div id="chatingRoom" :style="{top:chatingtop,height:chatinghei}">
       <div class="talk-contents">
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              {{username}}
+              <Dropdown @click.native="CHAT.list(userInfo.username, cururl)" trigger="click">
+                <a href="javascript:void(0)">
+                  聊天对象
+                  <Icon type="ios-arrow-down"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem @click.native="CHAT.socket.emit('refresh', {'url':cururl})">刷新</DropdownItem>
+                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)" :key="student.username">{{ student }}</DropdownItem>
+                  <DropdownItem divided @click.native="talkTo('all')">all</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              {{ username }}
             </div>
           </div>
-          <div class="content">
+
+          <div class="content" id="content-id">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
-              <div  class="talk-space self-talk"
-                    v-if="CHAT.msgArr[index].fromUser !== userInfo.username && CHAT.msgArr[index].toUser === username">
-                <div class="talk-content">
-                  <div class="talk-self-name">{{ msgObj.fromUser }}</div>
-                  <div class="talk-word talk-word-self">{{ msgObj.msg }}</div>
+              <div v-if="CHAT.msgArr[index].toUser === username && username !== userInfo.username">
+                <div class="talk-space self-talk"
+                     v-if="CHAT.msgArr[index].fromUser === userInfo.username">
+                  <div class="talk-content">
+                    <div class="talk-self-name">{{ msgObj.fromUser }}</div>
+                    <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'audio'">
+                      <audio :src="audioUrl(msgObj.msg)" controls></audio>
+                    </div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'img'">
+                      <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                    </div>
+                    <div v-else></div>
+                  </div>
+                </div>
+
+                <div class="talk-space user-talk" v-else>
+                  <div class="talk-content">
+                    <Poptip v-if="msgObj.fromUser !== '[系统]'" trigger="hover" content="content" placement="right-start">
+                      <div class="talk-user-name">{{ msgObj.fromUser }}</div>
+                      <div class="api" slot="content">
+                        <Button type="warning" @click="shutUp(msgObj)">禁言</Button>
+                        <Button type="error" @click="blackList(msgObj)">踢出</Button>
+                      </div>
+                    </Poptip>
+                    <div v-else class="talk-user-name">{{ msgObj.fromUser }}</div>
+
+                    <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'audio'">
+                      <audio :src="audioUrl(msgObj.msg)" controls></audio>
+                    </div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'img'">
+                      <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                    </div>
+                    <div v-else></div>
+                  </div>
                 </div>
               </div>
-              <div v-else></div>
-              <div  class="talk-space user-talk"
-                    v-if="CHAT.msgArr[index].toUser === username && CHAT.msgArr[index].fromUser === userInfo.username">
-                <div class="talk-content">
-                  <div class="talk-user-name">{{ msgObj.fromUser }}</div>
-                  <div class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+
+              <div v-else-if="CHAT.msgArr[index].toUser === userInfo.username && username !== userInfo.username">
+                <div  class="talk-space user-talk">
+                  <div class="talk-content">
+                    <div v-if="username === 'all'">
+                      <Poptip v-if="msgObj.fromUser !== '[系统]'" trigger="hover" content="content" placement="right-start">
+                        <div class="talk-user-name">[私信]：{{ msgObj.fromUser }}</div>
+                        <div class="api" slot="content">
+                          <Button type="warning" @click="shutUp(msgObj)">禁言</Button>
+                          <Button type="error" @click="blackList(msgObj)">踢出</Button>
+                        </div>
+                      </Poptip>
+                      <div v-else class="talk-user-name">[私信]：{{ msgObj.fromUser }}</div>
+                    </div>
+                    <div v-else-if="CHAT.msgArr[index].fromUser === username">
+                      <Poptip v-if="msgObj.fromUser !== '[系统]'" trigger="hover" content="content" placement="right-start">
+                        <div class="talk-user-name">{{ msgObj.fromUser }}</div>
+                        <div class="api" slot="content">
+                          <Button type="warning" @click="shutUp(msgObj)">禁言</Button>
+                          <Button type="error" @click="blackList(msgObj)">踢出</Button>
+                        </div>
+                      </Poptip>
+                      <div v-else class="talk-user-name">{{ msgObj.fromUser }}</div>
+                    </div>
+                    <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'audio'">
+                      <audio :src="audioUrl(msgObj.msg)" controls></audio>
+                    </div>
+                    <div v-else></div>
+                    <div v-if="msgObj.msgType === 'img'">
+                      <img class="talk-image" :src="imageUrl(msgObj.msg)"/>
+                    </div>
+                    <div v-else></div>
+                  </div>
                 </div>
               </div>
-              <div v-else></div>
             </div>
           </div>
 
@@ -261,20 +523,24 @@
             <div v-if="msgType === 'audio'" class="recorder">
               <button @click="toggleRecorder()">录音</button>
               <button @click="stopRecorder">停止</button>
-
-                <button
-                  class="record-audio"
-                  @click="removeRecord(idx)">删除</button>
-                <div class="record-text">{{audio.duration}}</div>
-
+              <button
+                class="record-audio"
+                @click="removeRecord(idx)">删除</button>
+              <div class="record-text">{{audio.duration}}</div>
+            </div>
+            <div v-if="msgType === 'img'" class="talker-image">已添加图片，按发送
             </div>
             <Button class="talker-send" type="success" @click="submit">发送</Button>
-            <Button class="talker-send" @click="msgType = 'audio'">语音</Button>
+            <Button class="talker-send" @click="changeMsgType">{{ msgTypeInfo }}</Button>
+            <a href="javascript:;" class=" upf talker-send" @click="chooseImg">图片
+              <input type="file" name="fileinput" id="fileinput"/>
+            </a>
           </div>
         </div>
       </div>
-    </Card>
+    </div>
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
+
   </div>
 </template>
 
@@ -285,21 +551,48 @@ import {RtmpStreamer} from '../../static/js/livingrtmp.js'
 import CHAT from '../client'
 import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
+import PrismEditor from 'vue-prism-editor'
+import VueCodemirror from 'codemirror/lib/codemirror'
+import 'codemirror/lib/codemirror.css' // css，必要
+
+// language
+import 'codemirror/mode/python/python.js'
+import 'codemirror/mode/clike/clike.js'
+
+// theme css
+import 'codemirror/theme/base16-light.css'
+// require active-line.js
+import 'codemirror/addon/selection/active-line.js'
+// closebrackets
+import 'codemirror/addon/edit/closebrackets.js'
+// keyMap
+import 'codemirror/addon/edit/matchbrackets.js'
+import 'codemirror/addon/comment/comment.js'
+import 'codemirror/addon/dialog/dialog.js'
+import 'codemirror/addon/dialog/dialog.css'
+import 'codemirror/addon/search/searchcursor.js'
+import 'codemirror/addon/search/search.js'
+import 'codemirror/keymap/emacs.js'
 
 export default{
   name: 'load',
   props: {
     micFailed: { type: Function },
     startRecord: { type: Function },
-    stopRecord: { type: Function },
+    stopRecord: { type: Function }
   },
   data () {
     return {
       /**
        * 以下为聊天室使用，请勿改动
        */
+      curpage: '1',
+      chatingtop: 60 + 'px',
+      chatinghei: 710 + 'px',
+      msgTypeInfo: '语音',
       socket: null,
       msgType: 'text',
+      talkType: 'broadcast',
       msg: '',
       CHAT,
       username: 'all',
@@ -316,12 +609,15 @@ export default{
       }),
       audio: {},
       selected: {},
-      uploadStatus: null,
-      uploaderOptions: {},
+      shutUpModal: false,
+      shutuplist: [],
       /**
        * 以上为聊天室使用，请勿改动
        */
+
+      // something to do with add student
       astu: '',
+      // stream stuff
       jinmai: 'ios-mic',
       jinshipin: 'ios-eye',
       isjinmai: false,
@@ -330,38 +626,264 @@ export default{
       classmain0: true,
       stream000: '',
       streamer: '',
-      streamername: '7181857ac220181025144543640',
+      streamername: '7181857ac220181030221452650',
 
       // pdf, multiple and codes
+      // pdf parameter
       split_pdf: 0.5,
       modal_pdflist: false,
-      pdfListInput: {username: ''},
-      pdfAll: [
+      // framework to show pdf all
+      pdfAll: [{title: 'Title', key: 'title'},
         {
-          title: 'Title',
-          key: 'title'
-        },
-        {
-          title: 'Url',
-          key: 'url'
-        }
-      ],
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 120,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.addPdfAll(params.index) }
+                }
+              }, 'Add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  click: () => { this.delPdfAll(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
       pdfThis: [
+        {title: 'Title', key: 'title'},
         {
-          title: 'Title',
-          key: 'title'
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 120,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.usePdf(params.index) }
+                }
+              }, 'Use'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  click: () => { this.delPdfClass(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
+      pdfThisList: [
+        {
+          title: 'pdf1',
+          url: '/static/pdf/1-1.pdf'
         },
         {
-          title: 'Url',
-          key: 'url'
+          title: 'pdf2',
+          url: '/static/pdf/1-1.pdf'
+        }],
+      pdfAllList: [{title: 'Slide01', url: 'hide/slide01'}],
+      // MULTI
+      // MULTIPLE CHOICE PARAMETER
+      split_multi: 0.5,
+      split_multicheck: 0.5,
+      modal_viewmulti: false,
+      modal_editmulti: false,
+      modal_multilist: false,
+      // FRAMEWORK TO SHOW MULTI
+      multiAll: [{title: 'Description', key: 'statement'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.addMultiAll(params.index) }
+                }
+              }, 'Add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.editMultiAll(params.index) }
+                }
+              }, 'Edit'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  click: () => { this.delMultiAll(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
+      multiThis: [{title: 'Description', key: 'statement'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.useMulti(params.index) }
+                }
+              }, 'Use'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.viewMulti(params.index) }
+                }
+              }, 'View'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  click: () => { this.delMultiClass(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
+      // MULTI LIST
+      multiAllList: [
+        {
+          uniqueId: '',
+          statement: 'Among the following people, who is the most gay one?',
+          optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+          answer: 'A'
+        },
+        {
+          uniqueId: '',
+          statement: 'What do you answer for "I don\'t know"?',
+          optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
+          answer: 'A'
         }
       ],
-      pdfThisList: [],
-      pdfAllList: [{title: 'Slide01', url: 'hide/slide01'}],
-      modal_multilist: false,
+      multiThisList: [{
+        uniqueId: '',
+        statement: 'Among the following people, who is the most gay one?',
+        optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+        answer: 'A'
+      }, {
+        uniqueId: '',
+        statement: 'What do you answer for "I don\'t know"?',
+        optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
+        answer: 'A'
+      }],
+      // MULTI STUDENT ANSWER LIST
+      multiAnswer: [{title: 'student', key: 'student'}, {title: 'answer', key: 'answer'}],
+      multiAnswerList: [{student: 'xcj', answer: 'A'}, {student: 'adil', answer: 'not answered'}],
+      codeAnswer: [{title: 'student', key: 'student'}, {title: 'answer', key: 'answer'}],
+      codeAnswerList: [{student: 'xcj', answer: '#include<iostream>'}, {student: 'adil', answer: 'not answered'}],
+      // CODE
+      // CODE PARAMETER
+      split_code: 0.5,
       modal_codelist: false,
-      testsourcecode: '#include<iostream>\n using namespace std;\n int main(){\n int c;\n cout<<c++<<endl;\n return 0}',
+      split_codecheck: 0.5,
+      modal_viewcode: false,
+      modal_editcode: false,
+      // FRAMEWORK TO SHOW CODE LIST
+      codeAll: [
+        {title: 'Statement', key: 'statement'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.addCodeAll(params.index) }
+                }
+              }, 'Add'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.editCodeAll(params.index) }
+                }
+              }, 'Edit'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  click: () => { this.delCodeAll(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
+      codeThis: [{title: 'Statement', key: 'statement'},
+        {
+          title: 'Action',
+          key: 'action',
+          fixed: 'right',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.useCode(params.index) }
+                }
+              }, 'Use'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                style: {marginRight: '5px'},
+                on: {
+                  click: () => { this.viewCode(params.index) }
+                }
+              }, 'View'),
+              h('Button', {
+                props: {type: 'text', size: 'small'},
+                on: {
+                  click: () => { this.delCodeClass(params.index) }
+                }
+              }, 'Del')])
+          }
+        }],
+      // CODE LIST
+      codeAllList: [
+        {
+          uniqueId: '',
+          statement: 'Eight Queens',
+          language: 'python',
+          example: 'null'
+        },
+        {
+          uniqueId: '',
+          statement: 'B-Tree',
+          language: 'cpp',
+          example: 'cout << "hello world" << endl;'
+        }
+      ],
+      codeThisList: [{
+        uniqueId: '',
+        statement: 'B-Tree',
+        language: 'cpp',
+        example: 'cout << "hello world" << endl;'
+      }],
+
+      // ADD PDF/MULTI/CODE MODALS
+      // PDF
       modal_pdf: false,
+      // MULTI
       modal_multi: false,
       multi_options: [
         {
@@ -369,32 +891,43 @@ export default{
           index: 1,
           status: 1
         }
-      ],
+      ], //
       multi_index: 1,
       sub_multi: {
-        statement: '',
-        optionList: [],
-        answer: '',
-        url: '教室url'
+        uniqueId: '',
+        statement: 'We Are Going to test it.',
+        optionList: ['something', 'somewhere', 'someplace', 'sometime'],
+        answer: 'A',
+        username: ''
       },
-      answer1: '',
-      answer2: '',
-      answer3: '',
-      answer4: '',
+      // CODE
       modal_code: false,
       sub_code: {
-        statement: '',
-        language: '' // language 应当是个多选框
+        uniqueId: '',
+        username: '',
+        statement: 'Print something in the console',
+        language: 'cpp',
+        example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0;\n}'
       },
-      // Shihang
-      modal3: false,
-      modal2: false,
-      modal1: false,
+      // CODE EDITOR
+      cmOption: {
+        autoCloseBrackets: true,
+        tabSize: 4,
+        lineNumbers: true,
+        line: true,
+        mode: 'python',
+        theme: 'base16-light'
+      },
+      // ADD STUDENT LIST
+      modal_student_xlsx: false,
+      // Shihang'S PARAMETER
       displayPdfurl: '',
       littlelivingcarddisplay: false,
       mainselectcarddisplay: false,
       mainpdfcarddisplay: false,
       mainlivingcarddisplay: true,
+
+      // COMMON INFO
       userInfo: {
         username: '',
         password: '',
@@ -408,40 +941,19 @@ export default{
         url: '',
         item: ''
       },
+      // STREAM PARAMETERS
       curstream: '',
       vid: '248980',
       cururl: '',
       curvideo: true,
-      theme1: 'light',
       toopen: true,
       openclose: 'ios-videocam-outline',
       opentext: '开播',
-      // 题目数据
-      examOptions: {
-        Description: '',
-        OptionA: '',
-        OptionB: '',
-        OptionC: '',
-        OptionD: ''
-      },
-      columns1: [
-        {
-          title: '题目',
-          key: 'title'
-        },
-        {
-          title: '答案',
-          key: 'ans'
-        }
-      ],
+
+      // SHIHANG'S STUFF
       curstu: 'zsh',
+      // SEEM TO BE ABLE TO SHOW STUDENT CODE, SAVE FOR NOW
       curti: [
-        {
-          title: '1',
-          type: 'select',
-          ans: 'A',
-          standardans: ''
-        },
         {
           title: '4',
           type: 'code',
@@ -453,29 +965,7 @@ export default{
       ionselect: '111',
       curtitle: 'xjbx1',
       curans: ['1', '2', '3', '4'],
-      curanswer: 'A',
-      selectitems: [
-        {
-          title: 'xjbx1',
-          ans: ['1', '2', '3', '4'],
-          answer: 'A'
-        },
-        {
-          title: 'xjbx2',
-          ans: ['1', '2', '3', '4'],
-          answer: 'A'
-        }
-      ],
-      pdfitems: [
-        {
-          title: 'pdf1',
-          url: '/static/pdf/1-1.pdf'
-        },
-        {
-          title: 'pdf2',
-          url: '/static/pdf/1-1.pdf'
-        }
-      ]
+      curanswer: 'A'
     }
   },
   mounted () {
@@ -483,14 +973,23 @@ export default{
      * 以下为聊天室使用，请勿改动
      */
     CHAT.message(this.userInfo.username)
+    this.findIfShutUp()
     /**
      * 以上为聊天室使用，请勿改动
      */
   },
   created () {
     this.cururl = this.$route.params.url
-    console.log(this.cururl)
+    // console.log(this.cururl)
     this.showUserInfo()
+    window['updatepage'] = () => {
+      this.updatepage();
+    };
+    window.addEventListener('message', function (e) { alert("djasljdks");
+      console.log(e.data)   } )
+
+
+
     /**
      * 以下为聊天室使用，请勿改动
      */
@@ -516,15 +1015,38 @@ export default{
       return parseFloat(this.recorder.volume)
     }
   },
-
+  components: {
+    PrismEditor,
+    VueCodemirror
+  },
   methods: {
+    updatepage () {
+      console.log('updatepage')
+      this.curpage = document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value
+      console.log(this.curpage)
+
+      let date = new Date()
+      let time = date.getHours() + ':' + date.getMinutes()
+      let obj = {
+        type: 'page',
+        msgType: 'page',
+        url: this.cururl,
+        time: time,
+        msg: this.curpage,
+        toUser: 'stu',
+        fromUser: this.userInfo.username
+      }
+      CHAT.submit(obj)
+    },
+    // ADD METHODS
+    // PDF
     addPDF () {
       // send pdf to backend
-      var formData = new FormData()
+      let formData = new FormData()
       formData.append('username', this.userInfo['username'])
       formData.append('file', document.querySelector('input[id=pdfinput]').files[0])
-      console.log(document.querySelector('input[id=pdfinput]').files[0])
-      var options = {
+      // console.log(document.querySelector('input[id=pdfinput]').files[0])
+      let options = {
         url: '/api/resource/add_pdf',
         data: formData,
         method: 'post',
@@ -533,45 +1055,43 @@ export default{
         }
       }
       axios(options).then((resp) => {
-        console.log('addPDF success')
+        // console.log('addPDF success')
       })
+      // IF SUCCESS, BACK END: ADD TO TEACHER & ROOM
+      // FRONTEND: JUST SHOW
     },
-    handleReset (name) {
-      this.$refs[name].resetFields()
-    },
-    handleAdd () {
-      this.index++
+    // MULTI
+    multi_addChoice () {
+      this.multi_index++
       this.multi_options.push({
         value: '',
-        index: this.index,
+        index: this.multi_index,
         status: 1
       })
     },
-    handleRemove (index) {
-      this.multi_options[index].status = 0
+    multi_delChoice (i) {
+      this.multi_options[i].status = 0
     },
-    // receive pdf list
-    showPdfList () {
-      this.modal_pdflist = true
-      this.pdfListInput.username = this.userInfo.username
-      // need to add all list & this list
-      axios.post('/api/resourse/getpdfs', this.pdfListInput).then((resp) => {
-        // resp.data 即是那个列表
-        this.pdfAllList = resp.data
-        this.pdfThisList = resp.data
-      })
+    create_multi () {
+      this.sub_multi.statement = ''
+      this.sub_multi.optionList.splice(0, this.sub_multi.optionList.length)
+      this.sub_multi.answer = ''
+      this.modal_multi = true
     },
     addMulti () {
       // send sub_multi should be set by now
-      this.sub_multi.url = this.cururl
+      this.sub_multi.username = this.userInfo.username
       // 将multi_option这个列表改成可发送的数组
-      for (var i = 0; i < this.index; i++) {
+      for (let i = 0; i < this.multi_index; i++) {
         if (this.multi_options[i].status === 1) {
           this.sub_multi.optionList.push(this.multi_options[i].value)
         }
       }
+      // test
+      // console.log(this.sub_multi.statement)
+      // console.log(this.sub_multi.optionList)
       // post
-      axios.post('/api/resourse/add_multiple', this.sub_multi).then((resp) => {
+      axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
@@ -583,21 +1103,533 @@ export default{
         }
       })
     },
+    // CODE
+    create_code () {
+      this.sub_code.statement = ''
+      // this.sub_code.example = ''
+      this.sub_code.language = ''
+      this.modal_code = true
+    },
     addCode () {
       // sub_code should be set by now
+      this.sub_code.username = this.userInfo.username
+      // test
+      console.log(this.sub_code.username)
+      console.log(this.sub_code.language)
+      console.log(this.sub_code.statement)
       // post
-      axios.post('/api/resourse/add_code', this.sub_code).then((resp) => {
+      axios.post('/api/resource/add_code', this.sub_code).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
           // 应当要维护一下代码题的列表,此处未添加
           window.location.reload()
-        // 如果失败
+          // 如果失败
         } else {
           this.$Message.error('添加代码题失败')
         }
       })
     },
+
+    // EDIT METHODS
+
+    // LIST METHODS
+    // PDF
+    // SHOW LIST
+    showPdfList () {
+      this.modal_pdflist = true
+      // get the input
+      let pdfListInput = {username: '', url: ''}
+      pdfListInput.username = this.userInfo.username
+      pdfListInput.url = this.cururl
+      // post
+      axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
+        // resp.data 即是那个列表
+        this.pdfAllList = resp.data.pdfAllList
+
+       //zsh this.pdfThisList = resp.data.pdfThisList
+      })
+    },
+    // ADD PDF TO CLASS
+    addPdfAll (index) {
+      // iPdf shape as : {title: 'Slide01', url: 'hide/slide01'}
+      let iPdf = this.pdfAllList[index]
+      let input = {username: '', url: '', pdf: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.pdf = iPdf
+      // post
+      axios.post('/api/resource/pdf_addclass', input).then((resp) => {
+        if (resp.data.status === 'success') {
+          let pdfInput = {username: '', url: ''}
+          pdfInput.username = this.userInfo.username
+          pdfInput.url = this.cururl
+          axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
+            if (resp.data.pdfAllList !== null) {
+              this.pdfAllList = resp.data.pdfAllList
+      //zsh  this.pdfThisList = resp.data.pdfThisList
+              window.location.reload()
+            } else {
+              this.$.message('wrong')
+            }
+          })
+        } else {
+          this.$.message('error in post')
+        }
+      })
+    },
+    // DEL PDF FROM TEACHER
+    delPdfAll (index) {
+      let iPdf = this.pdfAllList[index]
+      // input
+      let delPdfAllInput = {username: '', url: '', pdf: {}}
+      delPdfAllInput.username = this.userInfo.username
+      delPdfAllInput.url = this.cururl
+      delPdfAllInput.pdf = iPdf
+      // post
+      axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
+
+        if (resp.data.status === 'success') {
+          let pdfInput = {username: '', url: ''}
+          pdfInput.username = this.userInfo.username
+          pdfInput.url = this.cururl
+          axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
+            if (resp.data.pdfAllList !== null) {
+              this.pdfAllList = resp.data.pdfAllList
+      //zsh   this.pdfThisList = resp.data.pdfThisList
+              window.location.reload()
+            } else {
+              this.$.message('wrong')
+            }
+          })
+        } else {
+          this.$.message('error in post')
+        }
+      })
+    },
+    // USE IT
+    usePdf (index) {
+      let ipdf = this.pdfThisList[index]
+      this.$Modal.confirm({
+        title: '提示',
+        content: '是否展示' + ipdf.title,
+        onOk: () => {
+          console.log('onOK')
+          this.chatingtop = 330 + 'px'
+          this.chatinghei = 440 + 'px'
+          this.videohei = 260 + 'px'
+          this.mainselectcarddisplay = false
+          this.mainpdfcarddisplay = true
+          this.classmain0 = false
+          console.log(this.classmain0)
+          console.log(document.getElementById('rtmp-streamer1').class)
+          // this.liaotianshiheight = 350 + 'px'
+          this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
+          this.curvideo = false
+          this.modal_pdflist = false
+          console.log('1321312')
+          let date = new Date()
+          let time = date.getHours() + ':' + date.getMinutes()
+          let obj = {
+            type: 'pdf',
+            msgType: 'pdf',
+            url: this.cururl,
+            time: time,
+            msg: ipdf.url,
+            toUser: 'stu',
+            fromUser: this.userInfo.username
+          }
+          CHAT.submit(obj)
+        },
+        onCancel: () => {
+          this.$Message.info('Clicked cancel')
+        }
+      })
+    },
+    // DEL PDF FROM CLASS
+    delPdfClass (index) {
+      let iPdf = this.pdfThisList[index]
+      // get input
+      let input = {username: '', url: '', pdf: {}}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.pdf = iPdf
+      // post
+      axios.post('/api/resource/pdf_delclass', input).then((resp) => {
+        if (resp.data.status === 'success') {
+          let pdfInput = {username: '', url: ''}
+          pdfInput.username = this.userInfo.username
+          pdfInput.url = this.cururl
+          axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
+            if (resp.data.pdfAllList !== null) {
+              this.pdfAllList = resp.data.pdfAllList
+      //zsh   this.pdfThisList = resp.data.pdfThisList
+              window.location.reload()
+            } else {
+              this.$.message('wrong')
+            }
+          })
+        } else {
+          this.$.message('error in post')
+        }
+      })
+    },
+
+    // MULTI
+    // SHOW LIST
+    showMultiList () {
+      this.modal_multilist = true
+      // get input
+      let input = {username: '', url: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      // post
+      axios.post('/api/resource/getmultiples', input).then((resp) => {
+        // resp.data 即是那个列表
+        this.multiAllList = resp.data.multiAllList
+        this.multiThisList = resp.data.multiThisList
+        console.log(this.multiAllList)
+        console.log(this.multiThisList)
+      })
+    },
+    // EDIT MULTI
+    editMultiAll (index) {
+      let iMulti = this.multiAllList[index]
+      // give value here
+      this.sub_multi.statement = iMulti.statement
+      this.sub_multi.uniqueId = iMulti.uniqueId
+      this.sub_multi.answer = iMulti.answer
+      // multi options
+      this.multi_options.splice(0, this.multi_options.length)
+      // multi_options: [{value: '',index: 1,status: 1}],
+      for (let i = 0; i < iMulti.optionList.length; i++) {
+        let k = {value: '', index: i + 1, status: 1}
+        k.value = iMulti.optionList[i]
+        this.multi_options.push(k)
+      }
+      // get multi_options
+      this.modal_editmulti = true
+    },
+    // MULTI
+    submitMultiChange () {
+      // send sub_multi should be set by now
+      this.sub_multi.username = this.userInfo.username
+      // 将multi_option这个列表改成可发送的数组
+      for (let i = 0; i < this.multi_index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
+      // test
+      // console.log(this.sub_multi.statement)
+      // console.log(this.sub_multi.optionList)
+      // post
+      axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 维护选择题列表
+          let input = {username: '', url: ''}
+          input.username = this.userInfo.username
+          input.url = this.cururl
+          // post
+          axios.post('/api/resource/getmultiples', input).then((resp) => {
+            // resp.data 即是那个列表
+            this.multiAllList = resp.data.multiAllList
+            this.multiThisList = resp.data.multiThisList
+          })
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('Edit failed')
+        }
+      })
+    },
+    // ADD MULTI TO CLASS
+    addMultiAll (index) {
+      let iMulti = this.multiAllList[index]
+      let input = {username: '', url: '', uniqueId: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.uniqueId = iMulti.uniqueId
+      // post
+      axios.post('/api/resource/multi_addclass', input).then((resp) => {
+        if (resp.data.status === 'success') {
+          let multiInput = {username: '', url: ''}
+          multiInput.username = this.userInfo.username
+          multiInput.url = this.cururl
+          console.log('succeeded in post add class')
+          // post
+          axios.post('/api/resource/getmultiples', multiInput).then((resp) => {
+            // resp.data 即是那个列表
+            this.multiAllList = resp.data.multiAllList
+            this.multiThisList = resp.data.multiThisList
+            console.log('response data get, although do not know what')
+          })
+        } else {
+          this.$.message('something wrong')
+        }
+      })
+    },
+    // DEL PDF FROM TEACHER
+    delMultiAll (index) {
+      let iMulti = this.multiAllList[index]
+      // input
+      let input = {username: '', url: '', uniqueId: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.uniqueId = iMulti.uniqueId
+      // post
+      axios.post('/api/resource/delete_multiple', input).then((resp) => {
+        if (resp.data.status === 'success') {
+          let multiInput = {username: '', url: ''}
+          multiInput.username = this.userInfo.username
+          multiInput.url = this.cururl
+          // post
+          axios.post('/api/resource/getmultiples', multiInput).then((resp) => {
+            // resp.data 即是那个列表
+            this.multiAllList = resp.data.multiAllList
+            this.multiThisList = resp.data.multiThisList
+          })
+        } else {
+          this.$.message('something wrong')
+        }
+      })
+    },
+    // USE IT
+    useMulti (index) {
+      let iselect = this.multiThisList[index]
+      this.$Modal.confirm({
+        title: '提示',
+        content: '是否展示: \n ' + iselect.statement,
+        onOk: () => {
+          let date = new Date()
+          let time = date.getHours() + ':' + date.getMinutes()
+          let obj = {
+            type: 'select',
+            msgType: 'select',
+            url: this.cururl,
+            time: time,
+            msg: iselect,
+            toUser: 'stu',
+            fromUser: this.userInfo.username
+          }
+          CHAT.submit(obj)
+
+          this.videohei = 260 + 'px'
+          this.chatingtop = 330 + 'px'
+          this.chatinghei = 440 + 'px'
+          this.mainselectcarddisplay = true
+          this.mainpdfcarddisplay = false
+          this.classmain0 = false
+          this.curvideo = false
+          this.curtitle = iselect.statement
+          this.curanswer = iselect.answer
+          this.modal_multilist = false
+        },
+        onCancel: () => {
+          this.$Message.info('Clicked cancel')
+        }
+      })
+    },
+    // VIEW
+    viewMulti (index) {
+      let iMulti = this.multiThisList[index]
+      // input
+      let input = {username: '', url: '', uniqueId: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.uniqueId = iMulti.uniqueId
+      // post
+      axios.post('/api/resource/multi_viewclass', input).then((resp) => {
+        this.multiAnswerList = resp.data.multiAnswerList
+      })
+      this.sub_multi.optionList = iMulti.optionList
+      this.sub_multi.statement = iMulti.statement
+      this.sub_multi.answer = iMulti.answer
+      this.sub_multi.uniqueId = iMulti.uniqueId
+      console.log(this.sub_multi.optionList)
+      this.modal_viewmulti = true
+    },
+    // DEL MULTI FROM CLASS
+    delMultiClass (index) {
+      let iMulti = this.multiThisList[index]
+      // input
+      let input = {username: '', url: '', uniqueId: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.uniqueId = iMulti.uniqueId
+      // post
+      axios.post('/api/resource/multi_delclass', input).then((resp) => {
+        if (resp.data.status === 'success') {
+          let multiInput = {username: '', url: ''}
+          multiInput.username = this.userInfo.username
+          multiInput.url = this.cururl
+          // post
+          axios.post('/api/resource/getmultiples', multiInput).then((resp) => {
+            // resp.data 即是那个列表
+            this.multiAllList = resp.data.multiAllList
+            this.multiThisList = resp.data.multiThisList
+          })
+        } else {
+          this.$.message('something wrong')
+        }
+      })
+    },
+
+    // CODE
+    // SHOW LIST
+    showCodeList () {
+      this.modal_codelist = true
+      // get input
+      let input = {username: '', url: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      // post
+      axios.post('/api/resource/getcodes', input).then((resp) => {
+        // resp.data 即是那个列表
+        this.codeAllList = resp.data.codeAllList
+        this.codeThisList = resp.data.codeThisList
+      })
+    },
+    // EDIT CODE ASSIGNMENT
+    editCodeAll (index) {
+      let iCode = this.codeAllList[index]
+      this.sub_code.language = iCode.language
+      this.sub_code.example = iCode.example
+      this.sub_code.statement = iCode.statement
+      this.sub_code.uniqueId = iCode.uniqueId
+      this.sub_code.username = this.userInfo.username
+      this.modal_editcode = true
+    },
+    // CODE
+    submitCodeChange () {
+      // sub_code should be set by now
+      this.sub_code.username = this.userInfo.username
+      // test
+      console.log(this.sub_code.username)
+      console.log(this.sub_code.language)
+      console.log(this.sub_code.statement)
+      // post
+      axios.post('/api/resource/update_code', this.sub_code).then((resp) => {
+        this.$Message.success(resp.data.status)
+        // 如果成功
+        if (resp.data.status === 'success') {
+          // 不用维护列表啦，该用再用
+          window.location.reload()
+          // 如果失败
+        } else {
+          this.$Message.error('添加代码题失败')
+        }
+      })
+    },
+    // ADD CODE TO CLASS
+    addCodeAll (index) {
+      let iCode = this.codeAllList[index]
+      let input = {username: '', url: '', uniqueId: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.uniqueId = iCode.uniqueId
+      // post
+      axios.post('/api/resource/code_addclass', input).then((resp) => {
+        if (resp.data.status === 'success') {
+          let codeInput = {username: '', url: ''}
+          codeInput.username = this.userInfo.username
+          codeInput.url = this.cururl
+          // post
+          axios.post('/api/resource/getcodes', codeInput).then((resp) => {
+            // resp.data 即是那个列表
+            this.codeAllList = resp.data.codeAllList
+            this.codeThisList = resp.data.codeThisList
+          })
+        } else {
+          this.$.message('something wrong')
+        }
+      })
+    },
+    // DEL CODE FROM TEACHER
+    delCodeAll (index) {
+      let iCode = this.codeAllList[index]
+      // input
+      let input = {username: '', url: '', uniqueId: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.uniqueId = iCode.uniqueId
+      // post
+      axios.post('/api/resource/delete_code', input).then((resp) => {
+        if (resp.data.status === 'success') {
+          let codeInput = {username: '', url: ''}
+          codeInput.username = this.userInfo.username
+          codeInput.url = this.cururl
+          // post
+          axios.post('/api/resource/getcodes', codeInput).then((resp) => {
+            // resp.data 即是那个列表
+            this.codeAllList = resp.data.codeAllList
+            this.codeThisList = resp.data.codeThisList
+          })
+        } else {
+          this.$.message('something wrong')
+        }
+      })
+    },
+    // USE IT
+    useCode (index) {
+      let iCode = this.codeThisList[index]
+      iCode.statement = ''
+      // to be implemented
+      let date = new Date()
+      let time = date.getHours() + ':' + date.getMinutes()
+      let obj = {
+        type: 'code',
+        msgType: 'code',
+        url: this.cururl,
+        time: time,
+        msg: 'code',
+        toUser: 'stu',
+        fromUser: this.userInfo.username
+      }
+      CHAT.submit(obj)
+    },
+    // VIEW
+    viewCode (index) {
+      let iCode = this.codeThisList[index]
+      // input
+      let input = {username: '', url: '', uniqueId: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.uniqueId = iCode.uniqueId
+      // post
+      axios.post('/api/resource/code_viewclass', input).then((resp) => {
+        this.codeAnswerList = resp.data.codeAnswerList
+      })
+      this.modal_viewcode = true
+    },
+    // DEL CODE FROM CLASS
+    delCodeClass (index) {
+      let iCode = this.codeThisList[index]
+      // input
+      let input = {username: '', url: '', uniqueId: ''}
+      input.username = this.userInfo.username
+      input.url = this.cururl
+      input.uniqueId = iCode.uniqueId
+      // post
+      axios.post('/api/resource/code_delclass', input).then((resp) => {
+        if (resp.data.status === 'success') {
+          let codeInput = {username: '', url: ''}
+          codeInput.username = this.userInfo.username
+          codeInput.url = this.cururl
+          // post
+          axios.post('/api/resource/getcodes', codeInput).then((resp) => {
+            // resp.data 即是那个列表
+            this.codeAllList = resp.data.codeAllList
+            this.codeThisList = resp.data.codeThisList
+          })
+        } else {
+          this.$.message('something wrong')
+        }
+      })
+    },
+
     // Yuxuan's Methods Stops Here
 
     /**
@@ -607,11 +1639,14 @@ export default{
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
+      var date = new Date()
+      var time = date.getHours() + ':' + date.getMinutes()
+      var obj = {}
       if (this.msgType === 'text') {
-        var date = new Date()
-        var time = date.getHours() + ':' + date.getMinutes()
-        var obj = {
-          type: 'broadcast',
+        if (this.msg === '') return
+        obj = {
+          type: this.talkType,
+          msgType: 'text',
           url: this.cururl,
           time: time,
           msg: this.msg,
@@ -619,9 +1654,45 @@ export default{
           fromUser: this.userInfo.username
         }
         this.msg = ''
+        CHAT.submit(obj)
       } else if (this.msgType === 'audio') {
-        this.socket.emit('sendMsg', this.audio)
-        console.log(this.audio)
+        obj = {
+          type: this.talkType,
+          msgType: 'audio',
+          url: this.cururl,
+          time: time,
+          msg: this.audio,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        console.log(obj)
+        CHAT.submit(obj)
+      } else if (this.msgType === 'img') {
+        var blob = new Blob([document.querySelector('input[type=file]').files[0]], { type: 'image/png' })
+        obj = {
+          type: this.talkType,
+          msgType: 'img',
+          url: this.cururl,
+          time: time,
+          msg: blob,
+          toUser: this.username,
+          fromUser: this.userInfo.username
+        }
+        console.log(obj)
+        CHAT.submit(obj)
+        this.msgType = 'text'
+      }
+    },
+    chooseImg () {
+      this.msgType = 'img'
+    },
+    changeMsgType () {
+      if (this.msgType === 'text') {
+        this.msgTypeInfo = '语音'
+        this.msgType = 'audio'
+      } else if (this.msgType === 'audio') {
+        this.msgTypeInfo = '文字'
+        this.msgType = 'text'
       }
     },
     toggleRecorder () {
@@ -642,6 +1713,58 @@ export default{
         return
       }
       this.recorder.stop()
+    },
+    audioUrl (obj) {
+      var url = window.URL.createObjectURL(new Blob([obj.blob], { type: 'audio/wav' }))
+      return url
+    },
+    imageUrl (obj) {
+      var url = window.URL.createObjectURL(new Blob([obj], { type: 'image/png' }))
+      return url
+    },
+    talkTo (p) {
+      if (p === this.userInfo.username) return
+      this.username = p
+      if (p !== 'all') {
+        this.msg = ''
+        this.talkType = 'whisper'
+      } else {
+        this.msg = ''
+        this.talkType = 'broadcast'
+      }
+    },
+    shutUp (m) {
+      var obj = {
+        url: this.cururl,
+        toUser: m.fromUser,
+        fromUser: this.userInfo.username
+      }
+      console.log(m)
+      CHAT.shutUp(obj)
+    },
+    blackList (m) {
+      var obj = {
+        url: this.cururl,
+        toUser: m.fromUser,
+        fromUser: this.userInfo.username
+      }
+      console.log(m)
+      CHAT.blackList(obj)
+    },
+    findIfShutUp () {
+      axios.post('/api/classroom/shutuplist', {'url': this.cururl}).then((resp) => {
+        console.log(resp.data)
+        this.shutuplist = resp.data
+      })
+    },
+    getShutUpList () {
+      this.shutUpModal = true
+      this.findIfShutUp()
+    },
+    noShutUp (student) {
+      CHAT.youCanTalk(student, this.cururl)
+      var index = this.shutuplist.indexOf(student)
+      this.shutuplist.splice(index, 1)
     },
     /**
      * 以上为聊天室使用，请勿改动
@@ -669,7 +1792,7 @@ export default{
         this.studentitems = resp.studentitems
       })
     },
-    addstua () {
+    addStudent () {
       console.log('dhasjkhda')
       this.$Modal.confirm({
         render: (h) => {
@@ -716,6 +1839,7 @@ export default{
         this.studentitems = resp.studentitems
       })
     },
+    // 用于显示学生的代码
     showstudentti (item) {
       this.curstu = item
       const data = this.curuser
@@ -726,87 +1850,6 @@ export default{
       axios.post('/api/classroom/getstudentsti', data).then((resp) => {
         this.curti = resp.curti
       })
-      this.modal3 = true
-    },
-    teaselect () {
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      axios.post('/api/resourse/getselects', data).then((resp) => {
-        this.selectitems = resp.selectitems
-      })
-      this.modal2 = true
-    },
-    teatext () {
-      const data = this.curuser
-      data['username'] = this.userInfo['username']
-      data['job'] = this.userInfo['job']
-      data['url'] = this.cururl
-      axios.post('/api/resourse/getpdfs', data).then((resp) => {
-        this.pdfitems = resp.pdfitems
-      })
-      this.modal1 = true
-    },
-    showpdf: function (ipdf) {
-      this.$Modal.confirm({
-        title: '提示',
-        content: '是否展示' + ipdf.title,
-        onOk: () => {
-          const data = this.curuser
-          data['username'] = this.userInfo['username']
-          data['job'] = this.userInfo['job']
-          data['url'] = this.cururl
-          data['item'] = ipdf.title
-          axios.post('/api/classroom/showpdfs', data).then((resp) => {
-
-          })
-          console.log('1321312')
-          this.videohei = 260 + 'px'
-          this.mainselectcarddisplay = false
-          this.mainpdfcarddisplay = true
-          this.classmain0 = false
-          console.log(this.classmain0)
-          console.log(document.getElementById('rtmp-streamer1').class)
-          this.liaotianshiheight = 350 + 'px'
-          this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
-          this.curvideo = false
-          this.modal1 = false
-          console.log('1321312')
-        },
-        onCancel: () => {
-          this.$Message.info('Clicked cancel')
-        }
-      })
-    },
-    showselect: function (iselect) {
-      this.$Modal.confirm({
-        title: '提示',
-        content: '是否展示: \n ' + iselect.title,
-        onOk: () => {
-          const data = this.curuser
-          data['username'] = this.userInfo['username']
-          data['job'] = this.userInfo['job']
-          data['url'] = this.cururl
-          data['item'] = iselect.title
-          axios.post('/api/classroom/showselect', data).then((resp) => {
-
-          })
-          this.videohei = 260 + 'px'
-          this.mainselectcarddisplay = true
-          this.mainpdfcarddisplay = false
-          this.classmain0 = false
-          this.liaotianshiheight = 350 + 'px'
-          this.curvideo = false
-          this.curtitle = iselect.title
-          this.curans = iselect.ans
-          this.curanswer = iselect.answer
-          this.modal2 = false
-        },
-        onCancel: () => {
-          this.$Message.info('Clicked cancel')
-        }
-      })
     },
     closetext () {
       this.$Modal.confirm({
@@ -816,8 +1859,9 @@ export default{
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
           this.classmain0 = true
-          this.liaotianshiheight = 60 + 'px'
           this.videohei = 700 + 'px'
+          this.chatingtop = 60 + 'px'
+          this.chatinghei = 710 + 'px'
           this.curvideo = true
           const data = this.curuser
           data['username'] = this.userInfo['username']
@@ -826,6 +1870,19 @@ export default{
           axios.post('/api/classroom/closepdfsec', data).then((resp) => {
 
           })
+
+          var date = new Date()
+          var time = date.getHours() + ':' + date.getMinutes()
+          var obj = {
+            type: 'close',
+            msgType: 'close',
+            url: this.cururl,
+            time: time,
+            msg: 'close',
+            toUser: 'stu',
+            fromUser: this.userInfo.username
+          }
+          CHAT.submit(obj)
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -857,12 +1914,13 @@ export default{
               this.streamername = resp.data.streamername
               console.log(resp.data.streamername)
               console.log(this.streamername)
+              console.log(this.streamername)
+              setSWFIsReady()
+              this.streamer000 = document.getElementById('rtmp-streamer1')
+              this.streamer000.setScreenPosition(-100, 0)
+              this.streamer000.setScreenSize(700, 380)
+              this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
             })
-            setSWFIsReady()
-            this.streamer000 = document.getElementById('rtmp-streamer1')
-            this.streamer000.setScreenPosition(-100, 0)
-            this.streamer000.setScreenSize(700, 380)
-            this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
           },
           onCancel: () => {
           }
@@ -896,7 +1954,7 @@ export default{
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
-        this.streamer000.setMicRate(0)
+        this.streamer000.setMicRate(10000000000)
         this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       } else {
         this.jinmai = 'ios-mic-off'
@@ -923,7 +1981,7 @@ export default{
         this.streamer000.disconnect()
         this.streamer000.setScreenPosition(-1000, 0)
         this.streamer000.setScreenSize(700, 380)
-        this.streamer000.setCamFrameInterval(100000)
+        this.streamer000.setCamFrameInterval(1000000000)
         this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
       }
     }
@@ -933,13 +1991,15 @@ export default{
 
 </script>
 <style>
+  #teacherLiving {
+    padding: 0 5%;
+  }
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   #chatingRoom {
     position:absolute;
     left: 79%;
     width: 21%;
-    top:60px;
-    height: 90%;
+
   }
   .talk-contents {
     height: 100%;
@@ -961,7 +2021,6 @@ export default{
     margin: 0 19px;
     border-bottom: 1px solid #d6d6d6;
     background-color: #eee;
-    z-index: 1024;
   }
   .content {
     background-color: #eee;
@@ -1002,12 +2061,12 @@ export default{
     font-size: 12px;
     word-break: break-all;
   }
-  .talk-word-self {
+  .talk-word-user {
     border-bottom-right-radius: 0;
     margin-right: 10px;
     text-align: left;
   }
-  .talk-word-user {
+  .talk-word-self {
     background: rgba(243, 243, 243, 1) none;
     color: rgba(0, 0, 0, 1);
     border-bottom-left-radius: 0;
@@ -1028,6 +2087,9 @@ export default{
     text-align: left;
     position: relative;
     margin-left: 0px;
+  }
+  .talk-image {
+    width: 100px;
   }
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   .tealivingmain{
@@ -1053,7 +2115,7 @@ export default{
   }
 
   .menuitentea{
-    font-size: 20px;
+    font-size: 18px;
   }
   .btnopen{
     padding-:5%;
@@ -1108,9 +2170,6 @@ export default{
     left:-50px;
     font-size: 15px;
   }
-  .databutton{
-    margin-top: 15px;
-  }
   .upf {
     position: relative;
     display: inline-block;
@@ -1137,11 +2196,11 @@ export default{
     color: #004974;
     text-decoration: none;
   }
-   .demo-split{
-     height: 430px;
-     border: 1px solid #dcdee2;
-   }
-  .demo-split-pane{
+  .teacher-live-split{
+    height: 430px;
+    border: 1px solid #dcdee2;
+  }
+  .teacher-live-split-pane{
     padding: 10px;
   }
 </style>

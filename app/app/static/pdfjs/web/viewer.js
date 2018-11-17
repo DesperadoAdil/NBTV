@@ -5453,6 +5453,7 @@ var pdfjsWebLibs;
        source: this,
        location: this._location
       });
+      // parent.methods.updatepage();
      },
      containsElement: function (element) {
       return this.container.contains(element);
@@ -6764,9 +6765,23 @@ var pdfjsWebLibs;
    }
    function webViewerNextPage() {
     PDFViewerApplication.page++;
+    window.alert("++++")
+    window.console.log("++++")
+    window.parent.postMessage('super window 接收到了一条消息', '*')  
+    window.console.log(window.location.href)  
+    window.alert(window.location.href)
+    parent.updatepage()
+    // parent.methods.updatepage()
    }
    function webViewerPreviousPage() {
     PDFViewerApplication.page--;
+    window.alert("----")
+    window.console.log("----")
+    window.postMessage('super window 接收到了一条消息', '*')
+    window.console.log("dsajd")  
+    window.parent.updatepage()
+    // parent.updatepage()
+    // parent.methods.updatepage()
    }
    function webViewerZoomIn() {
     PDFViewerApplication.zoomIn();

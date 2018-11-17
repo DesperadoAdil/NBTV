@@ -1,16 +1,40 @@
 from app import db
 from datetime import datetime
 
+classroom_choice = db.Table(
+    'classroom_choice',
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False),
+    db.Column('choice_id', db.String(100), db.ForeignKey('choicequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False)
+)
+
+
+classroom_code = db.Table(
+    'classroom_code',
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False),
+    db.Column('code_id', db.String(100), db.ForeignKey('codequestion.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False)
+)
+
+
+classroom_pdf = db.Table(
+    'classroom_pdf',
+    db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False),
+    db.Column('pdf_id', db.String(151), db.ForeignKey('pdffile.uniqueId', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False)
+)
+
+
 class Classrooms(db.Model):
     __tablename__ = 'classrooms'
     __table_args__ = {
-        'mysql_charset':'utf8'
+        'mysql_charset': 'utf8',
+        'mysql_engine': 'InnoDB',
+        "useexisting": True
     }
-    # id = db.Column(db.Integer, primary_key=True,  unique=True, nullable=False)
+
     vid = db.Column(db.Integer, unique=True, nullable=False)
     teacher = db.Column(db.String(50), db.ForeignKey('teachers.username'), nullable=False)
     title = db.Column(db.String(150), nullable=False)
     thumbnail = db.Column(db.String(100), nullable=False)
+
     #直播间私密模式
     mode = db.Column(db.String(10), nullable=False, default="private")
 
@@ -25,17 +49,20 @@ class Classrooms(db.Model):
 
     studentlist = db.Column(db.Text, nullable=False, default = "[]")
     teacherlist = db.Column(db.Text, nullable=False, default = "[]")
-    #audiencelist = db.Column(db.Text, nullable=False, default = "[]")
-
-    filelist = db.Column(db.Text, nullable = False, default = "[]")
 
     visible = db.Column(db.String(5), nullable=False, default = "yes")
     createtime = db.Column(db.DateTime, default=datetime.now())
     #开播时间
     showtime = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    #黑名单
+    blacklist = db.Column(db.Text, nullable = False, default = "[]")
+    #禁言名单
+    shutuplist = db.Column(db.Text, nullable = False, default = "[]")
 
-    # choicequestion = db.relationship('ChoiceQuestion', backref='classrooms', lazy='dynamic')
-    # codequestion = db.relationship('CodeQuestion', backref='classrooms', lazy='dynamic')
+
+    choice = db.relationship('ChoiceQuestion', secondary = classroom_choice, backref = db.backref('classroom', lazy='dynamic'), lazy = 'dynamic')
+    code = db.relationship('CodeQuestion', secondary = classroom_code, backref = db.backref('classroom', lazy='dynamic'), lazy = 'dynamic')
+    pdffile = db.relationship('PDFFile', secondary = classroom_pdf, backref = db.backref('classroom', lazy='dynamic'), lazy = 'dynamic')
 
     def __repr__(self):
         return '<ClassroomUrl %r>' % self.url
@@ -86,17 +113,21 @@ class Messages(db.Model):
     def __repr__(self):
         return '<PhoneNumber %r>' % self.phonenumber
 
+
 class ChoiceQuestion(db.Model):
     __tablename__ = 'choicequestion'
     __table_args__ = {
-        'mysql_charset':'utf8'
+        'mysql_charset':'utf8',
+        'mysql_engine': 'InnoDB',
+        "useexisting": True
     }
     statement = db.Column(db.String(1000), nullable = False)
     optionList = db.Column(db.String(1000), nullable = False)
-    answer = db.Column(db.Integer, nullable = False)
-    uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+    answer = db.Column(db.String(3), nullable = False)
+    uniqueId = db.Column(db.String(100), primary_key = True, unique = True, nullable = False)
+
     submitRecord = db.Column(db.Text, nullable = False)
-    # classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
+
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
     def __repr__(self):
@@ -105,29 +136,37 @@ class ChoiceQuestion(db.Model):
 
 class CodeQuestion(db.Model):
     __tablename__ = 'codequestion'
-    __table_args__ = { 'mysql_charset':'utf8' }
+    __table_args__ = {
+        'mysql_charset':'utf8',
+        'mysql_engine': 'InnoDB'
+        }
     statement = db.Column(db.String(1000), nullable = False)
     language = db.Column(db.String(10), nullable = False)
-    uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
+    uniqueId = db.Column(db.String(100), primary_key = True, unique = True, nullable = False)
     submitRecord = db.Column(db.Text, nullable = False)
-    # classroom = db.Column(db.String(100), db.ForeignKey('classrooms.url', ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
+
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
     def __repr__(self):
         return '<codequestionId %r>' % self.uniqueId
 
+
 class PDFFile(db.Model):
     __tablename__ = 'pdffile'
+    __table_args__ = {
+        'mysql_charset':'utf8',
+        'mysql_engine': 'InnoDB'
+        }
 
-    # uniqueId = db.Column(db.String(10), primary_key = True, unique = True, nullable = False)
-    owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
     filename = db.Column(db.String(100), nullable = False)
     uniqueId = db.Column(db.String(151), nullable = False, primary_key = True)
-    # filePath = db.Column(db.Text, nullable = False)
-    __table_args__ = (
-        db.Index('filepath', 'owner', 'filename'),
-        {'mysql_charset':'utf8'}
-    )
+    
+    owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
+
+    #__table_args__ = (
+    # db.Index('filepath', 'owner', 'filename'),
+    #    {'mysql_charset':'utf8', 'mysql_engine': 'InnoDB'}
+    #)
 
     def __repr__(self):
         return '<pdfId %r>' % self.owner

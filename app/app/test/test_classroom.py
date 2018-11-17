@@ -28,32 +28,43 @@ class ClassroomTest(BaseTestCase):
 	}
 
 	def test_add_classroom(self):
+		classroom = Classrooms.query.filter_by(url = "123").first()
+		if classroom is not None:
+			db.session.delete(classroom)
+			db.session.commit()
+
 		# 这是可以正确插入的结果
-		response = self.app.post('/api/classroom/add_class', data = json.dumps(self.data, ensure_ascii = False))
+		response = self.app.post('/api/classroom/add_class', data = self.data)
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
 
 		# 这是不可以正确插入的结果
-		response = self.app.post('/api/classroom/add_class', data = json.dumps(self.dataerror, ensure_ascii = False))
+		response = self.app.post('/api/classroom/add_class', data = self.dataerror)
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
 
 
 	def test_bupdate_classroom(self):
 		# 这是可以正确插入的结果
-		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.data, ensure_ascii = False))
+		response = self.app.post('/api/classroom/update_class', data = self.data)
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
 
 		# 这是不可以正确插入的结果
-		response = self.app.post('/api/classroom/update_class', data = json.dumps(self.dataerror, ensure_ascii = False))
+		response = self.app.post('/api/classroom/update_class', data = self.dataerror)
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error:password wrong"}')
 
 
 	data_aaddstudents = { "url" : "123", "item" : "test1" }
 	dataerror_aaddstudents = { "url" : "123", "item" : "erroruser" }
-	testuser = Students(phonenumber = "12345678911", username = "test1", password = "123456")
-	db.session.add(testuser)
-	db.session.commit()
 	def test_caaddstudents(self):
 		print ("Test:Addstudents===============================")
+
+		testuser = Students.query.filter_by(username = "test1").first()
+		if testuser is None:
+			testuser = Students(phonenumber = "12345678911", username = "test1", password = "123456")
+		else:
+			testuser.classroomlist = json.dumps([])
+		db.session.add(testuser)
+		db.session.commit()
+
 
 		# 这是正确的结果
 		response = self.app.post('/api/classroom/aaddstudents', data = json.dumps(self.data_aaddstudents, ensure_ascii = False))

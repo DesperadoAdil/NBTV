@@ -1,6 +1,7 @@
 import json
 from ..models import ChoiceQuestion
 import uuid
+from app import db
 
 class MultiChoiceQuestion:
 	def __init__(self):
@@ -27,7 +28,7 @@ class MultiChoiceQuestion:
 			if que is None:
 				return "error:NoSuchQue"
 			que.statement = statement;
-			que.optionList = optionList;
+			que.optionList = json.dumps(optionList, ensure_ascii = False);
 			que.answer = answer;
 			db.session.add(que)
 			db.session.commit()
@@ -56,13 +57,16 @@ class MultiChoiceQuestion:
 		except:
 			return "error"
 
+	def search(self, uniqueId):
+		return ChoiceQuestion.query.filter_by(uniqueId = uniqueId).first()
+
 	def submitAnswer(self, uniqueId, studentId, ans):
 		try:
 			que = ChoiceQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 			record = json.loads(que.submitRecord)
-			record.append([studentId, ans])
+			record.append({'student':studentId, 'answer': ans})
 			que.submitRecord = json.dumps(record, ensure_ascii = False)
 			db.session.add(que)
 			db.commit()

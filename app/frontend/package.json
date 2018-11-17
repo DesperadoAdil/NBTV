@@ -16,17 +16,21 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "codemirror": "^5.41.0",
+    "highlight.js": "latest",
     "iview": "^3.1.3",
+    "prismjs": "latest",
     "socket.io": "^2.1.1",
     "socket.io-client": "latest",
     "vue": "^2.5.2",
     "vue-audio-recorder": "^2.2.0",
+    "vue-codemirror": "^4.0.6",
     "vue-cookies": "^1.5.7",
     "vue-headful": "^2.0.1",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1",
     "vue-highlightjs": "latest",
-    "highlight.js": "latest"
+    "vue-prism-editor": "latest",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

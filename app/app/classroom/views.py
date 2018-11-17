@@ -17,10 +17,11 @@ polyvManager = polyvAPI.ChannelManager()
 @classroom.route('/add_class', methods = ['POST'])
 def addClass():
 	ret = {}
-	data = request.get_data()
-	print('add a class')
-	print(data)
-	data = json.loads(data)
+	# data = request.get_data()
+	# print('add a class')
+	# print(data)
+	# data = json.loads(data)
+	data = request.form.to_dict()
 	try:
 		if not usermanager.verify(data['username'], data['password'], "teacher"):
 			ret["status"] = "error:password wrong"
@@ -43,10 +44,14 @@ def addClass():
 	vid = responseData['data']['channelId']
 	rtmpUrl = responseData['data']['url']
 
+	# 把缩略图给存起来
+	imgfile = request.files.get('img')
+
+
 	# 在教室列表里插入一个教室
 	# insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
 	ret = {}
-	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], data['thumbnail'], data['class_password'], data['url'], data['mode'])
+	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], imgfile, data['class_password'], data['url'], data['mode'])
 
 	return json.dumps(ret, ensure_ascii = False)
 
@@ -106,18 +111,18 @@ def deleteClass():
 
 @classroom.route('/update_class', methods = ['POST'])
 def updateClass():
-	data = request.get_data()
+	data = request.form.to_dict()
 	print('update a classroom')
 	print(data)
-	data = json.loads(data)
 
 	ret = {}
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
 		ret["status"] = "error:password wrong"
 		return json.dumps(ret, ensure_ascii = False)
 
+	imgfile = request.files.get('img')
 	# update(self, title, thumbnail, newUrl, passwd, oldUrl):
-	ret['status'] = classroomManager.update(data['title'], data['thumbnail'], data['url'], data['class_password'], data['old_url'])
+	ret['status'] = classroomManager.update(data['title'], imgfile, data['url'], data['class_password'], data['old_url'])
 	return json.dumps(ret, ensure_ascii = False)
 
 
@@ -140,6 +145,14 @@ def getList():
 		tmpd = {"title": tmp.title, "thumbnail": tmp.thumbnail, "url": tmp.url, "password": tmp.password}
 		ans.append(tmpd)
 	return json.dumps(ans, ensure_ascii = False)
+
+
+@classroom.route('/shutuplist', methods = ['POST'])
+def shutuplist():
+	data = request.get_data()
+	data = json.loads(data)
+	classroom = classroomManager.search(data['url'])
+	return classroom.shutuplist
 
 
 #xlsx添加学生
@@ -205,7 +218,6 @@ def aaddstudents():
 	ret["status"] = 'error'
 
 	data = request.get_data()
-	print (data)
 	data = json.loads(data)
 
 	url = data['url']
@@ -222,16 +234,24 @@ def aaddstudents():
 	else:
 		#直播间studentlist中加入学生username
 		studentlist = json.loads(classroom.studentlist)
-		studentlist.append(item)
-		classroom.studentlist = json.dumps(studentlist)
-		db.session.add(classroom)
+		if item not in studentlist:
+			studentlist.append(item)
+			classroom.studentlist = json.dumps(studentlist)
+			db.session.add(classroom)
+			db.session.commit()
+		else:
+			print ("Add Student Error: " + item + " already in classroom")
 
 		#学生classroomlist中加入直播间url
 		classroomlist = json.loads(student.classroomlist)
-		classroomlist.append(url)
-		student.classroomlist = json.dumps(classroomlist)
-		db.session.add(student)
-		db.session.commit()
+		if url not in classroomlist:
+			classroomlist.append(url)
+			student.classroomlist = json.dumps(classroomlist)
+			db.session.add(student)
+			db.session.commit()
+		else:
+			print ("Add Student Error: " + item + " already in classroom")
+
 		ret['status'] = "success"
 
 	print (json.dumps(ret))

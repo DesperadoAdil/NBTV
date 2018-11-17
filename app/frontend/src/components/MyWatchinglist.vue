@@ -1,5 +1,5 @@
 <template>
-  <div id="list" class="posi">
+  <div id="myWatchingList" class="posi">
     <h1 class="list-info">
       <Icon type="ios-time" />
       正在播出
@@ -74,51 +74,15 @@ export default {
       var compare = function (obj1, obj2) {
         var val1 = obj1.showtime
         var val2 = obj2.showtime
-        var datas1 = val1.split(' ')
-        var datas2 = val2.split(' ')
-
-        var date1 = datas1[0].split('-')
-        var date2 = datas2[0].split('-')
-
-        var time1 = datas1[1].split(':')
-        var time2 = datas2[1].split(':')
-        console.log(parseInt(date1[0]))
-        if (parseInt(date1[0]) < parseInt(date2[0])) {
-          return 1
-        } else if (parseInt(date1[0]) > parseInt(date2[0])) {
+        var date1=new Date(val1.replace(/-/g,"\/"));
+        var date2=new Date(val2.replace(/-/g,"\/"));
+        console.log(date1)
+        if(date1>date2){
           return -1
-        } else {
-          if (parseInt(date1[1]) < parseInt(date2[1])) {
-            return 1
-          } else if (parseInt(date1[1]) > parseInt(date2[1])) {
-            return -1
-          } else {
-            if (parseInt(date1[2]) < parseInt(date2[2])) {
-              return 1
-            } else if (parseInt(date1[2]) > parseInt(date2[2])) {
-              return -1
-            } else {
-              if (parseInt(time1[0]) < parseInt(time2[0])) {
-                return 1
-              } else if (parseInt(time1[0]) > parseInt(time2[0])) {
-                return -1
-              } else {
-                if (parseInt(time1[1]) < parseInt(time2[1])) {
-                  return 1
-                } else if (parseInt(time1[1]) > parseInt(time2[1])) {
-                  return -1
-                } else {
-                  if (parseInt(time1[2]) < parseInt(time2[2])) {
-                    return 1
-                  } else if (parseInt(time1[2]) > parseInt(time2[2])) {
-                    return -1
-                  } else {
-                    return 0
-                  }
-                }
-              }
-            }
-          }
+        }else if(date2>date1){
+          return 1
+        }else{
+          return 0
         }
 
       }
@@ -132,51 +96,15 @@ export default {
       var compare = function (obj1, obj2) {
         var val1 = obj1.createtime
         var val2 = obj2.createtime
-        var datas1 = val1.split(' ')
-        var datas2 = val2.split(' ')
-
-        var date1 = datas1[0].split('-')
-        var date2 = datas2[0].split('-')
-
-        var time1 = datas1[1].split(':')
-        var time2 = datas2[1].split(':')
-        console.log(parseInt(date1[0]))
-        if (parseInt(date1[0]) < parseInt(date2[0])) {
-          return 1
-        } else if (parseInt(date1[0]) > parseInt(date2[0])) {
+        var date1=new Date(val1.replace(/-/g,"\/"));
+        var date2=new Date(val2.replace(/-/g,"\/"));
+        console.log(date1)
+        if(date1>date2){
           return -1
-        } else {
-          if (parseInt(date1[1]) < parseInt(date2[1])) {
-            return 1
-          } else if (parseInt(date1[1]) > parseInt(date2[1])) {
-            return -1
-          } else {
-            if (parseInt(date1[2]) < parseInt(date2[2])) {
-              return 1
-            } else if (parseInt(date1[2]) > parseInt(date2[2])) {
-              return -1
-            } else {
-              if (parseInt(time1[0]) < parseInt(time2[0])) {
-                return 1
-              } else if (parseInt(time1[0]) > parseInt(time2[0])) {
-                return -1
-              } else {
-                if (parseInt(time1[1]) < parseInt(time2[1])) {
-                  return 1
-                } else if (parseInt(time1[1]) > parseInt(time2[1])) {
-                  return -1
-                } else {
-                  if (parseInt(time1[2]) < parseInt(time2[2])) {
-                    return 1
-                  } else if (parseInt(time1[2]) > parseInt(time2[2])) {
-                    return -1
-                  } else {
-                    return 0
-                  }
-                }
-              }
-            }
-          }
+        }else if(date2>date1){
+          return 1
+        }else{
+          return 0
         }
 
       }
@@ -239,13 +167,8 @@ export default {
 }
 </script>
 <style>
-  ul {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  li {
-    list-style: none;
+  #myWatchingList {
+    padding: 0 5%;
   }
   .posi{
     position: absolute;

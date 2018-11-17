@@ -18,7 +18,7 @@ def login():
     ret["status"] = 'error'
 
     data = request.get_data()
-    print (data)
+    #print (data)
     data = json.loads(data)
 
     username = data['username']
@@ -29,7 +29,7 @@ def login():
     if user is None or password != user.password:
         ret['status']='error: wrong username or password'
         return json.dumps(ret)
-    print (job + ' login, username = ' + user.username)
+    #print (job + ' login, username = ' + user.username)
     ret['username'] = user.username
     ret['password'] = user.password
     ret['rpassword'] = user.password
@@ -37,7 +37,7 @@ def login():
     ret['verification'] = ""
     ret['job'] = job
     ret['status'] = "success"
-    print (json.dumps(ret))
+    #print (json.dumps(ret))
     return json.dumps(ret)
 
 
@@ -48,7 +48,7 @@ def register():
     ret["status"] = 'error'
 
     data = request.get_data()
-    print (data)
+    #print (data)
     data = json.loads(data)
 
     phonenumber = data['mobile']
@@ -62,7 +62,7 @@ def register():
         ret['status']='error: please send textMessage first'
         return json.dumps(ret)
     if verification != mess.message:
-        print ('Not equal:' + verification + ' !=  ' + mess.message)
+        #print ('Not equal:' + verification + ' !=  ' + mess.message)
         ret['status']='error: wrong textMessage'
         return json.dumps(ret)
     else:
@@ -75,7 +75,7 @@ def register():
         ret['status']='error: user already exist'
         return json.dumps(ret)
     ret['status'] = usermanager.insert(phonenumber, username, password, job)
-    print (json.dumps(ret))
+    #print (json.dumps(ret))
     return json.dumps(ret)
 
 
@@ -86,18 +86,18 @@ def verification():
     ret["status"] = 'error'
 
     data = request.get_data()
-    print (data)
+    #print (data)
     data = json.loads(data)
 
     phonenumber = data['mobile']
     message = TextMessage.TextMessage()
     businessID = str(random.randint(100000,999999))
     lastTextMessage = str(random.randint(100000,999999))
-    print (businessID + '  ' + phonenumber + '  ' + lastTextMessage)
+    #print (businessID + '  ' + phonenumber + '  ' + lastTextMessage)
     dic = {}
     dic['code'] = lastTextMessage
     text = message.sendSMS(businessID, phonenumber, dic)
-    print (text)
+    #print (text)
 
     mess = Messages.query.filter(Messages.phonenumber == phonenumber).first()
     if mess is None:
@@ -108,7 +108,7 @@ def verification():
     db.session.commit()
 
     ret['status'] = "success"
-    print (json.dumps(ret))
+    #print (json.dumps(ret))
     return json.dumps(ret)
 
 
@@ -119,7 +119,7 @@ def change_password():
     ret["status"] = 'error'
 
     data = request.get_data()
-    print (data)
+    #print (data)
     data = json.loads(data)
 
     status = data['status']
@@ -139,7 +139,7 @@ def change_password():
         ret['status']='error: wrong old_password'
         return json.dumps(ret)
     ret['status'] = usermanager.update(user, phonenumber, user.username, new_password, user.classroomlist)
-    print (json.dumps(ret))
+    #print (json.dumps(ret))
     return json.dumps(ret)
 
 
@@ -150,7 +150,7 @@ def change_mobile():
     ret["status"] = 'error'
 
     data = request.get_data()
-    print (data)
+    #print (data)
     data = json.loads(data)
 
     status = data['status']
@@ -169,12 +169,12 @@ def change_mobile():
         ret['status']='error: please send textMessage first'
         return json.dumps(ret)
     if old_verification != old_mess.message:
-        print ('Not equal:' + old_verification + ' !=  ' + old_mess.message)
+        #print ('Not equal:' + old_verification + ' !=  ' + old_mess.message)
         ret['status']='error: wrong old_verification'
         return json.dumps(ret)
     elif new_verificaiton != new_mess.message:
         ret['status']='error: wrong new_verification'
-        print ('Not equal:' + new_verificaiton + ' !=  ' + new_mess.message)
+        #print ('Not equal:' + new_verificaiton + ' !=  ' + new_mess.message)
         return json.dumps(ret)
     else:
         print ('Both equal!')
@@ -187,7 +187,7 @@ def change_mobile():
         ret['status']='error: user does not exist'
         return json.dumps(ret)
     ret['status'] = usermanager.update(user, new_mobile, user.username, user.password, user.classroomlist)
-    print (json.dumps(ret))
+    #print (json.dumps(ret))
     return json.dumps(ret)
 
 
@@ -197,7 +197,7 @@ def my_list():
     ret = []
 
     data = request.get_data()
-    print (data)
+    #print (data)
     data = json.loads(data)
 
     username = data['username']
@@ -211,7 +211,7 @@ def my_list():
             print ("Mylist Error: No Such Class")
         dic = classroomManager.dict(classroom)
         ret.append(dic)
-    print (json.dumps(ret))
+    #print (json.dumps(ret))
     return json.dumps(ret)
 
 
@@ -222,7 +222,7 @@ def del_myclass():
     ret["status"] = 'error'
 
     data = request.get_data()
-    print (data)
+    #print (data)
     data = json.loads(data)
 
     username = data['username']
@@ -252,10 +252,5 @@ def del_myclass():
     except:
         print ("Delete Myclass Error")
 
-    print (json.dumps(ret))
+    #print (json.dumps(ret))
     return json.dumps(ret)
-
-
-
-
-

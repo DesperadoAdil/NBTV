@@ -18,6 +18,7 @@
         </Card>
       </Col>
     </Row>
+
   </div>
 
 </template>
@@ -27,6 +28,7 @@ export default {
   name: 'List',
   data () {
     return {
+      modal1: false,
       userInfo: {
         status: '',
         username: '',
@@ -46,12 +48,14 @@ export default {
           url: 'zsh',
           studentlist: '',
           teacherlist: '',
-          audiencelist: [1,5,6,21,321,43],
+          audiencelist: [1, 5, 6, 21, 321, 43],
           visible: '',
-          vid:'242544',
-          createtime:'2018-10-18 13:37:05',
-          showtime:'2018-10-18 13:37:05'
-        },
+          vid: '242544',
+          createtime: '2018-10-18 13:37:05',
+          showtime: '2018-10-18 13:37:05',
+          shutuplist: [],
+          blacklist: []
+        }
 
       ]
     }
@@ -75,49 +79,15 @@ export default {
       var compare = function (obj1, obj2) {
         var val1 = obj1.showtime
         var val2 = obj2.showtime
-        var datas1 = val1.split(' ')
-        var datas2 = val2.split(' ')
-        var date1 = datas1[0].split('-')
-        var date2 = datas2[0].split('-')
-        var time1 = datas1[1].split(':')
-        var time2 = datas2[1].split(':')
-        console.log(parseInt(date1[0]))
-        if (parseInt(date1[0]) < parseInt(date2[0])) {
-          return 1
-        } else if (parseInt(date1[0]) > parseInt(date2[0])) {
+        var date1 = new Date(val1.replace(/-/g, '\/'))
+        var date2 = new Date(val2.replace(/-/g, '\/'))
+        console.log(date1)
+        if (date1 > date2) {
           return -1
+        } else if (date2 > date1) {
+          return 1
         } else {
-          if (parseInt(date1[1]) < parseInt(date2[1])) {
-            return 1
-          } else if (parseInt(date1[1]) > parseInt(date2[1])) {
-            return -1
-          } else {
-            if (parseInt(date1[2]) < parseInt(date2[2])) {
-              return 1
-            } else if (parseInt(date1[2]) > parseInt(date2[2])) {
-              return -1
-            } else {
-              if (parseInt(time1[0]) < parseInt(time2[0])) {
-                return 1
-              } else if (parseInt(time1[0]) > parseInt(time2[0])) {
-                return -1
-              } else {
-                if (parseInt(time1[1]) < parseInt(time2[1])) {
-                  return 1
-                } else if (parseInt(time1[1]) > parseInt(time2[1])) {
-                  return -1
-                } else {
-                  if (parseInt(time1[2]) < parseInt(time2[2])) {
-                    return 1
-                  } else if (parseInt(time1[2]) > parseInt(time2[2])) {
-                    return -1
-                  } else {
-                    return 0
-                  }
-                }
-              }
-            }
-          }
+          return 0
         }
       }
       this.items.sort(compare)
@@ -130,49 +100,14 @@ export default {
       var compare = function (obj1, obj2) {
         var val1 = obj1.createtime
         var val2 = obj2.createtime
-        var datas1 = val1.split(' ')
-        var datas2 = val2.split(' ')
-        var date1 = datas1[0].split('-')
-        var date2 = datas2[0].split('-')
-        var time1 = datas1[1].split(':')
-        var time2 = datas2[1].split(':')
-        console.log(parseInt(date1[0]))
-        if (parseInt(date1[0]) < parseInt(date2[0])) {
-          return 1
-        } else if (parseInt(date1[0]) > parseInt(date2[0])) {
+        var date1 = new Date(val1.replace(/-/g, '\/'))
+        var date2 = new Date(val2.replace(/-/g, '\/'))
+        if (date1 > date2) {
           return -1
+        } else if (date2 > date1) {
+          return 1
         } else {
-          if (parseInt(date1[1]) < parseInt(date2[1])) {
-            return 1
-          } else if (parseInt(date1[1]) > parseInt(date2[1])) {
-            return -1
-          } else {
-            if (parseInt(date1[2]) < parseInt(date2[2])) {
-              return 1
-            } else if (parseInt(date1[2]) > parseInt(date2[2])) {
-              return -1
-            } else {
-              if (parseInt(time1[0]) < parseInt(time2[0])) {
-                return 1
-              } else if (parseInt(time1[0]) > parseInt(time2[0])) {
-                return -1
-              } else {
-                if (parseInt(time1[1]) < parseInt(time2[1])) {
-                  return 1
-                } else if (parseInt(time1[1]) > parseInt(time2[1])) {
-                  return -1
-                } else {
-                  if (parseInt(time1[2]) < parseInt(time2[2])) {
-                    return 1
-                  } else if (parseInt(time1[2]) > parseInt(time2[2])) {
-                    return -1
-                  } else {
-                    return 0
-                  }
-                }
-              }
-            }
-          }
+          return 0
         }
       }
       this.items.sort(compare)
@@ -182,7 +117,11 @@ export default {
       })
     },
 
-    skip: function (aab) {
+    skip: function (item) {
+      if (item.blacklist.includes(this.userInfo.username)) {
+        this.$Message.error('您已被永久移出教室')
+        return
+      }
       this.$Modal.confirm({
         render: (h) => {
           return h('Input', {
@@ -202,10 +141,10 @@ export default {
           })
         },
         onOk: () => {
-          if (this.currentpassword === aab.password) {
-            this.$router.push({path: '/living/'+ aab.url})
-          }
-          else {
+          if (this.currentpassword === item.password) {
+            this.$router.push({path: '/living/' + item.url})
+            window.location.reload()
+          } else {
             this.$Notice.error({
               title: '消息提示',
               desc: '您输入的密码错误，请仔细检查 '
@@ -226,11 +165,10 @@ export default {
 }
 </script>
 <style>
-ul {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+#list {
+  padding: 0 5%;
 }
+
 li {
   list-style: none;
 }
@@ -239,8 +177,6 @@ li {
   top: 60px;
   width: 100%;
 }
-
-
 .listbtn{
   test-align:left;
   font-style:normal;
