@@ -52,18 +52,9 @@
     <!--<div id="mainselectcard" class="celeardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
     <div  id="mainselectcard" class="cardtealivingselect00" :style="{display:CHAT.frametype === 'select'?'block':'none'}">
       <p class="selecttitle00">{{CHAT.selectall.statement}}</p>
-      <RadioGroup  class="radiotea" v-model="stuans" vertical>
-        <Radio label="A" style="font-size: 15px">
-          <span>A、{{CHAT.selectall.optionList[0]}}</span>
-        </Radio>
-        <Radio label="B" style="font-size: 15px">
-          <span>B、{{CHAT.selectall.optionList[1]}}</span>
-        </Radio>
-        <Radio label="C" style="font-size: 15px">
-          <span>C、{{CHAT.selectall.optionList[2]}}</span>
-        </Radio>
-        <Radio label="D" style="font-size: 15px">
-          <span>D、{{CHAT.selectall.optionList[3]}}</span>
+      <RadioGroup v-for="(item, index) in CHAT.selectall.optionList"  :key="index" class="radiotea" v-model="stuans" vertical>
+        <Radio label="index" style="font-size: 15px">
+          <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
         </Radio>
       </RadioGroup>
       <Button class="selectsubmit00" type="primary" @click="selectsubmit">提交答案: {{stuans}}</Button>
@@ -336,30 +327,33 @@ export default{
     s.type = 'text/javascript'
     s.src = 'https://player.polyv.net/livescript/liveplayer.js'
     document.body.appendChild(s)
+    s.onload = () => {
+        const data = this.curuser
+        data['username'] = this.userInfo['username']
+        data['job'] = this.userInfo['job']
+        data['url'] = this.cururl
+        axios.post('/api/classroom_stu/urlgetvid', data).then((resp) => {
+          this.curvid = resp.data.vid
+          console.log('vid:' + resp.data.vid)
+          console.log('vid:' + this.curvid)
+          var player = polyvObject('#player').livePlayer({
+            'width': '100%',
+            'height': 600 + 'px',
+            'uid': '7181857ac2',
+            'vid': this.curvid
+          })
+          var player = polyvObject('#player2').livePlayer({
+            'width': '100%',
+            'height': 200 + 'px',
+            'uid': '7181857ac2',
+            'vid': this.curvid
+          })
+        })
+    }
     this.showUserInfo()
     this.cururl = this.$route.params.url
     console.log(this.cururl)
-    const data = this.curuser
-    data['username'] = this.userInfo['username']
-    data['job'] = this.userInfo['job']
-    data['url'] = this.cururl
-    axios.post('/api/classroom_stu/urlgetvid', data).then((resp) => {
-      this.curvid = resp.data.vid
-      console.log('vid:' + resp.data.vid)
-      console.log('vid:' + this.curvid)
-      var player = polyvObject('#player').livePlayer({
-        'width': '100%',
-        'height': 600 + 'px',
-        'uid': '7181857ac2',
-        'vid': this.curvid
-      })
-      var player = polyvObject('#player2').livePlayer({
-        'width': '100%',
-        'height': 200 + 'px',
-        'uid': '7181857ac2',
-        'vid': this.curvid
-      })
-    })
+
     // for code highlight
     this.cmOption.mode = CHAT.codeall.language
     /**
