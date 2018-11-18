@@ -1571,24 +1571,52 @@ export default{
       })
     },
     // USE IT
-    useCode (index) {
-      let iCode = this.codeThisList[index]
-      iCode.statement = ''
-      // to be implemented
-      let date = new Date()
-      let time = date.getHours() + ':' + date.getMinutes()
-      let obj = {
-        type: 'code',
-        msgType: 'code',
-        url: this.cururl,
-        time: time,
-        msg: 'code',
-        toUser: 'stu',
-        fromUser: this.userInfo.username
+      useCode (index) {
+        let iCode = this.codeThisList[index]
+      //  {
+      //    uniqueId: '',
+      //      statement: 'B-Tree',
+      //    language: 'cpp',
+      //    example: 'cout << "hello world" << endl;'
+      //  }
+        console.log(iCode)
+        this.$Modal.confirm({
+            title: '提示',
+            content: '是否展示' + iCode.statement,
+            onOk: () => {
+            console.log('onOK')
+        this.chatingtop = 330 + 'px'
+        this.chatinghei = 440 + 'px'
+        this.videohei = 260 + 'px'
+        this.mainselectcarddisplay = false
+        this.mainpdfcarddisplay = false
+        this.classmain0 = false
+        console.log(this.classmain0)
+        console.log(document.getElementById('rtmp-streamer1').class)
+        this.modal_pdflist = false
+        console.log('1321312')
+        let date = new Date()
+        let time = date.getHours() + ':' + date.getMinutes()
+        let obj = {
+          type: 'code',
+          msgType: 'code',
+          url: this.cururl,
+          time: time,
+          msg: iCode,
+          toUser: 'stu',
+          fromUser: this.userInfo.username
+        }
+        CHAT.submit(obj)
+      },
+      onCancel: () => {
+        this.$Message.info('Clicked cancel')
       }
-      CHAT.submit(obj)
-    },
-    // VIEW
+      })
+      // to be implemented
+
+      },
+
+// VIEW
     viewCode (index) {
       let iCode = this.codeThisList[index]
       // input

@@ -95,6 +95,7 @@ const CHAT = {
     })
     this.socket.on('code', function (obj) {
       CHAT.frametype = 'code'
+      CHAT.codeall = obj.msg
     })
     this.socket.on('close', function (obj) {
       console.log("close")
