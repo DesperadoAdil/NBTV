@@ -983,20 +983,11 @@ export default{
     // console.log(this.cururl)
     this.showUserInfo()
     window['updatepage'] = () => {
-      this.updatepage()
-    }
-    if (window.addEventListener) {
-      window.addEventListener('message', function (e) {
-        console.log(e.data)
-      }, false)
-    } else if (window.attachEvent) {
-      window.attachEvent('onmessage', function (e) {
-        console.log(e.data)
-      })
-    }
-    window.addEventListener('message', function (e) {
-      console.log(e.data)
-    })
+      this.updatepage();
+    };
+
+
+
 
     /**
      * 以下为聊天室使用，请勿改动
@@ -1155,7 +1146,7 @@ export default{
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
 
-        // zsh this.pdfThisList = resp.data.pdfThisList
+        this.pdfThisList = resp.data.pdfThisList
       })
     },
     // ADD PDF TO CLASS
@@ -1215,6 +1206,7 @@ export default{
     // USE IT
     usePdf (index) {
       let ipdf = this.pdfThisList[index]
+      console.log(ipdf)
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示' + ipdf.title,
@@ -1405,6 +1397,7 @@ export default{
     // USE IT
     useMulti (index) {
       let iselect = this.multiThisList[index]
+      console.log(iselect)
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示: \n ' + iselect.statement,
