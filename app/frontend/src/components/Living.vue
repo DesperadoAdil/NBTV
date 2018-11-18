@@ -52,8 +52,8 @@
     <!--<div id="mainselectcard" class="celeardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
     <div  id="mainselectcard" class="cardtealivingselect00" :style="{display:CHAT.frametype === 'select'?'block':'none'}">
       <p class="selecttitle00">{{CHAT.selectall.statement}}</p>
-      <RadioGroup v-for="(item, index) in CHAT.selectall.optionList"  :key="index" class="radiotea" v-model="stuans" vertical>
-        <Radio label="index" style="font-size: 15px">
+      <RadioGroup  class="radiotea" v-model="stuans" vertical>
+        <Radio v-for="(item, index) in CHAT.selectall.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
           <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
         </Radio>
       </RadioGroup>

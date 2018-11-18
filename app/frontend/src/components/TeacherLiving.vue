@@ -391,26 +391,34 @@
     <div id="mainpdfcard" class="cardtealivingpdf" :style="{display:mainpdfcarddisplay?'block':'none'}">
       <iframe id="displayPdfIframe" name="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
-
+    <!--curmulti:{-->
+    <!--uniqueId: '',-->
+    <!--statement: 'Among the following people, who is the most gay one?',-->
+    <!--optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],-->
+    <!--answer: 'A'-->
+    <!--},-->
     <!---------main 选择题 部分 在主界面显示选择题------------->
     <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
-      <p class="selecttitle00">{{curtitle}}</p>
+      <p class="selecttitle00">{{curmulti.statement}}</p>
       <!---------TODO: 不能只有四个选项------------->
       <RadioGroup class="radiotea" v-model="ionselect" vertical>
-        <Radio v-bind:label="curans[0]" style="font-size: 15px">
-          <span>A、{{curans[0]}}</span>
+        <Radio v-for="(item, index) in curmulti.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
+          <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
         </Radio>
-        <Radio v-bind:label="curans[1]" style="font-size: 15px">
-          <span>B、{{curans[1]}}</span>
-        </Radio>
-        <Radio v-bind:label="curans[2]" style="font-size: 15px">
-          <span>C、{{curans[2]}}</span>
-        </Radio>
-        <Radio v-bind:label="curans[3]" style="font-size: 15px">
-          <span>D、{{curans[3]}}</span>
-        </Radio>
+        <!--<Radio v-bind:label="curans[0]" style="font-size: 15px">-->
+          <!--<span>A、{{curans[0]}}</span>-->
+        <!--</Radio>-->
+        <!--<Radio v-bind:label="curans[1]" style="font-size: 15px">-->
+          <!--<span>B、{{curans[1]}}</span>-->
+        <!--</Radio>-->
+        <!--<Radio v-bind:label="curans[2]" style="font-size: 15px">-->
+          <!--<span>C、{{curans[2]}}</span>-->
+        <!--</Radio>-->
+        <!--<Radio v-bind:label="curans[3]" style="font-size: 15px">-->
+          <!--<span>D、{{curans[3]}}</span>-->
+        <!--</Radio>-->
       </RadioGroup>
-      <p class="anstea00">本题目答案：{{curanswer}}</p>
+      <p class="anstea00">本题目答案：{{curmulti.answer}}</p>
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
@@ -698,6 +706,12 @@ export default{
       modal_editmulti: false,
       modal_multilist: false,
       // FRAMEWORK TO SHOW MULTI
+      curmulti:{
+            uniqueId: '',
+            statement: 'Among the following people, who is the most gay one?',
+            optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+            answer: 'A'
+        },
       multiAll: [{title: 'Description', key: 'statement'},
         {
           title: 'Action',
@@ -1212,9 +1226,9 @@ export default{
         content: '是否展示' + ipdf.title,
         onOk: () => {
           console.log('onOK')
-          this.chatingtop = 330 + 'px'
-          this.chatinghei = 440 + 'px'
-          this.videohei = 260 + 'px'
+          this.chatingtop = 340 + 'px'
+          this.chatinghei = 430 + 'px'
+          this.videohei = 250 + 'px'
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
           this.classmain0 = false
@@ -1415,13 +1429,14 @@ export default{
           }
           CHAT.submit(obj)
 
-          this.videohei = 260 + 'px'
-          this.chatingtop = 330 + 'px'
-          this.chatinghei = 440 + 'px'
+          this.videohei = 250 + 'px'
+          this.chatingtop = 340 + 'px'
+          this.chatinghei = 430 + 'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
           this.curvideo = false
+          this.curmulti=iselect
           this.curtitle = iselect.statement
           this.curanswer = iselect.answer
           this.modal_multilist = false
@@ -1571,24 +1586,52 @@ export default{
       })
     },
     // USE IT
-    useCode (index) {
-      let iCode = this.codeThisList[index]
-      iCode.statement = ''
-      // to be implemented
-      let date = new Date()
-      let time = date.getHours() + ':' + date.getMinutes()
-      let obj = {
-        type: 'code',
-        msgType: 'code',
-        url: this.cururl,
-        time: time,
-        msg: 'code',
-        toUser: 'stu',
-        fromUser: this.userInfo.username
+      useCode (index) {
+        let iCode = this.codeThisList[index]
+      //  {
+      //    uniqueId: '',
+      //      statement: 'B-Tree',
+      //    language: 'cpp',
+      //    example: 'cout << "hello world" << endl;'
+      //  }
+        console.log(iCode)
+        this.$Modal.confirm({
+            title: '提示',
+            content: '是否展示' + iCode.statement,
+            onOk: () => {
+            console.log('onOK')
+        this.chatingtop = 340 + 'px'
+        this.chatinghei = 430 + 'px'
+        this.videohei = 250 + 'px'
+        this.mainselectcarddisplay = false
+        this.mainpdfcarddisplay = false
+        this.classmain0 = false
+        console.log(this.classmain0)
+        console.log(document.getElementById('rtmp-streamer1').class)
+        this.modal_pdflist = false
+        console.log('1321312')
+        let date = new Date()
+        let time = date.getHours() + ':' + date.getMinutes()
+        let obj = {
+          type: 'code',
+          msgType: 'code',
+          url: this.cururl,
+          time: time,
+          msg: iCode,
+          toUser: 'stu',
+          fromUser: this.userInfo.username
+        }
+        CHAT.submit(obj)
+      },
+      onCancel: () => {
+        this.$Message.info('Clicked cancel')
       }
-      CHAT.submit(obj)
-    },
-    // VIEW
+      })
+      // to be implemented
+
+      },
+
+// VIEW
     viewCode (index) {
       let iCode = this.codeThisList[index]
       // input
