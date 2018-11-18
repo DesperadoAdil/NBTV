@@ -71,10 +71,10 @@ def getChoice():
         teacher = usermanager.search("username", username, "teacher")
         
         for item in teacher.choiceQue:
-            ret['multiAllList'].append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
+            ret['multiAllList'].append({"statement": item.statement, "optionList": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
         clr = classroomManager.search(data['url'])
         for item in clr.choice:
-            ret['multiThisList'].append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
+            ret['multiThisList'].append({"statement": item.statement, "optionList": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
         # return json.dumps(ret)
         ret['status'] = "success"
     except Exception as err:
