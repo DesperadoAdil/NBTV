@@ -74,17 +74,16 @@ export default {
       var compare = function (obj1, obj2) {
         var val1 = obj1.showtime
         var val2 = obj2.showtime
-        var date1=new Date(val1.replace(/-/g,"\/"));
-        var date2=new Date(val2.replace(/-/g,"\/"));
+        var date1 = new Date(val1.replace(/-/g, '\/'))
+        var date2 = new Date(val2.replace(/-/g, '\/'))
         console.log(date1)
-        if(date1>date2){
+        if (date1 > date2) {
           return -1
-        }else if(date2>date1){
+        } else if (date2 > date1) {
           return 1
-        }else{
+        } else {
           return 0
         }
-
       }
       this.items.sort(compare)
       this.$Notice.success({
@@ -96,17 +95,16 @@ export default {
       var compare = function (obj1, obj2) {
         var val1 = obj1.createtime
         var val2 = obj2.createtime
-        var date1=new Date(val1.replace(/-/g,"\/"));
-        var date2=new Date(val2.replace(/-/g,"\/"));
+        var date1 = new Date(val1.replace(/-/g, '\/'))
+        var date2 = new Date(val2.replace(/-/g, '\/'))
         console.log(date1)
-        if(date1>date2){
+        if (date1 > date2) {
           return -1
-        }else if(date2>date1){
+        } else if (date2 > date1) {
           return 1
-        }else{
+        } else {
           return 0
         }
-
       }
       this.items.sort(compare)
       this.$Notice.success({
@@ -120,10 +118,10 @@ export default {
         title: '警告',
         content: '确认删除直播间吗',
         onOk: () => {
-          //var params = new URLSearchParams()
-          //params.append('name', this.userInfo['username'])
-          //params.append('classroom', a)
-          //params.append('job', this.userInfo['job'])
+          // var params = new URLSearchParams()
+          // params.append('name', this.userInfo['username'])
+          // params.append('classroom', a)
+          // params.append('job', this.userInfo['job'])
           const data = this.delmyclassform
           data['username'] = this.userInfo['username']
           data['job'] = this.userInfo['job']
@@ -149,12 +147,12 @@ export default {
       })
     },
     skip: function (a) {
-      this.$router.push({path: '/living/'+ a.url})
+      this.$router.push({path: '/living/' + a.url})
     },
     getList: function () {
-      //var params = new URLSearchParams()
-      //params.append('name', this.userInfo['username'])
-      //params.append('job', this.userInfo['job'])
+      // var params = new URLSearchParams()
+      // params.append('name', this.userInfo['username'])
+      // params.append('job', this.userInfo['job'])
       const data = this.mylistform
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']

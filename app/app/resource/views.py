@@ -158,7 +158,8 @@ def addCode():
         #print(data)
         data = json.loads(data)
 
-        uniqueId = codeQuestionManager.insert(data['username'], data['statement'], data['language'])
+        uniqueId = codeQuestionManager.insert(data['username'], data['statement'], data['language'], data['example'])
+        
         ret["status"] = "success"
         ret["uniqueId"] = uniqueId
     except Exception as err:
@@ -185,7 +186,7 @@ def update_code():
     data = json.loads(data)
 
     ret = {}
-    ret['status'] = codeQuestionManager.update(data['uniqueId'], data['statement'], data['language'])
+    ret['status'] = codeQuestionManager.update(data['uniqueId'], data['statement'], data['language'], data['example'])
     return json.dumps(ret)
 
 @resource.route('/code_addclass', methods = ['POST', 'GET'])
@@ -304,7 +305,7 @@ def delete_PDF():
         data = json.loads(data)
         username = data['username']
         filename = data['pdf']['title']
-        ret['status'] = pdfManager.delete(username, filename)
+        ret['status'] = pdfManager.delete("%s/%s" % (username, filename))
     except Exception as err:
         print(err)
         ret['status'] = "error"
@@ -325,7 +326,8 @@ def delete_class_PDF():
         ret['status'] = 'error'
         return json.dumps(ret)
 
-    pdf_tmp = pdfManager.search(data['username'], data['pdf']['title'])
+    pdf_tmp = pdfManager.search("%s/%s" % (data['username'], data['pdf']['title']))
+    
     if pdf_tmp is None:
         print('gg: pdf_tmp is None')
     clr.pdffile.remove(pdf_tmp)

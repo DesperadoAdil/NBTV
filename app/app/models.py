@@ -126,7 +126,7 @@ class ChoiceQuestion(db.Model):
     answer = db.Column(db.String(3), nullable = False)
     uniqueId = db.Column(db.String(100), primary_key = True, unique = True, nullable = False)
 
-    submitRecord = db.Column(db.Text, nullable = False)
+    submitRecord = db.Column(db.Text, nullable = False, default = "{}")
 
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
@@ -143,7 +143,8 @@ class CodeQuestion(db.Model):
     statement = db.Column(db.String(1000), nullable = False)
     language = db.Column(db.String(10), nullable = False)
     uniqueId = db.Column(db.String(100), primary_key = True, unique = True, nullable = False)
-    submitRecord = db.Column(db.Text, nullable = False)
+    ansCode = db.Column(db.Text)
+    submitRecord = db.Column(db.Text, nullable = False, default = "{}")
 
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
@@ -163,10 +164,6 @@ class PDFFile(db.Model):
     
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
-    #__table_args__ = (
-    # db.Index('filepath', 'owner', 'filename'),
-    #    {'mysql_charset':'utf8', 'mysql_engine': 'InnoDB'}
-    #)
 
     def __repr__(self):
         return '<pdfId %r>' % self.owner
