@@ -992,8 +992,7 @@ export default{
     window.attachEvent('onmessage',function (e) { alert("djasljdks");
       console.log(e.data)   })
   }
-
-    window.addEventListener('message', function (e) { alert("djasljdks");
+  window.addEventListener('message', function (e) { alert("djasljdks");
       console.log(e.data)   } )
 
 
@@ -1155,7 +1154,7 @@ export default{
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
 
-       //zsh this.pdfThisList = resp.data.pdfThisList
+        this.pdfThisList = resp.data.pdfThisList
       })
     },
     // ADD PDF TO CLASS
@@ -1216,6 +1215,7 @@ export default{
     // USE IT
     usePdf (index) {
       let ipdf = this.pdfThisList[index]
+      console.log(ipdf)
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示' + ipdf.title,
@@ -1406,6 +1406,7 @@ export default{
     // USE IT
     useMulti (index) {
       let iselect = this.multiThisList[index]
+      console.log(iselect)
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示: \n ' + iselect.statement,
