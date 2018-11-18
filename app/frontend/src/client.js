@@ -84,6 +84,7 @@ const CHAT = {
       CHAT.studentlist = obj
     })
     this.socket.on('pdf', function (obj) {
+      console.log("pdf")
       CHAT.frametype = 'pdf'
       CHAT.pdfurl = obj.msg
     })
@@ -94,8 +95,10 @@ const CHAT = {
     })
     this.socket.on('code', function (obj) {
       CHAT.frametype = 'code'
+      CHAT.codeall = obj.msg
     })
     this.socket.on('close', function (obj) {
+      console.log("close")
       CHAT.frametype = 'close'
     })
     this.socket.on('page', function (obj) {
