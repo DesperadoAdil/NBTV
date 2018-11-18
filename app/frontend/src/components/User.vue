@@ -69,7 +69,118 @@ import router from '../router'
 import axios from 'axios'
 export default {
   name: 'User',
-  
+  data () {
+    const validatePassCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter the password!'))
+      } else if (!/^[a-zA-Z\d]{6,16}$/.test(value)) {
+        callback(new Error('Password unmatch or too long!'))
+      } else if (value !== this.userInfo.password) {
+        callback(new Error('Please enter the right password!'))
+      } else {
+        callback()
+      }
+    };
+    const validateNewPassCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter the password!'))
+      } else if (!/^[a-zA-Z\d]{6,16}$/.test(value)) {
+        callback(new Error('Password unmatch or too long!'))
+      } else {
+        callback()
+      }
+    };
+    const validateRpassCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter the password again!'))
+      } else if (value !== this.formInline.newpassword) {
+        callback(new Error('The two input passwords do not match!'))
+      } else {
+        callback()
+      }
+    };
+    const validateVerificationCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter your verification!'))
+      } else if (!/^\d{6}$/.test(value)) {
+        callback(new Error('Please enter the right verification!'))
+      } else {
+        callback()
+      }
+    };
+    const validateMobileCheck = (rule, value, callback) => {
+      if (value === this.userInfo.mobile) {
+        callback(new Error('Same phonenumber!'))
+      } else if (value === '') {
+        callback(new Error('Please enter your phonenumber!'))
+      } else if (!/^\d{11}$/.test(value)) {
+        callback(new Error('Please enter the right phonenumber!'))
+      } else {
+        callback()
+      }
+    };
+    return {
+      formInline: {
+        username: '',
+        oldpassword: '',
+        newpassword: '',
+        rnewpassword: '',
+        mobile: '',
+        newmobile: '',
+        oldverification: '',
+        newverification: '',
+        job: ''
+      },
+      userInfo: {
+        status: '',
+        username: '',
+        password: '',
+        mobile: '',
+        job: ''
+      },
+      LoginOrLogout: '登录',
+      changepassword: false,
+      changemobile: false,
+      verification: {
+        mobile: ''
+      },
+      password: {
+        status: '',
+        mobile: '',
+        old_password: '',
+        new_password: '',
+        job: ''
+      },
+      mobile: {
+        status: '',
+        old_mobile: '',
+        old_verification: '',
+        new_mobile: '',
+        new_verification: '',
+        job: ''
+      },
+      ruleInline: {
+        oldpassword: [
+          { validator: validatePassCheck, trigger: 'blur' }
+        ],
+        newpassword: [
+          { validator: validateNewPassCheck, trigger: 'blur' }
+        ],
+        rnewpassword: [
+          { validator: validateRpassCheck, trigger: 'blur' }
+        ],
+        newmobile: [
+          { validator: validateMobileCheck, trigger: 'blur' }
+        ],
+        oldverification: [
+          { validator: validateVerificationCheck, trigger: 'blur' }
+        ],
+        newverification: [
+          { validator: validateVerificationCheck, trigger: 'blur' }
+        ]
+      }
+    }
+  },
   created () {
     this.showUserInfo()
   },
