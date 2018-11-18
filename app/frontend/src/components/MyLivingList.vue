@@ -3,7 +3,7 @@
     <h1 class="list-info">
       <Icon type="ios-time" />
       我的直播
-      <Button type="primary" @click="addModal = true">新建直播间</Button>
+      <Button type="primary" @click="readyToAdd">新建直播间</Button>
     </h1>
     <Divider />
     <Modal
@@ -14,8 +14,9 @@
       @on-cancel="cancel">
       <Input v-model="newLiving.title" placeholder="课程名称"></Input>
       <a href="javascript:;" class="upf">上传缩略图
-        <input type="file" name="fileinput" id="fileinput">
+        <input type="file" name="fileinput" id="fileinput" accept="image/gif, image/jpeg, image/png, image/jpg">
       </a>
+      <output id="list"></output>
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
       <Select v-model="newLiving.mode">课程Mode
         <Option v-for="item in modeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -35,8 +36,9 @@
             @on-cancel="cancel">
             <Input v-model="myLivingList[modalIndex].title" placeholder="课程名称"></Input>
             <a href="javascript:;" class="upf">上传缩略图
-              <input type="file" name="filezsh" id="filezsh2" accept="image/gif, image/jpeg, image/png, image/jpg">
+              <input type="file" name="fileinput" id="filezsh2" accept="image/gif, image/jpeg, image/png, image/jpg">
             </a>
+            <output id="listUp"></output>
             <Input v-model="myLivingList[modalIndex].url" placeholder="课程url"></Input>
             <Input v-model="myLivingList[modalIndex].class_password" placeholder="课程密码（可空）"></Input>
           </Modal>
@@ -124,15 +126,19 @@ export default {
         }
       })
     },
+    readyToAdd () {
+      document.getElementById('fileinput').addEventListener('change', this.handleFileSelect, false)
+      this.addModal = true
+    },
     getBackUp (index) {
       this.modalIndex = index
       this.updateModal = true
       this.myLivingList[index]['old_url'] = this.myLivingList[index]['url']
+      document.getElementById('filezsh2').addEventListener('change', this.handleFileSelectForUp, false)
     },
     getBackUpForDel (index) {
       this.modalIndex = index
       this.deleteModal = true
-      this.myLivingList[index]['old_url'] = this.myLivingList[index]['url']
     },
     getMyLivingList () {
       this.userInfo['username'] = this.$cookies.get('user').username
@@ -176,13 +182,15 @@ export default {
         }
       }
       axios(options).then((resp) => {
+        if (resp.data.status !== 'success') {
+          this.$Message.error(resp.data.status)
+        }
         this.getMyLivingList()
       })
 
       this.addModal = false
     },
     updateLiving (index) {
-
       var fileInput00 = document.getElementById('filezsh2')
       console.log(fileInput00.files)
       console.log(document.querySelector('input[id=filezsh2]').files[0])
@@ -226,7 +234,64 @@ export default {
       this.addModal = false
       this.updateModal = false
       this.deleteModal = false
+    },
+    handleFileSelect (evt) {
+      console.log('add')
+      var files = evt.target.files // FileList object
+
+      // Loop through the FileList and render image files as thumbnails.
+      for (var i = 0, f; f = files[i]; i++) {
+        // Only process image files.
+        if (!f.type.match('image.*')) {
+          continue
+        }
+
+        var reader = new FileReader()
+
+        // Closure to capture the file information.
+        reader.onload = (function (theFile) {
+          return function (e) {
+            // Render thumbnail.
+            var span = document.createElement('span')
+            span.innerHTML = ['<img class="thumb" style="height:100px" src="', e.target.result,
+              '" title="', escape(theFile.name), '"/>'].join('')
+            document.getElementById('list').insertBefore(span, null)
+          }
+        })(f)
+
+        // Read in the image file as a data URL.
+        reader.readAsDataURL(f)
+      }
+    },
+    handleFileSelectForUp (evt) {
+      console.log('update')
+      var files = evt.target.files // FileList object
+
+      // Loop through the FileList and render image files as thumbnails.
+      for (var i = 0, f; f = files[i]; i++) {
+        // Only process image files.
+        if (!f.type.match('image.*')) {
+          continue
+        }
+
+        var reader = new FileReader()
+
+        // Closure to capture the file information.
+        reader.onload = (function (theFile) {
+          return function (e) {
+            // Render thumbnail.
+            var span = document.createElement('span')
+            span.innerHTML = ['<img class="thumb" style="height:100px" src="', e.target.result,
+              '" title="', escape(theFile.name), '"/>'].join('')
+            document.getElementById('listUp').insertBefore(span, null)
+          }
+        })(f)
+
+        // Read in the image file as a data URL.
+        reader.readAsDataURL(f)
+      }
     }
+
   }
 }
 </script>
