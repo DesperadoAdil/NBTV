@@ -213,6 +213,9 @@ export default {
         }
       }
       axios(options).then((resp) => {
+        if (resp.data.status !== 'success') {
+          this.$Message.error(resp.data.status)
+        }
         this.getMyLivingList()
       })
       this.updateModal = false
