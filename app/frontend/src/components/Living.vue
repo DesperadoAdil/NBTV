@@ -39,7 +39,7 @@
         </FormItem>
         <FormItem label="Code">
           <template>
-            <!-------------输入框的代码高亮----------------------->
+            <!--输入框的代码高亮-->
             <codemirror
               v-model="codeAns"
               :options="cmOption">
@@ -517,8 +517,8 @@ export default{
       data['url']=this.cururl
       data['uniqueId'] = this.CHAT.selectall.answer
       data['answer'] = this.stuans
-      axios.post('/api/classroom/selectsubmit', data).then((resp) => {
-
+      axios.post('/api/resource/multi_submit', data).then((resp) => {
+        this.$Message.success('提交成功!')
       })
     }
   }
