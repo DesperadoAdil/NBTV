@@ -284,6 +284,7 @@ def openlive():
 		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
+			classroom.status = "open"
 			ret['status'] = "success"
 
 	print (json.dumps(ret))
@@ -312,6 +313,7 @@ def closelive():
 		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
+			classroom.status = "close"
 			ret['status'] = "success"
 
 	print (json.dumps(ret))

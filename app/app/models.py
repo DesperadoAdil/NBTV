@@ -58,6 +58,8 @@ class Classrooms(db.Model):
     blacklist = db.Column(db.Text, nullable = False, default = "[]")
     #禁言名单
     shutuplist = db.Column(db.Text, nullable = False, default = "[]")
+    #直播姬状态
+    status = db.Column(db.String(10), nullable=False, default="close")
 
 
     choice = db.relationship('ChoiceQuestion', secondary = classroom_choice, backref = db.backref('classroom', lazy='dynamic'), lazy = 'dynamic')
@@ -161,7 +163,7 @@ class PDFFile(db.Model):
 
     filename = db.Column(db.String(100), nullable = False)
     uniqueId = db.Column(db.String(151), nullable = False, primary_key = True)
-    
+
     owner = db.Column(db.String(50), db.ForeignKey('teachers.username', ondelete = "CASCADE", onupdate = "CASCADE"), nullable = False)
 
 

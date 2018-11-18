@@ -24,6 +24,7 @@ class ClassroomManager:
 		ret['showtime'] = str(classroom.showtime)
 		ret['blacklist'] = classroom.blacklist
 		ret['shutuplist'] = classroom.shutuplist
+		ret['status'] = classroom.status
 		return ret
 
 	def insert(self, vid, rtmpUrl, teacher, title, imgfile, passwd, url, mode):
