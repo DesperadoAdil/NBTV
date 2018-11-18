@@ -4,6 +4,7 @@ import VueCookies from 'vue-cookies'
 import RTMP from 'rtmp-streamer'
 
 import Login from '@/components/Login'
+import User from '@/components/User'
 import Register from '@/components/Register'
 import List from '@/components/List'
 import Living from '@/components/Living'
@@ -22,19 +23,25 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      meta: { index: 2 },
+      meta: { index: 3 },
       component: Login
+    },
+    {
+      path: '/user',
+      name: 'User',
+      meta: { index: 2 },
+      component: User
     },
     {
       path: '/teacherliving/:url',
       name: 'TeacherLiving',
-      meta: { index: 6 },
+      meta: { index: 7 },
       component: TeacherLiving
     },
     {
       path: '/mywatchinglist',
       name: 'MyWatchingList',
-      meta: { index: 4 },
+      meta: { index: 5 },
       component: MyWatchingList
     },
     {
@@ -46,19 +53,19 @@ const router = new Router({
     {
       path: '/list',
       name: 'List',
-      meta: { index: 3 },
+      meta: { index: 4 },
       component: List
     },
     {
       path: '/living/:url',
       name: 'Living',
-      meta: { index: 7 },
+      meta: { index: 8 },
       component: Living
     },
     {
       path: '/MyLivingList',
       name: 'MyLivingList',
-      meta: { index: 5 },
+      meta: { index: 6 },
       component: MyLivingList
     },
     {

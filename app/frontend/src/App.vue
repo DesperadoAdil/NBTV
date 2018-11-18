@@ -105,6 +105,7 @@
               </FormItem>
             </Form>
             <div class="demo-drawer-footer">
+              <Button  @click="handleJump('user')">用户信息</Button>
               <Button  @click="handleClose">返回</Button>
               <Button type="primary" @click="logout">登出</Button>
             </div>
@@ -309,8 +310,8 @@ export default {
         router.push('/MyLivingList')
       } else if (name === 'myWatchingList') {
         router.push('/mywatchinglist')
-      } else if (name === 'UserInfo') {
-        router.push('/UserInfo')
+      } else if (name === 'user') {
+        router.push('/user')
       }
     },
     logout () {
