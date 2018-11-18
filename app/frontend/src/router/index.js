@@ -22,41 +22,49 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
+      meta: { index: 2 },
       component: Login
     },
     {
       path: '/teacherliving/:url',
       name: 'TeacherLiving',
+      meta: { index: 6 },
       component: TeacherLiving
     },
     {
       path: '/mywatchinglist',
       name: 'MyWatchingList',
+      meta: { index: 4 },
       component: MyWatchingList
     },
     {
       path: '/register',
       name: 'Register',
+      meta: { index: 1 },
       component: Register
     },
     {
       path: '/list',
       name: 'List',
+      meta: { index: 3 },
       component: List
     },
     {
       path: '/living/:url',
       name: 'Living',
+      meta: { index: 7 },
       component: Living
     },
     {
       path: '/MyLivingList',
       name: 'MyLivingList',
+      meta: { index: 5 },
       component: MyLivingList
     },
     {
       path: '/',
       name: 'HomePage',
+      meta: { index: 0 },
       component: HomePage
     }
   ]

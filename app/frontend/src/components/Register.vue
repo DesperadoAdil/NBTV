@@ -48,17 +48,51 @@ import axios from 'axios'
 import router from '../router'
 export default {
   data () {
-    const validatePassCheck = (rule, value, callback) => {
+    const validateUsernameCheck = (rule, value, callback) => {
       if (value === '') {
-        this.$Message.error('Please enter your password again')
-        callback()
-      } else if (value !== this.formInline.password) {
-        this.$Message.error('The two input passwords do not match!')
-        callback()
+        callback(new Error('Please enter your username!'))
+      } else if (!/^[a-zA-Z\d\u4e00-\u9fa5]{1,20}$/.test(value)) {
+        callback(new Error('Username unmatch or too long!'))
       } else {
         callback()
       }
-    }
+    };
+    const validatePassCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter the password!'))
+      } else if (!/^[a-zA-Z\d]{6,16}$/.test(value)) {
+        callback(new Error('Password unmatch or too long!'))
+      } else {
+        callback()
+      }
+    };
+    const validateRpassCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter the password again!'))
+      } else if (value !== this.formInline.password) {
+        callback(new Error('The two input passwords do not match!'))
+      } else {
+        callback()
+      }
+    };
+    const validateMobileCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter your phonenumber!'))
+      } else if (!/^\d{11}$/.test(value)) {
+        callback(new Error('Please enter the right phonenumber!'))
+      } else {
+        callback()
+      }
+    };
+    const validateVerificationCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter your verification!'))
+      } else if (!/^\d{6}$/.test(value)) {
+        callback(new Error('Please enter the right verification!'))
+      } else {
+        callback()
+      }
+    };
     return {
       formInline: {
         username: '',
@@ -72,14 +106,19 @@ export default {
       job: 'student',
       ruleInline: {
         username: [
-          { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+          { validator: validateUsernameCheck, trigger: 'blur' }
         ],
         password: [
-          { required: true, message: 'Please fill in the password.', trigger: 'blur' },
-          { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+          { validator: validatePassCheck, trigger: 'blur' }
+        ],
+        rpassword: [
+          { validator: validateRpassCheck, trigger: 'blur' }
+        ],
+        mobile: [
+          { validator: validateMobileCheck, trigger: 'blur' }
         ],
         verification: [
-          { validater: validatePassCheck, trigger: 'blur' }
+          { validator: validateVerificationCheck, trigger: 'blur' }
         ]
       }
     }

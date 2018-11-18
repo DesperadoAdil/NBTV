@@ -519,7 +519,7 @@
           </div>
 
           <div class="talker">
-            <Input v-if="msgType === 'text'" class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." />
+            <Input v-if="msgType === 'text'" class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." @on-enter="submit"/>
             <div v-if="msgType === 'audio'" class="recorder">
               <button @click="toggleRecorder()">录音</button>
               <button @click="stopRecorder">停止</button>
@@ -1186,7 +1186,6 @@ export default{
       delPdfAllInput.pdf = iPdf
       // post
       axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
-
         if (resp.data.status === 'success') {
           let pdfInput = {username: '', url: ''}
           pdfInput.username = this.userInfo.username
