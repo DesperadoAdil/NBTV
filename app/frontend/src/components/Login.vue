@@ -39,6 +39,24 @@ import axios from 'axios'
 import router from '../router'
 export default {
   data () {
+    const validateUsernameCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter your username!'))
+      } else if (!/^[a-zA-Z\d\u4e00-\u9fa5]{1,20}$/.test(value)) {
+        callback(new Error('Username unmatch or too long!'))
+      } else {
+        callback()
+      }
+    };
+    const validatePassCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter the password!'))
+      } else if (!/^[a-zA-Z\d]{6,16}$/.test(value)) {
+        callback(new Error('Password unmatch or too long!'))
+      } else {
+        callback()
+      }
+    };
     return {
       formInline: {
         username: '',
@@ -53,11 +71,10 @@ export default {
       loginway: 'username',
       ruleInline: {
         username: [
-          { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+          { validator: validateUsernameCheck, trigger: 'blur' }
         ],
         password: [
-          { required: true, message: 'Please fill in the password.', trigger: 'blur' },
-          { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+          { validator: validatePassCheck, trigger: 'blur' }
         ]
       }
     }
