@@ -113,7 +113,7 @@ def deleteClass():
 def updateClass():
 	data = request.form.to_dict()
 	print('update a classroom')
-	print(data)
+	# print(data)
 
 	ret = {}
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
