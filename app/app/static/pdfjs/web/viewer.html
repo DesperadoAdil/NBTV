@@ -41,6 +41,12 @@ See https://github.com/adobe-type-tools/cmap-resources
 <script src="../build/pdf.js"></script>
 
 <script>
+
+window.addEventListener('message', function (e) { console.log("msgrecv");
+      console.log(e.data) 
+      window.parent.updatepage()   } )
+
+
 console.log("dads")
 var k=location.search
 window.onload = function() {
