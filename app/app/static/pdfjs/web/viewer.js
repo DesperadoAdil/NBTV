@@ -6764,8 +6764,7 @@ var pdfjsWebLibs;
     }
    }
    function webViewerNextPage() {
-    PDFViewerApplication.page++;
-    window.alert("++++")
+    PDFViewerApplication.page++;    
     window.console.log("++++")
     window.parent.postMessage('super window 接收到了一条消息', '*')  
     window.console.log(window.location.href)  
@@ -6774,8 +6773,7 @@ var pdfjsWebLibs;
     // parent.methods.updatepage()
    }
    function webViewerPreviousPage() {
-    PDFViewerApplication.page--;
-    window.alert("----")
+    PDFViewerApplication.page--;   
     window.console.log("----")
     window.postMessage('super window 接收到了一条消息', '*')
     window.console.log("dsajd")  

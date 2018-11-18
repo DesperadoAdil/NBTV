@@ -4,6 +4,10 @@
       title="NBTV"
       />
     <Menu mode="horizontal" :theme="theme1" active-name="active">
+      <MenuItem name="0" class="mylist" @click.native="handleJump('/')">
+        <Icon type="ios-home" />
+        首页
+      </MenuItem>
       <MenuItem name="2" class="mylist" @click.native="handleJump('list')">
         <Icon type="ios-people" />
         课程广场
@@ -112,7 +116,9 @@
         开播
       </MenuItem>
     </Menu>
-    <router-view/>
+    <transition :name="transitionName">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
@@ -124,6 +130,7 @@ export default {
   name: 'App',
   data () {
     return {
+      transitionName: '',
       visible: false,
       // boolean to show or not
       showRpass: false,
@@ -292,7 +299,9 @@ export default {
       return this.userInfo['job'] === 'teacher'
     },
     handleJump (name) {
-      if (this.userInfo['status'] !== 'success') { // 未登录
+      if (name === '/') {
+        router.push('/')
+      } else if (this.userInfo['status'] !== 'success') { // 未登录
         router.push('/login')
       } else if (name === 'list') {
         router.push('/list')
@@ -330,6 +339,17 @@ export default {
         this.LoginOrLogout = this.userInfo['username']
       }
     }
+  },
+  watch: {
+    '$route' (to, from) {
+      console.log(from);
+      console.log(to);
+      if (to.meta.index > from.meta.index) {
+        this.transitionName = 'slide-right';
+      } else {
+        this.transitionName = 'slide-left';
+      }
+    }
   }
 }
 
@@ -356,5 +376,30 @@ export default {
   }
   .router {
     padding: 0 5%;
+  }
+
+  .slide-right-enter-active,
+  .slide-right-leave-active,
+  .slide-left-enter-active,
+  .slide-left-leave-active {
+    will-change: transform;
+    transition: all 500ms;
+    position: absolute;
+  }
+  .slide-right-enter {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+  .slide-right-leave-active {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+  .slide-left-enter {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+  .slide-left-leave-active {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
   }
 </style>

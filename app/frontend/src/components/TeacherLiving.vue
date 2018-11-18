@@ -985,6 +985,14 @@ export default{
     window['updatepage'] = () => {
       this.updatepage();
     };
+  if(window.addEventListener){
+    window.addEventListener('message', function (e) { alert("djasljdks");
+      console.log(e.data)   } ,false);
+  }else if(window.attachEvent){
+    window.attachEvent('onmessage',function (e) { alert("djasljdks");
+      console.log(e.data)   })
+  }
+
     window.addEventListener('message', function (e) { alert("djasljdks");
       console.log(e.data)   } )
 
@@ -1095,8 +1103,8 @@ export default{
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
-          // 维护选择题列表,此处尚无
-          window.location.reload()
+          // 不用维护选择题列表
+          console.log('Add Multiple Succeeded')
           // 如果失败
         } else {
           this.$Message.error('添加选择题失败')
@@ -1122,8 +1130,8 @@ export default{
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
-          // 应当要维护一下代码题的列表,此处未添加
-          window.location.reload()
+          // 不用维护列表
+          console.log('Add Code Succeeded')
           // 如果失败
         } else {
           this.$Message.error('添加代码题失败')
@@ -1167,8 +1175,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-      //zsh  this.pdfThisList = resp.data.pdfThisList
-              window.location.reload()
+              this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$.message('wrong')
             }
@@ -1196,8 +1203,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-      //zsh   this.pdfThisList = resp.data.pdfThisList
-              window.location.reload()
+              this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$.message('wrong')
             }
@@ -1263,8 +1269,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-      //zsh   this.pdfThisList = resp.data.pdfThisList
-              window.location.reload()
+              this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$.message('wrong')
             }
@@ -1300,7 +1305,10 @@ export default{
       this.sub_multi.uniqueId = iMulti.uniqueId
       this.sub_multi.answer = iMulti.answer
       // multi options
-      this.multi_options.splice(0, this.multi_options.length)
+      this.multi_options = []
+      // debug
+      console.log(iMulti)
+      console.log(iMulti.optionList)
       // multi_options: [{value: '',index: 1,status: 1}],
       for (let i = 0; i < iMulti.optionList.length; i++) {
         let k = {value: '', index: i + 1, status: 1}
@@ -1338,7 +1346,6 @@ export default{
             this.multiAllList = resp.data.multiAllList
             this.multiThisList = resp.data.multiThisList
           })
-          window.location.reload()
           // 如果失败
         } else {
           this.$Message.error('Edit failed')
@@ -1515,8 +1522,7 @@ export default{
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
-          // 不用维护列表啦，该用再用
-          window.location.reload()
+          console.log('Edit Code Succeeded')
           // 如果失败
         } else {
           this.$Message.error('添加代码题失败')
