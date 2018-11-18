@@ -17,10 +17,10 @@
         <input type="file" name="fileinput" id="fileinput">
       </a>
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
-      <Input v-model="newLiving.class_password" placeholder="课程密码（可空）"></Input>
       <Select v-model="newLiving.mode">课程Mode
         <Option v-for="item in modeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
+      <Input v-if="newLiving.mode === 'protected' || newLiving.mode === 'private'"  v-model="newLiving.class_password" placeholder="课程密码"></Input>
     </Modal>
     <ul class="myLivingList-flex-container">
         <li class="myLivingList-flex-item" v-for="(living, index) in myLivingList" :key="living.url">
@@ -31,7 +31,7 @@
           <Modal
             v-model="updateModal"
             title="更新课程"
-            @on-ok="updateLiving(index)"
+            @on-ok="updateLiving(modalIndex)"
             @on-cancel="cancel">
             <Input v-model="myLivingList[modalIndex].title" placeholder="课程名称"></Input>
             <a href="javascript:;" class="upf">上传缩略图
@@ -40,11 +40,11 @@
             <Input v-model="myLivingList[modalIndex].url" placeholder="课程url"></Input>
             <Input v-model="myLivingList[modalIndex].class_password" placeholder="课程密码（可空）"></Input>
           </Modal>
-          <span><Button type="error" @click="deleteModal = true">DELETE</Button></span>
+          <span><Button type="error" @click="getBackUpForDel(index)">DELETE</Button></span>
           <Modal
             v-model="deleteModal"
             title="删除课程"
-            @on-ok="deleteLiving(index)"
+            @on-ok="deleteLiving(modalIndex)"
             @on-cancel="cancel">
             <Input v-model="validate" placeholder="确认删除请输入yes"></Input>
           </Modal>
@@ -56,9 +56,6 @@
 <script>
 import axios from 'axios'
 export default {
-  props: {
-
-  },
   data () {
     return {
       modalIndex: 0,
@@ -132,6 +129,11 @@ export default {
       this.updateModal = true
       this.myLivingList[index]['old_url'] = this.myLivingList[index]['url']
     },
+    getBackUpForDel (index) {
+      this.modalIndex = index
+      this.deleteModal = true
+      this.myLivingList[index]['old_url'] = this.myLivingList[index]['url']
+    },
     getMyLivingList () {
       this.userInfo['username'] = this.$cookies.get('user').username
       this.userInfo['status'] = this.$cookies.get('user').status
@@ -183,7 +185,7 @@ export default {
 
       var fileInput00 = document.getElementById('filezsh2')
       console.log(fileInput00.files)
-      console.log(document.querySelector('input[id=filezsh2]').files)
+      console.log(document.querySelector('input[id=filezsh2]').files[0])
       var formData = new FormData()
       formData.append('username', this.$cookies.get('user').username)
       formData.append('password', this.$cookies.get('user').password)
@@ -193,6 +195,7 @@ export default {
       formData.append('url', this.myLivingList[index]['url'])
       formData.append('class_password', this.myLivingList[index]['class_password'])
       formData.append('mode', this.myLivingList[index]['mode'])
+      formData.append('old_url', this.myLivingList[index]['old_url'])
       var options = {
         url: '/api/classroom/update_class',
         data: formData,
