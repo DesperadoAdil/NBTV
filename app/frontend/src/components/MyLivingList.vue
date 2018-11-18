@@ -27,7 +27,7 @@
         <li class="myLivingList-flex-item" v-for="(living, index) in myLivingList" :key="living.url">
           <card>
           <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
-          <p class="title">{{ living.title }}</p>
+          <p class="my-class-title">{{ living.title }}</p>
           <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
           <Modal
             v-model="updateModal"
@@ -354,5 +354,9 @@ li {
   border-color: #78C3F3;
   color: #004974;
   text-decoration: none;
+}
+.my-class-title {
+  font-size: 20px;
+  text-align: left;
 }
 </style>
