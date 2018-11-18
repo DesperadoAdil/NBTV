@@ -391,12 +391,12 @@
     <div id="mainpdfcard" class="cardtealivingpdf" :style="{display:mainpdfcarddisplay?'block':'none'}">
       <iframe id="displayPdfIframe" name="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
-    curmulti:{
-    uniqueId: '',
-    statement: 'Among the following people, who is the most gay one?',
-    optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
-    answer: 'A'
-    },
+    <!--curmulti:{-->
+    <!--uniqueId: '',-->
+    <!--statement: 'Among the following people, who is the most gay one?',-->
+    <!--optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],-->
+    <!--answer: 'A'-->
+    <!--},-->
     <!---------main 选择题 部分 在主界面显示选择题------------->
     <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
       <p class="selecttitle00">{{curmulti.statement}}</p>
@@ -1226,9 +1226,9 @@ export default{
         content: '是否展示' + ipdf.title,
         onOk: () => {
           console.log('onOK')
-          this.chatingtop = 330 + 'px'
-          this.chatinghei = 440 + 'px'
-          this.videohei = 260 + 'px'
+          this.chatingtop = 340 + 'px'
+          this.chatinghei = 430 + 'px'
+          this.videohei = 250 + 'px'
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
           this.classmain0 = false
@@ -1429,9 +1429,9 @@ export default{
           }
           CHAT.submit(obj)
 
-          this.videohei = 260 + 'px'
-          this.chatingtop = 330 + 'px'
-          this.chatinghei = 440 + 'px'
+          this.videohei = 250 + 'px'
+          this.chatingtop = 340 + 'px'
+          this.chatinghei = 430 + 'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
@@ -1600,9 +1600,9 @@ export default{
             content: '是否展示' + iCode.statement,
             onOk: () => {
             console.log('onOK')
-        this.chatingtop = 330 + 'px'
-        this.chatinghei = 440 + 'px'
-        this.videohei = 260 + 'px'
+        this.chatingtop = 340 + 'px'
+        this.chatinghei = 430 + 'px'
+        this.videohei = 250 + 'px'
         this.mainselectcarddisplay = false
         this.mainpdfcarddisplay = false
         this.classmain0 = false
