@@ -19,6 +19,10 @@
           {{userInfo.mobile}}
         </p>
       </FormItem>
+      <FormItem v-if="!changepassword && !changemobile">
+        <Button type="primary" @click="ChangePassword()">修改密码</Button>
+        <Button type="primary" @click="ChangeMobile()">修改手机号</Button>
+      </FormItem>
       <FormItem v-if="changemobile" label="原手机验证码" label-position="left" label-width="150" prop="oldverification">
         <Row>
           <Col span="16">
@@ -55,10 +59,6 @@
         <Button  v-if="changepassword" @click="SubmitPassword()">提交</Button>
         <Button  v-else @click="SubmitMobile()">提交</Button>
         <Button  @click="Close()">返回</Button>
-      </FormItem>
-      <FormItem v-if="!changepassword && !changemobile">
-        <Button type="primary" @click="ChangePassword()">修改密码</Button>
-        <Button type="primary" @click="ChangeMobile()">修改手机号</Button>
       </FormItem>
     </Form>
   </div>
