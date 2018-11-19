@@ -29,7 +29,7 @@
             <Input type="text" v-model="formInline.oldverification"/>
           </Col>
           <Col span="8">
-            <Button @click="SendOldVerification()">发送验证码</Button>
+            <Button @click="SendVerification(userInfo.mobile)">发送验证码</Button>
           </Col>
         </Row>
       </FormItem>
@@ -42,7 +42,7 @@
             <Input type="text" v-model="formInline.newverification"/>
           </Col>
           <Col span="8">
-            <Button @click="SendNewVerification()">发送验证码</Button>
+            <Button @click="SendVerification(formInline.newmobile)" :disabled="newverificationsend">发送验证码</Button>
           </Col>
         </Row>
       </FormItem>
@@ -130,6 +130,7 @@ export default {
           callback()
         }
       }
+      this.newverificationsend = false
     };
     return {
       formInline: {
@@ -153,6 +154,7 @@ export default {
       LoginOrLogout: '登录',
       changepassword: false,
       changemobile: false,
+      newverificationsend: true,
       verification: {
         mobile: ''
       },
@@ -273,22 +275,14 @@ export default {
       this.changepassword = false
       window.location.reload()
     },
-    SendOldVerification () {
-      this.verification.mobile = this.userInfo.mobile
+    SendVerification (mobile) {
+      this.verification.mobile = mobile
       axios.post('/api/user/request_verification', this.verification).then((resp) => {
         if (resp.data.status === 'success') {
-          this.$Message.success('原手机验证码发送成功')
+          this.$Message.success('验证码发送成功!')
         }
       })
     },
-    SendNewVerification () {
-      this.verification.mobile = this.formInline.newmobile
-      axios.post('/api/user/request_verification', this.verification).then((resp) => {
-        if (resp.data.status === 'success') {
-          this.$Message.success('新手机验证码发送成功')
-        }
-      })
-    }
   }
 }
 </script>
