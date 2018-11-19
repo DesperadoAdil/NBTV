@@ -293,6 +293,8 @@ export default {
         if (resp.data.status === 'success') {
           this.$Message.success('验证码发送成功!')
           this.CountTime(id, 60)
+        } else {
+          this.$Message.error('验证码发送失败!')
         }
       })
     },
@@ -300,7 +302,6 @@ export default {
       window.location.reload()
     },
     CountTime (id, time) {
-      console.log(id, time)
       if (time <= 0) {
         document.getElementById(id).innerHTML = "发送验证码"
         if (id === "sv1") this.oldverificationsend = false

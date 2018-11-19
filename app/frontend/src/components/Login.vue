@@ -83,22 +83,21 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success('Send to server!')
           this.formInline['job'] = this.job
           this.formInline['loginway'] = this.loginway
           const data = this.formInline
           axios.post('/api/user/login', data).then((resp) => {
-            this.$Message.success(resp.data.status)
             if (resp.data.status === 'success') {
+              this.$Message.success('登陆成功!')
               this.$cookies.set('user', resp.data)
               router.push('/list')
               window.location.reload()
             } else {
-              this.$Message.error('用户名或密码错误')
+              this.$Message.error('用户名或密码错误!')
             }
           })
         } else {
-          this.$Message.error('用户名或密码格式不正确')
+          this.$Message.error('请正确填写信息!')
         }
       })
     }

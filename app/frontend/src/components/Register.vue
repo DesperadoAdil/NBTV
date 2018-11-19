@@ -20,13 +20,26 @@
         </Input>
       </FormItem>
       <FormItem prop="mobile">
-        <Input type="text" v-model="formInline.mobile" placeholder="Phone number">
-          <Icon type="ios-call" slot="prepend"></Icon>
-        </Input>
+        <Row>
+          <Col span="16">
+            <Input type="text" v-model="formInline.mobile" placeholder="Phone number" :disabled="send">
+              <Icon type="ios-call" slot="prepend"></Icon>
+            </Input>
+          </Col>
+          <Col span="8">
+            <Button @click="send=false,verificationsend=true,formInline.mobile=''" :disabled="verificationsend">重新填写</Button>
+          </Col>
       </FormItem>
       <FormItem prop="verification">
-        <Input type="text" v-model="formInline.verification" placeholder="verification">
-        </Input>
+        <Row>
+          <Col span="16">
+            <Input type="text" v-model="formInline.verification" placeholder="verification">
+              <Icon type="md-checkmark" slot="prepend"/>
+            </Input>
+          </Col>
+          <Col span="8">
+            <Button id="sv" @click="sendMsg('formInline')" :disabled="verificationsend">发送验证码</Button>
+          </Col>
       </FormItem>
       <FormItem prop="job">
         <RadioGroup v-model="job">
@@ -35,8 +48,7 @@
         </RadioGroup>
       </FormItem>
       <FormItem>
-        <Button type="primary" @click="handleSubmit('formInline')">Signin</Button>
-        <Button @click="sendMsg('formInline')">{{ msgBox }}</Button>
+        <Button type="primary" @click="handleSubmit('formInline')">注册</Button>
       </FormItem>
     </Form>
     <router-link to="/login">Cancel</router-link>
@@ -77,10 +89,13 @@ export default {
     };
     const validateMobileCheck = (rule, value, callback) => {
       if (value === '') {
+        this.verificationsend = true
         callback(new Error('Please enter your phonenumber!'))
       } else if (!/^\d{11}$/.test(value)) {
+        this.verificationsend = true
         callback(new Error('Please enter the right phonenumber!'))
       } else {
+        this.verificationsend = false
         callback()
       }
     };
@@ -102,8 +117,9 @@ export default {
         verification: '',
         job: ''
       },
-      msgBox: '发送验证码',
       job: 'student',
+      verificationsend: true,
+      send: false,
       ruleInline: {
         username: [
           { validator: validateUsernameCheck, trigger: 'blur' }
@@ -129,17 +145,18 @@ export default {
       const data = this.formInline
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success('Send to server!')
           axios.post('/api/user/register', data).then((resp) => {
-            this.$Message.success(resp.data.status)
+
             if (resp.data.status === 'success') {
+              this.$Message.success('注册成功!')
               router.push('/login')
             } else {
+              this.$Message.error('注册失败,验证码错误或用户已存在!')
               this.msg = `Status:${resp.data.status}`
             }
           })
         } else {
-          this.$Message.error('Fail!')
+          this.$Message.error('请正确填写信息!')
         }
       })
     },
@@ -147,9 +164,23 @@ export default {
       const data = this.formInline
       axios.post('/api/user/request_verification', data).then((resp) => {
         if (resp.data.status === 'success') {
-          this.msgBox = '验证码发送成功'
+          this.$Message.success('验证码发送成功!')
+          this.CountTime(60)
+        } else {
+          this.$Message.error('验证码发送失败!')
         }
       })
+    },
+    CountTime (time) {
+      if (time <= 0) {
+        document.getElementById("sv").innerHTML = "发送验证码"
+        this.verificationsend = false
+      } else {
+        this.verificationsend = true
+        this.send = true
+        document.getElementById("sv").innerHTML = time.toString()+"秒"
+        setTimeout(this.CountTime, 1000, time-1)
+      }
     }
   }
 }
