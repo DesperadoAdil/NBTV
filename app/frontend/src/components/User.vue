@@ -43,18 +43,18 @@
         </Row>
       </FormItem>
       <FormItem v-if="changepassword" label="原密码" label-position="left" label-width="150" prop="oldpassword">
-        <Input type="text" v-model="formInline.oldpassword"/>
+        <Input type="text" v-model="formInline.oldpassword" type="password"/>
       </FormItem>
       <FormItem v-if="changepassword" label="新密码" label-position="left" label-width="150" prop="newpassword">
-        <Input type="text" v-model="formInline.newpassword"/>
+        <Input type="text" v-model="formInline.newpassword" type="password"/>
       </FormItem>
       <FormItem v-if="changepassword" label="确认密码" label-position="left" label-width="150" prop="rnewpassword">
-        <Input type="text" v-model="formInline.rnewpassword"/>
+        <Input type="text" v-model="formInline.rnewpassword" type="password"/>
       </FormItem>
       <FormItem v-if="changepassword || changemobile">
         <Button  v-if="changepassword" @click="SubmitPassword()">提交</Button>
         <Button  v-else @click="SubmitMobile()">提交</Button>
-        <Button  @click="Close">返回</Button>
+        <Button  @click="Close()">返回</Button>
       </FormItem>
       <FormItem v-if="!changepassword && !changemobile">
         <Button type="primary" @click="ChangePassword()">修改密码</Button>
@@ -71,52 +71,64 @@ export default {
   name: 'User',
   data () {
     const validatePassCheck = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please enter the password!'))
-      } else if (!/^[a-zA-Z\d]{6,16}$/.test(value)) {
-        callback(new Error('Password unmatch or too long!'))
-      } else if (value !== this.userInfo.password) {
-        callback(new Error('Please enter the right password!'))
-      } else {
-        callback()
+      if (this.changepassword) {
+        if (value === '') {
+          callback(new Error('Please enter the password!'))
+        } else if (!/^[a-zA-Z\d]{6,16}$/.test(value)) {
+          callback(new Error('Password unmatch or too long!'))
+        } else if (value !== this.userInfo.password) {
+          callback(new Error('Please enter the right password!'))
+        } else {
+          callback()
+        }
       }
     };
     const validateNewPassCheck = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please enter the password!'))
-      } else if (!/^[a-zA-Z\d]{6,16}$/.test(value)) {
-        callback(new Error('Password unmatch or too long!'))
-      } else {
-        callback()
+      if (this.changepassword) {
+        if (value === this.userInfo.password) {
+          callback(new Error('Same password!'))
+        } else if (value === '') {
+          callback(new Error('Please enter the password!'))
+        } else if (!/^[a-zA-Z\d]{6,16}$/.test(value)) {
+          callback(new Error('Password unmatch or too long!'))
+        } else {
+          callback()
+        }
       }
     };
     const validateRpassCheck = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please enter the password again!'))
-      } else if (value !== this.formInline.newpassword) {
-        callback(new Error('The two input passwords do not match!'))
-      } else {
-        callback()
+      if (this.changepassword) {
+        if (value === '') {
+          callback(new Error('Please enter the password again!'))
+        } else if (value !== this.formInline.newpassword) {
+          callback(new Error('The two input passwords do not match!'))
+        } else {
+          callback()
+        }
       }
     };
     const validateVerificationCheck = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please enter your verification!'))
-      } else if (!/^\d{6}$/.test(value)) {
-        callback(new Error('Please enter the right verification!'))
-      } else {
-        callback()
+      if (this.changemobile) {
+        if (value === '') {
+          callback(new Error('Please enter your verification!'))
+        } else if (!/^\d{6}$/.test(value)) {
+          callback(new Error('Please enter the right verification!'))
+        } else {
+          callback()
+        }
       }
     };
     const validateMobileCheck = (rule, value, callback) => {
-      if (value === this.userInfo.mobile) {
-        callback(new Error('Same phonenumber!'))
-      } else if (value === '') {
-        callback(new Error('Please enter your phonenumber!'))
-      } else if (!/^\d{11}$/.test(value)) {
-        callback(new Error('Please enter the right phonenumber!'))
-      } else {
-        callback()
+      if (this.changemobile) {
+        if (value === this.userInfo.mobile) {
+          callback(new Error('Same phonenumber!'))
+        } else if (value === '') {
+          callback(new Error('Please enter your phonenumber!'))
+        } else if (!/^\d{11}$/.test(value)) {
+          callback(new Error('Please enter the right phonenumber!'))
+        } else {
+          callback()
+        }
       }
     };
     return {
@@ -251,8 +263,15 @@ export default {
       })
     },
     Close () {
+      this.formInline.oldpassword = ''
+      this.formInline.newpassword = ''
+      this.formInline.rnewpassword = ''
+      this.formInline.newmobile = ''
+      this.formInline.oldverification = ''
+      this.formInline.newverification = ''
       this.changemobile = false
       this.changepassword = false
+      window.location.reload()
     },
     SendOldVerification () {
       this.verification.mobile = this.userInfo.mobile
