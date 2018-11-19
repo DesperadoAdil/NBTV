@@ -29,12 +29,18 @@
             <Input type="text" v-model="formInline.oldverification"/>
           </Col>
           <Col span="8">
-            <Button @click="SendVerification(userInfo.mobile)">发送验证码</Button>
+            <Button id="sv1" @click="SendVerification(userInfo.mobile, 'sv1')" :disabled="oldverificationsend">发送验证码</Button>
           </Col>
         </Row>
       </FormItem>
       <FormItem v-if="changemobile" label="新手机号" label-position="left" label-width="150" prop="newmobile">
-        <Input type="text" v-model="formInline.newmobile"/>
+        <Row>
+          <Col span="16">
+              <Input type="text" v-model="formInline.newmobile" :disabled="send"/>
+          </Col>
+          <Col span="8">
+            <Button id="sv" @click="send=false,newverificationsend=true,formInline.newmobile=''" :disabled="newverificationsend">重新填写</Button>
+          </Col>
       </FormItem>
       <FormItem v-if="changemobile" label="新手机验证码" label-position="left" label-width="150" prop="newverification">
         <Row>
@@ -42,7 +48,7 @@
             <Input type="text" v-model="formInline.newverification"/>
           </Col>
           <Col span="8">
-            <Button @click="SendVerification(formInline.newmobile)" :disabled="newverificationsend">发送验证码</Button>
+            <Button id="sv2" @click="SendVerification(formInline.newmobile, 'sv2')" :disabled="newverificationsend">发送验证码</Button>
           </Col>
         </Row>
       </FormItem>
@@ -56,9 +62,9 @@
         <Input type="text" v-model="formInline.rnewpassword" type="password"/>
       </FormItem>
       <FormItem v-if="changepassword || changemobile">
-        <Button  v-if="changepassword" @click="SubmitPassword()">提交</Button>
-        <Button  v-else @click="SubmitMobile()">提交</Button>
-        <Button  @click="Close()">返回</Button>
+        <Button  v-if="changepassword" @click="SubmitPassword('formInline')">提交</Button>
+        <Button  v-else @click="SubmitMobile('formInline')">提交</Button>
+        <Button  @click="Reload()">返回</Button>
       </FormItem>
     </Form>
   </div>
@@ -121,16 +127,19 @@ export default {
     const validateMobileCheck = (rule, value, callback) => {
       if (this.changemobile) {
         if (value === this.userInfo.mobile) {
+          this.newverificationsend = true
           callback(new Error('Same phonenumber!'))
         } else if (value === '') {
+          this.newverificationsend = true
           callback(new Error('Please enter your phonenumber!'))
         } else if (!/^\d{11}$/.test(value)) {
+          this.newverificationsend = true
           callback(new Error('Please enter the right phonenumber!'))
         } else {
+          this.newverificationsend = false
           callback()
         }
       }
-      this.newverificationsend = false
     };
     return {
       formInline: {
@@ -154,7 +163,9 @@ export default {
       LoginOrLogout: '登录',
       changepassword: false,
       changemobile: false,
+      oldverificationsend: false,
       newverificationsend: true,
+      send: false,
       verification: {
         mobile: ''
       },
@@ -217,72 +228,96 @@ export default {
       this.changemobile = true
       this.changepassword = false
     },
-    SubmitPassword () {
-      if (this.userInfo.status === 'success') this.password.status = 'login'
-      else this.password.status = 'logout'
-      this.password.mobile = this.userInfo.mobile
-      this.password.old_password = this.userInfo.password
-      this.password.new_password = this.formInline.newpassword
-      this.password.job = this.userInfo.job
+    SubmitPassword (form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          if (this.userInfo.status === 'success') this.password.status = 'login'
+          else this.password.status = 'logout'
+          this.password.mobile = this.userInfo.mobile
+          this.password.old_password = this.userInfo.password
+          this.password.new_password = this.formInline.newpassword
+          this.password.job = this.userInfo.job
 
-      axios.post('/api/user/change_password', this.password).then((resp) => {
-        if (resp.data.status === 'success') {
-          this.$Message.success('成功修改密码!')
-          this.userInfo.password = this.formInline.newpassword
-          this.$cookies.set('user', this.userInfo)
-          window.location.reload()
-          this.showUserInfo()
-          this.changepassword = false
-          this.formInline.newpassword = ''
+          axios.post('/api/user/change_password', this.password).then((resp) => {
+            if (resp.data.status === 'success') {
+              this.$Message.success('成功修改密码!')
+              this.userInfo.password = this.formInline.newpassword
+              this.$cookies.set('user', this.userInfo)
+              this.Reload()
+              this.showUserInfo()
+              this.changepassword = false
+              this.formInline.newpassword = ''
+            } else {
+              this.$Message.error('修改密码失败!')
+            }
+          })
         } else {
-          this.$Message.error('修改密码失败!')
+          this.$Message.error('请填写完整信息!')
         }
       })
     },
-    SubmitMobile () {
-      if (this.userInfo.status === 'success') this.mobile.status = 'login'
-      else this.mobile.status = 'logout'
-      this.mobile.old_mobile = this.userInfo.mobile
-      this.mobile.old_verification = this.formInline.oldverification
-      this.mobile.new_mobile = this.formInline.newmobile
-      this.mobile.new_verification = this.formInline.newverification
-      this.mobile.job = this.userInfo.job
+    SubmitMobile (form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          if (this.userInfo.status === 'success') this.mobile.status = 'login'
+          else this.mobile.status = 'logout'
+          this.mobile.old_mobile = this.userInfo.mobile
+          this.mobile.old_verification = this.formInline.oldverification
+          this.mobile.new_mobile = this.formInline.newmobile
+          this.mobile.new_verification = this.formInline.newverification
+          this.mobile.job = this.userInfo.job
 
-      axios.post('/api/user/change_mobile', this.mobile).then((resp) => {
-        if (resp.data.status === 'success') {
-          this.$Message.success('成功修改手机号!')
-          this.userInfo.mobile = this.formInline.newmobile
-          this.$cookies.set('user', this.userInfo)
-          window.location.reload()
-          this.showUserInfo()
-          this.changemobile = false
-          this.formInline.newmobile = ''
-          this.formInline.oldverification = ''
-          this.formInline.newverification = ''
+          axios.post('/api/user/change_mobile', this.mobile).then((resp) => {
+            if (resp.data.status === 'success') {
+              this.$Message.success('成功修改手机号!')
+              this.userInfo.mobile = this.formInline.newmobile
+              this.$cookies.set('user', this.userInfo)
+              this.Reload()
+              this.showUserInfo()
+              this.changemobile = false
+              this.formInline.newmobile = ''
+              this.formInline.oldverification = ''
+              this.formInline.newverification = ''
+            } else {
+              this.$Message.error('修改手机号失败！')
+            }
+          })
         } else {
-          this.$Message.error('修改手机号失败！')
+          this.$Message.error('请填写完整信息!')
         }
       })
     },
-    Close () {
-      this.formInline.oldpassword = ''
-      this.formInline.newpassword = ''
-      this.formInline.rnewpassword = ''
-      this.formInline.newmobile = ''
-      this.formInline.oldverification = ''
-      this.formInline.newverification = ''
-      this.changemobile = false
-      this.changepassword = false
-      window.location.reload()
-    },
-    SendVerification (mobile) {
+    SendVerification (mobile, id) {
       this.verification.mobile = mobile
       axios.post('/api/user/request_verification', this.verification).then((resp) => {
         if (resp.data.status === 'success') {
           this.$Message.success('验证码发送成功!')
+          this.CountTime(id, 60)
         }
       })
     },
+    Reload () {
+      window.location.reload()
+    },
+    CountTime (id, time) {
+      console.log(id, time)
+      if (time <= 0) {
+        document.getElementById(id).innerHTML = "发送验证码"
+        if (id === "sv1") this.oldverificationsend = false
+        else this.newverificationsend = false
+      } else {
+        if (id === "sv1") {
+          this.oldverificationsend = true
+          document.getElementById(id).innerHTML = time.toString()+"秒"
+          setTimeout(this.CountTime, 1000, 'sv1', time-1)
+        } else {
+          this.newverificationsend = true
+          this.send = true
+          document.getElementById(id).innerHTML = time.toString()+"秒"
+          setTimeout(this.CountTime, 1000, 'sv2', time-1)
+        }
+      }
+    }
   }
 }
 </script>
@@ -292,5 +327,8 @@ export default {
   width: 100%;
   top: 60px;
   padding: 15% 40%;
+}
+#sv, #sv1, #sv2 {
+  width: 95px;
 }
 </style>
