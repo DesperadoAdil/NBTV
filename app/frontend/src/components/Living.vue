@@ -323,7 +323,7 @@ export default{
     //    };
   },
   created: function () {
-    this.getPageData();
+//    this.getPageData();
     const s = document.createElement('script')
     s.type = 'text/javascript'
     s.src = 'https://player.polyv.net/livescript/liveplayer.js'
