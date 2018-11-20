@@ -86,6 +86,7 @@ export default {
       return this.userInfo['job'] === 'teacher'
     },
     handleJump (name) {
+      this.visible = false
       if (name === '/') {
         router.push('/')
       } else if (this.userInfo['status'] !== 'success') { // 未登录
