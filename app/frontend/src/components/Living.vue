@@ -3,22 +3,22 @@
     <div  id="mainlivingcard" class="cardtealiving11" :style="{display:CHAT.frametype === 'close'?'block':'none'}">
       <!--<div id="mainlivingcard" class="cardtealiving11" :style="{display:mainlivingcarddisplay?'block':'none'}">-->
       <div class="topveido">
-        <h3>教室信息显示部分（待修改）</h3>
+        <!--<h3>教室信息显示部分（待修改）</h3>-->
       </div>
       <div id='player'></div>
       <div class="bottomveido">
-        <h3>礼物等其他显示部分（待修改）</h3>
+        <!--<h3>礼物等其他显示部分（待修改）</h3>-->
       </div>
     </div>
 
     <div  id="littlelivingcard" class="cardtealittleliving11" :style="{display:CHAT.frametype !== 'close'?'block':'none'}">
       <!--<div id="littlelivingcard" class="cardtealittleliving11" :style="{display:littlelivingcarddisplay?'block':'none'}">-->
       <div class="topveido">
-        <h3>教室信息显示部分（待修改）</h3>
+        <!--<h3>教室信息显示部分（待修改）</h3>-->
       </div>
       <div id='player2'></div>
       <div class="bottomveido">
-        <h3>礼物等其他显示部分（待修改）</h3>
+        <!--<h3>礼物等其他显示部分（待修改）</h3>-->
       </div>
     </div>
 
@@ -57,7 +57,7 @@
           <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
         </Radio>
       </RadioGroup>
-      <Button class="selectsubmit00" type="primary" @click="selectsubmit">提交答案: {{stuans}}</Button>
+      <Button class="selectsubmit00" type="primary" @click="selectsubmit">提交答案: {{String.fromCharCode(65+stuans)}}</Button>
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
@@ -338,13 +338,13 @@ export default{
           console.log('vid:' + this.curvid)
           var player = polyvObject('#player').livePlayer({
             'width': '100%',
-            'height': 600 + 'px',
+//            'height': 600 + 'px',
             'uid': '7181857ac2',
             'vid': this.curvid
           })
           var player = polyvObject('#player2').livePlayer({
             'width': '100%',
-            'height': 200 + 'px',
+//            'height': 200 + 'px',
             'uid': '7181857ac2',
             'vid': this.curvid
           })

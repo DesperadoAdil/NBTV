@@ -115,16 +115,16 @@ export default {
   methods: {
     directskip (living) {
       this.$router.push({path: '/teacherliving/' + living.url, params: {url: living.url}})
-      this.$Modal.confirm({
-        title: '提示',
-        content: '是否确认进入直播间',
-        onOk: () => {
-          window.location.reload()
-        },
-        onCancel: () => {
-          history.go(-1)
-        }
-      })
+//      this.$Modal.confirm({
+//        title: '提示',
+//        content: '是否确认进入直播间',
+//        onOk: () => {
+//          window.location.reload()
+//        },
+//        onCancel: () => {
+//          history.go(-1)
+//        }
+//      })
     },
     readyToAdd () {
       document.getElementById('fileinput').addEventListener('change', this.handleFileSelect, false)
