@@ -376,14 +376,14 @@
     <!---------main living 部分------------->
     <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
       <div class="topveido">
-        <h3>教室信息显示部分（待修改）</h3>
+        <!--<h3>教室信息显示部分（待修改）</h3>-->
       </div>
       <object >
         <embed id="rtmp-streamer1" src="/static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
                width="100%" :style="{height:videohei}"  allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
       </object>
       <div class="bottomve`ido">
-        <h3>礼物等其他显示部分（待修改）</h3>
+        <!--<h3>礼物等其他显示部分（待修改）</h3>-->
       </div>
     </div>
 
