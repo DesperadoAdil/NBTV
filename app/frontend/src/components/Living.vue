@@ -323,6 +323,7 @@ export default{
     //    };
   },
   created: function () {
+    this.getPageData();
     const s = document.createElement('script')
     s.type = 'text/javascript'
     s.src = 'https://player.polyv.net/livescript/liveplayer.js'
@@ -338,13 +339,13 @@ export default{
           console.log('vid:' + this.curvid)
           var player = polyvObject('#player').livePlayer({
             'width': '100%',
-//            'height': 600 + 'px',
+            'height': 600 + 'px',
             'uid': '7181857ac2',
             'vid': this.curvid
           })
           var player = polyvObject('#player2').livePlayer({
             'width': '100%',
-//            'height': 200 + 'px',
+            'height': 200 + 'px',
             'uid': '7181857ac2',
             'vid': this.curvid
           })
@@ -382,6 +383,10 @@ export default{
     }
   },
   methods: {
+    getPageData:function(){
+      this.CHAT = JSON.parse(localStorage.getItem('this.CHAT'));//使用getItem方法的前提是，你再自己需要的地方使用了setItem方法
+    },
+
     /**
      * 以下为聊天室使用，请勿改动
      */
