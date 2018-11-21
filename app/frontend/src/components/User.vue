@@ -54,13 +54,13 @@
         </Row>
       </FormItem>
       <FormItem v-if="changepassword" label="原密码" label-position="left" label-width="150" prop="oldpassword">
-        <Input type="text" v-model="formInline.oldpassword" type="password"/>
+        <Input type="text" v-model="formInline.oldpassword"/>
       </FormItem>
       <FormItem v-if="changepassword" label="新密码" label-position="left" label-width="150" prop="newpassword">
-        <Input type="text" v-model="formInline.newpassword" type="password"/>
+        <Input type="text" v-model="formInline.newpassword"/>
       </FormItem>
       <FormItem v-if="changepassword" label="确认密码" label-position="left" label-width="150" prop="rnewpassword">
-        <Input type="text" v-model="formInline.rnewpassword" type="password"/>
+        <Input type="text" v-model="formInline.rnewpassword"/>
       </FormItem>
       <FormItem v-if="changepassword || changemobile">
         <Button  v-if="changepassword" @click="SubmitPassword('formInline')">提交</Button>
