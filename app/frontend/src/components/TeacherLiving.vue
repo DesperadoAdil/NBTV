@@ -81,9 +81,7 @@
     </Modal>
 
     <!--multi_list-->
-    <Modal
-      v-model="modal_multilist" width="900"
-      @on-ok="modal_multilist = false" @on-cancel="modal_multilist = false">
+    <Modal v-model="modal_multilist" width="900">
       <div>
         <Split class="teacher-live-split" style="height: 430px" v-model="split_multi">
           <div slot="left"  class="teacher-live-split-pane">
@@ -99,17 +97,12 @@
         </Split>
       </div>
       <div slot="footer">
-        <Button type="text" size="large" @click="modal_pdflist = false">取消</Button>
+        <Button type="text" size="large" @click="modal_multilist = false">关闭</Button>
       </div>
     </Modal>
 
     <!--code_list-->
-    <Modal
-      v-model="modal_codelist"
-      @on-ok="modal_codelist = false"
-      @on-cancel="modal_codelist = false"
-      width="900"
-    >
+    <Modal v-model="modal_codelist" width="900">
       <div>
         <Split class="teacher-live-split" style="height: 430px" v-model="split_code">
           <div slot="left"  class="teacher-live-split-pane">
@@ -125,12 +118,12 @@
         </Split>
       </div>
       <div slot="footer">
-        <Button type="text" size="large" @click="modal_pdflist = false">取消</Button>
+        <Button type="text" size="large" @click="modal_codelist = false">关闭</Button>
       </div>
     </Modal>
 
     <!--上传-->
-    <Modal v-model="modal_pdf" @on-ok="addPDF()" @on-cancel="modal_pdf = false">
+    <Modal v-model="modal_pdf">
       <p slot="header" style="font-size: 20px">
         <span>上传课件</span>
       </p>
@@ -144,6 +137,9 @@
           <Button type="primary" @click="addPDF()">submit</Button>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button type="text" size="large" @click="modal_pdf = false">取消</Button>
+      </div>
     </Modal>
 
     <!--设置选择题-->
@@ -235,12 +231,8 @@
     </Modal>
 
     <!--view multi-->
-    <Modal
-      v-model="modal_viewmulti"
-      @on-ok="modal_viewmulti = false"
-      @on-cancel="modal_viewmulti = false"
-      width="900">
-      <Card>
+    <Modal v-model="modal_viewmulti" width="900">
+      <div>
         <Split class="teacher-live-split" style="height: 430px" v-model="split_multicheck">
           <div slot="left"  class="teacher-live-split-pane">
             <div style="position:relative; height:400px; overflow:auto">
@@ -263,7 +255,10 @@
             <Table height="420" stripe :columns="multiAnswer" :data="multiAnswerList"></Table>
           </div>
         </Split>
-      </Card>
+      </div>
+      <div slot="footer">
+        <Button type="text" size="large" @click="modal_viewmulti = false">关闭</Button>
+      </div>
     </Modal>
 
     <!--view code-->
@@ -407,26 +402,21 @@
     <!--},-->
     <!---------main 选择题 部分 在主界面显示选择题------------->
     <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
-      <p class="selecttitle00">{{curmulti.statement}}</p>
-      <!---------TODO: 不能只有四个选项------------->
-      <RadioGroup class="radiotea" v-model="ionselect" vertical>
-        <Radio v-for="(item, index) in curmulti.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
-          <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
-        </Radio>
-        <!--<Radio v-bind:label="curans[0]" style="font-size: 15px">-->
-          <!--<span>A、{{curans[0]}}</span>-->
-        <!--</Radio>-->
-        <!--<Radio v-bind:label="curans[1]" style="font-size: 15px">-->
-          <!--<span>B、{{curans[1]}}</span>-->
-        <!--</Radio>-->
-        <!--<Radio v-bind:label="curans[2]" style="font-size: 15px">-->
-          <!--<span>C、{{curans[2]}}</span>-->
-        <!--</Radio>-->
-        <!--<Radio v-bind:label="curans[3]" style="font-size: 15px">-->
-          <!--<span>D、{{curans[3]}}</span>-->
-        <!--</Radio>-->
-      </RadioGroup>
-      <p class="anstea00">本题目答案：{{curmulti.answer}}</p>
+      <Form>
+        <FormItem>
+          <p class="selecttitle00">{{curmulti.statement}}</p>
+        </FormItem>
+        <FormItem>
+          <RadioGroup class="radiotea" v-model="ionselect" vertical>
+            <Radio v-for="(item, index) in curmulti.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
+              <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
+            </Radio>
+          </RadioGroup>
+        </FormItem>
+        <FormItem>
+          <p class="anstea00">本题目答案：{{curmulti.answer}}</p>
+        </FormItem>
+      </Form>
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
@@ -1444,7 +1434,7 @@ export default{
           this.mainpdfcarddisplay = false
           this.classmain0 = false
           this.curvideo = false
-          this.curmulti=iselect
+          this.curmulti = iselect
           this.curtitle = iselect.statement
           this.curanswer = iselect.answer
           this.modal_multilist = false
@@ -1594,52 +1584,51 @@ export default{
       })
     },
     // USE IT
-      useCode (index) {
-        let iCode = this.codeThisList[index]
+    useCode (index) {
+      let iCode = this.codeThisList[index]
       //  {
       //    uniqueId: '',
       //      statement: 'B-Tree',
       //    language: 'cpp',
       //    example: 'cout << "hello world" << endl;'
       //  }
-        console.log(iCode)
-        this.$Modal.confirm({
-            title: '提示',
-            content: '是否展示' + iCode.statement,
-            onOk: () => {
-            console.log('onOK')
-        this.chatingtop = 340 + 'px'
-        this.chatinghei = 430 + 'px'
-        this.videohei = 250 + 'px'
-        this.mainselectcarddisplay = false
-        this.mainpdfcarddisplay = false
-        this.classmain0 = false
-        console.log(this.classmain0)
-        console.log(document.getElementById('rtmp-streamer1').class)
-        this.modal_pdflist = false
-        console.log('1321312')
-        let date = new Date()
-        let time = date.getHours() + ':' + date.getMinutes()
-        let obj = {
-          type: 'code',
-          msgType: 'code',
-          url: this.cururl,
-          time: time,
-          msg: iCode,
-          toUser: 'stu',
-          fromUser: this.userInfo.username
+      console.log(iCode)
+      this.$Modal.confirm({
+        title: '提示',
+        content: '是否展示' + iCode.statement,
+        onOk: () => {
+          console.log('onOK')
+          this.chatingtop = 340 + 'px'
+          this.chatinghei = 430 + 'px'
+          this.videohei = 250 + 'px'
+          this.mainselectcarddisplay = false
+          this.mainpdfcarddisplay = false
+          this.classmain0 = false
+          console.log(this.classmain0)
+          console.log(document.getElementById('rtmp-streamer1').class)
+          this.modal_pdflist = false
+          console.log('1321312')
+          let date = new Date()
+          let time = date.getHours() + ':' + date.getMinutes()
+          let obj = {
+            type: 'code',
+            msgType: 'code',
+            url: this.cururl,
+            time: time,
+            msg: iCode,
+            toUser: 'stu',
+            fromUser: this.userInfo.username
+          }
+          CHAT.submit(obj)
+        },
+        onCancel: () => {
+          this.$Message.info('Clicked cancel')
         }
-        CHAT.submit(obj)
-      },
-      onCancel: () => {
-        this.$Message.info('Clicked cancel')
-      }
       })
-      // to be implemented
+    // to be implemented
+    },
 
-      },
-
-// VIEW
+    // VIEW
     viewCode (index) {
       let iCode = this.codeThisList[index]
       // input
@@ -1826,10 +1815,10 @@ export default{
       data['url'] = this.cururl
       data['item'] = document.querySelector('input[type=file]').files[0]
       console.log(data['item']) */
-      var formData = new FormData()
+      let formData = new FormData()
       formData.append('url', this.cururl)
       formData.append('item', document.querySelector('input[id=xlsxinput]').files[0])
-      var options = {
+      let options = {
         url: '/api/classroom/xlsxaddstudents',
         data: formData,
         method: 'post',

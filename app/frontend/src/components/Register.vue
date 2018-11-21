@@ -29,6 +29,7 @@
           <Col span="8">
             <Button @click="send=false,verificationsend=true,formInline.mobile=''" :disabled="verificationsend">重新填写</Button>
           </Col>
+        </Row>
       </FormItem>
       <FormItem prop="verification">
         <Row>
@@ -40,6 +41,7 @@
           <Col span="8">
             <Button id="sv" @click="sendMsg('formInline')" :disabled="verificationsend">发送验证码</Button>
           </Col>
+        </Row>
       </FormItem>
       <FormItem prop="job">
         <RadioGroup v-model="job">
@@ -68,7 +70,7 @@ export default {
       } else {
         callback()
       }
-    };
+    }
     const validatePassCheck = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('Please enter the password!'))
@@ -77,7 +79,7 @@ export default {
       } else {
         callback()
       }
-    };
+    }
     const validateRpassCheck = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('Please enter the password again!'))
@@ -86,7 +88,7 @@ export default {
       } else {
         callback()
       }
-    };
+    }
     const validateMobileCheck = (rule, value, callback) => {
       if (value === '') {
         this.verificationsend = true
@@ -98,7 +100,7 @@ export default {
         this.verificationsend = false
         callback()
       }
-    };
+    }
     const validateVerificationCheck = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('Please enter your verification!'))
@@ -107,7 +109,7 @@ export default {
       } else {
         callback()
       }
-    };
+    }
     return {
       formInline: {
         username: '',
@@ -146,7 +148,6 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           axios.post('/api/user/register', data).then((resp) => {
-
             if (resp.data.status === 'success') {
               this.$Message.success('注册成功!')
               router.push('/login')
@@ -173,13 +174,13 @@ export default {
     },
     CountTime (time) {
       if (time <= 0) {
-        document.getElementById("sv").innerHTML = "发送验证码"
+        document.getElementById('sv').innerHTML = '发送验证码'
         this.verificationsend = false
       } else {
         this.verificationsend = true
         this.send = true
-        document.getElementById("sv").innerHTML = time.toString()+"秒"
-        setTimeout(this.CountTime, 1000, time-1)
+        document.getElementById('sv').innerHTML = time.toString() + '秒'
+        setTimeout(this.CountTime, 1000, time - 1)
       }
     }
   }
