@@ -222,6 +222,7 @@
               添加xlsx
               <input type="file" name="xlsxinput" id="xlsxinput">
             </a>
+            <input type="file" name="studentInput">
           </FormItem>
         </Poptip>
         <FormItem>
@@ -1817,7 +1818,7 @@ export default{
       console.log(data['item']) */
       let formData = new FormData()
       formData.append('url', this.cururl)
-      formData.append('item', document.querySelector('input[id=xlsxinput]').files[0])
+      formData.append('item', document.querySelector('input[id="xlsxinput"]').files[0])
       let options = {
         url: '/api/classroom/xlsxaddstudents',
         data: formData,
@@ -1826,8 +1827,9 @@ export default{
           'Content-Type': 'multipart/form-data'
         }
       }
+      console.log(options)
       axios(options).then((resp) => {
-        this.studentitems = resp.studentitems
+        this.studentitems = resp.data.studentitems
       })
     },
     addStudent () {
