@@ -41,6 +41,7 @@
           <!--输入框的代码高亮-->
           <codemirror
             id="codemirr"
+            v-model="curcode"
             :value="Chat.codeall.example"
             :options="cmOption"
             class="codecode"
@@ -49,6 +50,8 @@
 
         </FormItem>
       </Form>
+      <Button  type="primary" @click="codesubmit">提交答案</Button>
+
     </div>
 
     <!--<div id="mainselectcard" class="celeardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
@@ -226,6 +229,7 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
+      curcode:'',
       chathei: 600 + 'px',
       chattop: 150 + 'px',
       socket: null,
@@ -538,6 +542,21 @@ export default{
       this.userInfo['password'] = this.$cookies.get('user').password
       this.userInfo['mobile'] = this.$cookies.get('user').mobile
       this.userInfo['job'] = this.$cookies.get('user').job
+    },
+    codesubmit(){
+        console.log("dasdas")
+        var data={}
+        data['username'] = this.userInfo['username']
+        data['url']=this.cururl
+        data['uniqueId'] = this.CHAT.codeall.uniqueId
+        data['answer'] = this.curcode
+        axios.post('/api/resource/code_submit', data).then((resp) => {
+          this.$Message.success('提交成功!')
+      }).catch(function (err) {
+        Info.layerBox(err, 1)
+        this.$Message.success('提交失败!')
+      });
+
     },
     selectsubmit(){
       console.log("dasdas")
