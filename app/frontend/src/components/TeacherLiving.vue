@@ -1201,6 +1201,7 @@ export default{
       // post
       axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
         if (resp.data.status === 'success') {
+          this.$.message.success('deleted from teacher\'s resource')
           let pdfInput = {username: '', url: ''}
           pdfInput.username = this.userInfo.username
           pdfInput.url = this.cururl
@@ -1268,6 +1269,7 @@ export default{
       // post
       axios.post('/api/resource/pdf_delclass', input).then((resp) => {
         if (resp.data.status === 'success') {
+          this.$.message.success('deleted from class resource')
           let pdfInput = {username: '', url: ''}
           pdfInput.username = this.userInfo.username
           pdfInput.url = this.cururl
@@ -1276,7 +1278,7 @@ export default{
               this.pdfAllList = resp.data.pdfAllList
               this.pdfThisList = resp.data.pdfThisList
             } else {
-              this.$.message('wrong')
+              this.$.message.error('wrong')
             }
           })
         } else {
