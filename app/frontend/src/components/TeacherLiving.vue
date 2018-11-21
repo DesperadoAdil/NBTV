@@ -742,12 +742,7 @@ export default{
       modal_editmulti: false,
       modal_multilist: false,
       // FRAMEWORK TO SHOW MULTI
-      curmulti:{
-            uniqueId: '',
-            statement: 'Among the following people, who is the most gay one?',
-            optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
-            answer: 'A'
-        },
+
     curmulti:{
       uniqueId: '',
         statement: 'Among the following people, who is the most gay one?',
