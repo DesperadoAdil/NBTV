@@ -396,27 +396,27 @@
     <div id="mainpdfcard" class="cardtealivingpdf" :style="{display:mainpdfcarddisplay?'block':'none'}">
       <iframe id="displayPdfIframe" name="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
-    <!--curmulti:{-->
+    <!--curMulti:{-->
     <!--uniqueId: '',-->
     <!--statement: 'Among the following people, who is the most gay one?',-->
     <!--optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],-->
     <!--answer: 'A'-->
     <!--},-->
     <!---------main 选择题 部分 在主界面显示选择题------------->
-    <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
+    <div id="mainselectcard" :style="{display:mainselectcarddisplay?'block':'none'}">
       <Form>
         <FormItem>
-          <p class="selecttitle00">{{curmulti.statement}}</p>
+          <p class="selecttitle00">{{curMulti.statement}}</p>
         </FormItem>
         <FormItem>
-          <RadioGroup class="radiotea" v-model="ionselect" vertical>
-            <Radio v-for="(item, index) in curmulti.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
+          <RadioGroup class="radiotea" v-model="curMulti.optionList" vertical>
+            <Radio v-for="(item, index) in curMulti.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
               <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
             </Radio>
           </RadioGroup>
         </FormItem>
         <FormItem>
-          <p class="anstea00">本题目答案：{{curmulti.answer}}</p>
+          <p class="anstea00">本题目答案：{{curMulti.answer}}</p>
         </FormItem>
       </Form>
     </div>
@@ -706,12 +706,12 @@ export default{
       modal_editmulti: false,
       modal_multilist: false,
       // FRAMEWORK TO SHOW MULTI
-      curmulti:{
-            uniqueId: '',
-            statement: 'Among the following people, who is the most gay one?',
-            optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
-            answer: 'A'
-        },
+      curMulti: {
+        uniqueId: '',
+        statement: 'Among the following people, who is the most gay one?',
+        optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+        answer: 'A'
+      },
       multiAll: [{title: 'Description', key: 'statement'},
         {
           title: 'Action',
@@ -975,11 +975,7 @@ export default{
           standardans: ''
         }
       ],
-      studentitems: ['zsh', 'adil', 'zhq', 'hyx', 'xcj'],
-      ionselect: '111',
-      curtitle: 'xjbx1',
-      curans: ['1', '2', '3', '4'],
-      curanswer: 'A'
+      studentitems: ['zsh', 'adil', 'zhq', 'hyx', 'xcj']
     }
   },
   mounted () {
@@ -997,11 +993,8 @@ export default{
     // console.log(this.cururl)
     this.showUserInfo()
     window['updatepage'] = () => {
-      this.updatepage();
-    };
-
-
-
+      this.updatepage()
+    }
 
     /**
      * 以下为聊天室使用，请勿改动
@@ -1431,16 +1424,14 @@ export default{
           }
           CHAT.submit(obj)
 
-          this.videohei = 250 + 'px'
-          this.chatingtop = 340 + 'px'
-          this.chatinghei = 430 + 'px'
+          // this.videohei = 250 + 'px'
+          // this.chatingtop = 340 + 'px'
+          // this.chatinghei = 430 + 'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
           this.curvideo = false
-          this.curmulti = iselect
-          this.curtitle = iselect.statement
-          this.curanswer = iselect.answer
+          this.curMulti = iselect
           this.modal_multilist = false
         },
         onCancel: () => {
