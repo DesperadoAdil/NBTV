@@ -53,7 +53,7 @@
         <Button type="primary" @click="handleSubmit('formInline')">注册</Button>
       </FormItem>
     </Form>
-    <router-link to="/login">Cancel</router-link>
+    <router-link to="/login">返回</router-link>
   </div>
 </template>
 

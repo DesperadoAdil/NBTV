@@ -23,12 +23,28 @@ def on_join(data):
 	url = data['url']
 	join_room(username)
 	join_room(url)
-	send(username + '进入房间。', room = url)
+	send(username + '进入房间。', room = url, include_self = False)
 
 	if url not in chatingRoom.keys():
 		chatingRoom[url] = []
 	if username not in chatingRoom[url]:
 		chatingRoom[url].append(username)
+
+	classroom = Classrooms.query.filter_by(url = url).first()
+	if classroom is not None:
+		obj = json.loads(classroom.status)
+		if 'type' in obj:
+			typee = obj['type']
+			if typee == "pdf":
+				emit('pdf', obj, room = username)
+			elif typee == "page":
+				emit('page', obj, room = username)
+			elif typee == "code":
+				emit('code', obj, room = username)
+			elif typee == "select":
+				emit('select', obj, room = username)
+			elif typee == "close":
+				emit('close', obj, room = username)
 
 
 @socketio.on('sendMsg')
@@ -41,14 +57,34 @@ def sendMsg(data):
 		emit('whisper', data, room = data['toUser'])
 	elif type == "pdf":
 		emit('pdf', data, room = data['url'])
+		classroom = Classrooms.query.filter_by(url = data['url']).first()
+		classroom.status = json.dumps(data)
+		db.session.add(classroom)
+		db.session.commit()
 	elif type == "page":
 		emit('page', data, room = data['url'])
+		classroom = Classrooms.query.filter_by(url = data['url']).first()
+		classroom.status = json.dumps(data)
+		db.session.add(classroom)
+		db.session.commit()
 	elif type == "code":
 		emit('code', data, room = data['url'])
+		classroom = Classrooms.query.filter_by(url = data['url']).first()
+		classroom.status = json.dumps(data)
+		db.session.add(classroom)
+		db.session.commit()
 	elif type == "select":
 		emit('select', data, room = data['url'])
+		classroom = Classrooms.query.filter_by(url = data['url']).first()
+		classroom.status = json.dumps(data)
+		db.session.add(classroom)
+		db.session.commit()
 	elif type == "close":
 		emit('close', data, room = data['url'])
+		classroom = Classrooms.query.filter_by(url = data['url']).first()
+		classroom.status = json.dumps(data)
+		db.session.add(classroom)
+		db.session.commit()
 
 
 @socketio.on('list')

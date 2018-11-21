@@ -48,7 +48,7 @@ def addClass():
 	# insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
 	ret = {}
 	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], imgfile, data['class_password'], data['url'], data['mode'])
-	
+
 	if ret['status'] != "success":
 		polyvManager.deleteChannel(vid)
 
@@ -59,7 +59,7 @@ def addClass():
 def deleteClass():
 	data = request.get_data()
 	print('delete a class')
-	print(data)
+	#print(data)
 	data = json.loads(data)
 
 	ret = {}
@@ -129,7 +129,7 @@ def updateClass():
 def getList():
 	data = request.get_data()
 	print('get the classroomList')
-	print(data)
+	#print(data)
 	data = json.loads(data)
 
 	ret = {}
@@ -146,6 +146,34 @@ def getList():
 	return json.dumps(ans, ensure_ascii = False)
 
 
+@classroom.route('/urlcheck', methods = ['POST'])
+def urlcheck ():
+	ret = {}
+	data = request.get_data()
+	data = json.loads(data)
+	print (data)
+	url = data['url']
+	username = data['username']
+	classroom = classroomManager.search(url)
+	if classroom is None:
+		ret['status'] = "error"
+		return json.dumps(ret)
+	if classroom.mode == "public":
+		ret['status'] = "success"
+	elif classroom.mode == "protected":
+		ret['status'] = "password"
+		ret['password'] = classroom.password
+	elif classroom.mode == "private":
+		studentlist = json.loads(classroom.studentlist)
+		if username in studentlist:
+			ret['status'] = "success"
+		else:
+			ret['status'] = "error"
+	else:
+		ret['status'] = "error"
+	return json.dumps(ret)
+
+
 @classroom.route('/shutuplist', methods = ['POST'])
 def shutuplist():
 	data = request.get_data()
@@ -159,7 +187,7 @@ def shutuplist():
 def xlsxaddstudents():
 	ret = []
 	data = request.form.to_dict()
-	print (data)
+	#print (data)
 
 	url = data['url']
 	item = request.files.get('item')
@@ -183,11 +211,11 @@ def xlsxaddstudents():
 				if user is None or user == "":
 					continue
 				if user in studentlist:
-					print ("Xlsx Add Student Error: " + user + " already in classroom")
+					print ("Xlsx Add Student Error: " + user.encode('utf8') + " already in classroom")
 					continue
 				student = usermanager.search("username", user, "student")
 				if student is None:
-					print ("Xlsx Add Student Error: " + user + " does not exist")
+					print ("Xlsx Add Student Error: " + user.encode('utf8') + " does not exist")
 					continue
 
 				#学生classroomlist中加入直播间url
@@ -206,7 +234,7 @@ def xlsxaddstudents():
 	db.session.commit()
 	rmtree(tempdir)
 
-	print (json.dumps(ret))
+	#print (json.dumps(ret))
 	return json.dumps(ret)
 
 
@@ -225,10 +253,10 @@ def aaddstudents():
 	student = usermanager.search("username", item, "student")
 	classroom = classroomManager.search(url)
 	if student is None:
-		print ("Add Student Error: " + item + " does not exist")
+		print ("Add Student Error: " + item.encode('utf8') + " does not exist")
 		ret['status'] = 'error: no such student'
 	elif classroom is None:
-		print ("Add Student Error: " + url + " does not exist")
+		print ("Add Student Error: " + url.encode('utf8') + " does not exist")
 		ret['status'] = 'error: no such classroom'
 	else:
 		#直播间studentlist中加入学生username
@@ -239,7 +267,7 @@ def aaddstudents():
 			db.session.add(classroom)
 			db.session.commit()
 		else:
-			print ("Add Student Error: " + item + " already in classroom")
+			print ("Add Student Error: " + item.encode('utf8') + " already in classroom")
 
 		#学生classroomlist中加入直播间url
 		classroomlist = json.loads(student.classroomlist)
@@ -249,11 +277,11 @@ def aaddstudents():
 			db.session.add(student)
 			db.session.commit()
 		else:
-			print ("Add Student Error: " + item + " already in classroom")
+			print ("Add Student Error: " + item.encode('utf8') + " already in classroom")
 
 		ret['status'] = "success"
 
-	print (json.dumps(ret))
+	#print (json.dumps(ret))
 	return json.dumps(ret)
 
 
@@ -265,7 +293,7 @@ def openlive():
 
 	data = request.get_data()
 	print('openlive')
-	print(data)
+	#print(data)
 
 	data = json.loads(data)
 	url = data['url']
@@ -283,10 +311,10 @@ def openlive():
 		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
-			classroom.status = "open"
+			classroom.status = json.dumps({'type': "openliving"})
 			ret['status'] = "success"
 
-	print (json.dumps(ret))
+	#print (json.dumps(ret))
 	return json.dumps(ret)
 
 
@@ -297,7 +325,7 @@ def closelive():
 
 	data = request.get_data()
 	print('closelive')
-	print(data)
+	#print(data)
 
 	data = json.loads(data)
 	url = data['url']
@@ -312,8 +340,8 @@ def closelive():
 		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
-			classroom.status = "close"
+			classroom.status = json.dumps({'type': "closeliving"})
 			ret['status'] = "success"
 
-	print (json.dumps(ret))
+	#print (json.dumps(ret))
 	return json.dumps(ret)
