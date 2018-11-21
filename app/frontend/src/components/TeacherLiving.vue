@@ -82,7 +82,7 @@
       <div slot="footer">
         <Row>
           将已有资源添加至当前教室中，之后点击使用以发布教学资源
-          <Button type="text" size="large" @click="modal_pdflist = false">取消</Button>
+          <Button type="text" size="large" @click="modal_pdflist = false">关闭</Button>
         </Row>
       </div>
     </Modal>
@@ -1201,8 +1201,18 @@ export default{
       input.username = this.userInfo.username
       input.url = this.cururl
       input.pdf = iPdf
+      // check if added
+      let added = false
+      console.log(iPdf.url)
+      for (let i = 0; i < this.pdfThisList.length; i++) {
+        console.log(this.pdfThisList[i].url)
+        if (iPdf.url === this.pdfThisList[i].url) {
+          console.log('succeed!')
+          added = true
+        }
+      }
       // post
-      if (this.pdfThisList.indexOf(iPdf) !== -1) {
+      if (added) {
         // if it exists in current list
         this.$.message.success('Already Added')
       } else {
@@ -1216,11 +1226,11 @@ export default{
                 this.pdfAllList = resp.data.pdfAllList
                 this.pdfThisList = resp.data.pdfThisList
               } else {
-                this.$.message('wrong')
+                this.$.message.error('wrong')
               }
             })
           } else {
-            this.$.message('error in post')
+            this.$.message.error('error in post')
           }
         })
       }
@@ -1245,11 +1255,11 @@ export default{
               this.pdfAllList = resp.data.pdfAllList
               this.pdfThisList = resp.data.pdfThisList
             } else {
-              this.$.message('wrong')
+              this.$.message.error('wrong')
             }
           })
         } else {
-          this.$.message('error in post')
+          this.$.message.error('error in post')
         }
       })
     },
@@ -1317,7 +1327,7 @@ export default{
             }
           })
         } else {
-          this.$.message('error in post')
+          this.$.message.error('error in post')
         }
       })
     },
@@ -1401,9 +1411,19 @@ export default{
       input.username = this.userInfo.username
       input.url = this.cururl
       input.uniqueId = iMulti.uniqueId
+      // check if added
+      let added = false
+      console.log(iMulti.uniqueId)
+      for (let i = 0; i < this.multiThisList.length; i++) {
+        console.log(this.multiThisList[i].uniqueId)
+        if (iMulti.uniqueId === this.multiThisList[i].uniqueId) {
+          console.log('succeed!')
+          added = true
+        }
+      }
       // post
-      if (this.multiThisList.indexOf(iMulti) !== -1) {
-        this.$.message('Already Added')
+      if (added) {
+        this.$.message.error('Already Added')
       } else {
         axios.post('/api/resource/multi_addclass', input).then((resp) => {
           if (resp.data.status === 'success') {
@@ -1419,7 +1439,7 @@ export default{
               console.log('response data get, although do not know what')
             })
           } else {
-            this.$.message('something wrong')
+            this.$.message.error('something wrong')
           }
         })
       }
@@ -1445,7 +1465,7 @@ export default{
             this.multiThisList = resp.data.multiThisList
           })
         } else {
-          this.$.message('something wrong')
+          this.$.message.error('something wrong')
         }
       })
     },
@@ -1525,7 +1545,7 @@ export default{
             this.multiThisList = resp.data.multiThisList
           })
         } else {
-          this.$.message('something wrong')
+          this.$.message.error('something wrong')
         }
       })
     },
@@ -1582,9 +1602,19 @@ export default{
       input.username = this.userInfo.username
       input.url = this.cururl
       input.uniqueId = iCode.uniqueId
+      // check if added
+      let added = false
+      console.log(iCode.uniqueId)
+      for (let i = 0; i < this.codeThisList.length; i++) {
+        console.log(this.codeThisList[i].uniqueId)
+        if (iCode.uniqueId === this.codeThisList[i].uniqueId) {
+          console.log('succeed!')
+          added = true
+        }
+      }
       // post
-      if (this.codeThisList.indexOf(iCode) !== -1) {
-        this.$.message('Already Added')
+      if (added) {
+        this.$.message.error('Already Added')
       } else {
         axios.post('/api/resource/code_addclass', input).then((resp) => {
           if (resp.data.status === 'success') {
@@ -1598,7 +1628,7 @@ export default{
               this.codeThisList = resp.data.codeThisList
             })
           } else {
-            this.$.message('something wrong')
+            this.$.message.error('something wrong')
           }
         })
       }
@@ -1624,7 +1654,7 @@ export default{
             this.codeThisList = resp.data.codeThisList
           })
         } else {
-          this.$.message('something wrong')
+          this.$.message.error('something wrong')
         }
       })
     },
@@ -1708,7 +1738,7 @@ export default{
             this.codeThisList = resp.data.codeThisList
           })
         } else {
-          this.$.message('something wrong')
+          this.$.message.error('something wrong')
         }
       })
     },
