@@ -2,7 +2,7 @@
   <div id="list" class="posi">
     <h1 class="list-info">
       <Icon type="ios-time" />
-      正在播出
+      <span class="list-title-word">正在播出</span>
       <Button class="listbtn" @click="timelist">开播时间</Button>
       <Button class="listbtn" @click="audiencelist">创建时间</Button>
     </h1>
@@ -210,4 +210,6 @@ li {
 .list-info {
   text-align: left;
 }
+  .list-title-word {
+  }
 </style>
