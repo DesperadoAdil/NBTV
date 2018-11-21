@@ -23,7 +23,7 @@ def on_join(data):
 	url = data['url']
 	join_room(username)
 	join_room(url)
-	send(username + '进入房间。', room = url)
+	send(username + '进入房间。', room = url, include_self = False)
 
 	if url not in chatingRoom.keys():
 		chatingRoom[url] = []

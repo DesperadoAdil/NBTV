@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import VueCookies from 'vue-cookies'
 import RTMP from 'rtmp-streamer'
+import axios from 'axios'
+import iView from 'iview'
 
 import Login from '@/components/Login'
 import User from '@/components/User'
@@ -16,6 +18,7 @@ import HomePage from '@/components/HomePage'
 Vue.use(Router)
 Vue.use(VueCookies)
 Vue.use(RTMP)
+Vue.use(iView)
 
 const router = new Router({
   mode: 'history',
@@ -79,7 +82,7 @@ const router = new Router({
 
 export default router
 
-import axios from 'axios'
+
 router.beforeEach((to, from, next) => {
   console.log("from "+from.path+" to "+to.path)
   const publicPages = ['/', '/register', '/Register', '/login', '/Login']
@@ -107,44 +110,23 @@ router.beforeEach((to, from, next) => {
       }
       axios.post('/api/classroom/urlcheck', data).then((resp) => {
         if (resp.data.status === "success") {
-          window.$Message.success('成功进入直播间!')
+          window.confirm('成功进入直播间!')
           next()
         } else if (resp.data.status === "password") {
           console.log("password needed!")
-          var currentpassword = ''
-          next()
-          /*this.$Modal.confirm({
-            render: (h) => {
-              return h('Input', {
-                props: {
-                  id: 'passinput',
-                  autofocus: true,
-                  placeholder: 'Please enter the password of this room'
-                },
-                on: {
-                  input: (val) => {
-                    this.currentpassword = val
-                  }
-                }
-              })
-            },
-            onOk: () => {
-              if (this.currentpassword === resp.data.password) {
-                next()
-              } else {
-                window.$Notice.error({
-                  title: '消息提示',
-                  desc: '您输入的密码错误，请仔细检查!'
-                })
-                next(from.path)
-              }
-            }
-          })*/
+          var currentpassword = window.prompt("请输入教室密码","")
+          if (currentpassword === resp.data.password) {
+            window.confirm('成功进入直播间!')
+            next()
+          } else {
+            window.alert("您输入的密码错误，请仔细检查!")
+            next(from.path)
+          }
         } else if (resp.data.status === "error") {
-          window.$Message.success('权限不足，进入直播间失败!')
+          window.alert('权限不足，进入直播间失败!')
           next(from.path)
         } else {
-          window.$Message.success('发生未知错误!')
+          window.alert('发生未知错误!')
           next(from.path)
         }
       })

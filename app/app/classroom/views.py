@@ -155,6 +155,9 @@ def urlcheck ():
 	url = data['url']
 	username = data['username']
 	classroom = classroomManager.search(url)
+	if classroom is None:
+		ret['status'] = "error"
+		return json.dumps(ret)
 	if classroom.mode == "public":
 		ret['status'] = "success"
 	elif classroom.mode == "protected":
