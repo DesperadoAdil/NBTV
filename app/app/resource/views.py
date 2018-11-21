@@ -71,10 +71,10 @@ def getChoice():
         teacher = usermanager.search("username", username, "teacher")
         
         for item in teacher.choiceQue:
-            ret['multiAllList'].append({"statement": item.statement, "optionList": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
+            ret['multiAllList'].append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
         clr = classroomManager.search(data['url'])
         for item in clr.choice:
-            ret['multiThisList'].append({"statement": item.statement, "optionList": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
+            ret['multiThisList'].append({"statement": item.statement, "optionlist": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
         # return json.dumps(ret)
         ret['status'] = "success"
     except Exception as err:
@@ -139,6 +139,7 @@ def view_choice_class():
     data = json.loads(request.get_data())
 
     ret = {}
+    '''
     choice_tmp = multiChoiceManager.search(data['uniqueId'])
     if choice_tmp is None:
         print('gg: choice_tmp is None')
@@ -146,6 +147,25 @@ def view_choice_class():
         return json.dumps(ret)
 
     ret['multiAnswerList'] = json.loads(choice_tmp.submitRecord)
+    return json.dumps(ret)
+    '''
+    tmp = multiChoiceManager.getSubmitAns(data['uniqueId'], data['url'])
+    if type(tmp) != list:
+        ret['status'] = 'error'
+    else:
+        ret['multiAnswerList'] = tmp
+        ret['status'] = 'success'
+    return json.dumps(ret)
+
+
+@resource.route('/multi_submit', methods = ['POST', 'GET'])
+def multi_submit():
+    print('submit answer for multi')
+    data = request.get_data()
+    data = json.loads(data)
+
+    ret = {}
+    ret['status'] = multiChoiceManager.submitAnswer(data['uniqueId'], data['username'], data['url'], data['answer'])
     return json.dumps(ret)
 
 
@@ -158,8 +178,7 @@ def addCode():
         #print(data)
         data = json.loads(data)
 
-        uniqueId = codeQuestionManager.insert(data['username'], data['statement'], data['language'], data['example'])
-        
+        uniqueId = codeQuestionManager.insert(data['username'], data['statement'], data['language'])
         ret["status"] = "success"
         ret["uniqueId"] = uniqueId
     except Exception as err:
@@ -186,7 +205,7 @@ def update_code():
     data = json.loads(data)
 
     ret = {}
-    ret['status'] = codeQuestionManager.update(data['uniqueId'], data['statement'], data['language'], data['example'])
+    ret['status'] = codeQuestionManager.update(data['uniqueId'], data['statement'], data['language'])
     return json.dumps(ret)
 
 @resource.route('/code_addclass', methods = ['POST', 'GET'])
@@ -222,7 +241,7 @@ def view_code_class():
     data = json.loads(request.get_data())
     
     ret = {}
-    
+    '''
     code_tmp = codeQuestionManager.search(data['uniqueId'])
     if code_tmp is None or code_tmp.owner != data['username']:
         print('gg: code is wrong')
@@ -232,6 +251,15 @@ def view_code_class():
     ret['codeAnswerList'] = json.loads(code_tmp.submitRecord)
     ret['status'] = 'success'
     return json.dumps(ret)
+    '''
+    tmp = codeQuestionManager.getSubmitAns(data['uniqueId'], data['url'])
+    if type(tmp) != list:
+        ret['status'] = 'error'
+    else:
+        ret['multiAnswerList'] = tmp
+        ret['status'] = 'success'
+    return json.dumps(ret)
+
 
 @resource.route('/code_delclass', methods = ['POST', 'GET'])
 def code_delete_class():
@@ -280,6 +308,17 @@ def get_code():
         ret['status'] = 'error'
     return json.dumps(ret)
 
+@resource.route('/code_submit', methods = ['POST', 'GET'])
+def code_submit():
+    print('submit answer for code')
+    data = request.get_data()
+    data = json.loads(data)
+
+    ret = {}
+    ret['status'] = codeQuestionManager.submitAnswer(data['uniqueId'], data['username'], data['url'], data['answer'])
+    return json.dumps(ret)
+
+
 @resource.route('/add_pdf', methods = ['POST'])
 def add_PDF():
     print('add pdf file')
@@ -305,7 +344,7 @@ def delete_PDF():
         data = json.loads(data)
         username = data['username']
         filename = data['pdf']['title']
-        ret['status'] = pdfManager.delete("%s/%s" % (username, filename))
+        ret['status'] = pdfManager.delete(username, filename)
     except Exception as err:
         print(err)
         ret['status'] = "error"
@@ -326,13 +365,10 @@ def delete_class_PDF():
         ret['status'] = 'error'
         return json.dumps(ret)
 
-    pdf_tmp = pdfManager.search("%s/%s" % (data['username'], data['pdf']['title']))
-    
+    pdf_tmp = pdfManager.search(data['pdf']['url'][5:])
     if pdf_tmp is None:
         print('gg: pdf_tmp is None')
     clr.pdffile.remove(pdf_tmp)
-    db.session.add(clr)
-    db.session.commit()
 
     ret['status'] = 'success'
     return json.dumps(ret)
