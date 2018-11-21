@@ -1809,7 +1809,7 @@ export default{
      * 以上为聊天室使用，请勿改动
      */
     subxlsx () {
-      console.log('dhasjkhda')
+      console.log('upload xlsx')
       /* const data = this.curuser
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
@@ -1833,7 +1833,7 @@ export default{
       })
     },
     addStudent () {
-      console.log('dhasjkhda')
+      console.log('add student via username')
       this.$Modal.confirm({
         render: (h) => {
           return h('Input', {
