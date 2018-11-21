@@ -430,7 +430,10 @@
     <!--answer: 'A'-->
     <!--},-->
     <!---------main 选择题 部分 在主界面显示选择题------------->
-    <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
+
+    <!--zsh-->
+     <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
+    <!--zsh-->
       <Form>
         <FormItem label="题目">
           <p style="word-break:break-all;float:left;text-align: left">{{curmulti.statement}}</p>
@@ -1469,9 +1472,9 @@ export default{
         title: '提示',
         content: '是否展示: \n ' + iselect.statement,
         onOk: () => {
-
-
-          this.videohei = 250 + 'px'
+          console.log("sdasd")
+          this.chatingtop = 340 + 'px'
+          this.chatinghei = 430 + 'px'
           this.chatingtop = 340 + 'px'
           this.chatinghei = 430 + 'px'
           this.mainselectcarddisplay = true
@@ -1962,6 +1965,8 @@ export default{
         title: '提示',
         content: '确认退出教学资源',
         onOk: () => {
+        console.log("close")
+          this.maincodecarddispaly=false
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
           this.classmain0 = true
