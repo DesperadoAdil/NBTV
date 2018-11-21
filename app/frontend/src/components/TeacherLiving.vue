@@ -649,8 +649,22 @@ export default{
           width: 120,
           render: (h, params) => {
             return h('div', [
+              h('Button', [
+                h('Poptip', {
+                  props: {
+                    confirm: true,
+                    title: '点击以添加该PDF至本教室的使用资源中',
+                    type: 'text',
+                    size: 'small'
+                  },
+                  style: {marginRight: '5px'},
+                  on: {
+                    click: () => { this.addPdfAll(params.index) }
+                  }
+                }, 'Add')
+              ]),
               h('Button', {
-                props: {type: 'text', size: 'small'},
+                props: {type: 'text', size: 'small', title: '点击以添加该PDF至本教室的使用资源中'},
                 style: {marginRight: '5px'},
                 on: {
                   click: () => { this.addPdfAll(params.index) }
