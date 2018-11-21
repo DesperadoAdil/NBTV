@@ -365,7 +365,7 @@ def delete_class_PDF():
         ret['status'] = 'error'
         return json.dumps(ret)
 
-    pdf_tmp = pdfManager.search(data['username'], data['pdf']['title'])
+    pdf_tmp = pdfManager.search(data['pdf']['url'][5:])
     if pdf_tmp is None:
         print('gg: pdf_tmp is None')
     clr.pdffile.remove(pdf_tmp)
