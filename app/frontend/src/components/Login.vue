@@ -27,10 +27,10 @@
         </RadioGroup>
       </FormItem>
       <FormItem>
-        <Button type="primary" @click="handleSubmit('formInline')">Signin</Button>
+        <Button type="primary" @click="handleSubmit('formInline')">登录</Button>
       </FormItem>
     </Form>
-    <router-link to="/Register">Register</router-link>
+    <router-link to="/register">注册</router-link>
   </div>
 </template>
 
@@ -39,6 +39,24 @@ import axios from 'axios'
 import router from '../router'
 export default {
   data () {
+    const validateUsernameCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter your username!'))
+      } else if (!/^[a-zA-Z\d\u4e00-\u9fa5]{1,20}$/.test(value)) {
+        callback(new Error('Username unmatch or too long!'))
+      } else {
+        callback()
+      }
+    };
+    const validatePassCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter the password!'))
+      } else if (!/^[a-zA-Z\d]{6,16}$/.test(value)) {
+        callback(new Error('Password unmatch or too long!'))
+      } else {
+        callback()
+      }
+    };
     return {
       formInline: {
         username: '',
@@ -53,11 +71,10 @@ export default {
       loginway: 'username',
       ruleInline: {
         username: [
-          { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+          { validator: validateUsernameCheck, trigger: 'blur' }
         ],
         password: [
-          { required: true, message: 'Please fill in the password.', trigger: 'blur' },
-          { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+          { validator: validatePassCheck, trigger: 'blur' }
         ]
       }
     }
@@ -66,22 +83,21 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success('Send to server!')
           this.formInline['job'] = this.job
           this.formInline['loginway'] = this.loginway
           const data = this.formInline
           axios.post('/api/user/login', data).then((resp) => {
-            this.$Message.success(resp.data.status)
             if (resp.data.status === 'success') {
+              this.$Message.success('登陆成功!')
               this.$cookies.set('user', resp.data)
               router.push('/list')
               window.location.reload()
             } else {
-              this.$Message.error('用户名或密码错误')
+              this.$Message.error('用户名或密码错误!')
             }
           })
         } else {
-          this.$Message.error('用户名或密码格式不正确')
+          this.$Message.error('请正确填写信息!')
         }
       })
     }

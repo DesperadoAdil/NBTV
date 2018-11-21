@@ -3,22 +3,22 @@
     <div  id="mainlivingcard" class="cardtealiving11" :style="{display:CHAT.frametype === 'close'?'block':'none'}">
       <!--<div id="mainlivingcard" class="cardtealiving11" :style="{display:mainlivingcarddisplay?'block':'none'}">-->
       <div class="topveido">
-        <h3>教室信息显示部分（待修改）</h3>
+        <!--<h3>教室信息显示部分（待修改）</h3>-->
       </div>
       <div id='player'></div>
       <div class="bottomveido">
-        <h3>礼物等其他显示部分（待修改）</h3>
+        <!--<h3>礼物等其他显示部分（待修改）</h3>-->
       </div>
     </div>
 
     <div  id="littlelivingcard" class="cardtealittleliving11" :style="{display:CHAT.frametype !== 'close'?'block':'none'}">
       <!--<div id="littlelivingcard" class="cardtealittleliving11" :style="{display:littlelivingcarddisplay?'block':'none'}">-->
       <div class="topveido">
-        <h3>教室信息显示部分（待修改）</h3>
+        <!--<h3>教室信息显示部分（待修改）</h3>-->
       </div>
       <div id='player2'></div>
       <div class="bottomveido">
-        <h3>礼物等其他显示部分（待修改）</h3>
+        <!--<h3>礼物等其他显示部分（待修改）</h3>-->
       </div>
     </div>
 
@@ -39,7 +39,7 @@
         </FormItem>
         <FormItem label="Code">
           <template>
-            <!-------------输入框的代码高亮----------------------->
+            <!--输入框的代码高亮-->
             <codemirror
               v-model="codeAns"
               :options="cmOption">
@@ -52,12 +52,12 @@
     <!--<div id="mainselectcard" class="celeardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
     <div  id="mainselectcard" class="cardtealivingselect00" :style="{display:CHAT.frametype === 'select'?'block':'none'}">
       <p class="selecttitle00">{{CHAT.selectall.statement}}</p>
-      <RadioGroup v-for="(item, index) in CHAT.selectall.optionList"  :key="index" class="radiotea" v-model="stuans" vertical>
-        <Radio label="index" style="font-size: 15px">
+      <RadioGroup  class="radiotea" v-model="stuans" vertical>
+        <Radio v-for="(item, index) in CHAT.selectall.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
           <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
         </Radio>
       </RadioGroup>
-      <Button class="selectsubmit00" type="primary" @click="selectsubmit">提交答案: {{stuans}}</Button>
+      <Button class="selectsubmit00" type="primary" @click="selectsubmit">提交答案: {{String.fromCharCode(65+stuans)}}</Button>
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
@@ -323,6 +323,7 @@ export default{
     //    };
   },
   created: function () {
+//    this.getPageData();
     const s = document.createElement('script')
     s.type = 'text/javascript'
     s.src = 'https://player.polyv.net/livescript/liveplayer.js'
@@ -382,6 +383,10 @@ export default{
     }
   },
   methods: {
+    getPageData:function(){
+      this.CHAT = JSON.parse(localStorage.getItem('this.CHAT'));//使用getItem方法的前提是，你再自己需要的地方使用了setItem方法
+    },
+
     /**
      * 以下为聊天室使用，请勿改动
      */
@@ -517,8 +522,8 @@ export default{
       data['url']=this.cururl
       data['uniqueId'] = this.CHAT.selectall.answer
       data['answer'] = this.stuans
-      axios.post('/api/classroom/selectsubmit', data).then((resp) => {
-
+      axios.post('/api/resource/multi_submit', data).then((resp) => {
+        this.$Message.success('提交成功!')
       })
     }
   }

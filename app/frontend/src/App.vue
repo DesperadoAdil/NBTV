@@ -18,96 +18,23 @@
       </MenuItem>
 
       <MenuItem name="1" style="float:right">
-
-        <Dropdown trigger="custom" :visible="visible" placement="bottom-end" style="">
-          <a href="javascript:void(0)" trigger="click" @click="handleOpen">
+        <Dropdown trigger="custom" :visible="visible" placement="bottom-end" style="" @click.native="handleOpen">
+          <a href="javascript:void(0)" trigger="click">
             <Icon v-if="LoginOrLogout === '登录'" type="ios-contact-outline"></Icon>
               {{ LoginOrLogout }}
             <Icon type="ios-arrow-down"></Icon>
           </a>
-          <DropdownMenu slot="list" style="width: 400px">
-
-            <Form>
-              <!-- 用户名称 -->
-              <FormItem label="Name" label-position="left" label-width="80">
-                {{userInfo.username}}
-              </FormItem>
-              <!-- 用户身份 -->
-              <FormItem label="Job" label-position="left" label-width="80">
-                {{userInfo.job}}
-              </FormItem>
-              <!-- 用户手机号 -->
-              <FormItem label="Current Mobile" label-position="left" label-width="80">
-                <Row>
-                  <Col span="14">
-                    <Input type="text" v-model="userInfo.mobile" readonly></Input>
-                  </Col>
-                  <Col span="10">
-                    <Button @click="changeMobile()">{{mobileButton}}</Button>
-                  </Col>
-                </Row>
-              </FormItem>
-              <!-- 设置旧手机的验证码 -->
-              <FormItem v-if="showVerificationOld" label="Verification" label-position="left" label-width="80">
-                <Row>
-                  <Col span="14">
-                    <Input v-model="oldVerification" placeholder="Old Verification Code Here"></Input>
-                  </Col>
-                  <Col span="10">
-                    <Button @click="sendVerificationOld()">Send</Button>
-                  </Col>
-                </Row>
-              </FormItem>
-              <!-- 用户的新手机号 -->
-              <FormItem v-if="showNewMobile" label="New Mobile" label-position="left" label-width="80">
-                <Row>
-                  <Col span="14">
-                      <Input type="text" v-model="this.newMobile" placeholder="New Phone Number Here"></Input>
-                  </Col>
-                </Row>
-              </FormItem>
-              <!-- 设置新手机的验证码 -->
-              <FormItem v-if="showNewMobile" label="Verification" label-position="left" label-width="80">
-                <Row>
-                  <Col span="14">
-                     <Input v-model="newVerification" placeholder="New Verification Code Here"></Input>
-                  </Col>
-                  <Col span="10">
-                    <Button @click="sendVerificationNew()">Send</Button>
-                  </Col>
-                </Row>
-              </FormItem>
-              <!-- Confirm / Cancel -->
-              <FormItem v-if="showMobileChange" style="alignment: right">
-                <Button @click="submitMobileChange()">Verify</Button>
-              </FormItem>
-              <!-- 用户密码 -->
-              <FormItem label="Current Password" label-position="left" label-width="80">
-                <Row>
-                  <Col span="14">
-                    <Input type="text" v-model="newPassword"></Input>
-                  </Col>
-                  <Col span="10">
-                     <Button @click="changePassword()">{{passButton}}</Button>
-                  </Col>
-                </Row>
-              </FormItem>
-              <!-- 重复的用户密码 -->
-              <FormItem v-if="showRpass" label="New Password" label-position="left" label-width="80">
-                <Row>
-                  <Col span="14">
-                    <Input type="text" v-model="this.newRpassword"></Input>
-                  </Col>
-                  <Col span="10">
-                    <Button @click="submitPassChange()">Apply</Button>
-                  </Col>
-                </Row>
-              </FormItem>
-            </Form>
-            <div class="demo-drawer-footer">
-              <Button  @click="handleClose">返回</Button>
-              <Button type="primary" @click="logout">登出</Button>
-            </div>
+          <DropdownMenu slot="list" style="width: 120px">
+            <DropdownItem>
+              <div @click="handleJump('user')">
+                用户信息
+              </div>
+            </DropdownItem>
+            <DropdownItem divided>
+              <div @click="logout()">
+                登出
+              </div>
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </MenuItem>
@@ -132,21 +59,6 @@ export default {
     return {
       transitionName: '',
       visible: false,
-      // boolean to show or not
-      showRpass: false,
-      showMobileChange: false,
-      showVerificationOld: false,
-      showNewMobile: false,
-      // mobile and password
-      newMobile: '',
-      newPassword: '',
-      newRpassword: '',
-      oldVerification: '',
-      newVerification: '',
-      // buttons
-      mobileButton: 'Edit',
-      passButton: 'Edit',
-      // hanky's var
       theme1: 'light',
       active: '',
       userInfo: {
@@ -156,27 +68,7 @@ export default {
         mobile: '',
         job: 'teacher'
       },
-      // changed this to 已登录 to debug
-      LoginOrLogout: '登录',
-      // Password Submit
-      passSub: {
-        status: 'login/logout',
-        mobile: '',
-        old_password: '',
-        new_password: '',
-        job: ''
-      },
-      mobileSub: {
-        status: 'login/logout',
-        old_mobile: '',
-        old_verification: '',
-        new_mobile: '',
-        new_verification: '',
-        job: ''
-      },
-      verificationSub: {
-        mobile: ''
-      }
+      LoginOrLogout: '登录'
     }
   },
   created () {
@@ -190,115 +82,11 @@ export default {
       }
       this.visible = this.visible !== true
     },
-    handleClose () {
-      this.visible = false
-    },
-    cancelMobileChange () {
-      this.showVerificationOld = false
-      this.showNewMobile = false
-      this.showMobileChange = false
-      this.newMobile = ''
-      this.oldVerification = ''
-      this.newVerification = ''
-    },
-    submitMobileChange () {
-      // set input variable
-      this.mobileSub.old_mobile = this.userInfo.mobile
-      this.mobileSub.old_verification = this.oldVerification
-      this.mobileSub.new_mobile = this.newMobile
-      this.mobileSub.new_verification = this.newVerification
-      this.mobileSub.job = this.userInfo.job
-      // post
-      axios.post('/api/user/change_mobile', this.mobileSub).then((resp) => {
-        // this.$Message.success(resp.data.status)
-        // 如果成功
-        if (resp.data.status === 'success') {
-          // 更改userInfo
-          this.userInfo.mobile = this.newMobile
-          // 需要更改一下Cookie 现在还没好
-          // this.$cookies.set('user', resp.data)
-          window.location.reload()
-          this.showVerificationOld = false
-          this.showNewMobile = false
-          this.showMobileChange = false
-          this.newMobile = ''
-          this.oldVerification = ''
-          this.newVerification = ''
-        } else { // 如果失败
-          this.$Message.error('更改失败')
-        }
-      })
-    },
-    submitPassChange () {
-      // set input variable
-      this.passSub.mobile = this.userInfo.mobile
-      this.passSub.old_password = this.userInfo.password
-      this.passSub.new_password = this.newPassword
-      this.passSub.job = this.userInfo.job
-      // post
-      axios.post('/api/user/change_password', this.passSub).then((resp) => {
-        // this.$Message.success(resp.data.status)
-        // 如果成功
-        if (resp.data.status === 'success') {
-          // 更改userInfo
-          this.userInfo.password = this.newPassword
-          // 需要更改一下Cookie 现在还没好
-          // this.$cookies.set('user', resp.data)
-          window.location.reload()
-        } else { // 如果失败
-          this.$Message.error('更改失败')
-        }
-      })
-      // Hide the bars
-      this.showRpass = false
-    },
-    // SEND TO OLD MOBILE
-    sendVerificationOld () {
-      this.verificationSub.mobile = this.userInfo.mobile
-      axios.post('/api/user/request_verification', this.verificationSub).then((resp) => {
-        if (resp.data.status === 'success') {
-          this.$.message('原手机验证码发送成功')
-          this.showNewMobile = true
-        }
-      })
-      // this shouldn't appear here, but anyway...
-      this.showNewMobile = true
-    },
-    // SEND TO NEW MOBILE
-    sendVerificationNew () {
-      // send to new phone
-      this.verificationSub.mobile = this.newMobile
-      axios.post('/api/user/request_verification', this.verificationSub).then((resp) => {
-        if (resp.data.status === 'success') {
-          this.$.message('新手机验证码发送成功')
-        }
-      })
-    },
-    changeMobile () {
-      if (this.mobileButton === 'Edit') {
-        this.showMobileChange = true
-        this.showVerificationOld = true
-        this.mobileButton = 'Cancel'
-      } else {
-        this.cancelMobileChange()
-        this.mobileButton = 'Edit'
-      }
-    },
-    changePassword () {
-      // Edit / Cancel Password Change
-      if (this.showRpass === false) {
-        this.showRpass = true
-        this.newPassword = ''
-        this.passButton = 'Cancel'
-      } else {
-        this.showRpass = false
-        this.passButton = 'Edit'
-      }
-    },
     isTeacher () {
       return this.userInfo['job'] === 'teacher'
     },
     handleJump (name) {
+      this.visible = false
       if (name === '/') {
         router.push('/')
       } else if (this.userInfo['status'] !== 'success') { // 未登录
@@ -306,11 +94,11 @@ export default {
       } else if (name === 'list') {
         router.push('/list')
       } else if (name === 'myLivingList') {
-        router.push('/MyLivingList')
+        router.push('/mylivinglist')
       } else if (name === 'myWatchingList') {
         router.push('/mywatchinglist')
-      } else if (name === 'UserInfo') {
-        router.push('/UserInfo')
+      } else if (name === 'user') {
+        router.push('/user')
       }
     },
     logout () {
@@ -342,8 +130,6 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      console.log(from);
-      console.log(to);
       if (to.meta.index > from.meta.index) {
         this.transitionName = 'slide-right';
       } else {
@@ -366,13 +152,6 @@ export default {
   }
   .mylist{
     font-size: 20px;
-  }
-  .demo-drawer-footer{
-    width: 100%;
-    border-top: 1px solid #e8e8e8;
-    padding: 10px 16px;
-    text-align: right;
-    background: #fff;
   }
   .router {
     padding: 0 5%;

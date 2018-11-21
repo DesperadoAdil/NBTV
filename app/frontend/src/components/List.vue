@@ -9,8 +9,8 @@
     <Divider />
     <Row>
       <Col span="8" v-for="item in items" :key="item.vid" v-if="item.mode !== 'private'">
-        <Card class="listcard">
-          <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
+        <Card class="listcard" @click.native="skip(item)">
+          <img :src="item.thumbnail" class="thumbnail">
           <p class="title">{{ item.title }} </p>
           <p class="teacher">授课老师：{{ item.teacher }} </p>
           <p class="audiencenum">开播时间：{{ item.showtime}}</p>
@@ -122,36 +122,40 @@ export default {
         this.$Message.error('您已被永久移出教室')
         return
       }
-      this.$Modal.confirm({
-        render: (h) => {
-          return h('Input', {
-            props: {
-              id: 'passinput',
-              autofocus: true,
-              placeholder: 'Please enter the password of this room'
-            },
-            on: {
-              input: (val) => {
-                //                this.value = val;
-                this.currentpassword = val
-                //                if(val==="123")
-                //                  this.$router.push({path: 'living',query:{ id: a.vid}});
+      /*if (item.mode === 'protected') {
+        this.$Modal.confirm({
+          render: (h) => {
+            return h('Input', {
+              props: {
+                id: 'passinput',
+                autofocus: true,
+                placeholder: 'Please enter the password of this room'
+              },
+              on: {
+                input: (val) => {
+                  //                this.value = val;
+                  this.currentpassword = val
+                  //                if(val==="123")
+                  //                  this.$router.push({path: 'living',query:{ id: a.vid}});
+                }
               }
-            }
-          })
-        },
-        onOk: () => {
-          if (this.currentpassword === item.password) {
-            this.$router.push({path: '/living/' + item.url})
-            window.location.reload()
-          } else {
-            this.$Notice.error({
-              title: '消息提示',
-              desc: '您输入的密码错误，请仔细检查 '
             })
+          },
+          onOk: () => {
+            if (this.currentpassword === item.password) {
+              this.$router.push({path: '/living/' + item.url})
+              window.location.reload()
+            } else {
+              this.$Notice.error({
+                title: '消息提示',
+                desc: '您输入的密码错误，请仔细检查 '
+              })
+            }
           }
-        }
-      })
+        })
+      } else {*/
+        this.$router.push({path: '/living/' + item.url})
+      //}
     },
     getList: function () {
       axios.get('/api/list').then((resp) => {

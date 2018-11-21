@@ -2,8 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import VueCookies from 'vue-cookies'
 import RTMP from 'rtmp-streamer'
+import axios from 'axios'
+import iView from 'iview'
 
 import Login from '@/components/Login'
+import User from '@/components/User'
 import Register from '@/components/Register'
 import List from '@/components/List'
 import Living from '@/components/Living'
@@ -15,6 +18,7 @@ import HomePage from '@/components/HomePage'
 Vue.use(Router)
 Vue.use(VueCookies)
 Vue.use(RTMP)
+Vue.use(iView)
 
 const router = new Router({
   mode: 'history',
@@ -22,19 +26,25 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      meta: { index: 2 },
+      meta: { index: 3 },
       component: Login
+    },
+    {
+      path: '/user',
+      name: 'User',
+      meta: { index: 2 },
+      component: User
     },
     {
       path: '/teacherliving/:url',
       name: 'TeacherLiving',
-      meta: { index: 6 },
+      meta: { index: 7 },
       component: TeacherLiving
     },
     {
       path: '/mywatchinglist',
       name: 'MyWatchingList',
-      meta: { index: 4 },
+      meta: { index: 5 },
       component: MyWatchingList
     },
     {
@@ -46,19 +56,19 @@ const router = new Router({
     {
       path: '/list',
       name: 'List',
-      meta: { index: 3 },
+      meta: { index: 4 },
       component: List
     },
     {
       path: '/living/:url',
       name: 'Living',
-      meta: { index: 7 },
+      meta: { index: 8 },
       component: Living
     },
     {
-      path: '/MyLivingList',
+      path: '/mylivinglist',
       name: 'MyLivingList',
-      meta: { index: 5 },
+      meta: { index: 6 },
       component: MyLivingList
     },
     {
@@ -72,29 +82,60 @@ const router = new Router({
 
 export default router
 
-/*
+
 router.beforeEach((to, from, next) => {
-  // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/login', '/register', '/living', '/teacherliving', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo', '/teacherliving', '/developer']
-  const authRequired = !publicPages.includes(to.path)
+  console.log("from "+from.path+" to "+to.path)
+  const publicPages = ['/', '/register', '/Register', '/login', '/Login']
+  const privatePages = ['/user', '/list', '/mywatchinglist', '/mylivinglist']
+  const developerPages = ['developer']
   if (window.$cookies.get('user') === null) {
-    if (to.path === '/login') {
-      next('/login')
-    } else if (to.path === '/register') {
-      next('/register')
+    if (publicPages.includes(to.path)) {
+      next()
     } else {
-      next('login')
+      next('/login')
     }
   } else {
-    console.log(to.path)
-    if (authRequired) {
-      if (/^\/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$/.test(to.path)) {
-        next('/teacherliving' + to.path)
-      } else {
-        next('/list')
+    if (to.path === '/') next()
+    else if (publicPages.includes(to.path)) {
+      next('/')
+    } else if (to.path === '/mylivinglist') {
+      if (window.$cookies.get('user').job === 'teacher') next()
+      else next('/list')
+    } else if (privatePages.includes(to.path)) {
+      next()
+    } else if (/^\/living\/[a-zA-Z\d]+$/.test(to.path)) {
+      const data = {
+        'username': window.$cookies.get('user').username,
+        'url': to.path.split('/')[2]
       }
+      axios.post('/api/classroom/urlcheck', data).then((resp) => {
+        if (resp.data.status === "success") {
+          window.confirm('成功进入直播间!')
+          next()
+        } else if (resp.data.status === "password") {
+          console.log("password needed!")
+          var currentpassword = window.prompt("请输入教室密码","")
+          if (currentpassword === resp.data.password) {
+            window.confirm('成功进入直播间!')
+            next()
+          } else {
+            window.alert("您输入的密码错误，请仔细检查!")
+            next(from.path)
+          }
+        } else if (resp.data.status === "error") {
+          window.alert('权限不足，进入直播间失败!')
+          next(from.path)
+        } else {
+          window.alert('发生未知错误!')
+          next(from.path)
+        }
+      })
+      //next()
+    } else if (/^\/teacherliving\/[a-zA-Z\d]+$/.test(to.path)) {
+      if (window.$cookies.get('user').job === 'teacher') next()
+      else next('/list')
+    } else {
+      next('/list')
     }
   }
-  next()
 })
-*/

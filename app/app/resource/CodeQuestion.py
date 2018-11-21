@@ -7,23 +7,24 @@ class CodeQuestionObj:
 	def __init__(self):
 		pass
 
-	def insert(self, username, statement, language):
+	def insert(self, username, statement, language, ansCode):
 		if statement == "" or language == "":
 			return "error"
 		uniqueId = str(uuid.uuid4())
-		que = CodeQuestion(owner = username, uniqueId = uniqueId, statement = statement, language = language, submitRecord = "[]")
+		que = CodeQuestion(owner = username, uniqueId = uniqueId, statement = statement, language = language, submitRecord = "{}", ansCode = ansCode)
 		db.session.add(que)
 		db.session.commit()
 
 		return uniqueId
 
-	def update(self, uniqueId, statement, language):
+	def update(self, uniqueId, statement, language, ansCode):
 		try:
 			que = CodeQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 			que.statement = statement
 			que.language = language
+			que.ansCode = ansCode
 			db.session.add(que)
 			db.session.commit()
 
