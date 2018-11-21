@@ -94,7 +94,7 @@ export default {
       } else if (name === 'list') {
         router.push('/list')
       } else if (name === 'myLivingList') {
-        router.push('/MyLivingList')
+        router.push('/mylivinglist')
       } else if (name === 'myWatchingList') {
         router.push('/mywatchinglist')
       } else if (name === 'user') {

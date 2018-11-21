@@ -63,7 +63,7 @@ const router = new Router({
       component: Living
     },
     {
-      path: '/MyLivingList',
+      path: '/mylivinglist',
       name: 'MyLivingList',
       meta: { index: 6 },
       component: MyLivingList
@@ -79,29 +79,81 @@ const router = new Router({
 
 export default router
 
-/*
+import axios from 'axios'
 router.beforeEach((to, from, next) => {
-  // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/login', '/register', '/living', '/teacherliving', '/mywatchinglist', '/list', '/MyLivingList', '/UserInfo', '/teacherliving', '/developer']
-  const authRequired = !publicPages.includes(to.path)
+  console.log("from "+from.path+" to "+to.path)
+  const publicPages = ['/', '/register', '/Register', '/login', '/Login']
+  const privatePages = ['/user', '/list', '/mywatchinglist', '/mylivinglist']
+  const developerPages = ['developer']
   if (window.$cookies.get('user') === null) {
-    if (to.path === '/login') {
-      next('/login')
-    } else if (to.path === '/register') {
-      next('/register')
+    if (publicPages.includes(to.path)) {
+      next()
     } else {
-      next('login')
+      next('/login')
     }
   } else {
-    console.log(to.path)
-    if (authRequired) {
-      if (/^\/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$/.test(to.path)) {
-        next('/teacherliving' + to.path)
-      } else {
-        next('/list')
+    if (to.path === '/') next()
+    else if (publicPages.includes(to.path)) {
+      next('/')
+    } else if (to.path === '/mylivinglist') {
+      if (window.$cookies.get('user').job === 'teacher') next()
+      else next('/list')
+    } else if (privatePages.includes(to.path)) {
+      next()
+    } else if (/^\/living\/[a-zA-Z\d]+$/.test(to.path)) {
+      const data = {
+        'username': window.$cookies.get('user').username,
+        'url': to.path.split('/')[2]
       }
+      axios.post('/api/classroom/urlcheck', data).then((resp) => {
+        if (resp.data.status === "success") {
+          window.$Message.success('成功进入直播间!')
+          next()
+        } else if (resp.data.status === "password") {
+          console.log("password needed!")
+          var currentpassword = ''
+          next()
+          /*this.$Modal.confirm({
+            render: (h) => {
+              return h('Input', {
+                props: {
+                  id: 'passinput',
+                  autofocus: true,
+                  placeholder: 'Please enter the password of this room'
+                },
+                on: {
+                  input: (val) => {
+                    this.currentpassword = val
+                  }
+                }
+              })
+            },
+            onOk: () => {
+              if (this.currentpassword === resp.data.password) {
+                next()
+              } else {
+                window.$Notice.error({
+                  title: '消息提示',
+                  desc: '您输入的密码错误，请仔细检查!'
+                })
+                next(from.path)
+              }
+            }
+          })*/
+        } else if (resp.data.status === "error") {
+          window.$Message.success('权限不足，进入直播间失败!')
+          next(from.path)
+        } else {
+          window.$Message.success('发生未知错误!')
+          next(from.path)
+        }
+      })
+      //next()
+    } else if (/^\/teacherliving\/[a-zA-Z\d]+$/.test(to.path)) {
+      if (window.$cookies.get('user').job === 'teacher') next()
+      else next('/list')
+    } else {
+      next('/list')
     }
   }
-  next()
 })
-*/

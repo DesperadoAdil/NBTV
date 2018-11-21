@@ -27,10 +27,10 @@
         </RadioGroup>
       </FormItem>
       <FormItem>
-        <Button type="primary" @click="handleSubmit('formInline')">Signin</Button>
+        <Button type="primary" @click="handleSubmit('formInline')">登录</Button>
       </FormItem>
     </Form>
-    <router-link to="/Register">Register</router-link>
+    <router-link to="/register">注册</router-link>
   </div>
 </template>
 
