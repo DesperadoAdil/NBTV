@@ -129,7 +129,7 @@
       </p>
       <Form>
         <FormItem>
-          <a href="javascript:;" class="upf">pdf upload
+          <a href="javascript:;">pdf upload
             <input type="file" name="pdfinput" id="pdfinput">
           </a>
         </FormItem>
@@ -211,24 +211,25 @@
     </Modal>
 
     <!--上传学生名单-->
-    <Modal v-model="modal_student_xlsx" @on-ok="modal_student_xlsx = false" @on-cancel="modal_student_xlsx = false">
+    <Modal v-model="modal_student_xlsx">
       <p slot="header" style="font-size: 20px">
         <span>上传学生名单</span>
       </p>
       <Form>
         <Poptip word-wrap width="200" trigger="hover" title="提示" content="格式要求：xlsx文件的单元格填写一个完整的用户名，否则无效。添加失败可以再次添加或者用户名添加">
           <FormItem>
-            <a href="javascript:;" class="upf">
-              添加xlsx
-              <input type="file" name="xlsxinput" id="xlsxinput">
+            <a href="javascript:;">
+              <input type="file" name="xlsxinput" id="xlsxinput" value="添加xlsx">
             </a>
-            <input type="file" name="studentInput">
           </FormItem>
         </Poptip>
         <FormItem>
           <Button @click="subxlsx()">submit</Button>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button type="text" size="large" @click="modal_student_xlsx = false">取消</Button>
+      </div>
     </Modal>
 
     <!--view multi-->
@@ -1067,10 +1068,10 @@ export default{
         }
       }
       axios(options).then((resp) => {
-        // console.log('addPDF success')
+        if (resp.data.status === 'success') {
+          this.$.message.success('PDF uploaded successfully')
+        }
       })
-      // IF SUCCESS, BACK END: ADD TO TEACHER & ROOM
-      // FRONTEND: JUST SHOW
     },
     // MULTI
     multi_addChoice () {
@@ -1827,9 +1828,12 @@ export default{
           'Content-Type': 'multipart/form-data'
         }
       }
-      console.log(options)
+      console.log(formData.url)
       axios(options).then((resp) => {
         this.studentitems = resp.data.studentitems
+        if (resp.data.studentitems !== undefined) {
+          this.$.message.success('added succeeded')
+        }
       })
     },
     addStudent () {
