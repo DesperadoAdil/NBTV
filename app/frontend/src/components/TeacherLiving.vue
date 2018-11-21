@@ -1652,9 +1652,11 @@ export default{
         content: '是否展示' + iCode.statement,
         onOk: () => {
           console.log('onOK')
+        this.curcode=iCode
 
 
   document.getElementById("codemirr").focus();
+
           this.modal_codelist = false
           this.chatingtop = 340 + 'px'
           this.chatinghei = 430 + 'px'
