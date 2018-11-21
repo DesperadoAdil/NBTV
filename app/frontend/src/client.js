@@ -67,9 +67,9 @@ const CHAT = {
         toUser: 'all',
         fromUser: '[系统]'
       }
-      CHAT.msgArr.push(obj)
-      //let message = document.getElementById('content-id')
-      //message.scrollTop = message.scrollHeight
+      if (msg.replace('进入房间。', '') !== username) {
+        CHAT.msgArr.push(obj)
+      }
       console.log('CHAT.msgArr(system)', obj)
     })
     this.socket.on('whisper', function (obj) {
@@ -112,6 +112,7 @@ const CHAT = {
       console.log('已连接')
     })
     console.log(username, url)
+    CHAT.msgArr = []
     this.socket.emit('join', {'username': username, 'url': url})
     this.socket.on('check', function () {
       CHAT.socket.emit('check', {'username': username, 'url': url})
