@@ -18,8 +18,8 @@
       </MenuItem>
 
       <MenuItem name="1" style="float:right">
-        <Dropdown trigger="custom" :visible="visible" placement="bottom-end" style="">
-          <a href="javascript:void(0)" trigger="click" @click="handleOpen">
+        <Dropdown trigger="custom" :visible="visible" placement="bottom-end" style="" @click.native="handleOpen">
+          <a href="javascript:void(0)" trigger="click">
             <Icon v-if="LoginOrLogout === '登录'" type="ios-contact-outline"></Icon>
               {{ LoginOrLogout }}
             <Icon type="ios-arrow-down"></Icon>

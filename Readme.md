@@ -79,7 +79,6 @@ commit message都要符合这一个规范：
       - **backend:** *Adil*
 
 - ## 资源管理
-   - ### 新的或者要更改的API：
 
 - #### 查看pdf文件列表
 
@@ -206,8 +205,6 @@ commit message都要符合这一个规范：
     - **output:** `{ status: "error"/"success" }` // 返回更新后的列表
     - **frontend:** *Yuxuan*
     - backend
-
-- ### **新的或者需要更改的API终止于此**
 
    - ### pdf文件
 
@@ -464,6 +461,14 @@ choicequestion|存储选择题
 codequestion|存储代码题
 messages|存储短信验证码
 
+## 几个中间表
+
+数据表 | 描述 |
+:---: | :--:|
+classroom_choice | 教室与选择题资源的中间表
+classroom_code | 教室与代码题的中间表
+classroom_pdf | 教室与pdf文件的中间表
+
 ## 数据表结构
 classrooms|detail
 :---:|:---:
@@ -471,19 +476,21 @@ vid|保利威视推流vid
 teacher|直播间教师username
 title|直播间标题
 thumbnail|直播间缩略图
-mode|直播间私密模式
+mode|直播间隐私模式
 password|直播间密码
 url|直播间url
 rtmpUrl|保利威视推流url
 studentlist|直播间学生的username列表
 teacherlist|直播间教师的username列表，这里教师相当于学生
 audiencelist|直播间正在观看的观众username列表
-filelist|直播间pdf文件名列表
-choicequestion|直播间选择题的类对象列表
-codequestion|直播间代码题的类对象列表
 visible|直播间知否可见
 createtime|直播间创建日期
 showtime|直播间开播时间
+blacklist|直播间黑名单
+shutuplist|禁言名单
+choice|选择题（外键约束）
+code|代码题（外键约束）
+pdffile|pdf文件（外键约束）
 
 students|detail
 :---:|:---:
@@ -499,11 +506,16 @@ username|教师用户名
 password|教师密码
 classroomlist|教师加入的直播间的url列表
 classroom|教师创建的直播间的类对象列表
+pdfs|老师上传的所有pdf文件
+codeQue|老师上传的所有代码题
+choiceQue|老师上传的所有选择题
 
 pdffile|detail
 :---:|:---:
 uniqueId|pdf文件ID
-filePath|pdf文件路径(/username/filename.pdf)
+owner|pdf文件所属的老师
+filename|pdf文件的文件名
+
 
 choicequestion|detail
 :---:|:---:
@@ -512,7 +524,8 @@ statement|选择题题目
 optionList|选择题选项列表
 answer|选择题正确答案
 submitRecord|选择题提交记录列表
-classroom|选择题所属的教室url
+owner|选择题所属的老师的username（外键约束）
+
 
 codequestion|detail
 :---:|:---:
@@ -520,7 +533,7 @@ uniqueId|代码题ID
 statement|代码题题目
 language|代码题规定语言
 submitRecord|代码题提交记录列表
-classroom|代码题所属的教室url
+owner|代码题所属的老师（外键约束）
 
 messages|detail
 :---:|:---:
