@@ -42,7 +42,7 @@
           <codemirror
             id="codemirr"
             v-model="curcode"
-            :value="Chat.codeall.example"
+            :value="CHAT.codeall.example"
             :options="cmOption"
             class="codecode"
             >
@@ -68,7 +68,7 @@
           </RadioGroup>
         </FormItem>
       </Form>
-      <Button class="selectsubmit00" type="primary" @click="selectsubmit">提交答案: {{String.fromCharCode(65+stuans)}}</Button>
+      <Button  type="primary" @click="selectsubmit">提交答案: {{String.fromCharCode(65+stuans)}}</Button>
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
