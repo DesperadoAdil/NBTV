@@ -66,22 +66,24 @@
           <div slot="left"  class="teacher-live-split-pane">
             <p>全部PDF课件</p>
             <br>
-            <Table height="375" border :columns="pdfAll" :data="pdfAllList"></Table>
+            <Table height="345" border :columns="pdfAll" :data="pdfAllList"></Table>
             <p>点击添加：将课件添加至教室资源</p>
             <p>点击删除：从全部课件中删除课件</p>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
             <p>本教室资源</p>
             <br>
-            <Table height="375" border :columns="pdfThis" :data="pdfThisList"></Table>
+            <Table height="345" border :columns="pdfThis" :data="pdfThisList"></Table>
             <p>点击使用：在当前教室中使用课件</p>
             <p>点击删除：从当前教室中删除课件</p>
           </div>
         </Split>
       </div>
       <div slot="footer">
-        <p>将已有资源添加至当前教室中，之后点击使用以发布教学资源</p>
-        <Button type="text" size="large" @click="modal_pdflist = false">取消</Button>
+        <Row>
+          将已有资源添加至当前教室中，之后点击使用以发布教学资源
+          <Button type="text" size="large" @click="modal_pdflist = false">取消</Button>
+        </Row>
       </div>
     </Modal>
 
@@ -92,24 +94,24 @@
           <div slot="left"  class="teacher-live-split-pane">
             <p>全部选择题</p>
             <br>
-            <Table height="375" border :columns="multiAll" :data="multiAllList"></Table>
-            <p>点击添加：将题目添加至教室资源</p>
-            <p>点击编辑：在全部课件中编辑题目</p>
+            <Table height="345" border :columns="multiAll" :data="multiAllList"></Table>
+            <p>点击添加：将题目添加至教室资源; 点击编辑：在全部课件中编辑题目</p>
             <p>点击删除：从全部课件中删除题目</p>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
             <p>本教室资源</p>
             <br>
-            <Table height="375" border :columns="multiThis" :data="multiThisList"></Table>
-            <p>点击使用：在当前教室中使用题目</p>
-            <p>点击查看：查看当前题目答题情况</p>
+            <Table height="345" border :columns="multiThis" :data="multiThisList"></Table>
+            <p>点击使用：在当前教室中使用题目; 点击查看：查看当前题目答题情况</p>
             <p>点击删除：从当前教室中删除题目</p>
           </div>
         </Split>
       </div>
       <div slot="footer">
-        <p>将已有资源添加至当前教室中，之后点击使用以发布教学资源</p>
-        <Button type="text" size="large" @click="modal_multilist = false">关闭</Button>
+        <Row>
+          将已有资源添加至当前教室中，之后点击使用以发布教学资源
+          <Button type="text" size="large" @click="modal_multilist = false">关闭</Button>
+        </Row>
       </div>
     </Modal>
 
@@ -120,30 +122,30 @@
           <div slot="left"  class="teacher-live-split-pane">
             <p>全部代码题</p>
             <br>
-            <Table height="375" border :columns="codeAll" :data="codeAllList"></Table>
-            <p>点击添加：将题目添加至教室资源</p>
-            <p>点击编辑：在全部课件中编辑题目</p>
+            <Table height="345" border :columns="codeAll" :data="codeAllList"></Table>
+            <p>点击添加：将题目添加至教室资源; 点击编辑：在全部课件中编辑题目</p>
             <p>点击删除：从全部课件中删除题目</p>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
             <p>本教室资源</p>
             <br>
-            <Table height="375" border :columns="codeThis" :data="codeThisList"></Table>
-            <p>点击使用：在当前教室中使用题目</p>
-            <p>点击查看：查看当前题目答题情况</p>
+            <Table height="345" border :columns="codeThis" :data="codeThisList"></Table>
+            <p>点击使用：在当前教室中使用题目; 点击查看：查看当前题目答题情况</p>
             <p>点击删除：从当前教室中删除题目</p>
           </div>
         </Split>
       </div>
       <div slot="footer">
-        <p>将已有资源添加至当前教室中，之后点击使用以发布教学资源</p>
-        <Button type="text" size="large" @click="modal_codelist = false">关闭</Button>
+        <Row>
+          将已有资源添加至当前教室中，之后点击使用以发布教学资源
+          <Button type="text" size="large" @click="modal_codelist = false">关闭</Button>
+        </Row>
       </div>
     </Modal>
 
     <!--上传-->
     <Modal v-model="modal_pdf">
-      <p slot="header" style="font-size: 20px">
+      <p slot="header">
         <span>上传课件</span>
       </p>
       <Form>
@@ -163,7 +165,7 @@
 
     <!--设置选择题-->
     <Modal   v-model="modal_multi"    @on-ok="addMulti()"    @on-cancel="modal_multi = false">
-      <p slot="header" style="font-size: 20px">
+      <p slot="header">
         <span>设置选择题</span>
       </p>
       <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
@@ -200,7 +202,7 @@
 
     <!--设置编程题-->
     <Modal   v-model="modal_code"    @on-ok="addCode()"    @on-cancel="modal_code = false">
-      <p slot="header" style="font-size: 20px">
+      <p slot="header">
         <span>设置编程题</span>
       </p>
       <Form label-position="top">
