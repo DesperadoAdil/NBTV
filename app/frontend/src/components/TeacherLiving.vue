@@ -129,8 +129,8 @@
       </p>
       <Form>
         <FormItem>
-          <a href="javascript:;">pdf upload
-            <input type="file" name="pdfinput" id="pdfinput">
+          <a href="javascript:;">
+            <input type="file" name="pdfinput" id="pdfinput" value="pdf upload">
           </a>
         </FormItem>
         <FormItem>
@@ -396,27 +396,27 @@
     <div id="mainpdfcard" class="cardtealivingpdf" :style="{display:mainpdfcarddisplay?'block':'none'}">
       <iframe id="displayPdfIframe" name="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
-    <!--curmulti:{-->
+    <!--curMulti:{-->
     <!--uniqueId: '',-->
     <!--statement: 'Among the following people, who is the most gay one?',-->
     <!--optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],-->
     <!--answer: 'A'-->
     <!--},-->
     <!---------main 选择题 部分 在主界面显示选择题------------->
-    <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
+    <div id="mainselectcard" :style="{display:mainselectcarddisplay?'block':'none'}">
       <Form>
         <FormItem>
-          <p class="selecttitle00">{{curmulti.statement}}</p>
+          <p class="selecttitle00">{{curMulti.statement}}</p>
         </FormItem>
         <FormItem>
-          <RadioGroup class="radiotea" v-model="ionselect" vertical>
-            <Radio v-for="(item, index) in curmulti.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
+          <RadioGroup class="radiotea" v-model="curMulti.optionList" vertical>
+            <Radio v-for="(item, index) in curMulti.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
               <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
             </Radio>
           </RadioGroup>
         </FormItem>
         <FormItem>
-          <p class="anstea00">本题目答案：{{curmulti.answer}}</p>
+          <p class="anstea00">本题目答案：{{curMulti.answer}}</p>
         </FormItem>
       </Form>
     </div>
@@ -647,8 +647,22 @@ export default{
           width: 120,
           render: (h, params) => {
             return h('div', [
+              h('Button', [
+                h('Poptip', {
+                  props: {
+                    confirm: true,
+                    title: '点击以添加该PDF至本教室的使用资源中',
+                    type: 'text',
+                    size: 'small'
+                  },
+                  style: {marginRight: '5px'},
+                  on: {
+                    click: () => { this.addPdfAll(params.index) }
+                  }
+                }, 'Add')
+              ]),
               h('Button', {
-                props: {type: 'text', size: 'small'},
+                props: {type: 'text', size: 'small', title: '点击以添加该PDF至本教室的使用资源中'},
                 style: {marginRight: '5px'},
                 on: {
                   click: () => { this.addPdfAll(params.index) }
@@ -704,12 +718,12 @@ export default{
       modal_editmulti: false,
       modal_multilist: false,
       // FRAMEWORK TO SHOW MULTI
-      curmulti:{
-            uniqueId: '',
-            statement: 'Among the following people, who is the most gay one?',
-            optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
-            answer: 'A'
-        },
+      curMulti: {
+        uniqueId: '',
+        statement: 'Among the following people, who is the most gay one?',
+        optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+        answer: 'A'
+      },
       multiAll: [{title: 'Description', key: 'statement'},
         {
           title: 'Action',
@@ -973,11 +987,7 @@ export default{
           standardans: ''
         }
       ],
-      studentitems: ['zsh', 'adil', 'zhq', 'hyx', 'xcj'],
-      ionselect: '111',
-      curtitle: 'xjbx1',
-      curans: ['1', '2', '3', '4'],
-      curanswer: 'A'
+      studentitems: ['zsh', 'adil', 'zhq', 'hyx', 'xcj']
     }
   },
   mounted () {
@@ -995,11 +1005,8 @@ export default{
     // console.log(this.cururl)
     this.showUserInfo()
     window['updatepage'] = () => {
-      this.updatepage();
-    };
-
-
-
+      this.updatepage()
+    }
 
     /**
      * 以下为聊天室使用，请勿改动
@@ -1170,23 +1177,28 @@ export default{
       input.url = this.cururl
       input.pdf = iPdf
       // post
-      axios.post('/api/resource/pdf_addclass', input).then((resp) => {
-        if (resp.data.status === 'success') {
-          let pdfInput = {username: '', url: ''}
-          pdfInput.username = this.userInfo.username
-          pdfInput.url = this.cururl
-          axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
-            if (resp.data.pdfAllList !== null) {
-              this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
-            } else {
-              this.$.message('wrong')
-            }
-          })
-        } else {
-          this.$.message('error in post')
-        }
-      })
+      if (this.pdfThisList.indexOf(iPdf) !== -1) {
+        // if it exists in current list
+        this.$.message.success('Already Added')
+      } else {
+        axios.post('/api/resource/pdf_addclass', input).then((resp) => {
+          if (resp.data.status === 'success') {
+            let pdfInput = {username: '', url: ''}
+            pdfInput.username = this.userInfo.username
+            pdfInput.url = this.cururl
+            axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
+              if (resp.data.pdfAllList !== null) {
+                this.pdfAllList = resp.data.pdfAllList
+                this.pdfThisList = resp.data.pdfThisList
+              } else {
+                this.$.message('wrong')
+              }
+            })
+          } else {
+            this.$.message('error in post')
+          }
+        })
+      }
     },
     // DEL PDF FROM TEACHER
     delPdfAll (index) {
@@ -1199,6 +1211,7 @@ export default{
       // post
       axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
         if (resp.data.status === 'success') {
+          this.$.message.success('deleted from teacher\'s resource')
           let pdfInput = {username: '', url: ''}
           pdfInput.username = this.userInfo.username
           pdfInput.url = this.cururl
@@ -1266,6 +1279,7 @@ export default{
       // post
       axios.post('/api/resource/pdf_delclass', input).then((resp) => {
         if (resp.data.status === 'success') {
+          this.$.message.success('deleted from class resource')
           let pdfInput = {username: '', url: ''}
           pdfInput.username = this.userInfo.username
           pdfInput.url = this.cururl
@@ -1274,7 +1288,7 @@ export default{
               this.pdfAllList = resp.data.pdfAllList
               this.pdfThisList = resp.data.pdfThisList
             } else {
-              this.$.message('wrong')
+              this.$.message.error('wrong')
             }
           })
         } else {
@@ -1363,23 +1377,27 @@ export default{
       input.url = this.cururl
       input.uniqueId = iMulti.uniqueId
       // post
-      axios.post('/api/resource/multi_addclass', input).then((resp) => {
-        if (resp.data.status === 'success') {
-          let multiInput = {username: '', url: ''}
-          multiInput.username = this.userInfo.username
-          multiInput.url = this.cururl
-          console.log('succeeded in post add class')
-          // post
-          axios.post('/api/resource/getmultiples', multiInput).then((resp) => {
-            // resp.data 即是那个列表
-            this.multiAllList = resp.data.multiAllList
-            this.multiThisList = resp.data.multiThisList
-            console.log('response data get, although do not know what')
-          })
-        } else {
-          this.$.message('something wrong')
-        }
-      })
+      if (this.multiThisList.indexOf(iMulti) !== -1) {
+        this.$.message('Already Added')
+      } else {
+        axios.post('/api/resource/multi_addclass', input).then((resp) => {
+          if (resp.data.status === 'success') {
+            let multiInput = {username: '', url: ''}
+            multiInput.username = this.userInfo.username
+            multiInput.url = this.cururl
+            console.log('succeeded in post add class')
+            // post
+            axios.post('/api/resource/getmultiples', multiInput).then((resp) => {
+              // resp.data 即是那个列表
+              this.multiAllList = resp.data.multiAllList
+              this.multiThisList = resp.data.multiThisList
+              console.log('response data get, although do not know what')
+            })
+          } else {
+            this.$.message('something wrong')
+          }
+        })
+      }
     },
     // DEL PDF FROM TEACHER
     delMultiAll (index) {
@@ -1427,16 +1445,14 @@ export default{
           }
           CHAT.submit(obj)
 
-          this.videohei = 250 + 'px'
-          this.chatingtop = 340 + 'px'
-          this.chatinghei = 430 + 'px'
+          // this.videohei = 250 + 'px'
+          // this.chatingtop = 340 + 'px'
+          // this.chatinghei = 430 + 'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
           this.curvideo = false
-          this.curmulti = iselect
-          this.curtitle = iselect.statement
-          this.curanswer = iselect.answer
+          this.curMulti = iselect
           this.modal_multilist = false
         },
         onCancel: () => {
@@ -1542,21 +1558,25 @@ export default{
       input.url = this.cururl
       input.uniqueId = iCode.uniqueId
       // post
-      axios.post('/api/resource/code_addclass', input).then((resp) => {
-        if (resp.data.status === 'success') {
-          let codeInput = {username: '', url: ''}
-          codeInput.username = this.userInfo.username
-          codeInput.url = this.cururl
-          // post
-          axios.post('/api/resource/getcodes', codeInput).then((resp) => {
-            // resp.data 即是那个列表
-            this.codeAllList = resp.data.codeAllList
-            this.codeThisList = resp.data.codeThisList
-          })
-        } else {
-          this.$.message('something wrong')
-        }
-      })
+      if (this.codeThisList.indexOf(iCode) !== -1) {
+        this.$.message('Already Added')
+      } else {
+        axios.post('/api/resource/code_addclass', input).then((resp) => {
+          if (resp.data.status === 'success') {
+            let codeInput = {username: '', url: ''}
+            codeInput.username = this.userInfo.username
+            codeInput.url = this.cururl
+            // post
+            axios.post('/api/resource/getcodes', codeInput).then((resp) => {
+              // resp.data 即是那个列表
+              this.codeAllList = resp.data.codeAllList
+              this.codeThisList = resp.data.codeThisList
+            })
+          } else {
+            this.$.message('something wrong')
+          }
+        })
+      }
     },
     // DEL CODE FROM TEACHER
     delCodeAll (index) {
