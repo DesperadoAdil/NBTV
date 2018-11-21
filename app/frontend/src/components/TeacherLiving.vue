@@ -1086,6 +1086,9 @@ export default{
       console.log('updatepage')
       this.curpage = document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value
       console.log(this.curpage)
+      let idata = {pdfurl: '', page: ''}
+      idata.pdfurl = this.displayPdfurl
+      idata.page = this.curpage
 
       let date = new Date()
       let time = date.getHours() + ':' + date.getMinutes()
@@ -1094,7 +1097,7 @@ export default{
         msgType: 'page',
         url: this.cururl,
         time: time,
-        msg: this.curpage,
+        msg: idata,
         toUser: 'stu',
         fromUser: this.userInfo.username
       }

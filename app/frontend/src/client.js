@@ -102,7 +102,8 @@ const CHAT = {
       CHAT.frametype = 'close'
     })
     this.socket.on('page', function (obj) {
-      CHAT.curpage0 = obj.msg
+      CHAT.pdfurl=obj.msg.pdfurl
+      CHAT.curpage0 = obj.msg.page
     })
 
   },
