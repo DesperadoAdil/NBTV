@@ -129,8 +129,8 @@
       </p>
       <Form>
         <FormItem>
-          <a href="javascript:;">pdf upload
-            <input type="file" name="pdfinput" id="pdfinput">
+          <a href="javascript:;">
+            <input type="file" name="pdfinput" id="pdfinput" value="pdf upload">
           </a>
         </FormItem>
         <FormItem>
