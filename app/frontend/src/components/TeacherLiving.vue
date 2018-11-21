@@ -199,13 +199,15 @@
           </Select>
         </FormItem>
         <FormItem label="Example Code">
-          <template>
+
             <!-------------输入框的代码高亮----------------------->
             <codemirror
               v-model="sub_code.example"
               :options="cmOption">
             </codemirror>
-          </template>
+            <!--<textarea-->
+             <!--id="textarea1" name="textarea1">-->
+            <!--</textarea>-->
         </FormItem>
       </Form>
     </Modal>
@@ -396,6 +398,31 @@
     <div id="mainpdfcard" class="cardtealivingpdf" :style="{display:mainpdfcarddisplay?'block':'none'}">
       <iframe id="displayPdfIframe" name="displayPdfIframe" class="pdfframe" :src="displayPdfurl"/>
     </div>
+
+    <div  id="maincodecard" class="cardtealivingcdode11"  :style="{display:maincodecarddispaly?'block':'none'}">
+
+      <Form label-position="left">
+        <FormItem label="问题描述：" >
+          <p style="word-break:break-all;float:left;text-align: left">{{curcode.statement}}</p>
+        </FormItem>
+        <FormItem label="编程语言：">
+          <p style="word-break:break-all;float:left;text-align: left">{{curcode.language}}</p>
+        </FormItem>
+          <FormItem label="输入答案：">
+
+              <!--输入框的代码高亮-->
+              <codemirror
+                id="codemirr"
+                :value="curcode.example"
+                :options="cmOption"
+                class="codecode"
+                >
+              </codemirror>
+
+          </FormItem>
+        </Form>
+
+    </div>
     <!--curmulti:{-->
     <!--uniqueId: '',-->
     <!--statement: 'Among the following people, who is the most gay one?',-->
@@ -581,6 +608,18 @@ import 'codemirror/addon/dialog/dialog.css'
 import 'codemirror/addon/search/searchcursor.js'
 import 'codemirror/addon/search/search.js'
 import 'codemirror/keymap/emacs.js'
+import 'codemirror/theme/blackboard.css'
+import 'codemirror/mode/javascript/javascript'
+import 'codemirror/mode/clike/clike'
+import 'codemirror/mode/go/go'
+import 'codemirror/mode/htmlmixed/htmlmixed'
+import 'codemirror/mode/http/http'
+import 'codemirror/mode/php/php'
+import 'codemirror/mode/python/python'
+import 'codemirror/mode/http/http'
+import 'codemirror/mode/sql/sql'
+import 'codemirror/mode/vue/vue'
+import 'codemirror/mode/xml/xml'
 
 export default{
   name: 'load',
@@ -893,7 +932,12 @@ export default{
         language: 'cpp',
         example: 'cout << "hello world" << endl;'
       }],
-
+      curcode:{
+        uniqueId: '',
+        statement: 'Eight Queens',
+        language: 'python',
+        example: 'int main'
+      },
       // ADD PDF/MULTI/CODE MODALS
       // PDF
       modal_pdf: false,
@@ -925,12 +969,16 @@ export default{
       },
       // CODE EDITOR
       cmOption: {
-        autoCloseBrackets: true,
-        tabSize: 4,
-        lineNumbers: true,
-        line: true,
-        mode: 'python',
-        theme: 'base16-light'
+//        smartIndent:true,
+//          showCursorWhenSelecting: true,
+          autofocus: true,
+//        autoCloseBrackets: true,
+//        tabSize: 4,
+          lineNumbers: true,
+//        line: true,
+          mode: 'python',
+          theme: "blackboard" ,                 //选中的theme
+          lineWrapping: true,
       },
       // ADD STUDENT LIST
       modal_student_xlsx: false,
@@ -939,6 +987,7 @@ export default{
       littlelivingcarddisplay: false,
       mainselectcarddisplay: false,
       mainpdfcarddisplay: false,
+      maincodecarddispaly:false,
       mainlivingcarddisplay: true,
 
       // COMMON INFO
@@ -1229,6 +1278,7 @@ export default{
           this.chatingtop = 340 + 'px'
           this.chatinghei = 430 + 'px'
           this.videohei = 250 + 'px'
+  this.maincodecarddispaly=false
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
           this.classmain0 = false
@@ -1435,6 +1485,7 @@ export default{
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
+  this.maincodecarddispaly=false
           this.curvideo = false
           this.curmulti = iselect
           this.curtitle = iselect.statement
@@ -1600,12 +1651,17 @@ export default{
         content: '是否展示' + iCode.statement,
         onOk: () => {
           console.log('onOK')
+
+
+  document.getElementById("codemirr").focus();
+          this.modal_codelist = false
           this.chatingtop = 340 + 'px'
           this.chatinghei = 430 + 'px'
           this.videohei = 250 + 'px'
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
           this.classmain0 = false
+          this.maincodecarddispaly=true
           console.log(this.classmain0)
           console.log(document.getElementById('rtmp-streamer1').class)
           this.modal_pdflist = false
@@ -2246,5 +2302,21 @@ export default{
   }
   .teacher-live-split-pane{
     padding: 10px;
+  }
+  .cardtealivingcdode11{
+    position:absolute;
+    left: 19%;
+    width: 59%;
+    top:60px;
+    display: none;
+  }
+  p{
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: hidden;
+  }
+  .codecode{
+    text-align: left;
+
   }
 </style>
