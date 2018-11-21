@@ -40,7 +40,8 @@
           <template slot="title"><Icon type="ios-stats" />
             学生
           </template>
-          <MenuItem @click.native="modal_student_xlsx = true">xlsx文档添加</MenuItem>
+          <MenuItem @click.native="getstudents">学生列表</MenuItem>
+          <MenuItem @click.native="getStudentsByExcel">xlsx文档添加</MenuItem>
           <MenuItem @click.native="addStudent()">用户名添加</MenuItem>
           <MenuItem @click.native="getShutUpList()">解除禁言</MenuItem>
         </Submenu>
@@ -226,6 +227,11 @@
         <FormItem>
           <Button @click="subxlsx()">submit</Button>
         </FormItem>
+        <FormItem>
+          <div v-for="student in studentitems" :key="student">
+            {{ student }}
+          </div>
+        </FormItem>
       </Form>
       <div slot="footer">
         <Button type="text" size="large" @click="modal_student_xlsx = false">取消</Button>
@@ -368,13 +374,22 @@
       </Form>
     </Modal>
 
+    <Modal v-model="modalStudentList" @on-ok="modalStudentList = false">
+      <p slot="header">
+        <span>学生名单</span>
+      </p>
+      <div v-for="student in studentitems" :key="student">
+        {{ student }}
+      </div>
+    </Modal>
+
     <Modal v-model="shutUpModal" @on-ok="shutUpModal = false">
       <p slot="header">
         <span>禁言名单</span>
       </p>
-      <div v-for="student in shutuplist">
+      <div v-for="student in shutuplist" :key="student">
         {{ student }}
-        <button type="success" @click="noShutUp(student)">解禁</button>
+        <Button type="success" @click="noShutUp(student)">解禁</Button>
       </div>
     </Modal>
 
@@ -987,7 +1002,8 @@ export default{
           standardans: ''
         }
       ],
-      studentitems: ['zsh', 'adil', 'zhq', 'hyx', 'xcj']
+      studentitems: ['zsh', 'adil', 'zhq', 'hyx', 'xcj'],
+      modalStudentList: false
     }
   },
   mounted () {
@@ -1847,6 +1863,7 @@ export default{
      */
     subxlsx () {
       console.log('upload xlsx')
+      this.getstudents()
       /* const data = this.curuser
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
@@ -1872,6 +1889,10 @@ export default{
         }
       })
     },
+    addStudentByExcel () {
+      this.modal_student_xlsx = true
+      this.getstudents()
+    },
     addStudent () {
       console.log('add student via username')
       this.$Modal.confirm({
@@ -1895,10 +1916,8 @@ export default{
           data['job'] = this.userInfo['job']
           data['url'] = this.cururl
           data['item'] = this.astu
-          console.log('dhasjkhda')
-          console.log(this.astu)
           axios.post('/api/classroom/aaddstudents', data).then((resp) => {
-            this.studentitems = resp.studentitems
+            this.studentitems = resp.data
           })
         }
       })
@@ -1911,12 +1930,13 @@ export default{
       }
     },
     getstudents () {
+      this.modalStudentList = true
       const data = this.curuser
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
       data['url'] = this.cururl
       axios.post('/api/classroom/getstudents', data).then((resp) => {
-        this.studentitems = resp.studentitems
+        this.studentitems = resp.data
       })
     },
     // 用于显示学生的代码
@@ -1928,7 +1948,7 @@ export default{
       data['url'] = this.cururl
       data['item'] = this.curstu
       axios.post('/api/classroom/getstudentsti', data).then((resp) => {
-        this.curti = resp.curti
+        this.curti = resp.data
       })
     },
     closetext () {
