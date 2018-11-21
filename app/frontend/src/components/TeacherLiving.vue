@@ -1165,23 +1165,28 @@ export default{
       input.url = this.cururl
       input.pdf = iPdf
       // post
-      axios.post('/api/resource/pdf_addclass', input).then((resp) => {
-        if (resp.data.status === 'success') {
-          let pdfInput = {username: '', url: ''}
-          pdfInput.username = this.userInfo.username
-          pdfInput.url = this.cururl
-          axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
-            if (resp.data.pdfAllList !== null) {
-              this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
-            } else {
-              this.$.message('wrong')
-            }
-          })
-        } else {
-          this.$.message('error in post')
-        }
-      })
+      if (this.pdfThisList.indexOf(iPdf) !== -1) {
+        // if it exists in current list
+        this.$.message.success('Already Added')
+      } else {
+        axios.post('/api/resource/pdf_addclass', input).then((resp) => {
+          if (resp.data.status === 'success') {
+            let pdfInput = {username: '', url: ''}
+            pdfInput.username = this.userInfo.username
+            pdfInput.url = this.cururl
+            axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
+              if (resp.data.pdfAllList !== null) {
+                this.pdfAllList = resp.data.pdfAllList
+                this.pdfThisList = resp.data.pdfThisList
+              } else {
+                this.$.message('wrong')
+              }
+            })
+          } else {
+            this.$.message('error in post')
+          }
+        })
+      }
     },
     // DEL PDF FROM TEACHER
     delPdfAll (index) {
@@ -1360,23 +1365,27 @@ export default{
       input.url = this.cururl
       input.uniqueId = iMulti.uniqueId
       // post
-      axios.post('/api/resource/multi_addclass', input).then((resp) => {
-        if (resp.data.status === 'success') {
-          let multiInput = {username: '', url: ''}
-          multiInput.username = this.userInfo.username
-          multiInput.url = this.cururl
-          console.log('succeeded in post add class')
-          // post
-          axios.post('/api/resource/getmultiples', multiInput).then((resp) => {
-            // resp.data 即是那个列表
-            this.multiAllList = resp.data.multiAllList
-            this.multiThisList = resp.data.multiThisList
-            console.log('response data get, although do not know what')
-          })
-        } else {
-          this.$.message('something wrong')
-        }
-      })
+      if (this.multiThisList.indexOf(iMulti) !== -1) {
+        this.$.message('Already Added')
+      } else {
+        axios.post('/api/resource/multi_addclass', input).then((resp) => {
+          if (resp.data.status === 'success') {
+            let multiInput = {username: '', url: ''}
+            multiInput.username = this.userInfo.username
+            multiInput.url = this.cururl
+            console.log('succeeded in post add class')
+            // post
+            axios.post('/api/resource/getmultiples', multiInput).then((resp) => {
+              // resp.data 即是那个列表
+              this.multiAllList = resp.data.multiAllList
+              this.multiThisList = resp.data.multiThisList
+              console.log('response data get, although do not know what')
+            })
+          } else {
+            this.$.message('something wrong')
+          }
+        })
+      }
     },
     // DEL PDF FROM TEACHER
     delMultiAll (index) {
@@ -1537,21 +1546,25 @@ export default{
       input.url = this.cururl
       input.uniqueId = iCode.uniqueId
       // post
-      axios.post('/api/resource/code_addclass', input).then((resp) => {
-        if (resp.data.status === 'success') {
-          let codeInput = {username: '', url: ''}
-          codeInput.username = this.userInfo.username
-          codeInput.url = this.cururl
-          // post
-          axios.post('/api/resource/getcodes', codeInput).then((resp) => {
-            // resp.data 即是那个列表
-            this.codeAllList = resp.data.codeAllList
-            this.codeThisList = resp.data.codeThisList
-          })
-        } else {
-          this.$.message('something wrong')
-        }
-      })
+      if (this.codeThisList.indexOf(iCode) !== -1) {
+        this.$.message('Already Added')
+      } else {
+        axios.post('/api/resource/code_addclass', input).then((resp) => {
+          if (resp.data.status === 'success') {
+            let codeInput = {username: '', url: ''}
+            codeInput.username = this.userInfo.username
+            codeInput.url = this.cururl
+            // post
+            axios.post('/api/resource/getcodes', codeInput).then((resp) => {
+              // resp.data 即是那个列表
+              this.codeAllList = resp.data.codeAllList
+              this.codeThisList = resp.data.codeThisList
+            })
+          } else {
+            this.$.message('something wrong')
+          }
+        })
+      }
     },
     // DEL CODE FROM TEACHER
     delCodeAll (index) {
