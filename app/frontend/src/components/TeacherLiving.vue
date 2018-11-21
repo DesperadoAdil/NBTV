@@ -41,7 +41,7 @@
             学生
           </template>
           <MenuItem @click.native="getstudents">学生列表</MenuItem>
-          <MenuItem @click.native="getStudentsByExcel">xlsx文档添加</MenuItem>
+          <MenuItem @click.native="addStudentByExcel">xlsx文档添加</MenuItem>
           <MenuItem @click.native="addStudent()">用户名添加</MenuItem>
           <MenuItem @click.native="getShutUpList()">解除禁言</MenuItem>
         </Submenu>
@@ -220,7 +220,7 @@
         <Poptip word-wrap width="200" trigger="hover" title="提示" content="格式要求：xlsx文件的单元格填写一个完整的用户名，否则无效。添加失败可以再次添加或者用户名添加">
           <FormItem>
             <a href="javascript:;">
-              <input type="file" name="xlsxinput" id="xlsxinput" value="添加xlsx">
+              <input type="file" name="xlsxinput" id="xlsxinput" value="上传Excel文件">
             </a>
           </FormItem>
         </Poptip>
@@ -543,14 +543,7 @@
 
           <div class="talker">
             <Input v-if="msgType === 'text'" class="talker-input" v-model="msg" type="textarea" :autosize="true" placeholder="Enter something..." @on-enter="submit"/>
-            <div v-if="msgType === 'audio'" class="recorder">
-              <button @click="toggleRecorder()">录音</button>
-              <button @click="stopRecorder">停止</button>
-              <button
-                class="record-audio"
-                @click="removeRecord(idx)">删除</button>
-              <div class="record-text">{{audio.duration}}</div>
-            </div>
+            <div v-else-if="msgType === 'img'">点击发送上传图片</div>
             <button class="talker-send" type="success" @click="submit">发送</button>
             <button class="talker-send" v-on:mousedown="toggleRecorder" v-on:mouseup="submitRecord"><Icon type="ios-mic" size="20"/></button>
             <a href="javascript:;" class=" upf talker-send" @click="chooseImg">图片
@@ -1711,6 +1704,7 @@ export default{
      */
     chatingRoomInit () {
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
+      document.getElementById('fileinput').addEventListener('change', this.chooseImg(), false);
     },
     submit () {
       var date = new Date()
@@ -1883,15 +1877,21 @@ export default{
       }
       console.log(formData.url)
       axios(options).then((resp) => {
-        this.studentitems = resp.data.studentitems
-        if (resp.data.studentitems !== undefined) {
+        if (resp.data !== undefined) {
           this.$.message.success('added succeeded')
+          this.getstudents()
         }
       })
     },
     addStudentByExcel () {
       this.modal_student_xlsx = true
-      this.getstudents()
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      axios.post('/api/classroom/getstudents', data).then((resp) => {
+        this.studentitems = resp.data
+      })
     },
     addStudent () {
       console.log('add student via username')
@@ -1917,7 +1917,9 @@ export default{
           data['url'] = this.cururl
           data['item'] = this.astu
           axios.post('/api/classroom/aaddstudents', data).then((resp) => {
-            this.studentitems = resp.data
+            if (resp.data.status === 'success') {
+              this.$Message.success('成功添加学生')
+            }
           })
         }
       })
