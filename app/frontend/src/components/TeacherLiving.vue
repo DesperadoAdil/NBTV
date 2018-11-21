@@ -536,10 +536,8 @@
                 @click="removeRecord(idx)">删除</button>
               <div class="record-text">{{audio.duration}}</div>
             </div>
-            <div v-if="msgType === 'img'" class="talker-image">已添加图片，按发送
-            </div>
-            <Button class="talker-send" type="success" @click="submit">发送</Button>
-            <Button class="talker-send" @click="changeMsgType">{{ msgTypeInfo }}</Button>
+            <button class="talker-send" type="success" @click="submit">发送</button>
+            <button class="talker-send" v-on:mousedown="toggleRecorder" v-on:mouseup="submitRecord"><Icon type="ios-mic" size="20"/></button>
             <a href="javascript:;" class=" upf talker-send" @click="chooseImg">图片
               <input type="file" name="fileinput" id="fileinput"/>
             </a>
@@ -1723,6 +1721,23 @@ export default{
         this.msgType = 'text'
       }
     },
+    submitRecord () {
+      console.log('mouse up')
+      this.stopRecorder()
+      var date = new Date()
+      var time = date.getHours() + ':' + date.getMinutes()
+      var obj = {
+        type: this.talkType,
+        msgType: 'audio',
+        url: this.cururl,
+        time: time,
+        msg: this.audio,
+        toUser: this.username,
+        fromUser: this.userInfo.username
+      }
+      console.log(obj)
+      CHAT.submit(obj)
+    },
     chooseImg () {
       this.msgType = 'img'
     },
@@ -1736,6 +1751,7 @@ export default{
       }
     },
     toggleRecorder () {
+      console.log('mouse down')
       if (!this.isRecording || (this.isRecording && this.isPause)) {
         this.recorder.start()
         if (this.startRecord) {
@@ -2134,6 +2150,32 @@ export default{
   }
   .talk-image {
     width: 100px;
+  }
+  .talker-send {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: 5px 15px 6px;
+    font-size: 12px;
+    border-radius: 4px;
+    transition: color .2s linear,background-color .2s linear,border .2s linear,box-shadow .2s linear;
+    vertical-align: middle;
+    line-height: 1.5;
+    outline: 0;
+    color: #fff;
+    background-color: #19be6b;
+    border-color: #19be6b;
+    -webkit-appearance: button;
   }
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   .tealivingmain{
