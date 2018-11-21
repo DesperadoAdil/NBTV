@@ -155,6 +155,9 @@ def urlcheck ():
 	url = data['url']
 	username = data['username']
 	classroom = classroomManager.search(url)
+	if classroom is None:
+		ret['status'] = "error"
+		return json.dumps(ret)
 	if classroom.mode == "public":
 		ret['status'] = "success"
 	elif classroom.mode == "protected":
@@ -308,7 +311,7 @@ def openlive():
 		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
-			classroom.status = "open"
+			classroom.status = json.dumps({'type': "openliving"})
 			ret['status'] = "success"
 
 	#print (json.dumps(ret))
@@ -337,7 +340,7 @@ def closelive():
 		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
-			classroom.status = "close"
+			classroom.status = json.dumps({'type': "closeliving"})
 			ret['status'] = "success"
 
 	#print (json.dumps(ret))

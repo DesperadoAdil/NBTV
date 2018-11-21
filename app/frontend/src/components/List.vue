@@ -9,8 +9,8 @@
     <Divider />
     <Row>
       <Col span="8" v-for="item in items" :key="item.vid" v-if="item.mode !== 'private'">
-        <Card class="listcard">
-          <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
+        <Card class="listcard" @click.native="skip(item)">
+          <img :src="item.thumbnail" class="thumbnail">
           <p class="title">{{ item.title }} </p>
           <p class="teacher">授课老师：{{ item.teacher }} </p>
           <p class="audiencenum">开播时间：{{ item.showtime}}</p>
@@ -122,7 +122,7 @@ export default {
         this.$Message.error('您已被永久移出教室')
         return
       }
-      if (item.mode === 'protected') {
+      /*if (item.mode === 'protected') {
         this.$Modal.confirm({
           render: (h) => {
             return h('Input', {
@@ -153,9 +153,9 @@ export default {
             }
           }
         })
-      } else {
+      } else {*/
         this.$router.push({path: '/living/' + item.url})
-      }
+      //}
     },
     getList: function () {
       axios.get('/api/list').then((resp) => {

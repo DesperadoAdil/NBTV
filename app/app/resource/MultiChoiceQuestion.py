@@ -60,17 +60,34 @@ class MultiChoiceQuestion:
 	def search(self, uniqueId):
 		return ChoiceQuestion.query.filter_by(uniqueId = uniqueId).first()
 
-	def submitAnswer(self, uniqueId, studentId, ans):
+	def submitAnswer(self, uniqueId, studentId, url, ans):
 		try:
 			que = ChoiceQuestion.query.filter_by(uniqueId = uniqueId).first()
 			if que is None:
 				return "error:NoSuchQue"
 			record = json.loads(que.submitRecord)
-			record.append({'student':studentId, 'answer': ans})
+			if not url in record:
+				record[url] = {}
+			record[url][studentId] = ans
+
 			que.submitRecord = json.dumps(record, ensure_ascii = False)
 			db.session.add(que)
 			db.commit()
 			return "success"
+		except:
+			return "error"
+
+	def getSubmitAns(self, uniqueId, url):
+		try:
+			ret = []
+			que = self.search(uniqueId)
+			if que is None:
+				return "error"
+			record = json.loads(que.submitRecord)
+			if url in record:
+				for key in record[url]:
+					ret.append({'student': key, 'answer': record[url][key]})
+			return ret
 		except:
 			return "error"
 
