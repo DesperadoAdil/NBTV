@@ -29,22 +29,24 @@
 
     <!--<div id="maincodecard" class="cardtealivingcdode00" :style="{display:maincodecarddisplay?'block':'none'}">-->
     <div  id="maincodecard" class="cardtealivingcdode00"  :style="{display:CHAT.frametype === 'code'?'block':'none'}">
-      <h>编程题</h>
-      <Form label-position="top">
-        <FormItem label="Description">
-          {{CHAT.codeall.statement}}
+      <Form label-position="left">
+        <FormItem label="问题描述：" >
+          <p style="word-break:break-all;float:left;text-align: left"> {{CHAT.codeall.statement}}</p>
         </FormItem>
-        <FormItem label="Language">
-          {{CHAT.codeall.language}}
+        <FormItem label="编程语言：">
+          <p style="word-break:break-all;float:left;text-align: left">{{CHAT.codeall.language}}</p>
         </FormItem>
-        <FormItem label="Code">
-          <template>
-            <!--输入框的代码高亮-->
-            <codemirror
-              v-model="codeAns"
-              :options="cmOption">
-            </codemirror>
-          </template>
+        <FormItem label="输入答案：">
+
+          <!--输入框的代码高亮-->
+          <codemirror
+            id="codemirr"
+            :value="Chat.codeall.example"
+            :options="cmOption"
+            class="codecode"
+            >
+          </codemirror>
+
         </FormItem>
       </Form>
     </div>
@@ -193,6 +195,18 @@ import 'codemirror/addon/dialog/dialog.css'
 import 'codemirror/addon/search/searchcursor.js'
 import 'codemirror/addon/search/search.js'
 import 'codemirror/keymap/emacs.js'
+import 'codemirror/theme/blackboard.css'
+import 'codemirror/mode/javascript/javascript'
+import 'codemirror/mode/clike/clike'
+import 'codemirror/mode/go/go'
+import 'codemirror/mode/htmlmixed/htmlmixed'
+import 'codemirror/mode/http/http'
+import 'codemirror/mode/php/php'
+import 'codemirror/mode/python/python'
+import 'codemirror/mode/http/http'
+import 'codemirror/mode/sql/sql'
+import 'codemirror/mode/vue/vue'
+import 'codemirror/mode/xml/xml'
 
 export default{
   name: 'load',
@@ -264,12 +278,16 @@ export default{
       },
       // CODE EDITOR
       cmOption: {
-        autoCloseBrackets: true,
-        tabSize: 4,
-        lineNumbers: true,
-        line: true,
-        mode: 'python',
-        theme: 'base16-light'
+//        smartIndent:true,
+//          showCursorWhenSelecting: true,
+        autofocus: true,
+//        autoCloseBrackets: true,
+//        tabSize: 4,
+          lineNumbers: true,
+//        line: true,
+          mode: 'python',
+          theme: "blackboard" ,                 //选中的theme
+          lineWrapping: true,
       },
       // CODE
       codeAns: '#include <iostream>\nint main(){\n\treturn 0;\n}'
@@ -711,5 +729,8 @@ export default{
     top:600px;
     left:-100px;
   }
+  .codecode{
+  text-align: left;
 
+}
 </style>
