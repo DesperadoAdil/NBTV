@@ -1002,6 +1002,7 @@ export default{
         item: ''
       },
       // STREAM PARAMETERS
+      curpdfurl0:'',
       curstream: '',
       vid: '248980',
       cururl: '',
@@ -1084,7 +1085,7 @@ export default{
       this.curpage = document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value
       console.log(this.curpage)
       let idata = {pdfurl: '', page: ''}
-      idata.pdfurl = this.displayPdfurl
+      idata.pdfurl = this.curpdfurl0
       idata.page = this.curpage
 
       let date = new Date()
@@ -1209,7 +1210,7 @@ export default{
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
 
-        this.pdfThisList = resp.data.pdfThisList
+         this.pdfThisList = resp.data.pdfThisList
       })
     },
     // ADD PDF TO CLASS
@@ -1229,7 +1230,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
+               this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$.message('wrong')
             }
@@ -1256,7 +1257,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
+             this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$.message('wrong')
             }
@@ -1275,6 +1276,7 @@ export default{
         content: '是否展示' + ipdf.title,
         onOk: () => {
           console.log('onOK')
+        this.curpdfurl0=ipdf.url
           this.chatingtop = 340 + 'px'
           this.chatinghei = 430 + 'px'
           this.videohei = 250 + 'px'
@@ -1324,7 +1326,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
+             this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$.message('wrong')
             }

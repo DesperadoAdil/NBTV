@@ -46,32 +46,32 @@ window.addEventListener('message', function (e) { console.log("msgrecv");
       console.log(e.data) 
       window.parent.updatepage()   } )
 
-
+var paggg;
 console.log("dads")
 
-window.onload = function() {
-  setInterval(function() {
+
       var sHref = location.search
       //console.log(document.getElementById("pageNumber").value)
       //console.log(sHref)
       
         
          // alert(sHref)
-        url = sHref.split("?")[2];
+        paggg = sHref.split("?")[2];
          // alert(url)             
-        var ddd=document.getElementById("pageNumber").value;
+       
          // alert(ddd)      
-        if(url!==undefined&&url!==ddd)
+        if(paggg!==undefined)
         {
-           // alert("diff")
-          document.getElementById("pageNumber").value=url;
-        }else if(url!==undefined&&url===ddd){
-           // alert("same")
+        	paggg = sHref.split("?")[2];
+           console.log("diff")
+          // document.getElementById("pageNumber").value=url;
+        }else{
+        	paggg = '1';
+           console.log("same")
         }  
                  
       
-    }, 1000);
-}
+
 
 </script>
 <script src="viewer.js"></script>
