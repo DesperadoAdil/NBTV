@@ -748,6 +748,12 @@ export default{
             optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
             answer: 'A'
         },
+    curmulti:{
+      uniqueId: '',
+        statement: 'Among the following people, who is the most gay one?',
+        optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
+        answer: 'A'
+    },
       multiAll: [{title: 'Description', key: 'statement'},
         {
           title: 'Action',
