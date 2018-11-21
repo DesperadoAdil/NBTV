@@ -60,9 +60,8 @@
     <!--PDFlist-->
     <Modal
       v-model="modal_pdflist" width="900"
-      @on-ok="modal_pdflist = false" @on-cancel="modal_pdflist = false"
     >
-      <Card>
+      <div>
         <Split class="teacher-live-split" style="height: 430px" v-model="split_pdf">
           <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
@@ -75,14 +74,17 @@
             <Table height="375" border :columns="pdfThis" :data="pdfThisList"></Table>
           </div>
         </Split>
-      </Card>
+      </div>
+      <div slot="footer">
+        <Button type="text" size="large" @click="modal_pdflist = false">取消</Button>
+      </div>
     </Modal>
 
     <!--multi_list-->
     <Modal
       v-model="modal_multilist" width="900"
       @on-ok="modal_multilist = false" @on-cancel="modal_multilist = false">
-      <Card>
+      <div>
         <Split class="teacher-live-split" style="height: 430px" v-model="split_multi">
           <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
@@ -95,7 +97,10 @@
             <Table height="375" border :columns="multiThis" :data="multiThisList"></Table>
           </div>
         </Split>
-      </Card>
+      </div>
+      <div slot="footer">
+        <Button type="text" size="large" @click="modal_pdflist = false">取消</Button>
+      </div>
     </Modal>
 
     <!--code_list-->
@@ -105,7 +110,7 @@
       @on-cancel="modal_codelist = false"
       width="900"
     >
-      <Card>
+      <div>
         <Split class="teacher-live-split" style="height: 430px" v-model="split_code">
           <div slot="left"  class="teacher-live-split-pane">
             <p>All</p>
@@ -118,7 +123,10 @@
             <Table height="375" border :columns="codeThis" :data="codeThisList"></Table>
           </div>
         </Split>
-      </Card>
+      </div>
+      <div slot="footer">
+        <Button type="text" size="large" @click="modal_pdflist = false">取消</Button>
+      </div>
     </Modal>
 
     <!--上传-->

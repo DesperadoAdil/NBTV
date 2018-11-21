@@ -41,6 +41,7 @@
           <Col span="8">
             <Button id="sv" @click="send=false,newverificationsend=true,formInline.newmobile=''" :disabled="newverificationsend">重新填写</Button>
           </Col>
+        </Row>
       </FormItem>
       <FormItem v-if="changemobile" label="新手机验证码" label-position="left" label-width="150" prop="newverification">
         <Row>
