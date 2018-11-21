@@ -213,15 +213,13 @@
           </Input>
         </FormItem>
         <FormItem label="代码语言">
-          <Select v-model="sub_code.language">
+          <Select v-model="cmOption.mode">
             <Option value="python">python</Option>
-            <Option value="clike">cpp</Option>
-            <Option value="javascript">javascript</Option>
+            <Option value="text/x-c++src">cpp</Option>
           </Select>
         </FormItem>
         <FormItem label="示例代码">
           <template>
-            <!-------------输入框的代码高亮----------------------->
             <codemirror
               v-model="sub_code.example"
               :options="cmOption">
@@ -309,18 +307,16 @@
             </div>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
-            <div slot="right"  class="teacher-live-split-pane">
-              <div style="position:relative; height:400px; overflow:auto">
-                <Form :label-width="40">
-                  <FormItem
-                    v-for="(item, index) in codeAnswerList"
-                    :key="index"
-                    :label="item.student"
-                    >
-                    <pre v-highlightjs="item.answer" height="100"><code class="cpp"></code></pre>
-                  </FormItem>
-                </Form>
-              </div>
+            <div style="position:relative; height:400px; overflow:auto">
+              <Form :label-width="40">
+                <FormItem
+                  v-for="(item, index) in codeAnswerList"
+                  :key="index"
+                  :label="item.student"
+                  >
+                  <pre v-highlightjs="item.answer" height="100"><code class="p"></code></pre>
+                </FormItem>
+              </Form>
             </div>
           </div>
         </Split>
@@ -377,12 +373,17 @@
           </Input>
         </FormItem>
         <FormItem label="代码语言">
-          <Input v-model="sub_code.language" placeholder="Set the language"></Input>
+          <Select v-model="cmOption.mode">
+            <Option value="python">python</Option>
+            <Option value="text/x-c++src">cpp</Option>
+          </Select>
         </FormItem>
         <FormItem label="示例代码">
-          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
           <template>
-            <prism-editor :code="sub_code.example" language="cpp"></prism-editor>
+            <codemirror
+              v-model="sub_code.example"
+              :options="cmOption">
+            </codemirror>
           </template>
         </FormItem>
       </Form>
@@ -966,7 +967,7 @@ export default{
         tabSize: 4,
         lineNumbers: true,
         line: true,
-        mode: 'python',
+        mode: '',
         theme: 'base16-light'
       },
       // ADD STUDENT LIST
@@ -1149,13 +1150,18 @@ export default{
     // CODE
     create_code () {
       this.sub_code.statement = ''
-      // this.sub_code.example = ''
+      this.sub_code.example = ''
       this.sub_code.language = ''
       this.modal_code = true
     },
     addCode () {
       // sub_code should be set by now
       this.sub_code.username = this.userInfo.username
+      if (this.cmOption.mode === 'python') {
+        this.sub_code.language = 'python'
+      } else if (this.cmOption.mode === 'text/x-c++src') {
+        this.sub_code.language = 'cpp'
+      }
       // test
       console.log(this.sub_code.username)
       console.log(this.sub_code.language)
@@ -1579,6 +1585,11 @@ export default{
     submitCodeChange () {
       // sub_code should be set by now
       this.sub_code.username = this.userInfo.username
+      if (this.cmOption.mode === 'python') {
+        this.sub_code.language = 'python'
+      } else if (this.cmOption.mode === 'text/x-c++src') {
+        this.sub_code.language = 'cpp'
+      }
       // test
       console.log(this.sub_code.username)
       console.log(this.sub_code.language)
