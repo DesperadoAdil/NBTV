@@ -24,6 +24,7 @@ class ClassroomManager:
 		ret['showtime'] = str(classroom.showtime)
 		ret['blacklist'] = classroom.blacklist
 		ret['shutuplist'] = classroom.shutuplist
+		ret['status'] = classroom.status
 		return ret
 
 	def insert(self, vid, rtmpUrl, teacher, title, imgfile, passwd, url, mode):
@@ -45,7 +46,7 @@ class ClassroomManager:
 			return "success"
 		except Exception as err:
 			print(err)
-			return "error"
+			return "error:该url已被占用"
 
 	def delete(self, url):
 		#在调用这个接口之前，需要先判断是否是本用户删除的，需要验证密码
@@ -81,7 +82,7 @@ class ClassroomManager:
 			return "success"
 		except Exception as err:
 			print("update classrooms: ", err)
-			return "error"
+			return "error: url已经被占用了"
 
 	def updateShowTime(self, url):
 		try:

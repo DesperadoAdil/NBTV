@@ -17,5 +17,5 @@ def list():
         else:
             dic = classroomManager.dict(Class)
             ret.append(dic)
-    print (json.dumps(ret))
+    #print (json.dumps(ret))
     return json.dumps(ret)

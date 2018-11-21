@@ -17,10 +17,6 @@ polyvManager = polyvAPI.ChannelManager()
 @classroom.route('/add_class', methods = ['POST'])
 def addClass():
 	ret = {}
-	# data = request.get_data()
-	# print('add a class')
-	# print(data)
-	# data = json.loads(data)
 	data = request.form.to_dict()
 	try:
 		if not usermanager.verify(data['username'], data['password'], "teacher"):
@@ -52,6 +48,9 @@ def addClass():
 	# insert(self, vid, rtmpUrl, teacher, title, thumbnail, passwd, url):
 	ret = {}
 	ret['status'] = classroomManager.insert(vid, rtmpUrl, data['username'], data['title'], imgfile, data['class_password'], data['url'], data['mode'])
+	
+	if ret['status'] != "success":
+		polyvManager.deleteChannel(vid)
 
 	return json.dumps(ret, ensure_ascii = False)
 
@@ -113,7 +112,7 @@ def deleteClass():
 def updateClass():
 	data = request.form.to_dict()
 	print('update a classroom')
-	print(data)
+	# print(data)
 
 	ret = {}
 	if not usermanager.verify(data['username'], data['password'], 'teacher'):
@@ -284,6 +283,7 @@ def openlive():
 		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
+			classroom.status = "open"
 			ret['status'] = "success"
 
 	print (json.dumps(ret))
@@ -312,6 +312,7 @@ def closelive():
 		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
+			classroom.status = "close"
 			ret['status'] = "success"
 
 	print (json.dumps(ret))

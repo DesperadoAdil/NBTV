@@ -6764,24 +6764,12 @@ var pdfjsWebLibs;
     }
    }
    function webViewerNextPage() {
-    PDFViewerApplication.page++;
-    window.alert("++++")
-    window.console.log("++++")
-    window.parent.postMessage('super window 接收到了一条消息', '*')  
-    window.console.log(window.location.href)  
-    window.alert(window.location.href)
-    parent.updatepage()
-    // parent.methods.updatepage()
+    PDFViewerApplication.page++;    
+    window.console.log("++++")    
    }
    function webViewerPreviousPage() {
-    PDFViewerApplication.page--;
-    window.alert("----")
-    window.console.log("----")
-    window.postMessage('super window 接收到了一条消息', '*')
-    window.console.log("dsajd")  
-    window.parent.updatepage()
-    // parent.updatepage()
-    // parent.methods.updatepage()
+    PDFViewerApplication.page--;   
+    window.console.log("----")   
    }
    function webViewerZoomIn() {
     PDFViewerApplication.zoomIn();
@@ -6832,6 +6820,7 @@ var pdfjsWebLibs;
    }
    function webViewerPageChanging(e) {
     var page = e.pageNumber;
+    window.console.log("webviewerpagechanging")
     PDFViewerApplication.toolbar.setPageNumber(page, e.pageLabel || null);
     PDFViewerApplication.secondaryToolbar.setPageNumber(page);
     if (PDFViewerApplication.pdfSidebar.isThumbnailViewVisible) {
@@ -6843,6 +6832,8 @@ var pdfjsWebLibs;
       Stats.add(page, pageView.stats);
      }
     }
+    window.postMessage({msg:"page",page:PDFViewerApplication.page},"*")
+    window.console.log("webviewerpagechanged")
    }
    var zoomDisabled = false, zoomDisabledTimeout;
    function webViewerWheel(evt) {

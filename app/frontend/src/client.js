@@ -84,17 +84,21 @@ const CHAT = {
       CHAT.studentlist = obj
     })
     this.socket.on('pdf', function (obj) {
+      console.log("pdf")
       CHAT.frametype = 'pdf'
       CHAT.pdfurl = obj.msg
     })
     this.socket.on('select', function (obj) {
       CHAT.frametype = 'select'
+      console.log(obj.msg)
       CHAT.selectall = obj.msg
     })
     this.socket.on('code', function (obj) {
       CHAT.frametype = 'code'
+      CHAT.codeall = obj.msg
     })
     this.socket.on('close', function (obj) {
+      console.log("close")
       CHAT.frametype = 'close'
     })
     this.socket.on('page', function (obj) {

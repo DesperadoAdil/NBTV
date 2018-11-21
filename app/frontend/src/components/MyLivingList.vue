@@ -3,7 +3,7 @@
     <h1 class="list-info">
       <Icon type="ios-time" />
       我的直播
-      <Button type="primary" @click="addModal = true">新建直播间</Button>
+      <Button type="primary" @click="readyToAdd">新建直播间</Button>
     </h1>
     <Divider />
     <Modal
@@ -14,37 +14,39 @@
       @on-cancel="cancel">
       <Input v-model="newLiving.title" placeholder="课程名称"></Input>
       <a href="javascript:;" class="upf">上传缩略图
-        <input type="file" name="fileinput" id="fileinput">
+        <input type="file" name="fileinput" id="fileinput" accept="image/gif, image/jpeg, image/png, image/jpg">
       </a>
+      <output id="list"></output>
       <Input v-model="newLiving.url" placeholder="课程url"></Input>
-      <Input v-model="newLiving.class_password" placeholder="课程密码（可空）"></Input>
       <Select v-model="newLiving.mode">课程Mode
         <Option v-for="item in modeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
+      <Input v-if="newLiving.mode === 'protected' || newLiving.mode === 'private'"  v-model="newLiving.class_password" placeholder="课程密码"></Input>
     </Modal>
     <ul class="myLivingList-flex-container">
         <li class="myLivingList-flex-item" v-for="(living, index) in myLivingList" :key="living.url">
           <card>
           <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
-          <p class="title">{{ living.title }}</p>
+          <p class="my-class-title">{{ living.title }}</p>
           <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
           <Modal
             v-model="updateModal"
             title="更新课程"
-            @on-ok="updateLiving(index)"
+            @on-ok="updateLiving(modalIndex)"
             @on-cancel="cancel">
             <Input v-model="myLivingList[modalIndex].title" placeholder="课程名称"></Input>
             <a href="javascript:;" class="upf">上传缩略图
-              <input type="file" name="filezsh" id="filezsh2" accept="image/gif, image/jpeg, image/png, image/jpg">
+              <input type="file" name="fileinput" id="filezsh2" accept="image/gif, image/jpeg, image/png, image/jpg">
             </a>
+            <output id="listUp"></output>
             <Input v-model="myLivingList[modalIndex].url" placeholder="课程url"></Input>
             <Input v-model="myLivingList[modalIndex].class_password" placeholder="课程密码（可空）"></Input>
           </Modal>
-          <span><Button type="error" @click="deleteModal = true">DELETE</Button></span>
+          <span><Button type="error" @click="getBackUpForDel(index)">DELETE</Button></span>
           <Modal
             v-model="deleteModal"
             title="删除课程"
-            @on-ok="deleteLiving(index)"
+            @on-ok="deleteLiving(modalIndex)"
             @on-cancel="cancel">
             <Input v-model="validate" placeholder="确认删除请输入yes"></Input>
           </Modal>
@@ -56,9 +58,6 @@
 <script>
 import axios from 'axios'
 export default {
-  props: {
-
-  },
   data () {
     return {
       modalIndex: 0,
@@ -116,21 +115,30 @@ export default {
   methods: {
     directskip (living) {
       this.$router.push({path: '/teacherliving/' + living.url, params: {url: living.url}})
-      this.$Modal.confirm({
-        title: '提示',
-        content: '是否确认进入直播间',
-        onOk: () => {
-          window.location.reload()
-        },
-        onCancel: () => {
-          history.go(-1)
-        }
-      })
+//      this.$Modal.confirm({
+//        title: '提示',
+//        content: '是否确认进入直播间',
+//        onOk: () => {
+//          window.location.reload()
+//        },
+//        onCancel: () => {
+//          history.go(-1)
+//        }
+//      })
+    },
+    readyToAdd () {
+      document.getElementById('fileinput').addEventListener('change', this.handleFileSelect, false)
+      this.addModal = true
     },
     getBackUp (index) {
       this.modalIndex = index
       this.updateModal = true
       this.myLivingList[index]['old_url'] = this.myLivingList[index]['url']
+      document.getElementById('filezsh2').addEventListener('change', this.handleFileSelectForUp, false)
+    },
+    getBackUpForDel (index) {
+      this.modalIndex = index
+      this.deleteModal = true
     },
     getMyLivingList () {
       this.userInfo['username'] = this.$cookies.get('user').username
@@ -174,16 +182,18 @@ export default {
         }
       }
       axios(options).then((resp) => {
+        if (resp.data.status !== 'success') {
+          this.$Message.error(resp.data.status)
+        }
         this.getMyLivingList()
       })
 
       this.addModal = false
     },
     updateLiving (index) {
-
       var fileInput00 = document.getElementById('filezsh2')
       console.log(fileInput00.files)
-      console.log(document.querySelector('input[id=filezsh2]').files)
+      console.log(document.querySelector('input[id=filezsh2]').files[0])
       var formData = new FormData()
       formData.append('username', this.$cookies.get('user').username)
       formData.append('password', this.$cookies.get('user').password)
@@ -193,6 +203,7 @@ export default {
       formData.append('url', this.myLivingList[index]['url'])
       formData.append('class_password', this.myLivingList[index]['class_password'])
       formData.append('mode', this.myLivingList[index]['mode'])
+      formData.append('old_url', this.myLivingList[index]['old_url'])
       var options = {
         url: '/api/classroom/update_class',
         data: formData,
@@ -202,6 +213,9 @@ export default {
         }
       }
       axios(options).then((resp) => {
+        if (resp.data.status !== 'success') {
+          this.$Message.error(resp.data.status)
+        }
         this.getMyLivingList()
       })
       this.updateModal = false
@@ -223,7 +237,64 @@ export default {
       this.addModal = false
       this.updateModal = false
       this.deleteModal = false
+    },
+    handleFileSelect (evt) {
+      console.log('add')
+      var files = evt.target.files // FileList object
+
+      // Loop through the FileList and render image files as thumbnails.
+      for (var i = 0, f; f = files[i]; i++) {
+        // Only process image files.
+        if (!f.type.match('image.*')) {
+          continue
+        }
+
+        var reader = new FileReader()
+
+        // Closure to capture the file information.
+        reader.onload = (function (theFile) {
+          return function (e) {
+            // Render thumbnail.
+            var span = document.createElement('span')
+            span.innerHTML = ['<img class="thumb" style="height:100px" src="', e.target.result,
+              '" title="', escape(theFile.name), '"/>'].join('')
+            document.getElementById('list').insertBefore(span, null)
+          }
+        })(f)
+
+        // Read in the image file as a data URL.
+        reader.readAsDataURL(f)
+      }
+    },
+    handleFileSelectForUp (evt) {
+      console.log('update')
+      var files = evt.target.files // FileList object
+
+      // Loop through the FileList and render image files as thumbnails.
+      for (var i = 0, f; f = files[i]; i++) {
+        // Only process image files.
+        if (!f.type.match('image.*')) {
+          continue
+        }
+
+        var reader = new FileReader()
+
+        // Closure to capture the file information.
+        reader.onload = (function (theFile) {
+          return function (e) {
+            // Render thumbnail.
+            var span = document.createElement('span')
+            span.innerHTML = ['<img class="thumb" style="height:100px" src="', e.target.result,
+              '" title="', escape(theFile.name), '"/>'].join('')
+            document.getElementById('listUp').insertBefore(span, null)
+          }
+        })(f)
+
+        // Read in the image file as a data URL.
+        reader.readAsDataURL(f)
+      }
     }
+
   }
 }
 </script>
@@ -283,5 +354,9 @@ li {
   border-color: #78C3F3;
   color: #004974;
   text-decoration: none;
+}
+.my-class-title {
+  font-size: 20px;
+  text-align: left;
 }
 </style>
