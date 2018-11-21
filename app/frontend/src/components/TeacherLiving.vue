@@ -432,18 +432,15 @@
     <!---------main 选择题 部分 在主界面显示选择题------------->
     <div id="mainselectcard" :style="{display:mainselectcarddisplay?'block':'none'}">
       <Form>
-        <FormItem>
-          <p class="selecttitle00">{{curMulti.statement}}</p>
+        <FormItem label="题目">
+          <p style="word-break:break-all;float:left;text-align: left">{{curmulti.statement}}</p>
         </FormItem>
+        <FormItem v-for="(item, index) in curmulti.optionList"  :key="index"  style=" font-size: 15px">
+          <p style="word-break:break-all;float:left;text-align: left">{{String.fromCharCode(65+index)+" : "+item}}</p>
+          </FormItem>
+
         <FormItem>
-          <RadioGroup class="radiotea" v-model="curMulti.optionList" vertical>
-            <Radio v-for="(item, index) in curMulti.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
-              <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
-            </Radio>
-          </RadioGroup>
-        </FormItem>
-        <FormItem>
-          <p class="anstea00">本题目答案：{{curMulti.answer}}</p>
+          <p style="word-break:break-all;float:left;text-align: left">本题目答案：{{curmulti.answer}}</p>
         </FormItem>
       </Form>
     </div>
@@ -1485,6 +1482,18 @@ export default{
         title: '提示',
         content: '是否展示: \n ' + iselect.statement,
         onOk: () => {
+
+
+          // this.videohei = 250 + 'px'
+          // this.chatingtop = 340 + 'px'
+          // this.chatinghei = 430 + 'px'
+          this.mainselectcarddisplay = true
+          this.mainpdfcarddisplay = false
+          this.classmain0 = false
+  this.maincodecarddispaly=false
+          this.curvideo = false
+          this.curMulti = iselect
+          this.modal_multilist = false
           let date = new Date()
           let time = date.getHours() + ':' + date.getMinutes()
           let obj = {
@@ -1497,17 +1506,6 @@ export default{
             fromUser: this.userInfo.username
           }
           CHAT.submit(obj)
-
-          // this.videohei = 250 + 'px'
-          // this.chatingtop = 340 + 'px'
-          // this.chatinghei = 430 + 'px'
-          this.mainselectcarddisplay = true
-          this.mainpdfcarddisplay = false
-          this.classmain0 = false
-  this.maincodecarddispaly=false
-          this.curvideo = false
-          this.curMulti = iselect
-          this.modal_multilist = false
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')

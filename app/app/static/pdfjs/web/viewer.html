@@ -48,15 +48,14 @@ window.addEventListener('message', function (e) { console.log("msgrecv");
 
 
 console.log("dads")
-var k=location.search
+
 window.onload = function() {
   setInterval(function() {
       var sHref = location.search
       //console.log(document.getElementById("pageNumber").value)
       //console.log(sHref)
-      if(k!==sHref)
-      {
-        k=sHref
+      
+        
          // alert(sHref)
         url = sHref.split("?")[2];
          // alert(url)             
@@ -69,7 +68,7 @@ window.onload = function() {
         }else if(url!==undefined&&url===ddd){
            // alert("same")
         }  
-      }           
+                 
       
     }, 1000);
 }
