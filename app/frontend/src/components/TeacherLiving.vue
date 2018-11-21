@@ -1291,7 +1291,7 @@ export default{
     },
     // EDIT MULTI
     editMultiAll (index) {
-      let iMulti = this.multiAllList[index]
+      const iMulti = this.multiAllList[index]
       // give value here
       this.sub_multi.statement = iMulti.statement
       this.sub_multi.uniqueId = iMulti.uniqueId
