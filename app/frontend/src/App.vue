@@ -18,8 +18,8 @@
       </MenuItem>
 
       <MenuItem name="1" style="float:right">
-        <Dropdown trigger="custom" :visible="visible" placement="bottom-end" style="">
-          <a href="javascript:void(0)" trigger="click" @click="handleOpen">
+        <Dropdown trigger="custom" :visible="visible" placement="bottom-end" style="" @click.native="handleOpen">
+          <a href="javascript:void(0)" trigger="click">
             <Icon v-if="LoginOrLogout === '登录'" type="ios-contact-outline"></Icon>
               {{ LoginOrLogout }}
             <Icon type="ios-arrow-down"></Icon>
@@ -94,7 +94,7 @@ export default {
       } else if (name === 'list') {
         router.push('/list')
       } else if (name === 'myLivingList') {
-        router.push('/MyLivingList')
+        router.push('/mylivinglist')
       } else if (name === 'myWatchingList') {
         router.push('/mywatchinglist')
       } else if (name === 'user') {
