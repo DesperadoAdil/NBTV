@@ -977,7 +977,7 @@ export default{
         language: 'cpp',
         example: 'cout << "hello world" << endl;'
       }],
-      curcode:{
+      curcode: {
         uniqueId: '',
         statement: 'Eight Queens',
         language: 'python',
@@ -1008,7 +1008,7 @@ export default{
       sub_code: {
         uniqueId: '',
         username: '',
-        statement: 'Print something in the console',
+        statement: 'Print something in the // console',
         language: 'cpp',
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0;\n}'
       },
@@ -1086,7 +1086,7 @@ export default{
   },
   created () {
     this.cururl = this.$route.params.url
-    // console.log(this.cururl)
+    // // console.log(this.cururl)
     this.showUserInfo()
     window['updatepage'] = () => {
       this.updatepage()
@@ -1123,9 +1123,9 @@ export default{
   },
   methods: {
     updatepage () {
-      console.log('updatepage')
+      // console.log('updatepage')
       this.curpage = document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value
-      console.log(this.curpage)
+      // console.log(this.curpage)
       let idata = {pdfurl: '', page: ''}
       idata.pdfurl = this.curpdfurl0
       idata.page = this.curpage
@@ -1150,7 +1150,7 @@ export default{
       let formData = new FormData()
       formData.append('username', this.userInfo['username'])
       formData.append('file', document.querySelector('input[id=pdfinput]').files[0])
-      // console.log(document.querySelector('input[id=pdfinput]').files[0])
+      // // console.log(document.querySelector('input[id=pdfinput]').files[0])
       let options = {
         url: '/api/resource/add_pdf',
         data: formData,
@@ -1193,15 +1193,15 @@ export default{
         }
       }
       // test
-      // console.log(this.sub_multi.statement)
-      // console.log(this.sub_multi.optionList)
+      // // console.log(this.sub_multi.statement)
+      // // console.log(this.sub_multi.optionList)
       // post
       axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
           // 不用维护选择题列表
-          console.log('Add Multiple Succeeded')
+          // console.log('Add Multiple Succeeded')
           // 如果失败
         } else {
           this.$Message.error('添加选择题失败')
@@ -1224,16 +1224,16 @@ export default{
         this.sub_code.language = 'cpp'
       }
       // test
-      console.log(this.sub_code.username)
-      console.log(this.sub_code.language)
-      console.log(this.sub_code.statement)
+      // console.log(this.sub_code.username)
+      // console.log(this.sub_code.language)
+      // console.log(this.sub_code.statement)
       // post
       axios.post('/api/resource/add_code', this.sub_code).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
           // 不用维护列表
-          console.log('Add Code Succeeded')
+          // console.log('Add Code Succeeded')
           // 如果失败
         } else {
           this.$Message.error('添加代码题失败')
@@ -1270,11 +1270,11 @@ export default{
       input.pdf = iPdf
       // check if added
       let added = false
-      console.log(iPdf.url)
+      // console.log(iPdf.url)
       for (let i = 0; i < this.pdfThisList.length; i++) {
-        console.log(this.pdfThisList[i].url)
+        // console.log(this.pdfThisList[i].url)
         if (iPdf.url === this.pdfThisList[i].url) {
-          console.log('succeed!')
+          // console.log('succeed!')
           added = true
         }
       }
@@ -1333,12 +1333,12 @@ export default{
     // USE IT
     usePdf (index) {
       let ipdf = this.pdfThisList[index]
-      console.log(ipdf)
+      // console.log(ipdf)
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示' + ipdf.title,
         onOk: () => {
-          console.log('onOK')
+          // console.log('onOK')
         this.curpdfurl0=ipdf.url
           this.chatingtop = 340 + 'px'
           this.chatinghei = 430 + 'px'
@@ -1347,13 +1347,13 @@ export default{
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
           this.classmain0 = false
-          console.log(this.classmain0)
-          console.log(document.getElementById('rtmp-streamer1').class)
+          // console.log(this.classmain0)
+          // console.log(document.getElementById('rtmp-streamer1').class)
           // this.liaotianshiheight = 350 + 'px'
           this.displayPdfurl = '/static/pdfjs/web/viewer.html?file=' + ipdf.url
           this.curvideo = false
           this.modal_pdflist = false
-          console.log('1321312')
+          // console.log('1321312')
           let date = new Date()
           let time = date.getHours() + ':' + date.getMinutes()
           let obj = {
@@ -1414,8 +1414,8 @@ export default{
         // resp.data 即是那个列表
         this.multiAllList = resp.data.multiAllList
         this.multiThisList = resp.data.multiThisList
-        console.log(this.multiAllList)
-        console.log(this.multiThisList)
+        // console.log(this.multiAllList)
+        // console.log(this.multiThisList)
       })
     },
     // EDIT MULTI
@@ -1428,8 +1428,8 @@ export default{
       // multi options
       this.multi_options = []
       // debug
-      console.log(iMulti)
-      console.log(iMulti.optionList)
+      // console.log(iMulti)
+      // console.log(iMulti.optionList)
       // multi_options: [{value: '',index: 1,status: 1}],
       for (let i = 0; i < iMulti.optionList.length; i++) {
         let k = {value: '', index: i + 1, status: 1}
@@ -1450,8 +1450,8 @@ export default{
         }
       }
       // test
-      // console.log(this.sub_multi.statement)
-      // console.log(this.sub_multi.optionList)
+      // // console.log(this.sub_multi.statement)
+      // // console.log(this.sub_multi.optionList)
       // post
       axios.post('/api/resource/add_multiple', this.sub_multi).then((resp) => {
         this.$Message.success(resp.data.status)
@@ -1482,11 +1482,11 @@ export default{
       input.uniqueId = iMulti.uniqueId
       // check if added
       let added = false
-      console.log(iMulti.uniqueId)
+      // console.log(iMulti.uniqueId)
       for (let i = 0; i < this.multiThisList.length; i++) {
-        console.log(this.multiThisList[i].uniqueId)
+        // console.log(this.multiThisList[i].uniqueId)
         if (iMulti.uniqueId === this.multiThisList[i].uniqueId) {
-          console.log('succeed!')
+          // console.log('succeed!')
           added = true
         }
       }
@@ -1499,13 +1499,13 @@ export default{
             let multiInput = {username: '', url: ''}
             multiInput.username = this.userInfo.username
             multiInput.url = this.cururl
-            console.log('succeeded in post add class')
+            // console.log('succeeded in post add class')
             // post
             axios.post('/api/resource/getmultiples', multiInput).then((resp) => {
               // resp.data 即是那个列表
               this.multiAllList = resp.data.multiAllList
               this.multiThisList = resp.data.multiThisList
-              console.log('response data get, although do not know what')
+              // console.log('response data get, although do not know what')
             })
           } else {
             this.$Message.error('something wrong')
@@ -1541,12 +1541,12 @@ export default{
     // USE IT
     useMulti (index) {
       let iselect = this.multiThisList[index]
-      console.log(iselect)
+      // console.log(iselect)
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示: \n ' + iselect.statement,
         onOk: () => {
-          console.log("sdasd")
+          // console.log("sdasd")
           this.chatingtop = 340 + 'px'
           this.chatinghei = 430 + 'px'
           this.chatingtop = 340 + 'px'
@@ -1595,7 +1595,7 @@ export default{
       this.sub_multi.statement = iMulti.statement
       this.sub_multi.answer = iMulti.answer
       this.sub_multi.uniqueId = iMulti.uniqueId
-      console.log(this.sub_multi.optionList)
+      // console.log(this.sub_multi.optionList)
       this.modal_viewmulti = true
     },
     // DEL MULTI FROM CLASS
@@ -1659,15 +1659,15 @@ export default{
         this.sub_code.language = 'cpp'
       }
       // test
-      console.log(this.sub_code.username)
-      console.log(this.sub_code.language)
-      console.log(this.sub_code.statement)
+      // console.log(this.sub_code.username)
+      // console.log(this.sub_code.language)
+      // console.log(this.sub_code.statement)
       // post
       axios.post('/api/resource/update_code', this.sub_code).then((resp) => {
         this.$Message.success(resp.data.status)
         // 如果成功
         if (resp.data.status === 'success') {
-          console.log('Edit Code Succeeded')
+          // console.log('Edit Code Succeeded')
           // 如果失败
         } else {
           this.$Message.error('添加代码题失败')
@@ -1683,11 +1683,11 @@ export default{
       input.uniqueId = iCode.uniqueId
       // check if added
       let added = false
-      console.log(iCode.uniqueId)
+      // console.log(iCode.uniqueId)
       for (let i = 0; i < this.codeThisList.length; i++) {
-        console.log(this.codeThisList[i].uniqueId)
+        // console.log(this.codeThisList[i].uniqueId)
         if (iCode.uniqueId === this.codeThisList[i].uniqueId) {
-          console.log('succeed!')
+          // console.log('succeed!')
           added = true
         }
       }
@@ -1746,12 +1746,12 @@ export default{
       //    language: 'cpp',
       //    example: 'cout << "hello world" << endl;'
       //  }
-      console.log(iCode)
+      // console.log(iCode)
       this.$Modal.confirm({
         title: '提示',
         content: '是否展示' + iCode.statement,
         onOk: () => {
-          console.log('onOK')
+          // console.log('onOK')
         this.curcode=iCode
 
 
@@ -1765,10 +1765,10 @@ export default{
           this.mainpdfcarddisplay = false
           this.classmain0 = false
           this.maincodecarddispaly=true
-          console.log(this.classmain0)
-          console.log(document.getElementById('rtmp-streamer1').class)
+          // console.log(this.classmain0)
+          // console.log(document.getElementById('rtmp-streamer1').class)
           this.modal_pdflist = false
-          console.log('1321312')
+          // console.log('1321312')
           let date = new Date()
           let time = date.getHours() + ':' + date.getMinutes()
           let obj = {
@@ -1801,7 +1801,7 @@ export default{
       this.sub_code.language = iCode.language
       this.sub_code.example = iCode.example
       // debug
-      console.log(input)
+      // console.log(input)
       this.sub_code.statement = iCode.statement
       this.sub_code.language = iCode.language
       this.sub_code.example = iCode.example
@@ -1873,7 +1873,7 @@ export default{
           toUser: this.username,
           fromUser: this.userInfo.username
         }
-        console.log(obj)
+        // console.log(obj)
         CHAT.submit(obj)
       } else if (this.msgType === 'img') {
         var blob = new Blob([document.querySelector('input[type=file]').files[0]], { type: 'image/png' })
@@ -1886,13 +1886,13 @@ export default{
           toUser: this.username,
           fromUser: this.userInfo.username
         }
-        console.log(obj)
+        // console.log(obj)
         CHAT.submit(obj)
         this.msgType = 'text'
       }
     },
     submitRecord () {
-      console.log('mouse up')
+      // console.log('mouse up')
       this.stopRecorder()
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
@@ -1905,7 +1905,7 @@ export default{
         toUser: this.username,
         fromUser: this.userInfo.username
       }
-      console.log(obj)
+      // console.log(obj)
       CHAT.submit(obj)
     },
     chooseImg () {
@@ -1921,7 +1921,7 @@ export default{
       }
     },
     toggleRecorder () {
-      console.log('mouse down')
+      // console.log('mouse down')
       if (!this.isRecording || (this.isRecording && this.isPause)) {
         this.recorder.start()
         if (this.startRecord) {
@@ -1965,7 +1965,7 @@ export default{
         toUser: m.fromUser,
         fromUser: this.userInfo.username
       }
-      console.log(m)
+      // console.log(m)
       CHAT.shutUp(obj)
     },
     blackList (m) {
@@ -1974,12 +1974,12 @@ export default{
         toUser: m.fromUser,
         fromUser: this.userInfo.username
       }
-      console.log(m)
+      // console.log(m)
       CHAT.blackList(obj)
     },
     findIfShutUp () {
       axios.post('/api/classroom/shutuplist', {'url': this.cururl}).then((resp) => {
-        console.log(resp.data)
+        // console.log(resp.data)
         this.shutuplist = resp.data
       })
     },
@@ -1996,14 +1996,14 @@ export default{
      * 以上为聊天室使用，请勿改动
      */
     subxlsx () {
-      console.log('upload xlsx')
+      // console.log('upload xlsx')
       this.getstudents()
       /* const data = this.curuser
       data['username'] = this.userInfo['username']
       data['job'] = this.userInfo['job']
       data['url'] = this.cururl
       data['item'] = document.querySelector('input[type=file]').files[0]
-      console.log(data['item']) */
+      // console.log(data['item']) */
       let formData = new FormData()
       formData.append('url', this.cururl)
       formData.append('item', document.querySelector('input[id="xlsxinput"]').files[0])
@@ -2015,7 +2015,7 @@ export default{
           'Content-Type': 'multipart/form-data'
         }
       }
-      console.log(formData.url)
+      // console.log(formData.url)
       axios(options).then((resp) => {
         if (resp.data !== undefined) {
           this.$Message.success('added succeeded')
@@ -2034,7 +2034,7 @@ export default{
       })
     },
     addStudent () {
-      console.log('add student via username')
+      // console.log('add student via username')
       this.$Modal.confirm({
         render: (h) => {
           return h('Input', {
@@ -2098,7 +2098,7 @@ export default{
         title: '提示',
         content: '确认退出教学资源',
         onOk: () => {
-        console.log("close")
+        // console.log("close")
           this.maincodecarddispaly=false
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
@@ -2156,9 +2156,9 @@ export default{
             data['url'] = this.cururl
             axios.post('/api/classroom/openliving', data).then((resp) => {
               this.streamername = resp.data.streamername
-              console.log(resp.data.streamername)
-              console.log(this.streamername)
-              console.log(this.streamername)
+              // console.log(resp.data.streamername)
+              // console.log(this.streamername)
+              // console.log(this.streamername)
               setSWFIsReady()
               this.streamer000 = document.getElementById('rtmp-streamer1')
               this.streamer000.setScreenPosition(-100, 0)
