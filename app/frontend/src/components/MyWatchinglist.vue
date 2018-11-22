@@ -76,7 +76,6 @@ export default {
         var val2 = obj2.showtime
         var date1 = new Date(val1.replace(/-/g, '\/'))
         var date2 = new Date(val2.replace(/-/g, '\/'))
-        console.log(date1)
         if (date1 > date2) {
           return -1
         } else if (date2 > date1) {
@@ -97,7 +96,6 @@ export default {
         var val2 = obj2.createtime
         var date1 = new Date(val1.replace(/-/g, '\/'))
         var date2 = new Date(val2.replace(/-/g, '\/'))
-        console.log(date1)
         if (date1 > date2) {
           return -1
         } else if (date2 > date1) {
