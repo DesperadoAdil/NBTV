@@ -369,6 +369,8 @@ def delete_class_PDF():
     if pdf_tmp is None:
         print('gg: pdf_tmp is None')
     clr.pdffile.remove(pdf_tmp)
+    db.session.add(clr)
+    db.session.commit()
 
     ret['status'] = 'success'
     return json.dumps(ret)
