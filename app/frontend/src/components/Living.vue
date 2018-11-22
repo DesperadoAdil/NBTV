@@ -327,8 +327,6 @@ export default{
         data['url'] = this.cururl
         axios.post('/api/classroom_stu/urlgetvid', data).then((resp) => {
           this.curvid = resp.data.vid
-          console.log('vid:' + resp.data.vid)
-          console.log('vid:' + this.curvid)
           var player = polyvObject('#player').livePlayer({
             'width': '100%',
             'height': 600 + 'px',
@@ -345,7 +343,6 @@ export default{
     }
     this.showUserInfo()
     this.cururl = this.$route.params.url
-    console.log(this.cururl)
 
     // for code highlight
     this.cmOption.mode = CHAT.codeall.language
@@ -416,7 +413,6 @@ export default{
           toUser: this.username,
           fromUser: this.userInfo.username
         }
-        console.log(obj)
         CHAT.submit(obj)
       } else if (this.msgType === 'img') {
         var blob = new Blob([document.querySelector('input[type=file]').files[0]], { type: 'image/png' })
@@ -429,19 +425,16 @@ export default{
           toUser: this.username,
           fromUser: this.userInfo.username
         }
-        console.log(obj)
         CHAT.submit(obj)
         this.msgType = 'text'
       }
     },
     findIfShutUp () {
       axios.post('/api/classroom/shutuplist', {'url': this.cururl}).then((resp) => {
-        console.log(resp.data)
         this.shutuplist = resp.data
       })
     },
     submitRecord () {
-      console.log('mouse up')
       this.stopRecorder()
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
@@ -454,7 +447,6 @@ export default{
         toUser: this.username,
         fromUser: this.userInfo.username
       }
-      console.log(obj)
       CHAT.submit(obj)
     },
     chooseImg () {
@@ -470,7 +462,6 @@ export default{
       }
     },
     toggleRecorder () {
-      console.log('mouse down')
       if (!this.isRecording || (this.isRecording && this.isPause)) {
         this.recorder.start()
         if (this.startRecord) {
@@ -526,7 +517,6 @@ export default{
       this.userInfo['job'] = this.$cookies.get('user').job
     },
     selectsubmit(){
-      console.log("dasdas")
       var data={}
       data['username'] = this.userInfo['username']
       data['url']=this.cururl
