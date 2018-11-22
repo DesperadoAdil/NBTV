@@ -1482,6 +1482,7 @@ export default{
           this.classmain0 = false
   this.maincodecarddispaly=false
           this.curvideo = false
+          this.curmulti=iselect
           this.curmulti = iselect
           this.curtitle = iselect.statement
           this.curanswer = iselect.answer
