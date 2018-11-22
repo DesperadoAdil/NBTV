@@ -2,15 +2,15 @@
   <div id="list" class="posi">
     <h1 class="list-info">
       <Icon type="ios-time" />
-      正在播出
+      <span class="list-title-word">正在播出</span>
       <Button class="listbtn" @click="timelist">开播时间</Button>
       <Button class="listbtn" @click="audiencelist">创建时间</Button>
     </h1>
     <Divider />
     <Row>
       <Col span="8" v-for="item in items" :key="item.vid" v-if="item.mode !== 'private'">
-        <Card class="listcard">
-          <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
+        <Card class="listcard" @click.native="skip(item)">
+          <img :src="item.thumbnail" class="thumbnail">
           <p class="title">{{ item.title }} </p>
           <p class="teacher">授课老师：{{ item.teacher }} </p>
           <p class="audiencenum">开播时间：{{ item.showtime}}</p>
@@ -122,7 +122,7 @@ export default {
         this.$Message.error('您已被永久移出教室')
         return
       }
-      if (item.mode === 'protected') {
+      /*if (item.mode === 'protected') {
         this.$Modal.confirm({
           render: (h) => {
             return h('Input', {
@@ -153,9 +153,9 @@ export default {
             }
           }
         })
-      } else {
+      } else {*/
         this.$router.push({path: '/living/' + item.url})
-      }
+      //}
     },
     getList: function () {
       axios.get('/api/list').then((resp) => {
@@ -210,4 +210,6 @@ li {
 .list-info {
   text-align: left;
 }
+  .list-title-word {
+  }
 </style>

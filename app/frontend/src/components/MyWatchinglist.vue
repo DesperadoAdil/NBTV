@@ -2,15 +2,15 @@
   <div id="myWatchingList" class="posi">
     <h1 class="list-info">
       <Icon type="ios-time" />
-      正在播出
+      <span class="list-title-word">正在播出</span>
       <Button class="listbtn" @click="timelist">开播时间</Button>
       <Button class="listbtn" @click="audiencelist">创建时间</Button>
     </h1>
     <Divider />
     <Row>
       <Col span="12" v-for="item in items" :key="item.vid">
-        <Card class="watchcard">
-          <img :src="item.thumbnail" class="thumbnail" @click="skip(item)">
+        <Card class="watchcard" @click="skip(item)">
+          <img :src="item.thumbnail" class="thumbnail" >
           <p class="title"></p>
             {{ item.title }}
           <Tooltip placement="top">
@@ -214,5 +214,7 @@ export default {
   }
   .list-info {
     text-align: left;
+  }
+  .list-title-word {
   }
 </style>
