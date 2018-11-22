@@ -28,27 +28,30 @@
           <card>
           <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
           <p class="my-class-title">{{ living.title }}</p>
-          <span><Button type="success" @click="getBackUp(index)">UPDATE</Button></span>
+          <span><Button type="success" @click="getBackUp(index)">更新课程</Button></span>
           <Modal
             v-model="updateModal"
-            title="更新课程"
+            title="更新课程基本信息"
             @on-ok="updateLiving(modalIndex)"
             @on-cancel="cancel">
-            <Input v-model="myLivingList[modalIndex].title" placeholder="课程名称"></Input>
+            <span>课程名称</span>
+            <span><Input v-model="myLivingList[modalIndex].title" placeholder="课程名称"></Input></span>
             <a href="javascript:;" class="upf">上传缩略图
               <input type="file" name="fileinput" id="filezsh2" accept="image/gif, image/jpeg, image/png, image/jpg">
             </a>
             <output id="listUp"></output>
-            <Input v-model="myLivingList[modalIndex].url" placeholder="课程url"></Input>
-            <Input v-model="myLivingList[modalIndex].class_password" placeholder="课程密码（可空）"></Input>
+            课程URL
+            <Input v-model="myLivingList[modalIndex].url" placeholder="课程URL"></Input>
+            课程密码
+            <Input v-model="myLivingList[modalIndex].class_password" placeholder="课程密码"></Input>
           </Modal>
-          <span><Button type="error" @click="getBackUpForDel(index)">DELETE</Button></span>
+          <span><Button type="error" @click="getBackUpForDel(index)">删除课程</Button></span>
           <Modal
             v-model="deleteModal"
             title="删除课程"
             @on-ok="deleteLiving(modalIndex)"
-            @on-cancel="cancel">
-            <Input v-model="validate" placeholder="确认删除请输入yes"></Input>
+            @on-cancel="cancel">这将永久删除您的直播间，确认删除请输入yes
+            <Input v-model="validate"></Input>
           </Modal>
           </card>
         </li>
