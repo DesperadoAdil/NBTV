@@ -178,7 +178,7 @@ def addCode():
         #print(data)
         data = json.loads(data)
 
-        uniqueId = codeQuestionManager.insert(data['username'], data['statement'], data['language'])
+        uniqueId = codeQuestionManager.insert(data['username'], data['statement'], data['language'], data['example'])
         ret["status"] = "success"
         ret["uniqueId"] = uniqueId
     except Exception as err:
