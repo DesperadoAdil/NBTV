@@ -771,16 +771,8 @@ export default{
               }, '删除')])
           }
         }],
-      pdfThisList: [
-        {
-          title: 'pdf1',
-          url: '/static/pdf/1-1.pdf'
-        },
-        {
-          title: 'pdf2',
-          url: '/static/pdf/1-1.pdf'
-        }],
-      pdfAllList: [{title: 'Slide01', url: 'hide/slide01'}],
+      pdfThisList: [],
+      pdfAllList: [],
       // MULTI
       // MULTIPLE CHOICE PARAMETER
       split_multi: 0.5,
@@ -790,11 +782,11 @@ export default{
       modal_multilist: false,
       // FRAMEWORK TO SHOW MULTI
 
-    curmulti:{
-      uniqueId: '',
-        statement: 'Among the following people, who is the most gay one?',
-        optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
-        answer: 'A'
+      curmulti: {
+        uniqueId: '',
+        statement: '',
+        optionList: [],
+        answer: ''
       },
       multiAll: [{title: '题目', key: 'statement'},
         {
@@ -857,36 +849,13 @@ export default{
           }
         }],
       // MULTI LIST
-      multiAllList: [
-        {
-          uniqueId: '',
-          statement: 'Among the following people, who is the most gay one?',
-          optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
-          answer: 'A'
-        },
-        {
-          uniqueId: '',
-          statement: 'What do you answer for "I don\'t know"?',
-          optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
-          answer: 'A'
-        }
-      ],
-      multiThisList: [{
-        uniqueId: '',
-        statement: 'Among the following people, who is the most gay one?',
-        optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
-        answer: 'A'
-      }, {
-        uniqueId: '',
-        statement: 'What do you answer for "I don\'t know"?',
-        optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
-        answer: 'A'
-      }],
+      multiAllList: [],
+      multiThisList: [],
       // MULTI STUDENT ANSWER LIST
       multiAnswer: [{title: 'student', key: 'student'}, {title: 'answer', key: 'answer'}],
-      multiAnswerList: [{student: 'xcj', answer: 'A'}, {student: 'adil', answer: 'not answered'}],
+      multiAnswerList: [],
       codeAnswer: [{title: 'student', key: 'student'}, {title: 'answer', key: 'answer'}],
-      codeAnswerList: [{student: 'xcj', answer: '#include<iostream>'}, {student: 'adil', answer: 'not answered'}],
+      codeAnswerList: [],
       // CODE
       // CODE PARAMETER
       split_code: 0.5,
@@ -957,31 +926,13 @@ export default{
           }
         }],
       // CODE LIST
-      codeAllList: [
-        {
-          uniqueId: '',
-          statement: 'Eight Queens',
-          language: 'python',
-          example: 'null'
-        },
-        {
-          uniqueId: '',
-          statement: 'B-Tree',
-          language: 'cpp',
-          example: 'cout << "hello world" << endl;'
-        }
-      ],
-      codeThisList: [{
-        uniqueId: '',
-        statement: 'B-Tree',
-        language: 'cpp',
-        example: 'cout << "hello world" << endl;'
-      }],
+      codeAllList: [],
+      codeThisList: [],
       curcode: {
         uniqueId: '',
-        statement: 'Eight Queens',
-        language: 'python',
-        example: 'int main'
+        statement: '',
+        language: '',
+        example: ''
       },
       // ADD PDF/MULTI/CODE MODALS
       // PDF
@@ -998,9 +949,9 @@ export default{
       multi_index: 1,
       sub_multi: {
         uniqueId: '',
-        statement: 'We Are Going to test it.',
-        optionList: ['something', 'somewhere', 'someplace', 'sometime'],
-        answer: 'A',
+        statement: '',
+        optionList: [],
+        answer: '',
         username: ''
       },
       // CODE
@@ -1008,23 +959,23 @@ export default{
       sub_code: {
         uniqueId: '',
         username: '',
-        statement: 'Print something in the // console',
-        language: 'cpp',
-        example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0;\n}'
+        statement: '',
+        language: '',
+        example: ''
       },
       // CODE EDITOR
-        cmOption: {
-  //        smartIndent:true,
-  //          showCursorWhenSelecting: true,
-            autofocus: true,
-  //        autoCloseBrackets: true,
-  //        tabSize: 4,
-            lineNumbers: true,
-  //        line: true,
-            mode: 'python',
-            theme: "blackboard" ,                 //选中的theme
-            lineWrapping: true,
-        },
+      cmOption: {
+        //        smartIndent:true,
+        //          showCursorWhenSelecting: true,
+        autofocus: true,
+        //      autoCloseBrackets: true,
+        //      tabSize: 4,
+        lineNumbers: true,
+        //      line: true,
+        mode: 'python',
+        theme: 'blackboard',  // 选中的theme
+        lineWrapping: true
+      },
       // ADD STUDENT LIST
       modal_student_xlsx: false,
       // Shihang'S PARAMETER
