@@ -1797,6 +1797,9 @@ export default{
       input.username = this.userInfo.username
       input.url = this.cururl
       input.uniqueId = iCode.uniqueId
+      this.sub_code.statement = iCode.statement
+      this.sub_code.language = iCode.language
+      this.sub_code.example = iCode.example
       // debug
       console.log(input)
       // post
