@@ -1799,6 +1799,9 @@ export default{
       input.uniqueId = iCode.uniqueId
       // debug
       console.log(input)
+      this.sub_code.statement = iCode.statement
+      this.sub_code.language = iCode.language
+      this.sub_code.example = iCode.example
       // post
       axios.post('/api/resource/code_viewclass', input).then((resp) => {
         this.codeAnswerList = resp.data.codeAnswerList
