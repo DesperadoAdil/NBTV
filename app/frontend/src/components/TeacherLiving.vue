@@ -1161,7 +1161,7 @@ export default{
       }
       axios(options).then((resp) => {
         if (resp.data.status === 'success') {
-          this.$.message.success('PDF uploaded successfully')
+          this.$Message.success('PDF uploaded successfully')
         }
       })
     },
@@ -1281,7 +1281,7 @@ export default{
       // post
       if (added) {
         // if it exists in current list
-        this.$.message.success('Already Added')
+        this.$Message.success('Already Added')
       } else {
         axios.post('/api/resource/pdf_addclass', input).then((resp) => {
           if (resp.data.status === 'success') {
@@ -1293,11 +1293,11 @@ export default{
                 this.pdfAllList = resp.data.pdfAllList
                 this.pdfThisList = resp.data.pdfThisList
               } else {
-                this.$.message.error('wrong')
+                this.$Message.error('wrong')
               }
             })
           } else {
-            this.$.message.error('error in post')
+            this.$Message.error('error in post')
           }
         })
       }
@@ -1313,7 +1313,7 @@ export default{
       // post
       axios.post('/api/resource/delete_pdf', delPdfAllInput).then((resp) => {
         if (resp.data.status === 'success') {
-          this.$.message.success('deleted from teacher\'s resource')
+          this.$Message.success('deleted from teacher\'s resource')
           let pdfInput = {username: '', url: ''}
           pdfInput.username = this.userInfo.username
           pdfInput.url = this.cururl
@@ -1322,11 +1322,11 @@ export default{
               this.pdfAllList = resp.data.pdfAllList
              this.pdfThisList = resp.data.pdfThisList
             } else {
-              this.$.message.error('wrong')
+              this.$Message.error('wrong')
             }
           })
         } else {
-          this.$.message.error('error in post')
+          this.$Message.error('error in post')
         }
       })
     },
@@ -1383,20 +1383,20 @@ export default{
       // post
       axios.post('/api/resource/pdf_delclass', input).then((resp) => {
         if (resp.data.status === 'success') {
-          this.$.message.success('deleted from class resource')
+          this.$Message.success('deleted from class resource')
           let pdfInput = {username: '', url: ''}
           pdfInput.username = this.userInfo.username
           pdfInput.url = this.cururl
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
-            if (resp.data.pdfAllList !== null) {
+            if (resp.data.status === 'success') {
               this.pdfAllList = resp.data.pdfAllList
-             this.pdfThisList = resp.data.pdfThisList
+              this.pdfThisList = resp.data.pdfThisList
             } else {
-              this.$.message.error('wrong')
+              this.$Message.error('wrong')
             }
           })
         } else {
-          this.$.message.error('error in post')
+          this.$Message.error('error in post')
         }
       })
     },
@@ -1492,7 +1492,7 @@ export default{
       }
       // post
       if (added) {
-        this.$.message.error('Already Added')
+        this.$Message.error('Already Added')
       } else {
         axios.post('/api/resource/multi_addclass', input).then((resp) => {
           if (resp.data.status === 'success') {
@@ -1508,7 +1508,7 @@ export default{
               console.log('response data get, although do not know what')
             })
           } else {
-            this.$.message.error('something wrong')
+            this.$Message.error('something wrong')
           }
         })
       }
@@ -1534,7 +1534,7 @@ export default{
             this.multiThisList = resp.data.multiThisList
           })
         } else {
-          this.$.message.error('something wrong')
+          this.$Message.error('something wrong')
         }
       })
     },
@@ -1619,7 +1619,7 @@ export default{
             this.multiThisList = resp.data.multiThisList
           })
         } else {
-          this.$.message.error('something wrong')
+          this.$Message.error('something wrong')
         }
       })
     },
@@ -1693,7 +1693,7 @@ export default{
       }
       // post
       if (added) {
-        this.$.message.error('Already Added')
+        this.$Message.error('Already Added')
       } else {
         axios.post('/api/resource/code_addclass', input).then((resp) => {
           if (resp.data.status === 'success') {
@@ -1707,7 +1707,7 @@ export default{
               this.codeThisList = resp.data.codeThisList
             })
           } else {
-            this.$.message.error('something wrong')
+            this.$Message.error('something wrong')
           }
         })
       }
@@ -1733,7 +1733,7 @@ export default{
             this.codeThisList = resp.data.codeThisList
           })
         } else {
-          this.$.message.error('something wrong')
+          this.$Message.error('something wrong')
         }
       })
     },
@@ -1797,6 +1797,8 @@ export default{
       input.username = this.userInfo.username
       input.url = this.cururl
       input.uniqueId = iCode.uniqueId
+      // debug
+      console.log(input)
       // post
       axios.post('/api/resource/code_viewclass', input).then((resp) => {
         this.codeAnswerList = resp.data.codeAnswerList
@@ -1824,7 +1826,7 @@ export default{
             this.codeThisList = resp.data.codeThisList
           })
         } else {
-          this.$.message.error('something wrong')
+          this.$Message.error('something wrong')
         }
       })
     },
@@ -2010,7 +2012,7 @@ export default{
       console.log(formData.url)
       axios(options).then((resp) => {
         if (resp.data !== undefined) {
-          this.$.message.success('added succeeded')
+          this.$Message.success('added succeeded')
           this.getstudents()
         }
       })
