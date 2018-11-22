@@ -1795,7 +1795,6 @@ export default{
      */
     chatingRoomInit () {
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
-      document.getElementById('fileinput').addEventListener('change', this.chooseImg(), false);
     },
     submit () {
       var date = new Date()

@@ -62,11 +62,11 @@ export default {
       theme1: 'light',
       active: '',
       userInfo: {
-        status: 'success',
+        status: '',
         username: '',
         password: '',
         mobile: '',
-        job: 'teacher'
+        job: ''
       },
       LoginOrLogout: '登录'
     }

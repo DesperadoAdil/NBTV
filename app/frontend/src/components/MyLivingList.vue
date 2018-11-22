@@ -164,14 +164,11 @@ export default {
           living['thumbnail'] = resp.data[i]['thumbnail']
           living['class_password'] = resp.data[i]['password']
           living['mode'] = resp.data[i]['mode']
-          console.log(living)
           this.myLivingList.push(living)
         }
-        console.log(this.myLivingList)
       })
     },
     addLiving () {
-      console.log(document.querySelector('input[id=fileinput]').files[0])
       var formData = new FormData()
       formData.append('username', this.$cookies.get('user').username)
       formData.append('password', this.$cookies.get('user').password)
@@ -200,8 +197,6 @@ export default {
     },
     updateLiving (index) {
       var fileInput00 = document.getElementById('filezsh2')
-      console.log(fileInput00.files)
-      console.log(document.querySelector('input[id=filezsh2]').files[0])
       var formData = new FormData()
       formData.append('username', this.$cookies.get('user').username)
       formData.append('password', this.$cookies.get('user').password)
@@ -247,7 +242,6 @@ export default {
       this.deleteModal = false
     },
     handleFileSelect (evt) {
-      console.log('add')
       var files = evt.target.files // FileList object
 
       // Loop through the FileList and render image files as thumbnails.
@@ -275,7 +269,6 @@ export default {
       }
     },
     handleFileSelectForUp (evt) {
-      console.log('update')
       var files = evt.target.files // FileList object
 
       // Loop through the FileList and render image files as thumbnails.
