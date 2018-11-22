@@ -59,7 +59,7 @@ class Classrooms(db.Model):
     #禁言名单
     shutuplist = db.Column(db.Text, nullable = False, default = "[]")
     #直播姬状态
-    status = db.Column(db.String(150), nullable=False, default="close")
+    status = db.Column(db.Text, nullable=False, default="{'type': 'closeliving'}")
 
 
     choice = db.relationship('ChoiceQuestion', secondary = classroom_choice, backref = db.backref('classroom', lazy='dynamic'), lazy = 'dynamic')
