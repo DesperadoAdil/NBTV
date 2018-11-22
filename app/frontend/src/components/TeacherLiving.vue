@@ -969,18 +969,18 @@ export default{
         example: '#include<iostream>\nusing namespace std;\nint main(){\n  int c;\n  cout<<c++<<endl;\n  return 0;\n}'
       },
       // CODE EDITOR
-      cmOption: {
-//        smartIndent:true,
-//          showCursorWhenSelecting: true,
-          autofocus: true,
-//        autoCloseBrackets: true,
-//        tabSize: 4,
-          lineNumbers: true,
-//        line: true,
-          mode: 'python',
-          theme: "blackboard" ,                 //选中的theme
-          lineWrapping: true,
-      },
+        cmOption: {
+  //        smartIndent:true,
+  //          showCursorWhenSelecting: true,
+            autofocus: true,
+  //        autoCloseBrackets: true,
+  //        tabSize: 4,
+            lineNumbers: true,
+  //        line: true,
+            mode: 'python',
+            theme: "blackboard" ,                 //选中的theme
+            lineWrapping: true,
+        },
       // ADD STUDENT LIST
       modal_student_xlsx: false,
       // Shihang'S PARAMETER
