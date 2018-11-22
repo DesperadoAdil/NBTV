@@ -414,6 +414,10 @@ export default{
       this.socket = CHAT.init(this.userInfo.username, this.cururl)
     },
     submit () {
+      if (this.silence === true || this.shutuplist.includes(this.userInfo.username)) {
+        this.$Message.error('您已被禁言')
+        return
+      }
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
       var obj = {}
@@ -457,6 +461,12 @@ export default{
         CHAT.submit(obj)
         this.msgType = 'text'
       }
+    },
+    findIfShutUp () {
+      axios.post('/api/classroom/shutuplist', {'url': this.cururl}).then((resp) => {
+        console.log(resp.data)
+        this.shutuplist = resp.data
+      })
     },
     submitRecord () {
       console.log('mouse up')

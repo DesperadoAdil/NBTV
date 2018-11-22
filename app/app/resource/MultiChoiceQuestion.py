@@ -72,7 +72,7 @@ class MultiChoiceQuestion:
 
 			que.submitRecord = json.dumps(record, ensure_ascii = False)
 			db.session.add(que)
-			db.commit()
+			db.session.commit()
 			return "success"
 		except:
 			return "error"
