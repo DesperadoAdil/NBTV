@@ -256,7 +256,7 @@ def view_code_class():
     if type(tmp) != list:
         ret['status'] = 'error'
     else:
-        ret['multiAnswerList'] = tmp
+        ret['codeAnswerList'] = tmp
         ret['status'] = 'success'
     return json.dumps(ret)
 
