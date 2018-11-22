@@ -716,6 +716,7 @@ export default{
           width: 180,
           render: (h, params) => {
             return h('div', [
+              /*
               h('Button', [
                 h('Tooltip', {
                   props: {
@@ -730,8 +731,7 @@ export default{
                     click: () => { this.addPdfAll(params.index) }
                   }
                 }, '添加')
-              ]),
-              /*
+              ]), */
               h('Button', {
                 props: {type: 'text', size: 'small', title: '点击以添加该PDF至本教室的使用资源中'},
                 style: {marginRight: '5px'},
@@ -739,7 +739,6 @@ export default{
                   click: () => { this.addPdfAll(params.index) }
                 }
               }, 'Add'),
-              */
               h('Button', {
                 props: {type: 'text', size: 'small', title: 'test'},
                 on: {
