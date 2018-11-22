@@ -1552,7 +1552,10 @@ export default{
           this.classmain0 = false
   this.maincodecarddispaly=false
           this.curvideo = false
-          this.curMulti = iselect
+          this.curmulti=iselect
+          this.curmulti = iselect
+          this.curtitle = iselect.statement
+          this.curanswer = iselect.answer
           this.modal_multilist = false
           let date = new Date()
           let time = date.getHours() + ':' + date.getMinutes()
