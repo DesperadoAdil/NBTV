@@ -12,20 +12,30 @@
       title="添加课程"
       @on-ok="addLiving()"
       @on-cancel="cancel">
-      <Input v-model="newLiving.title" placeholder="课程名称"></Input>
-      <a href="javascript:;" class="upf">上传缩略图
-        <input type="file" name="fileinput" id="fileinput" accept="image/gif, image/jpeg, image/png, image/jpg">
-      </a>
-      <output id="list"></output>
-      <Input v-model="newLiving.url" placeholder="课程url"></Input>
-      <Select v-model="newLiving.mode">课程Mode
-        <Option v-for="item in modeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
-      <Input v-if="newLiving.mode === 'protected' || newLiving.mode === 'private'"  v-model="newLiving.class_password" placeholder="课程密码"></Input>
+      <Form :model="newLiving" :label-width="80">
+        <FormItem label="课程名称">
+          <Input v-model="newLiving.title" placeholder="给自己的课程起一个好听的名字吧"></Input>
+        </FormItem>
+        <a href="javascript:;" class="upf">上传封面
+          <input type="file" name="fileinput" id="fileinput" accept="image/gif, image/jpeg, image/png, image/jpg">
+        </a>
+        <output id="list"></output>
+        <FormItem label="课程URL">
+          <Input v-model="newLiving.url" placeholder="课程url"></Input>
+        </FormItem>
+        <FormItem label="课程Mode">
+          <Select v-model="newLiving.mode">
+            <Option v-for="item in modeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="课程密码" v-if="newLiving.mode === 'protected' || newLiving.mode === 'private'" >
+          <Input  v-model="newLiving.class_password" placeholder="课程密码"></Input>
+        </FormItem>
+      </Form>
+
     </Modal>
     <ul class="myLivingList-flex-container">
-        <li class="myLivingList-flex-item" v-for="(living, index) in myLivingList" :key="living.url">
-          <card>
+        <card class="myLivingList-flex-item" v-for="(living, index) in myLivingList" :key="living.url">
           <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
           <p class="my-class-title">{{ living.title }}</p>
           <span><Button type="success" @click="getBackUp(index)">更新课程</Button></span>
@@ -34,16 +44,21 @@
             title="更新课程基本信息"
             @on-ok="updateLiving(modalIndex)"
             @on-cancel="cancel">
-            <span>课程名称</span>
-            <span><Input v-model="myLivingList[modalIndex].title" placeholder="课程名称"></Input></span>
-            <a href="javascript:;" class="upf">上传缩略图
-              <input type="file" name="fileinput" id="filezsh2" accept="image/gif, image/jpeg, image/png, image/jpg">
-            </a>
-            <output id="listUp"></output>
-            课程URL
-            <Input v-model="myLivingList[modalIndex].url" placeholder="课程URL"></Input>
-            课程密码
-            <Input v-model="myLivingList[modalIndex].class_password" placeholder="课程密码"></Input>
+            <Form :model="myLivingList[modalIndex]" :label-width="80">
+              <FormItem label="课程名称">
+                <Input v-model="myLivingList[modalIndex].title" placeholder="课程名称"></Input>
+              </FormItem>
+              <a href="javascript:;" class="upf">上传封面
+                <input type="file" name="fileinput" id="filezsh2" accept="image/gif, image/jpeg, image/png, image/jpg">
+              </a>
+              <output id="listUp"></output>
+              <FormItem label="课程URL">
+                <Input v-model="myLivingList[modalIndex].url" placeholder="课程URL"></Input>
+              </FormItem>
+              <FormItem label="课程密码" v-if="myLivingList[modalIndex].mode === 'protected' || myLivingList[modalIndex].mode === 'private'" >
+                <Input v-model="myLivingList[modalIndex].class_password" placeholder="课程密码"></Input>
+              </FormItem>
+            </Form>
           </Modal>
           <span><Button type="error" @click="getBackUpForDel(index)">删除课程</Button></span>
           <Modal
@@ -53,8 +68,7 @@
             @on-cancel="cancel">这将永久删除您的直播间，确认删除请输入yes
             <Input v-model="validate"></Input>
           </Modal>
-          </card>
-        </li>
+        </card>
     </ul>
   </div>
 </template>
@@ -93,16 +107,7 @@ export default {
       addModal: false,
       updateModal: false,
       deleteModal: false,
-      myLivingList: [{
-        username: '',
-        password: '',
-        job: '',
-        old_url: '',
-        title: '',
-        thumbnail: '../assets/logo.png',
-        url: '1',
-        class_password: ''
-      }, {}, {}, {}, {}],
+      myLivingList: [],
       userInfo: {
         username: '',
         password: '',
@@ -323,7 +328,7 @@ li {
   padding: 20px;
   margin: 5% 5%;
   width: 30%;
-  height: 20%;
+  height: 30%;
 }
 #myLivingList {
   padding: 0 5%;

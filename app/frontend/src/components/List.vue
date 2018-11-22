@@ -38,26 +38,7 @@ export default {
       },
       LoginOrLogout: '登录',
       currentpassword: '',
-      items: [
-        {
-          id: '1',
-          teacher: 'zsh',
-          title: 'math',
-          thumbnail: require('../assets/logo.png'),
-          password: '123',
-          url: 'zsh',
-          studentlist: '',
-          teacherlist: '',
-          audiencelist: [1, 5, 6, 21, 321, 43],
-          visible: '',
-          vid: '242544',
-          createtime: '2018-10-18 13:37:05',
-          showtime: '2018-10-18 13:37:05',
-          shutuplist: [],
-          blacklist: []
-        }
-
-      ]
+      items: []
     }
   },
   created () {
