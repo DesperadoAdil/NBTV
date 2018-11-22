@@ -9,9 +9,9 @@
           <template slot="title" ><Icon type="ios-paper" />
             资源
           </template>
-          <MenuItem @click.native="showPdfList()">PDF</MenuItem>
-          <MenuItem @click.native="showMultiList()">Choice</MenuItem>
-          <MenuItem @click.native="showCodeList()">Code</MenuItem>
+          <MenuItem @click.native="showPdfList()">PDF课件</MenuItem>
+          <MenuItem @click.native="showMultiList()">选择题</MenuItem>
+          <MenuItem @click.native="showCodeList()">代码题</MenuItem>
         </Submenu>
         <!-- 资源 -->
 
@@ -20,9 +20,9 @@
           <template slot="title" ><Icon type="ios-paper" />
             添加
           </template>
-          <MenuItem @click.native="modal_pdf = true">PDF</MenuItem>
-          <MenuItem @click.native="create_multi()">Choice</MenuItem>
-          <MenuItem @click.native="create_code()">Code</MenuItem>
+          <MenuItem @click.native="modal_pdf = true">PDF课件</MenuItem>
+          <MenuItem @click.native="create_multi()">选择题</MenuItem>
+          <MenuItem @click.native="create_code()">代码题</MenuItem>
         </Submenu>
         <!-- 添加 -->
 
@@ -64,19 +64,26 @@
       <div>
         <Split class="teacher-live-split" style="height: 430px" v-model="split_pdf">
           <div slot="left"  class="teacher-live-split-pane">
-            <p>All</p>
+            <p>全部PDF课件</p>
             <br>
-            <Table height="375" border :columns="pdfAll" :data="pdfAllList"></Table>
+            <Table height="345" border :columns="pdfAll" :data="pdfAllList"></Table>
+            <p>点击添加：将课件添加至教室资源</p>
+            <p>点击删除：从全部课件中删除课件</p>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
-            <p>This Classroom</p>
+            <p>本教室资源</p>
             <br>
-            <Table height="375" border :columns="pdfThis" :data="pdfThisList"></Table>
+            <Table height="345" border :columns="pdfThis" :data="pdfThisList"></Table>
+            <p>点击使用：在当前教室中使用课件</p>
+            <p>点击删除：从当前教室中删除课件</p>
           </div>
         </Split>
       </div>
       <div slot="footer">
-        <Button type="text" size="large" @click="modal_pdflist = false">取消</Button>
+        <Row>
+          将已有资源添加至当前教室中，之后点击使用以发布教学资源
+          <Button type="text" size="large" @click="modal_pdflist = false">关闭</Button>
+        </Row>
       </div>
     </Modal>
 
@@ -85,19 +92,26 @@
       <div>
         <Split class="teacher-live-split" style="height: 430px" v-model="split_multi">
           <div slot="left"  class="teacher-live-split-pane">
-            <p>All</p>
+            <p>全部选择题</p>
             <br>
-            <Table height="375" border :columns="multiAll" :data="multiAllList"></Table>
+            <Table height="345" border :columns="multiAll" :data="multiAllList"></Table>
+            <p>点击添加：将题目添加至教室资源; 点击编辑：在全部课件中编辑题目</p>
+            <p>点击删除：从全部课件中删除题目</p>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
-            <p>This Classroom</p>
+            <p>本教室资源</p>
             <br>
-            <Table height="375" border :columns="multiThis" :data="multiThisList"></Table>
+            <Table height="345" border :columns="multiThis" :data="multiThisList"></Table>
+            <p>点击使用：在当前教室中使用题目; 点击查看：查看当前题目答题情况</p>
+            <p>点击删除：从当前教室中删除题目</p>
           </div>
         </Split>
       </div>
       <div slot="footer">
-        <Button type="text" size="large" @click="modal_multilist = false">关闭</Button>
+        <Row>
+          将已有资源添加至当前教室中，之后点击使用以发布教学资源
+          <Button type="text" size="large" @click="modal_multilist = false">关闭</Button>
+        </Row>
       </div>
     </Modal>
 
@@ -106,25 +120,32 @@
       <div>
         <Split class="teacher-live-split" style="height: 430px" v-model="split_code">
           <div slot="left"  class="teacher-live-split-pane">
-            <p>All</p>
+            <p>全部代码题</p>
             <br>
-            <Table height="375" border :columns="codeAll" :data="codeAllList"></Table>
+            <Table height="345" border :columns="codeAll" :data="codeAllList"></Table>
+            <p>点击添加：将题目添加至教室资源; 点击编辑：在全部课件中编辑题目</p>
+            <p>点击删除：从全部课件中删除题目</p>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
-            <p>This Classroom</p>
+            <p>本教室资源</p>
             <br>
-            <Table height="375" border :columns="codeThis" :data="codeThisList"></Table>
+            <Table height="345" border :columns="codeThis" :data="codeThisList"></Table>
+            <p>点击使用：在当前教室中使用题目; 点击查看：查看当前题目答题情况</p>
+            <p>点击删除：从当前教室中删除题目</p>
           </div>
         </Split>
       </div>
       <div slot="footer">
-        <Button type="text" size="large" @click="modal_codelist = false">关闭</Button>
+        <Row>
+          将已有资源添加至当前教室中，之后点击使用以发布教学资源
+          <Button type="text" size="large" @click="modal_codelist = false">关闭</Button>
+        </Row>
       </div>
     </Modal>
 
     <!--上传-->
     <Modal v-model="modal_pdf">
-      <p slot="header" style="font-size: 20px">
+      <p slot="header">
         <span>上传课件</span>
       </p>
       <Form>
@@ -144,12 +165,12 @@
 
     <!--设置选择题-->
     <Modal   v-model="modal_multi"    @on-ok="addMulti()"    @on-cancel="modal_multi = false">
-      <p slot="header" style="font-size: 20px">
+      <p slot="header">
         <span>设置选择题</span>
       </p>
       <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
-        <FormItem label="Statement">
-          <Input type="textarea" v-model="sub_multi.statement" placeholder="Enter your Description"></Input>
+        <FormItem label="题目描述">
+          <Input type="textarea" v-model="sub_multi.statement" placeholder="输入你的选择题描述"></Input>
         </FormItem>
         <!-- 以下为选项的动态添加删除  -->
         <FormItem
@@ -158,53 +179,52 @@
           :key="index">
           <Row>
             <Col span="18">
-              <Input type="text" placeholder="Enter Your Choice" v-model="multi_options[index].value"></Input>
+              <Input type="text" placeholder="输入选项" v-model="multi_options[index].value"></Input>
             </Col>
             <Col span="4" offset="1">
-              <Button @click="multi_delChoice(index)">Delete</Button>
+              <Button @click="multi_delChoice(index)">删除</Button>
             </Col>
           </Row>
         </FormItem>
         <FormItem>
           <Row>
             <Col span="12">
-              <Button type="dashed" long @click="multi_addChoice()" icon="md-add">Add Choice</Button>
+              <Button type="dashed" long @click="multi_addChoice()" icon="md-add">添加选项</Button>
             </Col>
           </Row>
         </FormItem>
         <!-- 答案设置  -->
-        <FormItem label="The Answer">
-          <Input v-model="sub_multi.answer" placeholder="a number"></Input>
+        <FormItem label="答案">
+          <Input v-model="sub_multi.answer" placeholder="A/B/C/D/.."></Input>
         </FormItem>
       </Form>
     </Modal>
 
     <!--设置编程题-->
     <Modal   v-model="modal_code"    @on-ok="addCode()"    @on-cancel="modal_code = false">
-      <p slot="header" style="font-size: 20px">
+      <p slot="header">
         <span>设置编程题</span>
       </p>
       <Form label-position="top">
-        <FormItem label="Text">
+        <FormItem label="题目描述">
           <Input v-model="sub_code.statement"
                  type="textarea" rows="4"
-                 placeholder="Enter Your Statement">
+                 placeholder="输入你的题目描述">
           </Input>
         </FormItem>
-        <FormItem label="Language">
-          <Select v-model="sub_code.language">
+        <FormItem label="代码语言">
+          <Select v-model="cmOption.mode">
             <Option value="python">python</Option>
-            <Option value="clike">cpp</Option>
-            <Option value="javascript">javascript</Option>
+            <Option value="text/x-c++src">cpp</Option>
           </Select>
         </FormItem>
-        <FormItem label="Example Code">
-
-            <!-------------输入框的代码高亮----------------------->
+        <FormItem label="示例代码">
+          <template>
             <codemirror
               v-model="sub_code.example"
               :options="cmOption">
             </codemirror>
+          </template>
             <!--<textarea-->
              <!--id="textarea1" name="textarea1">-->
             <!--</textarea>-->
@@ -226,7 +246,7 @@
           </FormItem>
         </Poptip>
         <FormItem>
-          <Button @click="subxlsx()">submit</Button>
+          <Button @click="subxlsx()">提交</Button>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -241,7 +261,7 @@
           <div slot="left"  class="teacher-live-split-pane">
             <div style="position:relative; height:400px; overflow:auto">
             <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
-              <FormItem label="Statement">
+              <FormItem label="题目描述">
                 {{sub_multi.statement}}
               </FormItem>
               <FormItem
@@ -249,7 +269,7 @@
                 :key="index">
                 {{String.fromCharCode(65+index)+" : "+item}}
               </FormItem>
-              <FormItem label="The Answer">
+              <FormItem label="答案">
                 {{sub_multi.answer}}
               </FormItem>
             </Form>
@@ -277,31 +297,29 @@
           <div slot="left"  class="teacher-live-split-pane">
             <div style="position:relative; height:400px; overflow:auto">
               <Form label-position="top">
-                <FormItem label="Text">
+                <FormItem label="题目描述">
                   {{sub_code.statement}}
                 </FormItem>
-                <FormItem label="Language">
+                <FormItem label="代码语言">
                   {{sub_code.language}}
                 </FormItem>
-                <FormItem label="Example Code">
+                <FormItem label="示例代码">
                   <pre v-highlightjs="sub_code.example" height="100"><code class="cpp"></code></pre>
                 </FormItem>
               </Form>
             </div>
           </div>
           <div slot="right"  class="teacher-live-split-pane">
-            <div slot="right"  class="teacher-live-split-pane">
-              <div style="position:relative; height:400px; overflow:auto">
-                <Form :label-width="40">
-                  <FormItem
-                    v-for="(item, index) in codeAnswerList"
-                    :key="index"
-                    :label="item.student"
-                    >
-                    <pre v-highlightjs="item.answer" height="100"><code class="cpp"></code></pre>
-                  </FormItem>
-                </Form>
-              </div>
+            <div style="position:relative; height:400px; overflow:auto">
+              <Form :label-width="40">
+                <FormItem
+                  v-for="(item, index) in codeAnswerList"
+                  :key="index"
+                  :label="item.student"
+                  >
+                  <pre v-highlightjs="item.answer" height="100"><code class="p"></code></pre>
+                </FormItem>
+              </Form>
             </div>
           </div>
         </Split>
@@ -314,8 +332,8 @@
         <span>修改选择题</span>
       </p>
       <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
-        <FormItem label="Statement">
-          <Input type="textarea" v-model="sub_multi.statement" placeholder="Enter your Description"></Input>
+        <FormItem label="题目描述">
+          <Input type="textarea" v-model="sub_multi.statement" placeholder="输入你的题目描述"></Input>
         </FormItem>
         <!-- 以下为选项的动态添加删除  -->
         <FormItem
@@ -327,20 +345,20 @@
               <Input type="text" placeholder="Enter Your Choice" v-model="multi_options[index].value"></Input>
             </Col>
             <Col span="4" offset="1">
-              <Button @click="multi_delChoice(index)">Delete</Button>
+              <Button @click="multi_delChoice(index)">删除</Button>
             </Col>
           </Row>
         </FormItem>
         <FormItem>
           <Row>
             <Col span="12">
-              <Button type="dashed" long @click="multi_addChoice()" icon="md-add">Add Choice</Button>
+              <Button type="dashed" long @click="multi_addChoice()" icon="md-add">添加选项</Button>
             </Col>
           </Row>
         </FormItem>
         <!-- 答案设置  -->
-        <FormItem label="The Answer">
-          <Input v-model="sub_multi.answer" placeholder="a number"></Input>
+        <FormItem label="题目答案">
+          <Input v-model="sub_multi.answer" placeholder="A/B/C/D/.."></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -351,20 +369,24 @@
         <span>设置编程题</span>
       </p>
       <Form label-position="top">
-        <FormItem label="Text">
+        <FormItem label="题目描述">
           <Input v-model="sub_code.statement"
                  type="textarea" rows="4"
-                 placeholder="Enter Your Statement">
+                 placeholder="输入你的题目描述">
           </Input>
         </FormItem>
-        <FormItem label="Language">
-          <Input v-model="sub_code.language" placeholder="Set the language"></Input>
+        <FormItem label="代码语言">
+          <Select v-model="cmOption.mode">
+            <Option value="python">python</Option>
+            <Option value="text/x-c++src">cpp</Option>
+          </Select>
         </FormItem>
-        <FormItem label="Example Code">
-          <!-- autosize="{minRows: 2,maxRows: 5}" may be used in input attribute-->
+        <FormItem label="示例代码">
           <template>
-            <!-------------输入框的代码高亮还没好，现在仅能静态高亮------------>
-            <prism-editor :code="sub_code.example" language="cpp"></prism-editor>
+            <codemirror
+              v-model="sub_code.example"
+              :options="cmOption">
+            </codemirror>
           </template>
         </FormItem>
       </Form>
@@ -678,28 +700,30 @@ export default{
       split_pdf: 0.5,
       modal_pdflist: false,
       // framework to show pdf all
-      pdfAll: [{title: 'Title', key: 'title'},
+      pdfAll: [{title: '标题', key: 'title'},
         {
-          title: 'Action',
+          title: '选项',
           key: 'action',
           fixed: 'right',
-          width: 120,
+          width: 180,
           render: (h, params) => {
             return h('div', [
               h('Button', [
-                h('Poptip', {
+                h('Tooltip', {
                   props: {
-                    confirm: true,
-                    title: '点击以添加该PDF至本教室的使用资源中',
-                    type: 'text',
-                    size: 'small'
+                    // confirm: true,
+                    content: '点击以添加该PDF至本教室的使用资源中',
+                    placement: 'bottom'
+                    // type: 'text',
+                    // size: 'small'
                   },
                   style: {marginRight: '5px'},
                   on: {
                     click: () => { this.addPdfAll(params.index) }
                   }
-                }, 'Add')
+                }, '添加')
               ]),
+              /*
               h('Button', {
                 props: {type: 'text', size: 'small', title: '点击以添加该PDF至本教室的使用资源中'},
                 style: {marginRight: '5px'},
@@ -707,18 +731,19 @@ export default{
                   click: () => { this.addPdfAll(params.index) }
                 }
               }, 'Add'),
+              */
               h('Button', {
-                props: {type: 'text', size: 'small'},
+                props: {type: 'text', size: 'small', title: 'test'},
                 on: {
                   click: () => { this.delPdfAll(params.index) }
                 }
-              }, 'Del')])
+              }, '删除')])
           }
         }],
       pdfThis: [
-        {title: 'Title', key: 'title'},
+        {title: '标题', key: 'title'},
         {
-          title: 'Action',
+          title: '选项',
           key: 'action',
           fixed: 'right',
           width: 120,
@@ -730,13 +755,13 @@ export default{
                 on: {
                   click: () => { this.usePdf(params.index) }
                 }
-              }, 'Use'),
+              }, '使用'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
                   click: () => { this.delPdfClass(params.index) }
                 }
-              }, 'Del')])
+              }, '删除')])
           }
         }],
       pdfThisList: [
@@ -763,10 +788,10 @@ export default{
         statement: 'Among the following people, who is the most gay one?',
         optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
         answer: 'A'
-    },
-      multiAll: [{title: 'Description', key: 'statement'},
+      },
+      multiAll: [{title: '题目', key: 'statement'},
         {
-          title: 'Action',
+          title: '选项',
           key: 'action',
           fixed: 'right',
           width: 180,
@@ -778,25 +803,25 @@ export default{
                 on: {
                   click: () => { this.addMultiAll(params.index) }
                 }
-              }, 'Add'),
+              }, '添加'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
                   click: () => { this.editMultiAll(params.index) }
                 }
-              }, 'Edit'),
+              }, '编辑'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
                   click: () => { this.delMultiAll(params.index) }
                 }
-              }, 'Del')])
+              }, '删除')])
           }
         }],
-      multiThis: [{title: 'Description', key: 'statement'},
+      multiThis: [{title: '题目', key: 'statement'},
         {
-          title: 'Action',
+          title: '选项',
           key: 'action',
           fixed: 'right',
           width: 180,
@@ -808,20 +833,20 @@ export default{
                 on: {
                   click: () => { this.useMulti(params.index) }
                 }
-              }, 'Use'),
+              }, '使用'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
                   click: () => { this.viewMulti(params.index) }
                 }
-              }, 'View'),
+              }, '查看'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
                   click: () => { this.delMultiClass(params.index) }
                 }
-              }, 'Del')])
+              }, '删除')])
           }
         }],
       // MULTI LIST
@@ -864,9 +889,9 @@ export default{
       modal_editcode: false,
       // FRAMEWORK TO SHOW CODE LIST
       codeAll: [
-        {title: 'Statement', key: 'statement'},
+        {title: '题目', key: 'statement'},
         {
-          title: 'Action',
+          title: '选项',
           key: 'action',
           fixed: 'right',
           width: 180,
@@ -878,25 +903,25 @@ export default{
                 on: {
                   click: () => { this.addCodeAll(params.index) }
                 }
-              }, 'Add'),
+              }, '添加'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
                   click: () => { this.editCodeAll(params.index) }
                 }
-              }, 'Edit'),
+              }, '编辑'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
                   click: () => { this.delCodeAll(params.index) }
                 }
-              }, 'Del')])
+              }, '删除')])
           }
         }],
-      codeThis: [{title: 'Statement', key: 'statement'},
+      codeThis: [{title: '题目', key: 'statement'},
         {
-          title: 'Action',
+          title: '选项',
           key: 'action',
           fixed: 'right',
           width: 180,
@@ -908,20 +933,20 @@ export default{
                 on: {
                   click: () => { this.useCode(params.index) }
                 }
-              }, 'Use'),
+              }, '使用'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 style: {marginRight: '5px'},
                 on: {
                   click: () => { this.viewCode(params.index) }
                 }
-              }, 'View'),
+              }, '查看'),
               h('Button', {
                 props: {type: 'text', size: 'small'},
                 on: {
                   click: () => { this.delCodeClass(params.index) }
                 }
-              }, 'Del')])
+              }, '删除')])
           }
         }],
       // CODE LIST
@@ -982,16 +1007,12 @@ export default{
       },
       // CODE EDITOR
       cmOption: {
-//        smartIndent:true,
-//          showCursorWhenSelecting: true,
-          autofocus: true,
-//        autoCloseBrackets: true,
-//        tabSize: 4,
-          lineNumbers: true,
-//        line: true,
-          mode: 'python',
-          theme: "blackboard" ,                 //选中的theme
-          lineWrapping: true,
+        autoCloseBrackets: true,
+        tabSize: 4,
+        lineNumbers: true,
+        line: true,
+        mode: '',
+        theme: 'base16-light'
       },
       // ADD STUDENT LIST
       modal_student_xlsx: false,
@@ -1178,13 +1199,18 @@ export default{
     // CODE
     create_code () {
       this.sub_code.statement = ''
-      // this.sub_code.example = ''
+      this.sub_code.example = ''
       this.sub_code.language = ''
       this.modal_code = true
     },
     addCode () {
       // sub_code should be set by now
       this.sub_code.username = this.userInfo.username
+      if (this.cmOption.mode === 'python') {
+        this.sub_code.language = 'python'
+      } else if (this.cmOption.mode === 'text/x-c++src') {
+        this.sub_code.language = 'cpp'
+      }
       // test
       console.log(this.sub_code.username)
       console.log(this.sub_code.language)
@@ -1230,8 +1256,18 @@ export default{
       input.username = this.userInfo.username
       input.url = this.cururl
       input.pdf = iPdf
+      // check if added
+      let added = false
+      console.log(iPdf.url)
+      for (let i = 0; i < this.pdfThisList.length; i++) {
+        console.log(this.pdfThisList[i].url)
+        if (iPdf.url === this.pdfThisList[i].url) {
+          console.log('succeed!')
+          added = true
+        }
+      }
       // post
-      if (this.pdfThisList.indexOf(iPdf) !== -1) {
+      if (added) {
         // if it exists in current list
         this.$.message.success('Already Added')
       } else {
@@ -1245,11 +1281,11 @@ export default{
                 this.pdfAllList = resp.data.pdfAllList
                 this.pdfThisList = resp.data.pdfThisList
               } else {
-                this.$.message('wrong')
+                this.$.message.error('wrong')
               }
             })
           } else {
-            this.$.message('error in post')
+            this.$.message.error('error in post')
           }
         })
       }
@@ -1274,11 +1310,11 @@ export default{
               this.pdfAllList = resp.data.pdfAllList
              this.pdfThisList = resp.data.pdfThisList
             } else {
-              this.$.message('wrong')
+              this.$.message.error('wrong')
             }
           })
         } else {
-          this.$.message('error in post')
+          this.$.message.error('error in post')
         }
       })
     },
@@ -1348,7 +1384,7 @@ export default{
             }
           })
         } else {
-          this.$.message('error in post')
+          this.$.message.error('error in post')
         }
       })
     },
@@ -1432,9 +1468,19 @@ export default{
       input.username = this.userInfo.username
       input.url = this.cururl
       input.uniqueId = iMulti.uniqueId
+      // check if added
+      let added = false
+      console.log(iMulti.uniqueId)
+      for (let i = 0; i < this.multiThisList.length; i++) {
+        console.log(this.multiThisList[i].uniqueId)
+        if (iMulti.uniqueId === this.multiThisList[i].uniqueId) {
+          console.log('succeed!')
+          added = true
+        }
+      }
       // post
-      if (this.multiThisList.indexOf(iMulti) !== -1) {
-        this.$.message('Already Added')
+      if (added) {
+        this.$.message.error('Already Added')
       } else {
         axios.post('/api/resource/multi_addclass', input).then((resp) => {
           if (resp.data.status === 'success') {
@@ -1450,7 +1496,7 @@ export default{
               console.log('response data get, although do not know what')
             })
           } else {
-            this.$.message('something wrong')
+            this.$.message.error('something wrong')
           }
         })
       }
@@ -1476,7 +1522,7 @@ export default{
             this.multiThisList = resp.data.multiThisList
           })
         } else {
-          this.$.message('something wrong')
+          this.$.message.error('something wrong')
         }
       })
     },
@@ -1558,7 +1604,7 @@ export default{
             this.multiThisList = resp.data.multiThisList
           })
         } else {
-          this.$.message('something wrong')
+          this.$.message.error('something wrong')
         }
       })
     },
@@ -1592,6 +1638,11 @@ export default{
     submitCodeChange () {
       // sub_code should be set by now
       this.sub_code.username = this.userInfo.username
+      if (this.cmOption.mode === 'python') {
+        this.sub_code.language = 'python'
+      } else if (this.cmOption.mode === 'text/x-c++src') {
+        this.sub_code.language = 'cpp'
+      }
       // test
       console.log(this.sub_code.username)
       console.log(this.sub_code.language)
@@ -1615,9 +1666,19 @@ export default{
       input.username = this.userInfo.username
       input.url = this.cururl
       input.uniqueId = iCode.uniqueId
+      // check if added
+      let added = false
+      console.log(iCode.uniqueId)
+      for (let i = 0; i < this.codeThisList.length; i++) {
+        console.log(this.codeThisList[i].uniqueId)
+        if (iCode.uniqueId === this.codeThisList[i].uniqueId) {
+          console.log('succeed!')
+          added = true
+        }
+      }
       // post
-      if (this.codeThisList.indexOf(iCode) !== -1) {
-        this.$.message('Already Added')
+      if (added) {
+        this.$.message.error('Already Added')
       } else {
         axios.post('/api/resource/code_addclass', input).then((resp) => {
           if (resp.data.status === 'success') {
@@ -1631,7 +1692,7 @@ export default{
               this.codeThisList = resp.data.codeThisList
             })
           } else {
-            this.$.message('something wrong')
+            this.$.message.error('something wrong')
           }
         })
       }
@@ -1657,7 +1718,7 @@ export default{
             this.codeThisList = resp.data.codeThisList
           })
         } else {
-          this.$.message('something wrong')
+          this.$.message.error('something wrong')
         }
       })
     },
@@ -1748,7 +1809,7 @@ export default{
             this.codeThisList = resp.data.codeThisList
           })
         } else {
-          this.$.message('something wrong')
+          this.$.message.error('something wrong')
         }
       })
     },
