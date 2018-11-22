@@ -6287,6 +6287,7 @@ var pdfjsWebLibs;
      });
     },
     setInitialView: function pdfViewSetInitialView(storedHash, options) {
+      var fpage = paggg;
      var scale = options && options.scale;
      var sidebarView = options && options.sidebarView;
      this.isInitialViewSet = true;
@@ -6304,6 +6305,7 @@ var pdfjsWebLibs;
       this.pdfViewer.currentScaleValue = scale;
       this.page = 1;
      }
+     this.pdfViewer.currentPageNumber=parseInt(fpage);
      this.toolbar.setPageNumber(this.pdfViewer.currentPageNumber, this.pdfViewer.currentPageLabel);
      this.secondaryToolbar.setPageNumber(this.pdfViewer.currentPageNumber);
      if (!this.pdfViewer.currentScaleValue) {

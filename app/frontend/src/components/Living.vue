@@ -41,7 +41,8 @@
           <!--输入框的代码高亮-->
           <codemirror
             id="codemirr"
-            :value="Chat.codeall.example"
+            v-model="curcode"
+            :value="CHAT.codeall.example"
             :options="cmOption"
             class="codecode"
             >
@@ -49,17 +50,25 @@
 
         </FormItem>
       </Form>
+      <Button  type="primary" @click="codesubmit">提交答案</Button>
+
     </div>
 
     <!--<div id="mainselectcard" class="celeardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
     <div  id="mainselectcard" class="cardtealivingselect00" :style="{display:CHAT.frametype === 'select'?'block':'none'}">
-      <p class="selecttitle00">{{CHAT.selectall.statement}}</p>
-      <RadioGroup  class="radiotea" v-model="stuans" vertical>
-        <Radio v-for="(item, index) in CHAT.selectall.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
-          <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
-        </Radio>
-      </RadioGroup>
-      <Button class="selectsubmit00" type="primary" @click="selectsubmit">提交答案: {{String.fromCharCode(65+stuans)}}</Button>
+      <Form>
+        <FormItem label="题目">
+          <p style="word-break:break-all;float:left;text-align: left">{{CHAT.selectall.statement}}</p>
+        </FormItem>
+        <FormItem >
+          <RadioGroup  style="float: left" v-model="stuans" vertical>
+            <Radio v-for="(item, index) in CHAT.selectall.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
+              <span >{{String.fromCharCode(65+index)+" : "+item}}</span>
+            </Radio>
+          </RadioGroup>
+        </FormItem>
+      </Form>
+      <Button  type="primary" @click="selectsubmit">提交答案: {{String.fromCharCode(65+stuans)}}</Button>
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
@@ -220,6 +229,7 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
+      curcode:'',
       chathei: 600 + 'px',
       chattop: 150 + 'px',
       socket: null,
@@ -533,16 +543,34 @@ export default{
       this.userInfo['mobile'] = this.$cookies.get('user').mobile
       this.userInfo['job'] = this.$cookies.get('user').job
     },
+    codesubmit(){
+        console.log("dasdas")
+        var data={}
+        data['username'] = this.userInfo['username']
+        data['url']=this.cururl
+        data['uniqueId'] = this.CHAT.codeall.uniqueId
+        data['answer'] = this.curcode
+        axios.post('/api/resource/code_submit', data).then((resp) => {
+          this.$Message.success('提交成功!')
+      }).catch(function (err) {
+        Info.layerBox(err, 1)
+        this.$Message.success('提交失败!')
+      });
+
+    },
     selectsubmit(){
       console.log("dasdas")
       var data={}
       data['username'] = this.userInfo['username']
       data['url']=this.cururl
-      data['uniqueId'] = this.CHAT.selectall.answer
+      data['uniqueId'] = this.CHAT.selectall.uniqueId
       data['answer'] = this.stuans
       axios.post('/api/resource/multi_submit', data).then((resp) => {
         this.$Message.success('提交成功!')
-      })
+      }).catch(function (err) {
+        Info.layerBox(err, 1)
+  this.$Message.success('提交失败!')
+      });
     }
   }
 
@@ -617,6 +645,11 @@ export default{
     border-radius: 5px;
     font-size: 12px;
     word-break: break-all;
+  }
+  p{
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: hidden;
   }
   .talk-word-user {
     border-bottom-right-radius: 0;

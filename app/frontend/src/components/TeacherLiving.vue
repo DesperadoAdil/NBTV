@@ -452,20 +452,20 @@
     <!--answer: 'A'-->
     <!--},-->
     <!---------main 选择题 部分 在主界面显示选择题------------->
-    <div id="mainselectcard" :style="{display:mainselectcarddisplay?'block':'none'}">
+
+    <!--zsh-->
+     <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
+    <!--zsh-->
       <Form>
-        <FormItem>
-          <p class="selecttitle00">{{curMulti.statement}}</p>
+        <FormItem label="题目">
+          <p style="word-break:break-all;float:left;text-align: left">{{curmulti.statement}}</p>
         </FormItem>
+        <FormItem v-for="(item, index) in curmulti.optionList"  :key="index"  style=" font-size: 15px">
+          <p style="word-break:break-all;float:left;text-align: left">{{String.fromCharCode(65+index)+" : "+item}}</p>
+          </FormItem>
+
         <FormItem>
-          <RadioGroup class="radiotea" v-model="curMulti.optionList" vertical>
-            <Radio v-for="(item, index) in curMulti.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
-              <span>{{String.fromCharCode(65+index)+" : "+item}}</span>
-            </Radio>
-          </RadioGroup>
-        </FormItem>
-        <FormItem>
-          <p class="anstea00">本题目答案：{{curMulti.answer}}</p>
+          <p style="word-break:break-all;float:left;text-align: left">本题目答案：{{curmulti.answer}}</p>
         </FormItem>
       </Form>
     </div>
@@ -782,8 +782,9 @@ export default{
       modal_editmulti: false,
       modal_multilist: false,
       // FRAMEWORK TO SHOW MULTI
-      curMulti: {
-        uniqueId: '',
+
+    curmulti:{
+      uniqueId: '',
         statement: 'Among the following people, who is the most gay one?',
         optionList: ['ADIL', 'XCJ', 'HYX', 'ZHQ ♂ ZSH'],
         answer: 'A'
@@ -1038,6 +1039,7 @@ export default{
         item: ''
       },
       // STREAM PARAMETERS
+      curpdfurl0:'',
       curstream: '',
       vid: '248980',
       cururl: '',
@@ -1113,7 +1115,7 @@ export default{
       this.curpage = document.getElementById('displayPdfIframe').contentWindow.document.getElementById('pageNumber').value
       console.log(this.curpage)
       let idata = {pdfurl: '', page: ''}
-      idata.pdfurl = this.displayPdfurl
+      idata.pdfurl = this.curpdfurl0
       idata.page = this.curpage
 
       let date = new Date()
@@ -1243,7 +1245,7 @@ export default{
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
 
-        this.pdfThisList = resp.data.pdfThisList
+         this.pdfThisList = resp.data.pdfThisList
       })
     },
     // ADD PDF TO CLASS
@@ -1306,7 +1308,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
+             this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$.message.error('wrong')
             }
@@ -1325,6 +1327,7 @@ export default{
         content: '是否展示' + ipdf.title,
         onOk: () => {
           console.log('onOK')
+        this.curpdfurl0=ipdf.url
           this.chatingtop = 340 + 'px'
           this.chatinghei = 430 + 'px'
           this.videohei = 250 + 'px'
@@ -1375,7 +1378,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-              this.pdfThisList = resp.data.pdfThisList
+             this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$.message.error('wrong')
             }
@@ -1531,6 +1534,18 @@ export default{
         title: '提示',
         content: '是否展示: \n ' + iselect.statement,
         onOk: () => {
+          console.log("sdasd")
+          this.chatingtop = 340 + 'px'
+          this.chatinghei = 430 + 'px'
+          this.chatingtop = 340 + 'px'
+          this.chatinghei = 430 + 'px'
+          this.mainselectcarddisplay = true
+          this.mainpdfcarddisplay = false
+          this.classmain0 = false
+  this.maincodecarddispaly=false
+          this.curvideo = false
+          this.curMulti = iselect
+          this.modal_multilist = false
           let date = new Date()
           let time = date.getHours() + ':' + date.getMinutes()
           let obj = {
@@ -1543,17 +1558,6 @@ export default{
             fromUser: this.userInfo.username
           }
           CHAT.submit(obj)
-
-          // this.videohei = 250 + 'px'
-          // this.chatingtop = 340 + 'px'
-          // this.chatinghei = 430 + 'px'
-          this.mainselectcarddisplay = true
-          this.mainpdfcarddisplay = false
-          this.classmain0 = false
-  this.maincodecarddispaly=false
-          this.curvideo = false
-          this.curMulti = iselect
-          this.modal_multilist = false
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -1733,9 +1737,11 @@ export default{
         content: '是否展示' + iCode.statement,
         onOk: () => {
           console.log('onOK')
+        this.curcode=iCode
 
 
   document.getElementById("codemirr").focus();
+
           this.modal_codelist = false
           this.chatingtop = 340 + 'px'
           this.chatinghei = 430 + 'px'
@@ -2056,6 +2062,8 @@ export default{
         title: '提示',
         content: '确认退出教学资源',
         onOk: () => {
+        console.log("close")
+          this.maincodecarddispaly=false
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
           this.classmain0 = true
