@@ -588,11 +588,11 @@ export default{
   }
   .talk-contents {
     height: 100%;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
   }
   .talk-nav {
     background-color: #eee;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     text-align: center;
     position: absolute;
     top: 0;
@@ -612,14 +612,14 @@ export default{
     position: absolute;
     bottom: 50px;
     padding: 0 19px;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     top: 51px;
     right: 0;
     left: 0;
     overflow: scroll;
   }
   .talker {
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     padding-right: 19px;
     border-top: 1px solid #d6d6d6;
     position: absolute;
@@ -660,7 +660,7 @@ export default{
     background: rgba(243, 243, 243, 1) none;
     color: rgba(0, 0, 0, 1);
     border-bottom-left-radius: 0;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     text-align: right;
   }
   .self-talk {
