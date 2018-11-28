@@ -1,12 +1,16 @@
 <template>
   <div id="myWatchingList" class="posi">
+
     <h1 class="list-info">
       <Icon type="ios-time" />
-      <span class="list-title-word">正在播出</span>
-      <Button class="listbtn" @click="timelist">开播时间</Button>
-      <Button class="listbtn" @click="audiencelist">创建时间</Button>
+      正在播出
     </h1>
     <Divider />
+    <h2 class="list-info">
+      <Button type="primary" class="listbtn" @click="timelist">开播时间</Button>
+      <Button type="primary" class="listbtn" @click="audiencelist">创建时间</Button>
+    </h2>
+
     <Row>
       <Col span="12" v-for="item in items" :key="item.vid">
         <Card class="watchcard" @click="skip(item)">
