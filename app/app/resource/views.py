@@ -139,16 +139,7 @@ def view_choice_class():
     data = json.loads(request.get_data())
 
     ret = {}
-    '''
-    choice_tmp = multiChoiceManager.search(data['uniqueId'])
-    if choice_tmp is None:
-        print('gg: choice_tmp is None')
-        ret['status'] = 'error'
-        return json.dumps(ret)
 
-    ret['multiAnswerList'] = json.loads(choice_tmp.submitRecord)
-    return json.dumps(ret)
-    '''
     tmp = multiChoiceManager.getSubmitAns(data['uniqueId'], data['url'])
     if type(tmp) != list:
         ret['status'] = 'error'
