@@ -15,7 +15,7 @@ class MultiChoiceQuestion:
 
 		uniqueId = str(uuid.uuid4())
 
-		que = ChoiceQuestion(owner = username, uniqueId = uniqueId, statement = statement, optionList = json.dumps(optionList, ensure_ascii = False), answer = answer, submitRecord = "[]")
+		que = ChoiceQuestion(owner = username, uniqueId = uniqueId, statement = statement, optionList = json.dumps(optionList, ensure_ascii = False), answer = answer, submitRecord = "{}")
 		db.session.add(que)
 		db.session.commit()
 
@@ -74,7 +74,8 @@ class MultiChoiceQuestion:
 			db.session.add(que)
 			db.session.commit()
 			return "success"
-		except:
+		except Exception as err:
+			print(err)
 			return "error"
 
 	def getSubmitAns(self, uniqueId, url):

@@ -139,16 +139,7 @@ def view_choice_class():
     data = json.loads(request.get_data())
 
     ret = {}
-    '''
-    choice_tmp = multiChoiceManager.search(data['uniqueId'])
-    if choice_tmp is None:
-        print('gg: choice_tmp is None')
-        ret['status'] = 'error'
-        return json.dumps(ret)
 
-    ret['multiAnswerList'] = json.loads(choice_tmp.submitRecord)
-    return json.dumps(ret)
-    '''
     tmp = multiChoiceManager.getSubmitAns(data['uniqueId'], data['url'])
     if type(tmp) != list:
         ret['status'] = 'error'
@@ -205,7 +196,7 @@ def update_code():
     data = json.loads(data)
 
     ret = {}
-    ret['status'] = codeQuestionManager.update(data['uniqueId'], data['statement'], data['language'])
+    ret['status'] = codeQuestionManager.update(data['uniqueId'], data['statement'], data['language'], data['example'])
     return json.dumps(ret)
 
 @resource.route('/code_addclass', methods = ['POST', 'GET'])
@@ -241,17 +232,7 @@ def view_code_class():
     data = json.loads(request.get_data())
     
     ret = {}
-    '''
-    code_tmp = codeQuestionManager.search(data['uniqueId'])
-    if code_tmp is None or code_tmp.owner != data['username']:
-        print('gg: code is wrong')
-        ret['status'] = 'error'
-        return json.dumps(ret)
 
-    ret['codeAnswerList'] = json.loads(code_tmp.submitRecord)
-    ret['status'] = 'success'
-    return json.dumps(ret)
-    '''
     tmp = codeQuestionManager.getSubmitAns(data['uniqueId'], data['url'])
     if type(tmp) != list:
         ret['status'] = 'error'
