@@ -44,7 +44,7 @@ class Resource_Code_Test(BaseTestCase):
 		uniqueId = codeQuestionManager.insert(self.code_data['username'], self.code_data['statement'], self.code_data['language'], self.code_data['example'])
 		
 		# add code to a class
-		response = self.app.post('/api/resource/code_add_class', data = json.dumps({"username": "adil", "url": "123456", "uniqueId": uniqueId}))
+		response = self.app.post('/api/resource/code_addclass', data = json.dumps({"username": "adil", "url": "123456", "uniqueId": uniqueId}))
 		self.assertEquals(json.loads(response.data)['status'], 'success')
 
 		# submit a code to a class
