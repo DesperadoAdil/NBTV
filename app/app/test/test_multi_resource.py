@@ -34,7 +34,7 @@ class Resource_Multi_Test(BaseTestCase):
 	def test_update_multi(self):
 		uniqueId = multiChoiceManager.insert(self.multi_data['username'], self.multi_data['statement'], self.multi_data['optionList'], self.multi_data['answer'])
 		
-		response = self.app.post('/api/resource/update_multiple', data = json.dumps(self.multi_data))
+		response = self.app.post('/api/resource/update_multiple', data = json.dumps({"uniqueId": uniqueId, "statement": self.multi_data['statement'], "optionList": self.multi_data['optionList'], "answer": "B"}))
 		response_data = json.loads(response.data.decode('utf8'))
 		self.assertEquals(response_data['status'], 'success')
 

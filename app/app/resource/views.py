@@ -232,17 +232,7 @@ def view_code_class():
     data = json.loads(request.get_data())
     
     ret = {}
-    '''
-    code_tmp = codeQuestionManager.search(data['uniqueId'])
-    if code_tmp is None or code_tmp.owner != data['username']:
-        print('gg: code is wrong')
-        ret['status'] = 'error'
-        return json.dumps(ret)
 
-    ret['codeAnswerList'] = json.loads(code_tmp.submitRecord)
-    ret['status'] = 'success'
-    return json.dumps(ret)
-    '''
     tmp = codeQuestionManager.getSubmitAns(data['uniqueId'], data['url'])
     if type(tmp) != list:
         ret['status'] = 'error'
