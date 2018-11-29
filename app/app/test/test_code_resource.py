@@ -28,6 +28,7 @@ class Resource_Code_Test(BaseTestCase):
 	def test_update_code(self):
 		uniqueId = codeQuestionManager.insert(self.code_data['username'], self.code_data['statement'], self.code_data['language'], self.code_data['example'])
 		
+		self.code_data['uniqueId'] = uniqueId
 		response = self.app.post('/api/resource/update_code', data = json.dumps(self.code_data))		
 		self.assertEquals(json.loads(response.data)['status'], 'success')
 
