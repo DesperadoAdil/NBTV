@@ -74,7 +74,8 @@ class MultiChoiceQuestion:
 			db.session.add(que)
 			db.session.commit()
 			return "success"
-		except:
+		except Exception as err:
+			print(err)
 			return "error"
 
 	def getSubmitAns(self, uniqueId, url):
