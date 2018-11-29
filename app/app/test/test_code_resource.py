@@ -13,20 +13,20 @@ class Resource_Code_Test(BaseTestCase):
 	}
 
 	def test_add_code(self):
-		response = self.app.post('/api/resource/add_code', data = json.dumps(code_data))
+		response = self.app.post('/api/resource/add_code', data = json.dumps(self.code_data))
 		response_data = json.loads(response.data.decode('utf8'))
 		self.assertEquals(response_data['status'], "success")
 
 		codeQuestionManager.delete(response_data['uniqueId'])
 
 	def test_delete_code(self):
-		uniqueId = codeQuestionManager.insert(code_data['username'], code_data['statement'], code_data['language'], code_data['example'])
+		uniqueId = codeQuestionManager.insert(self.code_data['username'], self.code_data['statement'], self.code_data['language'], self.code_data['example'])
 
 		response = self.app.post('/api/resource/delete_code', data = json.dumps({'uniqueId': uniqueId}))
 		self.assertEquals(json.loads(response.data)['status'], 'success')
 
 	def test_update_code(self):
-		uniqueId = codeQuestionManager.insert(code_data['username'], code_data['statement'], code_data['language'], code_data['example'])
+		uniqueId = codeQuestionManager.insert(self.code_data['username'], self.code_data['statement'], self.code_data['language'], self.code_data['example'])
 		
 		response = self.app.post('/api/resource/update_code', data = json.dumps({"uniqueId": uniqueId, "statement": self.code_data['statement'], "language": self.code_data["language"]}))		
 		self.assertEquals(json.loads(response.data)['status'], 'success')
@@ -41,7 +41,7 @@ class Resource_Code_Test(BaseTestCase):
 		self.assertEquals(type(response_data['codeThisList']), list)
 
 	def test_add_submit_view_delete_code_class(self):
-		uniqueId = codeQuestionManager.insert(code_data['username'], code_data['statement'], code_data['language'], code_data['example'])
+		uniqueId = codeQuestionManager.insert(self.code_data['username'], self.code_data['statement'], self.code_data['language'], self.code_data['example'])
 		
 		# add code to a class
 		response = self.app.post('/api/resource/code_add_class', data = json.dumps({"username": "adil", "url": "123456", "uniqueId": uniqueId}))
