@@ -16,8 +16,8 @@ class Resource_Multi_Test(BaseTestCase):
 	def test_add_multi(self):
 		
 		response = self.app.post('/api/resource/add_multiple', data = json.dumps(self.multi_data))
-		response_data = json.loads(response.data.decode('utf8')
-		self.assertEquals(response_data['status'], "success"))
+		response_data = json.loads(response.data.decode('utf8'))
+		self.assertEquals(response_data['status'], "success")
 
 		try:
 			multiChoiceManager.delete(response_data['uniqueId'])

@@ -14,8 +14,8 @@ class Resource_Code_Test(BaseTestCase):
 
 	def test_add_code(self):
 		response = self.app.post('/api/resource/add_code', data = json.dumps(code_data))
-		response_data = json.loads(response.data.decode('utf8')
-		self.assertEquals(response_data['status'], "success"))
+		response_data = json.loads(response.data.decode('utf8'))
+		self.assertEquals(response_data['status'], "success")
 
 		codeQuestionManager.delete(response_data['uniqueId'])
 
