@@ -196,7 +196,7 @@ def update_code():
     data = json.loads(data)
 
     ret = {}
-    ret['status'] = codeQuestionManager.update(data['uniqueId'], data['statement'], data['language'])
+    ret['status'] = codeQuestionManager.update(data['uniqueId'], data['statement'], data['language'], data['example'])
     return json.dumps(ret)
 
 @resource.route('/code_addclass', methods = ['POST', 'GET'])
