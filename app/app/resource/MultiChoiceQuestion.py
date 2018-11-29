@@ -15,7 +15,7 @@ class MultiChoiceQuestion:
 
 		uniqueId = str(uuid.uuid4())
 
-		que = ChoiceQuestion(owner = username, uniqueId = uniqueId, statement = statement, optionList = json.dumps(optionList, ensure_ascii = False), answer = answer, submitRecord = "[]")
+		que = ChoiceQuestion(owner = username, uniqueId = uniqueId, statement = statement, optionList = json.dumps(optionList, ensure_ascii = False), answer = answer, submitRecord = "{}")
 		db.session.add(que)
 		db.session.commit()
 
