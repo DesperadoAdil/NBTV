@@ -38,8 +38,8 @@
     </Modal>
     <Row class="myLivingList-flex-container">
       <Col span="8" v-for="(living, index) in myLivingList" :key="living.url">
-        <card class="myLivingList-flex-item" @click.native="directskip(living)">
-          <img :src="living.thumbnail" class="thumbnail" >
+        <card class="myLivingList-flex-item" >
+          <img :src="living.thumbnail" class="thumbnail" @click="directskip(living)">
           <p class="my-class-title">{{ living.title }}</p>
           <span><Button type="success" @click="getBackUp(index)">更新课程</Button></span>
           <Modal
