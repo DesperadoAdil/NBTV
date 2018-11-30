@@ -940,13 +940,15 @@ export default{
       modal_pdf: false,
       // MULTI
       modal_multi: false,
-      multi_options: [
-        {
-          value: '',
-          index: 1,
-          status: 1
-        }
-      ], //
+      // multi_options: set as []
+      // multi_options: [
+      //   {
+      //     value: '',
+      //     index: 1,
+      //     status: 1
+      //   }
+      // ],
+      multi_options: [],
       multi_index: 1,
       sub_multi: {
         uniqueId: '',
@@ -1306,12 +1308,12 @@ export default{
         content: '是否展示' + ipdf.title,
         onOk: () => {
           // console.log('onOK')
-        this.curpdfurl0=ipdf.url
+          this.curpdfurl0 = ipdf.url
           this.chatingtop = 310 + 'px'
           this.chatinghei = 450 + 'px'
           this.videohei = 250 + 'px'
-          this.using=true
-          this.maincodecarddispaly=false
+          this.using = true
+          this.maincodecarddispaly = false
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
           this.classmain0 = false
@@ -1729,7 +1731,7 @@ export default{
           this.chatingtop = 310 + 'px'
           this.chatinghei = 450 + 'px'
           this.videohei = 250 + 'px'
-          this.using=true
+          this.using = true
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
           this.classmain0 = false
@@ -1766,9 +1768,6 @@ export default{
       input.username = this.userInfo.username
       input.url = this.cururl
       input.uniqueId = iCode.uniqueId
-      this.sub_code.statement = iCode.statement
-      this.sub_code.language = iCode.language
-      this.sub_code.example = iCode.example
       // debug
       // console.log(input)
       this.sub_code.statement = iCode.statement
