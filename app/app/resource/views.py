@@ -329,6 +329,7 @@ def delete_PDF():
     except Exception as err:
         print(err)
         ret['status'] = "error"
+    print(ret)
     return json.dumps(ret, ensure_ascii = False)
 
 
@@ -351,7 +352,7 @@ def delete_class_PDF():
         print('gg: pdf_tmp is None')
         ret['status'] = 'error'
         return json.dumps(ret)
-        
+
     clr.pdffile.remove(pdf_tmp)
     db.session.add(clr)
     db.session.commit()
