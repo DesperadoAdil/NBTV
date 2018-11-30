@@ -1,5 +1,6 @@
 from app import db
 from datetime import datetime
+import json
 
 classroom_choice = db.Table(
     'classroom_choice',
@@ -59,7 +60,7 @@ class Classrooms(db.Model):
     #禁言名单
     shutuplist = db.Column(db.Text, nullable = False, default = "[]")
     #直播姬状态
-    status = db.Column(db.Text, nullable=False, default="{'type': 'closeliving'}")
+    status = db.Column(db.Text, nullable=False, default=json.dumps({'type': 'closeliving'}))
 
 
     choice = db.relationship('ChoiceQuestion', secondary = classroom_choice, backref = db.backref('classroom', lazy='dynamic'), lazy = 'dynamic')
