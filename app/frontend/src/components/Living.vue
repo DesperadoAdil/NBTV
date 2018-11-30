@@ -13,13 +13,13 @@
 
     <div  id="littlelivingcard" class="cardtealittleliving11" :style="{display:CHAT.frametype !== 'close'?'block':'none'}">
       <!--<div id="littlelivingcard" class="cardtealittleliving11" :style="{display:littlelivingcarddisplay?'block':'none'}">-->
-      <div class="topveido">
+      <!--<div class="topveido">-->
         <!--<h3>教室信息显示部分（待修改）</h3>-->
-      </div>
+      <!--</div>-->
       <div id='player2'></div>
-      <div class="bottomveido">
+      <!--<div class="bottomveido">-->
         <!--<h3>礼物等其他显示部分（待修改）</h3>-->
-      </div>
+      <!--</div>-->
     </div>
 
     <!--<div id="mainpdfcard" class="cardtealivingpdf11" :style="{display:mainpdfcarddisplay?'block':'none'}">-->
@@ -30,13 +30,13 @@
     <!--<div id="maincodecard" class="cardtealivingcdode00" :style="{display:maincodecarddisplay?'block':'none'}">-->
     <div  id="maincodecard" class="cardtealivingcdode00"  :style="{display:CHAT.frametype === 'code'?'block':'none'}">
       <Form label-position="left">
-        <FormItem label="问题描述：" >
-          <p style="word-break:break-all;float:left;text-align: left"> {{CHAT.codeall.statement}}</p>
+        <FormItem  >
+          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px">问题描述: {{CHAT.codeall.statement}}</p>
         </FormItem>
-        <FormItem label="编程语言：">
-          <p style="word-break:break-all;float:left;text-align: left">{{CHAT.codeall.language}}</p>
+        <FormItem >
+          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px">编程语言：{{CHAT.codeall.language}}</p>
         </FormItem>
-        <FormItem label="输入答案：">
+        <FormItem>
 
           <!--输入框的代码高亮-->
           <codemirror
@@ -57,22 +57,23 @@
     <!--<div id="mainselectcard" class="celeardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
     <div  id="mainselectcard" class="cardtealivingselect00" :style="{display:CHAT.frametype === 'select'?'block':'none'}">
       <Form>
-        <FormItem label="题目">
-          <p style="word-break:break-all;float:left;text-align: left">{{CHAT.selectall.statement}}</p>
+        <FormItem >
+          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px">题目：{{CHAT.selectall.statement}}</p>
         </FormItem>
         <FormItem >
-          <RadioGroup  style="float: left" v-model="stuans" vertical>
-            <Radio v-for="(item, index) in CHAT.selectall.optionList"  :key="index" v-bind:label="index" style="font-size: 15px">
-              <span >{{String.fromCharCode(65+index)+" : "+item}}</span>
+          <RadioGroup  style="float:left" v-model="stuans" vertical>
+            <Radio v-for="(item, index) in CHAT.selectall.optionList"  :key="index" v-bind:label="index" style="font-size: 15px;float:left">
+              <span style="font-size: 20px">{{String.fromCharCode(65+index)+" : "+item}}</span>
+              <br/>
             </Radio>
           </RadioGroup>
         </FormItem>
       </Form>
-      <Button  type="primary" @click="selectsubmit">提交答案: {{String.fromCharCode(65+stuans)}}</Button>
+      <Button  type="primary" @click="selectsubmit" style="font-size: 20px ;float: left">提交答案: {{String.fromCharCode(65+stuans)}}</Button>
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
-    <div id="chatingRoom2" :style="{height:CHAT.frametype === 'close'? 650+'px':350+'px',top:CHAT.frametype === 'close'? 150+'px':450+'px'}">
+    <div id="chatingRoom2" :style="{height:CHAT.frametype === 'close'? 650+'px':400+'px',top:CHAT.frametype === 'close'? 150+'px':350+'px'}">
       <div class="talk-contents">
         <div class="talk-inner">
           <div class="talk-nav">
@@ -588,11 +589,11 @@ export default{
   }
   .talk-contents {
     height: 100%;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
   }
   .talk-nav {
     background-color: #eee;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     text-align: center;
     position: absolute;
     top: 0;
@@ -612,14 +613,14 @@ export default{
     position: absolute;
     bottom: 50px;
     padding: 0 19px;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     top: 51px;
     right: 0;
     left: 0;
     overflow: scroll;
   }
   .talker {
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     padding-right: 19px;
     border-top: 1px solid #d6d6d6;
     position: absolute;
@@ -660,7 +661,7 @@ export default{
     background: rgba(243, 243, 243, 1) none;
     color: rgba(0, 0, 0, 1);
     border-bottom-left-radius: 0;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     text-align: right;
   }
   .self-talk {
@@ -686,13 +687,13 @@ export default{
   .cardtealiving11{
     position:absolute;
     left: 10%;
-    width: 59%;
+    width: 60%;
     top:150px;
   }
   .cardtealivingpdf11{
     position:absolute;
     left: 10%;
-    width: 59%;
+    width: 60%;
     top:150px;
 
   }
@@ -722,7 +723,7 @@ export default{
   .cardtealivingselect00{
     position:absolute;
     left: 10%;
-    width: 59%;
+    width: 60%;
     height: 800px;
     top:150px;
 
@@ -730,7 +731,7 @@ export default{
   .cardtealivingcdode00{
     position:absolute;
     left: 10%;
-    width: 59%;
+    width: 60%;
     height: 800px;
     top:150px;
 

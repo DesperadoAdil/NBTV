@@ -4,16 +4,17 @@
       <!-- -----------侧边栏----------------- -->
       <Menu name="sidemenu" style="width: 100%">
 
-        <!-- 资源 -->
-        <Submenu name="post" class="menuitentea">
-          <template slot="title" ><Icon type="ios-paper" />
-            资源
+        <!-- 学生 -->
+        <Submenu name="student" class="menuitentea"  >
+          <template slot="title"><Icon type="ios-stats" />
+            学生
           </template>
-          <MenuItem @click.native="showPdfList()">PDF课件</MenuItem>
-          <MenuItem @click.native="showMultiList()">选择题</MenuItem>
-          <MenuItem @click.native="showCodeList()">代码题</MenuItem>
+          <MenuItem @click.native="getstudents">学生列表</MenuItem>
+          <MenuItem @click.native="addStudentByExcel">xlsx文档添加</MenuItem>
+          <MenuItem @click.native="addStudent()">用户名添加</MenuItem>
+          <MenuItem @click.native="getShutUpList()">解除禁言</MenuItem>
         </Submenu>
-        <!-- 资源 -->
+        <!-- 学生 -->
 
         <!-- 添加 -->
         <Submenu name="add" class="menuitentea">
@@ -26,8 +27,21 @@
         </Submenu>
         <!-- 添加 -->
 
+        <!-- 资源 -->
+        <Submenu name="post" class="menuitentea">
+          <template slot="title" ><Icon type="ios-paper" />
+            资源
+          </template>
+          <MenuItem @click.native="showPdfList()">PDF课件</MenuItem>
+          <MenuItem @click.native="showMultiList()">选择题</MenuItem>
+          <MenuItem @click.native="showCodeList()">代码题</MenuItem>
+        </Submenu>
+        <!-- 资源 -->
+
+
+
         <!-- 使用 -->
-        <Submenu name="cancel" class="menuitentea">
+        <Submenu name="cancel" class="menuitentea" v-if="using">
           <template slot="title"><Icon type="ios-people" />
             使用
           </template>
@@ -35,17 +49,7 @@
         </Submenu>
         <!-- 使用 -->
 
-        <!-- 学生 -->
-        <Submenu name="student" class="menuitentea"  >
-          <template slot="title"><Icon type="ios-stats" />
-            学生
-          </template>
-          <MenuItem @click.native="getstudents">学生列表</MenuItem>
-          <MenuItem @click.native="addStudentByExcel">xlsx文档添加</MenuItem>
-          <MenuItem @click.native="addStudent()">用户名添加</MenuItem>
-          <MenuItem @click.native="getShutUpList()">解除禁言</MenuItem>
-        </Submenu>
-        <!-- 学生 -->
+
       </Menu>
       <!-- -----------侧边栏----------------- -->
 
@@ -53,8 +57,6 @@
       <Button class="btnopen" type="primary"  v-bind:icon="openclose"  @click="teaopenclose()">
         <span class="menuitentea">{{this.opentext}}</span>
       </Button>
-      <Button type="primary" shape="circle" v-bind:icon="jinmai" @click="tojinmai"></Button>
-      <Button type="primary" shape="circle" v-bind:icon="jinshipin" @click="tojinshipin()"></Button>
     </div>
 
     <!-------------Modal of the menus----------------->
@@ -419,16 +421,10 @@
 
     <!---------main living 部分------------->
     <div  id="mainlivingcard" v-bind:class="classmain0 ? 'cardtealiving00' : 'cardtealittleliving00'" >
-      <div class="topveido">
-        <!--<h3>教室信息显示部分（待修改）</h3>-->
-      </div>
       <object >
         <embed id="rtmp-streamer1" src="/static/swfdir/RtmpStreamer.swf" bgcolor="#999999" quality="high"
                width="100%" :style="{height:videohei}"  allowScriptAccess="sameDomain" type="application/x-shockwave-flash"  allowfullscreen="true"></embed>
       </object>
-      <div class="bottomve`ido">
-        <!--<h3>礼物等其他显示部分（待修改）</h3>-->
-      </div>
     </div>
 
     <!---------main pdf 部分------------->
@@ -439,14 +435,13 @@
     <div  id="maincodecard" class="cardtealivingcdode11"  :style="{display:maincodecarddispaly?'block':'none'}">
 
       <Form label-position="left">
-        <FormItem label="问题描述：" >
-          <p style="word-break:break-all;float:left;text-align: left">{{curcode.statement}}</p>
+        <FormItem  >
+          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px;padding-left: 20px">问题描述：{{curcode.statement}}</p>
         </FormItem>
-        <FormItem label="编程语言：">
-          <p style="word-break:break-all;float:left;text-align: left">{{curcode.language}}</p>
+        <FormItem >
+          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px;padding-left: 20px">编程语言：{{curcode.language}}</p>
         </FormItem>
-          <FormItem label="输入答案：">
-
+          <FormItem >
               <!--输入框的代码高亮-->
               <codemirror
                 id="codemirr"
@@ -472,23 +467,26 @@
      <div id="mainselectcard" class="cardtealivingselect" :style="{display:mainselectcarddisplay?'block':'none'}">
     <!--zsh-->
       <Form>
-        <FormItem label="题目">
-          <p style="word-break:break-all;float:left;text-align: left">{{curmulti.statement}}</p>
+        <FormItem >
+          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px;padding-left: 20px">题目：{{curmulti.statement}}</p>
         </FormItem>
         <FormItem v-for="(item, index) in curmulti.optionList"  :key="index"  style=" font-size: 15px">
-          <p style="word-break:break-all;float:left;text-align: left">{{String.fromCharCode(65+index)+" : "+item}}</p>
+          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px;padding-left: 20px">{{String.fromCharCode(65+index)+" : "+item}}</p>
           </FormItem>
 
         <FormItem>
-          <p style="word-break:break-all;float:left;text-align: left">本题目答案：{{curmulti.answer}}</p>
+          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px;padding-left: 20px">本题目答案：{{curmulti.answer}}</p>
         </FormItem>
       </Form>
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
     <div id="chatingRoom" :style="{top:chatingtop,height:chatinghei}">
+
       <div class="talk-contents">
         <div class="talk-inner">
+
+
           <div class="talk-nav">
             <div class="talk-title">
               <Dropdown @click.native="CHAT.list(userInfo.username, cururl)" trigger="click">
@@ -506,9 +504,12 @@
             </div>
           </div>
 
+
           <div class="content" id="content-id">
             <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
               <div v-if="CHAT.msgArr[index].toUser === username && username !== userInfo.username">
+
+
                 <div class="talk-space self-talk"
                      v-if="CHAT.msgArr[index].fromUser === userInfo.username">
                   <div class="talk-content">
@@ -657,6 +658,7 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
+      using:false,
       curpage: '1',
       chatingtop: 60 + 'px',
       chatinghei: 710 + 'px',
@@ -689,10 +691,6 @@ export default{
       // something to do with add student
       astu: '',
       // stream stuff
-      jinmai: 'ios-mic',
-      jinshipin: 'ios-eye',
-      isjinmai: false,
-      isjinshipin: false,
       videohei: 700 + 'px',
       classmain0: true,
       stream000: '',
@@ -1285,11 +1283,12 @@ export default{
         content: '是否展示' + ipdf.title,
         onOk: () => {
           // console.log('onOK')
-          this.curpdfurl0 = ipdf.url
-          this.chatingtop = 340 + 'px'
-          this.chatinghei = 430 + 'px'
+        this.curpdfurl0=ipdf.url
+          this.chatingtop = 310 + 'px'
+          this.chatinghei = 450 + 'px'
           this.videohei = 250 + 'px'
-          this.maincodecarddispaly = false
+          this.using=true
+          this.maincodecarddispaly=false
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = true
           this.classmain0 = false
@@ -1493,10 +1492,11 @@ export default{
         content: '是否展示: \n ' + iselect.statement,
         onOk: () => {
           // console.log("sdasd")
-          this.chatingtop = 340 + 'px'
-          this.chatinghei = 430 + 'px'
-          this.chatingtop = 340 + 'px'
-          this.chatinghei = 430 + 'px'
+
+          this.chatingtop = 310 + 'px'
+          this.chatinghei = 450 + 'px'
+          this.using=true
+          this.videohei = 250 + 'px'
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
@@ -1702,9 +1702,10 @@ export default{
           document.getElementById('codemirr').focus()
 
           this.modal_codelist = false
-          this.chatingtop = 340 + 'px'
-          this.chatinghei = 430 + 'px'
+          this.chatingtop = 310 + 'px'
+          this.chatinghei = 450 + 'px'
           this.videohei = 250 + 'px'
+          this.using=true
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
           this.classmain0 = false
@@ -2046,6 +2047,7 @@ export default{
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
           this.classmain0 = true
+          this.using=false
           this.videohei = 700 + 'px'
           this.chatingtop = 60 + 'px'
           this.chatinghei = 710 + 'px'
@@ -2134,45 +2136,6 @@ export default{
         })
       }
     },
-    tojinmai () {
-      if (this.isjinmai) {
-        this.jinmai = 'ios-mic'
-        this.isjinmai = false
-        this.streamer000.disconnect()
-        this.streamer000.setScreenPosition(-1000, 0)
-        this.streamer000.setScreenSize(700, 380)
-        this.streamer000.setMicRate(10000000000)
-        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
-      } else {
-        this.jinmai = 'ios-mic-off'
-        this.isjinmai = true
-        this.streamer000.disconnect()
-        this.streamer000.setScreenPosition(-1000, 0)
-        this.streamer000.setScreenSize(700, 380)
-        this.streamer000.setMicRate(0)
-        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
-      }
-    },
-    tojinshipin () {
-      if (this.isjinshipin) {
-        this.jinshipin = 'ios-eye'
-        this.isjinshipin = false
-        this.streamer000.disconnect()
-        this.streamer000.setScreenPosition(-1000, 0)
-        this.streamer000.setScreenSize(700, 380)
-        this.streamer000.setCamFrameInterval(15)
-        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
-      } else {
-        this.jinshipin = 'ios-eye-off'
-        this.isjinshipin = true
-        this.streamer000.disconnect()
-        this.streamer000.setScreenPosition(-1000, 0)
-        this.streamer000.setScreenSize(700, 380)
-        this.streamer000.setCamFrameInterval(1000000000)
-        this.streamer000.publish('rtmp://push2.videocc.net/recordfe', this.streamername)
-      }
-    }
-
   }
 }
 
@@ -2184,17 +2147,17 @@ export default{
   /* 赵汉卿负责的聊天室部分，请勿修改 */
   #chatingRoom {
     position:absolute;
-    left: 79%;
+    left: 78%;
     width: 21%;
 
   }
   .talk-contents {
     height: 100%;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
   }
   .talk-nav {
     background-color: #eee;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     text-align: center;
     position: absolute;
     top: 0;
@@ -2214,14 +2177,14 @@ export default{
     position: absolute;
     bottom: 50px;
     padding: 0 19px;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     top: 51px;
     right: 0;
     left: 0;
     overflow: scroll;
   }
   .talker {
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     padding-right: 19px;
     border-top: 1px solid #d6d6d6;
     position: absolute;
@@ -2257,7 +2220,7 @@ export default{
     background: rgba(243, 243, 243, 1) none;
     color: rgba(0, 0, 0, 1);
     border-bottom-left-radius: 0;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     text-align: right;
   }
   .self-talk {
@@ -2316,13 +2279,13 @@ export default{
   }
   .cardtealiving00{
     position:absolute;
-    left: 19%;
-    width: 59%;
+    left: 18%;
+    width: 60%;
     top:60px;
   }
   .cardtealittleliving00{
     position:absolute;
-    left: 79%;
+    left: 78%;
     width: 21%;
     top:60px;
   }
@@ -2337,8 +2300,8 @@ export default{
 
   .cardtealivingpdf{
     position:absolute;
-    left: 19%;
-    width: 59%;
+    left: 18%;
+    width: 60%;
     top:60px;
     display: none;
   }
@@ -2356,8 +2319,8 @@ export default{
   }
   .cardtealivingselect{
     position:absolute;
-    left: 19%;
-    width: 59%;
+    left: 18%;
+    width: 60%;
     height: 800px;
     top:60px;
     display: none;
@@ -2418,8 +2381,8 @@ export default{
   }
   .cardtealivingcdode11{
     position:absolute;
-    left: 19%;
-    width: 59%;
+    left: 18%;
+    width: 60%;
     top:60px;
     display: none;
   }
@@ -2430,6 +2393,6 @@ export default{
   }
   .codecode{
     text-align: left;
-
+    height:500px;
   }
 </style>

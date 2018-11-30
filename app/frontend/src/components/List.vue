@@ -2,11 +2,13 @@
   <div id="list" class="posi">
     <h1 class="list-info">
       <Icon type="ios-time" />
-      <span class="list-title-word">正在播出</span>
-      <Button class="listbtn" @click="timelist">开播时间</Button>
-      <Button class="listbtn" @click="audiencelist">创建时间</Button>
+      正在播出
     </h1>
     <Divider />
+    <h2 class="list-info">
+      <Button type="primary" class="listbtn" @click="timelist">开播时间</Button>
+      <Button type="primary" class="listbtn" @click="audiencelist">创建时间</Button>
+    </h2>
     <Row>
       <Col span="8" v-for="item in items" :key="item.vid" v-if="item.mode !== 'private'">
         <Card class="listcard" @click.native="skip(item)">
@@ -159,6 +161,8 @@ li {
   position: absolute;
   top: 60px;
   width: 100%;
+
+
 }
 .listbtn{
   test-align:left;

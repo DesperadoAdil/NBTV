@@ -3,9 +3,11 @@
     <h1 class="list-info">
       <Icon type="ios-time" />
       我的直播
-      <Button type="primary" @click="readyToAdd">新建直播间</Button>
     </h1>
     <Divider />
+    <h2 class="list-info">
+      <Button type="primary" @click="readyToAdd">新建直播间</Button>
+    </h2>
     <Modal
       :model="newLiving"
       v-model="addModal"

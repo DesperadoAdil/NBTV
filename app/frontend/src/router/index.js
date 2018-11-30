@@ -112,15 +112,12 @@ router.beforeEach((to, from, next) => {
       /*
       axios.post('/api/classroom/urlcheck', data).then((resp) => {
         if (resp.data.status === "success") {
-          //window.confirm('成功进入直播间!')
           next()
         } else if (resp.data.status === "password") {
-          //console.log("password needed!")
           var currentpassword = window.prompt("请输入教室密码","")
-          if (currentpassword === '') {
+          if (!currentpassword || currentpassword === '') {
             next(from.path)
           } else if (currentpassword === resp.data.password) {
-            //window.confirm('成功进入直播间!')
             next()
           } else {
             window.alert("您输入的密码错误，请仔细检查!")
