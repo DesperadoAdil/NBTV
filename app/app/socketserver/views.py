@@ -6,13 +6,13 @@ import json
 chatingRoom = {}
 
 @socketio.on('connect')
-def on_connect():
+def test_connect():
 	print ('Client connected')
 	emit('open')
 
 
 @socketio.on('disconnect')
-def on_disconnect():
+def test_disconnect():
 	print ('Client disconnected')
 
 
