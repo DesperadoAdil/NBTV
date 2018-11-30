@@ -4,7 +4,7 @@ from app.classroom.Classroom import classroomManager
 import unittest
 import json
 
-class ClasslistTest(BaseTestCase):
+class SocketServerTest(BaseTestCase):
     def test_aon_connect(self):
         print ("Test:SocketIO_on_connect==============================================")
 
