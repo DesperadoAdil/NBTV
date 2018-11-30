@@ -160,7 +160,7 @@ def getstudents():
 
 
 @classroom.route('/urlcheck', methods = ['POST'])
-def urlcheck ():
+def urlcheck():
 	ret = {}
 	data = request.get_data()
 	data = json.loads(data)
