@@ -317,7 +317,7 @@ def add_PDF():
 
 @resource.route('/delete_pdf', methods = ['POST'])
 def delete_PDF():
-    print('delet a pdf file')
+    print('delete a pdf file')
     ret = {}
     try:
         data = request.get_data()
@@ -329,6 +329,7 @@ def delete_PDF():
     except Exception as err:
         print(err)
         ret['status'] = "error"
+    print(ret)
     return json.dumps(ret, ensure_ascii = False)
 
 
@@ -349,6 +350,9 @@ def delete_class_PDF():
     pdf_tmp = pdfManager.search(data['pdf']['url'][5:])
     if pdf_tmp is None:
         print('gg: pdf_tmp is None')
+        ret['status'] = 'error'
+        return json.dumps(ret)
+
     clr.pdffile.remove(pdf_tmp)
     db.session.add(clr)
     db.session.commit()

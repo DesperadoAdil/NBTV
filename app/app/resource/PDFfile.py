@@ -29,7 +29,7 @@ class PDF:
 
     def delete(self, username, fname):
         try:
-            pdf = PDFFile.query.filter_by(owner = username, filename = fname).first()
+            pdf = PDFFile.query.filter_by(uniqueId = "%s/%s" % (username, fname)).first()
             if pdf is None:
                 return "error"
             db.session.delete(pdf)
