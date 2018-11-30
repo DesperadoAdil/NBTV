@@ -1,6 +1,7 @@
 from app.test.BaseTestCase import BaseTestCase
 from app.models import *
 from app.classroom.Classroom import classroomManager
+from app.user.User import usermanager
 import unittest
 import json
 
@@ -20,8 +21,7 @@ class UserTest(BaseTestCase):
 		ret = json.loads(response.data.decode('utf8'))
 		self.assertEquals(ret["status"], "success")
 		testuser = Teachers.query.filter_by(username = "testuser").first()
-		db.session.delete(testuser)
-		db.session.commit()
+		usermanager.delete(testuser)
 
 
 	data_register = { "username" : 'testuser', "mobile" : "17799163761", "password" : '123456', "verification" : "123456", "job" : "teacher" }
@@ -154,30 +154,29 @@ class UserTest(BaseTestCase):
 		self.assertEquals(response.data.decode('utf8'), ret)
 
 
-	testuser = Students(phonenumber = "12345678910", username = "testuser", password = "123456", classroomlist = json.dumps(["242544"]))
-	db.session.add(testuser)
-	Classroom = classroomManager.search("242544")
-	classroomuser = json.loads(Classroom.studentlist)
-	classroomuser.append("testuser")
-	Classroom.studentlist = json.dumps(classroomuser)
-	db.session.add(Classroom)
-	db.session.commit()
-	classroom = classroomManager.dict(Classroom)
-	classroom["url"] = "123456"
-	data_delmyclass = { "username" : "testuser", "job" : "student", "classroom" : classroom }
-	dataerror_delmyclass = { "username" : "stu2", "job" : "student", "classroom" : classroom }
-
 	def test_ndelmyclass(self):
 		print ("Test:Delmyclass===============================")
 
+		testuser = Students(phonenumber = "12345678910", username = "testuser", password = "123456", classroomlist = json.dumps(["242544"]))
+		db.session.add(testuser)
+		Classroom = classroomManager.search("242544")
+		classroomuser = json.loads(Classroom.studentlist)
+		classroomuser.append("testuser")
+		Classroom.studentlist = json.dumps(classroomuser)
+		db.session.add(Classroom)
+		db.session.commit()
+		classroom = classroomManager.dict(Classroom)
+		classroom["url"] = "123456"
+		data_delmyclass = { "username" : "testuser", "job" : "student", "classroom" : classroom }
+		dataerror_delmyclass = { "username" : "stu2", "job" : "student", "classroom" : classroom }
+
 		# 这是不可以正确删除直播间列表的结果
-		response = self.app.post('/api/user/delmyclass', data = json.dumps(self.dataerror_delmyclass, ensure_ascii = False))
+		response = self.app.post('/api/user/delmyclass', data = json.dumps(dataerror_delmyclass, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error"}')
 
 		# 这是可以正确删除直播间列表的结果
-		self.classroom["url"] = "242544"
-		response = self.app.post('/api/user/delmyclass', data = json.dumps(self.data_delmyclass, ensure_ascii = False))
+		classroom["url"] = "242544"
+		response = self.app.post('/api/user/delmyclass', data = json.dumps(data_delmyclass, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
 		testuser = Students.query.filter_by(username = "testuser").first()
-		db.session.delete(testuser)
-		db.session.commit()
+		usermanager.delete(testuser)

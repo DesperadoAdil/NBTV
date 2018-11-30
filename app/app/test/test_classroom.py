@@ -75,7 +75,7 @@ class ClassroomTest(BaseTestCase):
 		self.assertEquals(response.data.decode('utf8'), '{"status": "error: no such student"}')
 
 
-	def test_delete_classroom(self):
+	def test_zdelete_classroom(self):
 		response = self.app.post('/api/classroom/delete_class', data = json.dumps(self.data, ensure_ascii = False))
 		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
 
@@ -108,3 +108,33 @@ class ClassroomTest(BaseTestCase):
 		response = self.app.post('/api/classroom/closeliving', data = json.dumps({ "username" : "adil", "url" : "123456" }))
 		tmp = json.loads(response.data.decode('utf8'))
 		self.assertEquals(tmp['status'], "success")
+
+
+	def test_getstudents(self):
+		print ("Test:Getstudents===============================")
+
+		response = self.app.post('/api/classroom/getstudents', data = json.dumps({ "url" : "123" }))
+		self.assertEquals(response.data.decode('utf8'), '["test1"]')
+
+
+	def test_urlcheck(self):
+		print ("Test:Urlcheck===============================")
+
+		response = self.app.post('/api/classroom/urlcheck', data = json.dumps({ "username" : "test1", "url" : "123" }))
+		self.assertEquals(response.data.decode('utf8'), '{"status": "success"}')
+
+		response = self.app.post('/api/classroom/urlcheck', data = json.dumps({ "username" : "test2", "url" : "123" }))
+		self.assertEquals(response.data.decode('utf8'), '{"status": "error"}')
+
+		response = self.app.post('/api/classroom/urlcheck', data = json.dumps({ "username" : "adil", "url" : "123456" }))
+		self.assertEquals(response.data.decode('utf8'), '{"status": "password", "password": "123456"}')
+
+		response = self.app.post('/api/classroom/urlcheck', data = json.dumps({ "username" : "adil", "url" : "654321" }))
+		self.assertEquals(response.data.decode('utf8'), '{"status": "error"}')
+
+
+	def test_shutuplist(self):
+		print ("Test:Shutuplist===============================")
+
+		response = self.app.post('/api/classroom/shutuplist', data = json.dumps({ "url" : "123" }))
+		self.assertEquals(response.data.decode('utf8'), '[]')

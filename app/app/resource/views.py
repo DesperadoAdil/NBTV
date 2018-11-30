@@ -69,7 +69,7 @@ def getChoice():
     try:
         username = data['username']
         teacher = usermanager.search("username", username, "teacher")
-        
+
         for item in teacher.choiceQue:
             ret['multiAllList'].append({"statement": item.statement, "optionList": json.loads(item.optionList), "answer": item.answer, "uniqueId": item.uniqueId})
         clr = classroomManager.search(data['url'])
@@ -88,7 +88,7 @@ def add_choice_class():
     print('add choice to class')
     data = request.get_data()
     data = json.loads(data)
-    
+
     ret = {}
 
     choice_tmp = multiChoiceManager.search(data['uniqueId'])
@@ -230,7 +230,7 @@ def add_code_class():
 def view_code_class():
     print('view code class')
     data = json.loads(request.get_data())
-    
+
     ret = {}
 
     tmp = codeQuestionManager.getSubmitAns(data['uniqueId'], data['url'])
@@ -277,12 +277,12 @@ def get_code():
     try:
         username = data['username']
         teacher = usermanager.search("username", username, "teacher")
-        
+
         for item in teacher.codeQue:
-            ret['codeAllList'].append({"statement": item.statement, "language": item.language, "uniqueId": item.uniqueId})
+            ret['codeAllList'].append({"statement": item.statement, "language": item.language, "uniqueId": item.uniqueId, "example": item.ansCode})
         clr = classroomManager.search(data['url'])
         for item in clr.code:
-            ret['codeThisList'].append({"statement": item.statement, "language": item.language, "uniqueId": item.uniqueId})
+            ret['codeThisList'].append({"statement": item.statement, "language": item.language, "uniqueId": item.uniqueId, "example": item.ansCode})
         ret['status'] = 'success'
     except Exception as err:
         print(err)
@@ -359,7 +359,7 @@ def delete_class_PDF():
 
     ret['status'] = 'success'
     return json.dumps(ret)
-    
+
 
 #Get_pdfs
 @resource.route('/getpdfs', methods = ['POST'])
@@ -430,4 +430,3 @@ def add_pdf_class():
 
     ret['status'] = 'success'
     return json.dumps(ret)
-
