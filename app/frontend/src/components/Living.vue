@@ -42,10 +42,8 @@
           <codemirror
             id="codemirr"
             v-model="curcode"
-            :value="CHAT.codeall.example"
-            :options="cmOption"
             class="codecode"
-            >
+            :options="cmOption">
           </codemirror>
 
         </FormItem>
@@ -175,7 +173,6 @@ import CHAT from '../client'
 import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
 import router from '../router'
-import VueCodemirror from 'codemirror/lib/codemirror'
 import 'codemirror/lib/codemirror.css' // css，必要
 
 // language
@@ -198,14 +195,9 @@ import 'codemirror/addon/search/searchcursor.js'
 import 'codemirror/addon/search/search.js'
 import 'codemirror/keymap/emacs.js'
 import 'codemirror/theme/blackboard.css'
-import 'codemirror/mode/javascript/javascript'
-import 'codemirror/mode/clike/clike'
 import 'codemirror/mode/go/go'
 import 'codemirror/mode/htmlmixed/htmlmixed'
-import 'codemirror/mode/http/http'
 import 'codemirror/mode/php/php'
-import 'codemirror/mode/python/python'
-import 'codemirror/mode/http/http'
 import 'codemirror/mode/sql/sql'
 import 'codemirror/mode/vue/vue'
 import 'codemirror/mode/xml/xml'
@@ -222,7 +214,7 @@ export default{
       /**
        * 以下为聊天室使用，请勿改动
        */
-      curcode:'',
+      curcode: '',
       chathei: 600 + 'px',
       chattop: 150 + 'px',
       socket: null,
@@ -281,16 +273,16 @@ export default{
       },
       // CODE EDITOR
       cmOption: {
-//        smartIndent:true,
-//          showCursorWhenSelecting: true,
+        // smartIndent:true,
+        // showCursorWhenSelecting: true,
         autofocus: true,
-//        autoCloseBrackets: true,
-//        tabSize: 4,
-          lineNumbers: true,
-//        line: true,
-          mode: 'python',
-          theme: "blackboard" ,                 //选中的theme
-          lineWrapping: true,
+        // autoCloseBrackets: true,
+        // tabSize: 4,
+        lineNumbers: true,
+        // line: true,
+        mode: 'python',
+        theme: 'blackboard', // 选中的theme
+        lineWrapping: true
       },
       // CODE
       codeAns: '#include <iostream>\nint main(){\n\treturn 0;\n}'
@@ -344,37 +336,35 @@ export default{
     //    };
   },
   created: function () {
-//    this.getPageData();
+    // this.getPageData();
     const s = document.createElement('script')
     s.type = 'text/javascript'
     s.src = 'https://player.polyv.net/livescript/liveplayer.js'
     document.body.appendChild(s)
     s.onload = () => {
-        const data = this.curuser
-        data['username'] = this.userInfo['username']
-        data['job'] = this.userInfo['job']
-        data['url'] = this.cururl
-        axios.post('/api/classroom_stu/urlgetvid', data).then((resp) => {
-          this.curvid = resp.data.vid
-          var player = polyvObject('#player').livePlayer({
-            'width': '100%',
-            'height': 600 + 'px',
-            'uid': '7181857ac2',
-            'vid': this.curvid
-          })
-          var player = polyvObject('#player2').livePlayer({
-            'width': '100%',
-            'height': 200 + 'px',
-            'uid': '7181857ac2',
-            'vid': this.curvid
-          })
+      const data = this.curuser
+      data['username'] = this.userInfo['username']
+      data['job'] = this.userInfo['job']
+      data['url'] = this.cururl
+      axios.post('/api/classroom_stu/urlgetvid', data).then((resp) => {
+        this.curvid = resp.data.vid
+        var player = polyvObject('#player').livePlayer({
+          'width': '100%',
+          'height': 600 + 'px',
+          'uid': '7181857ac2',
+          'vid': this.curvid
         })
+        var player = polyvObject('#player2').livePlayer({
+          'width': '100%',
+          'height': 200 + 'px',
+          'uid': '7181857ac2',
+          'vid': this.curvid
+        })
+      })
     }
     this.showUserInfo()
     this.cururl = this.$route.params.url
 
-    // for code highlight
-    this.cmOption.mode = CHAT.codeall.language
     /**
      * 以下为聊天室使用，请勿改动
      */
@@ -382,6 +372,12 @@ export default{
     /**
      * 以上为聊天室使用，请勿改动
      */
+
+    // for code highlight
+    this.cmOption.mode = CHAT.codeall.language
+    if (this.cmOption.mode === 'cpp') {
+      this.cmOption.mode = 'text/x-c++src'
+    }
   },
   computed: {
     isPause () {
@@ -545,33 +541,32 @@ export default{
       this.userInfo['mobile'] = this.$cookies.get('user').mobile
       this.userInfo['job'] = this.$cookies.get('user').job
     },
-    codesubmit(){
-        console.log("dasdas")
-        var data={}
-        data['username'] = this.userInfo['username']
-        data['url']=this.cururl
-        data['uniqueId'] = this.CHAT.codeall.uniqueId
-        data['answer'] = this.curcode
-        axios.post('/api/resource/code_submit', data).then((resp) => {
-          this.$Message.success('提交成功!')
+    codesubmit () {
+      console.log('dasdas')
+      var data = {}
+      data['username'] = this.userInfo['username']
+      data['url'] = this.cururl
+      data['uniqueId'] = this.CHAT.codeall.uniqueId
+      data['answer'] = this.curcode
+      axios.post('/api/resource/code_submit', data).then((resp) => {
+        this.$Message.success('提交成功!')
       }).catch(function (err) {
         Info.layerBox(err, 1)
         this.$Message.success('提交失败!')
-      });
-
+      })
     },
-    selectsubmit(){
-      var data={}
+    selectsubmit () {
+      var data = {}
       data['username'] = this.userInfo['username']
-      data['url']=this.cururl
+      data['url'] = this.cururl
       data['uniqueId'] = this.CHAT.selectall.uniqueId
       data['answer'] = this.stuans
       axios.post('/api/resource/multi_submit', data).then((resp) => {
         this.$Message.success('提交成功!')
       }).catch(function (err) {
         Info.layerBox(err, 1)
-  this.$Message.success('提交失败!')
-      });
+        this.$Message.success('提交失败!')
+      })
     }
   }
 

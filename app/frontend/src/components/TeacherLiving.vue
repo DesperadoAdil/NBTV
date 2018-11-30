@@ -49,7 +49,6 @@
         </Submenu>
         <!-- 使用 -->
 
-
       </Menu>
       <!-- -----------侧边栏----------------- -->
 
@@ -198,7 +197,11 @@
         </FormItem>
         <!-- 答案设置  -->
         <FormItem label="答案">
-          <Input v-model="sub_multi.answer" placeholder="A/B/C/D/.."></Input>
+          <Select>
+            <Option v-for="(item, index) in sub_multi.optionList"
+                    :key="index"
+                    :value=String.fromCharCode(65+index)>{{String.fromCharCode(65+index)}}</Option>
+          </Select>
         </FormItem>
       </Form>
     </Modal>
@@ -366,7 +369,11 @@
         </FormItem>
         <!-- 答案设置  -->
         <FormItem label="题目答案">
-          <Input v-model="sub_multi.answer" placeholder="A/B/C/D/.."></Input>
+          <Select>
+            <Option v-for="(item, index) in sub_multi.optionList"
+                    :key="index"
+                    :value=String.fromCharCode(65+index)>{{String.fromCharCode(65+index)}}</Option>
+          </Select>
         </FormItem>
       </Form>
     </Modal>
@@ -1118,9 +1125,23 @@ export default{
         index: this.multi_index,
         status: 1
       })
+      // set sub_multi.optionList
+      this.sub_multi.optionList = []
+      for (let i = 0; i < this.multi_index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
     },
     multi_delChoice (i) {
       this.multi_options[i].status = 0
+      // set sub_multi.optionList
+      this.sub_multi.optionList = []
+      for (let i = 0; i < this.multi_index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
     },
     create_multi () {
       this.sub_multi.statement = ''
@@ -1132,6 +1153,7 @@ export default{
       // send sub_multi should be set by now
       this.sub_multi.username = this.userInfo.username
       // 将multi_option这个列表改成可发送的数组
+      this.sub_multi.optionList = []
       for (let i = 0; i < this.multi_index; i++) {
         if (this.multi_options[i].status === 1) {
           this.sub_multi.optionList.push(this.multi_options[i].value)
@@ -1389,6 +1411,7 @@ export default{
       // send sub_multi should be set by now
       this.sub_multi.username = this.userInfo.username
       // 将multi_option这个列表改成可发送的数组
+      this.sub_multi.optionList = []
       for (let i = 0; i < this.multi_index; i++) {
         if (this.multi_options[i].status === 1) {
           this.sub_multi.optionList.push(this.multi_options[i].value)
