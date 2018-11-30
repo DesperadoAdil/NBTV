@@ -1619,6 +1619,10 @@ export default{
       this.sub_code.statement = iCode.statement
       this.sub_code.uniqueId = iCode.uniqueId
       this.sub_code.username = this.userInfo.username
+      this.cmOption.mode = iCode.language
+      if (iCode.language === 'cpp') {
+        this.cmOption.mode = 'text/x-c++src'
+      }
       this.modal_editcode = true
     },
     // CODE
