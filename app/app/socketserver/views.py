@@ -12,7 +12,7 @@ def on_connect():
 
 
 @socketio.on('disconnect')
-def test_disconnect():
+def on_disconnect():
 	print ('Client disconnected')
 
 
@@ -159,3 +159,7 @@ def noShutUp(data):
 	db.session.commit()
 
 	emit('noShutUp', room = username)
+
+@socketio.on('clear')
+def clear():
+	chatingRoom.clear()
