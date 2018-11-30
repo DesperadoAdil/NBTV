@@ -34,9 +34,10 @@
       </Form>
 
     </Modal>
-    <ul class="myLivingList-flex-container">
-        <card class="myLivingList-flex-item" v-for="(living, index) in myLivingList" :key="living.url">
-          <img :src="living.thumbnail" class="thumbnail"  @click="directskip(living)">
+    <Row class="myLivingList-flex-container">
+      <Col span="8" v-for="(living, index) in myLivingList" :key="living.url">
+        <card class="myLivingList-flex-item" @click.native="directskip(living)">
+          <img :src="living.thumbnail" class="thumbnail" >
           <p class="my-class-title">{{ living.title }}</p>
           <span><Button type="success" @click="getBackUp(index)">更新课程</Button></span>
           <Modal
@@ -69,7 +70,8 @@
             <Input v-model="validate"></Input>
           </Modal>
         </card>
-    </ul>
+      </Col>
+    </Row>
   </div>
 </template>
 <script>
@@ -318,10 +320,8 @@ li {
 
 }
 .myLivingList-flex-item {
-  padding: 20px;
-  margin: 5% 5%;
-  width: 30%;
-  height: 30%;
+  padding: 3%;
+  margin: 6%;
 }
 #myLivingList {
   padding: 0 5%;

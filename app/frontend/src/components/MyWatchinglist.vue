@@ -214,5 +214,6 @@ export default {
     text-align: left;
   }
   .list-title-word {
+    margin-top: 10px;
   }
 </style>
