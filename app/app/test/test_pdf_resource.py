@@ -16,7 +16,7 @@ class Resource_PDF_Test(BaseTestCase):
 			'username': 'adil',
 			'pdf': {'title': 'xcj_gg', 'url': 'gggg'}
 		}
-		response = self.app.post('/api/response/delete_pdf', data = json.dumps(data))
+		response = self.app.post('/api/resource/delete_pdf', data = json.dumps(data))
 		self.assertEquals(json.loads(response.data)['status'], "error")
 
 
@@ -44,5 +44,5 @@ class Resource_PDF_Test(BaseTestCase):
 		}
 		response = self.app.post('/api/resource/pdf_delclass', data = json.dumps(data))
 		self.assertEquals(json.loads(response.data)['status'], 'error')
-		
+
 
