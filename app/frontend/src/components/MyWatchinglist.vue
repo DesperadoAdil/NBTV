@@ -13,7 +13,7 @@
 
     <Row>
       <Col span="12" v-for="item in items" :key="item.vid">
-        <Card class="watchcard" @click="skip(item)">
+        <Card class="watchcard" @click.native="skip(item)">
           <img :src="item.thumbnail" class="thumbnail" >
           <p class="title"></p>
             {{ item.title }}
@@ -218,5 +218,6 @@ export default {
     text-align: left;
   }
   .list-title-word {
+    margin-top: 10px;
   }
 </style>
