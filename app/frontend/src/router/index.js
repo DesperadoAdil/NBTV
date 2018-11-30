@@ -88,6 +88,7 @@ router.beforeEach((to, from, next) => {
   const publicPages = ['/', '/register', '/Register', '/login', '/Login']
   const privatePages = ['/user', '/list', '/mywatchinglist', '/mylivinglist']
   const developerPages = ['developer']
+  /*
   if (window.$cookies.get('user') === null) {
     if (publicPages.includes(to.path)) {
       next()
@@ -108,6 +109,7 @@ router.beforeEach((to, from, next) => {
         'username': window.$cookies.get('user').username,
         'url': to.path.split('/')[2]
       }
+      /*
       axios.post('/api/classroom/urlcheck', data).then((resp) => {
         if (resp.data.status === "success") {
           next()
@@ -136,5 +138,5 @@ router.beforeEach((to, from, next) => {
     } else {
       next('/list')
     }
-  }
+  }*/
 })

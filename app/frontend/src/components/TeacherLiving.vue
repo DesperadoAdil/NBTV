@@ -49,7 +49,6 @@
         </Submenu>
         <!-- 使用 -->
 
-
       </Menu>
       <!-- -----------侧边栏----------------- -->
 
@@ -198,7 +197,11 @@
         </FormItem>
         <!-- 答案设置  -->
         <FormItem label="答案">
-          <Input v-model="sub_multi.answer" placeholder="A/B/C/D/.."></Input>
+          <Select>
+            <Option v-for="(item, index) in sub_multi.optionList"
+                    :key="index"
+                    :value=String.fromCharCode(65+index)>{{String.fromCharCode(65+index)}}</Option>
+          </Select>
         </FormItem>
       </Form>
     </Modal>
@@ -366,7 +369,11 @@
         </FormItem>
         <!-- 答案设置  -->
         <FormItem label="题目答案">
-          <Input v-model="sub_multi.answer" placeholder="A/B/C/D/.."></Input>
+          <Select>
+            <Option v-for="(item, index) in sub_multi.optionList"
+                    :key="index"
+                    :value=String.fromCharCode(65+index)>{{String.fromCharCode(65+index)}}</Option>
+          </Select>
         </FormItem>
       </Form>
     </Modal>
@@ -639,13 +646,9 @@ import 'codemirror/addon/search/search.js'
 import 'codemirror/keymap/emacs.js'
 import 'codemirror/theme/blackboard.css'
 import 'codemirror/mode/javascript/javascript'
-import 'codemirror/mode/clike/clike'
 import 'codemirror/mode/go/go'
 import 'codemirror/mode/htmlmixed/htmlmixed'
-import 'codemirror/mode/http/http'
 import 'codemirror/mode/php/php'
-import 'codemirror/mode/python/python'
-import 'codemirror/mode/http/http'
 import 'codemirror/mode/sql/sql'
 import 'codemirror/mode/vue/vue'
 import 'codemirror/mode/xml/xml'
@@ -971,7 +974,7 @@ export default{
         lineNumbers: true,
         //      line: true,
         mode: 'python',
-        theme: 'blackboard',  // 选中的theme
+        theme: 'blackboard', // 选中的theme
         lineWrapping: true
       },
       // ADD STUDENT LIST
@@ -981,7 +984,7 @@ export default{
       littlelivingcarddisplay: false,
       mainselectcarddisplay: false,
       mainpdfcarddisplay: false,
-      maincodecarddispaly:false,
+      maincodecarddispaly: false,
       mainlivingcarddisplay: true,
 
       // COMMON INFO
@@ -999,7 +1002,7 @@ export default{
         item: ''
       },
       // STREAM PARAMETERS
-      curpdfurl0:'',
+      curpdfurl0: '',
       curstream: '',
       vid: '248980',
       cururl: '',
@@ -1122,9 +1125,23 @@ export default{
         index: this.multi_index,
         status: 1
       })
+      // set sub_multi.optionList
+      this.sub_multi.optionList = []
+      for (let i = 0; i < this.multi_index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
     },
     multi_delChoice (i) {
       this.multi_options[i].status = 0
+      // set sub_multi.optionList
+      this.sub_multi.optionList = []
+      for (let i = 0; i < this.multi_index; i++) {
+        if (this.multi_options[i].status === 1) {
+          this.sub_multi.optionList.push(this.multi_options[i].value)
+        }
+      }
     },
     create_multi () {
       this.sub_multi.statement = ''
@@ -1136,6 +1153,7 @@ export default{
       // send sub_multi should be set by now
       this.sub_multi.username = this.userInfo.username
       // 将multi_option这个列表改成可发送的数组
+      this.sub_multi.optionList = []
       for (let i = 0; i < this.multi_index; i++) {
         if (this.multi_options[i].status === 1) {
           this.sub_multi.optionList.push(this.multi_options[i].value)
@@ -1205,8 +1223,7 @@ export default{
       axios.post('/api/resource/getpdfs', pdfListInput).then((resp) => {
         // resp.data 即是那个列表
         this.pdfAllList = resp.data.pdfAllList
-
-         this.pdfThisList = resp.data.pdfThisList
+        this.pdfThisList = resp.data.pdfThisList
       })
     },
     // ADD PDF TO CLASS
@@ -1269,7 +1286,7 @@ export default{
           axios.post('/api/resource/getpdfs', pdfInput).then((resp) => {
             if (resp.data.pdfAllList !== null) {
               this.pdfAllList = resp.data.pdfAllList
-             this.pdfThisList = resp.data.pdfThisList
+              this.pdfThisList = resp.data.pdfThisList
             } else {
               this.$Message.error('wrong')
             }
@@ -1394,6 +1411,7 @@ export default{
       // send sub_multi should be set by now
       this.sub_multi.username = this.userInfo.username
       // 将multi_option这个列表改成可发送的数组
+      this.sub_multi.optionList = []
       for (let i = 0; i < this.multi_index; i++) {
         if (this.multi_options[i].status === 1) {
           this.sub_multi.optionList.push(this.multi_options[i].value)
@@ -1505,9 +1523,9 @@ export default{
           this.mainselectcarddisplay = true
           this.mainpdfcarddisplay = false
           this.classmain0 = false
-  this.maincodecarddispaly=false
+          this.maincodecarddispaly = false
           this.curvideo = false
-          this.curmulti=iselect
+          this.curmulti = iselect
           this.curmulti = iselect
           this.curtitle = iselect.statement
           this.curanswer = iselect.answer
@@ -1703,10 +1721,8 @@ export default{
         content: '是否展示' + iCode.statement,
         onOk: () => {
           // console.log('onOK')
-        this.curcode=iCode
-
-
-  document.getElementById("codemirr").focus();
+          this.curcode = iCode
+          document.getElementById('codemirr').focus()
 
           this.modal_codelist = false
           this.chatingtop = 310 + 'px'
@@ -1716,7 +1732,7 @@ export default{
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
           this.classmain0 = false
-          this.maincodecarddispaly=true
+          this.maincodecarddispaly = true
           // console.log(this.classmain0)
           // console.log(document.getElementById('rtmp-streamer1').class)
           this.modal_pdflist = false
@@ -2050,7 +2066,7 @@ export default{
         content: '确认退出教学资源',
         onOk: () => {
         // console.log("close")
-          this.maincodecarddispaly=false
+          this.maincodecarddispaly = false
           this.mainselectcarddisplay = false
           this.mainpdfcarddisplay = false
           this.classmain0 = true
