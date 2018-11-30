@@ -197,7 +197,7 @@
         </FormItem>
         <!-- 答案设置  -->
         <FormItem label="答案">
-          <Select>
+          <Select v-model="sub_multi.answer">
             <Option v-for="(item, index) in sub_multi.optionList"
                     :key="index"
                     :value=String.fromCharCode(65+index)>{{String.fromCharCode(65+index)}}</Option>
@@ -369,7 +369,7 @@
         </FormItem>
         <!-- 答案设置  -->
         <FormItem label="题目答案">
-          <Select>
+          <Select v-model="sub_multi.answer">
             <Option v-for="(item, index) in sub_multi.optionList"
                     :key="index"
                     :value=String.fromCharCode(65+index)>{{String.fromCharCode(65+index)}}</Option>
@@ -1147,6 +1147,7 @@ export default{
       this.sub_multi.statement = ''
       this.sub_multi.optionList.splice(0, this.sub_multi.optionList.length)
       this.sub_multi.answer = ''
+      this.multi_options = [{value: '', index: 1, status: 1}]
       this.modal_multi = true
     },
     addMulti () {
