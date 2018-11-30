@@ -98,6 +98,7 @@ export default {
       } else if (name === 'myWatchingList') {
         router.push('/mywatchinglist')
       } else if (name === 'user') {
+        this.visible = false
         router.push('/user')
       }
     },

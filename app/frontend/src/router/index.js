@@ -129,7 +129,6 @@ router.beforeEach((to, from, next) => {
           next(from.path)
         }
       })
-      next()
     } else if (/^\/teacherliving\/[a-zA-Z\d]+$/.test(to.path)) {
       if (window.$cookies.get('user').job === 'teacher') next()
       else next('/list')
