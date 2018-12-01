@@ -29,14 +29,14 @@ const CHAT = {
   },
   shutUp: function (obj) {
     this.socket.emit('shutup', obj)
-    console.log('shut up')
+    //console.log('shut up')
   },
   blackList: function (obj) {
     this.socket.emit('blacklist', obj)
-    console.log('black list')
+    //console.log('black list')
   },
   list: function (username, url) {
-    console.log('list')
+    //console.log('list')
     this.socket.emit('list', {'username': username, 'url': url})
   },
   beenShutUp: function (username) {
@@ -54,7 +54,7 @@ const CHAT = {
     this.socket.emit('noShutUp', {'username': username, 'url': url})
   },
   message: function (username) {
-    console.log('message')
+    //console.log('message')
     this.socket.on('message', function (msg) {
       var date = new Date()
       var time = date.getHours() + ':' + date.getMinutes()
@@ -70,27 +70,27 @@ const CHAT = {
       if (msg.replace('进入房间。', '') !== username) {
         CHAT.msgArr.push(obj)
       }
-      console.log('CHAT.msgArr(system)', obj)
+      //console.log('CHAT.msgArr(system)', obj)
     })
     this.socket.on('whisper', function (obj) {
       CHAT.msgArr.push(obj)
-      console.log('CHAT.msgArr(whisper)', obj)
+      //console.log('CHAT.msgArr(whisper)', obj)
     })
     this.socket.on('broadcast', function (obj) {
       CHAT.msgArr.push(obj)
-      console.log('CHAT.msgArr(broadcast)', obj)
+      //console.log('CHAT.msgArr(broadcast)', obj)
     })
     this.socket.on('list', function (obj) {
       CHAT.studentlist = obj
     })
     this.socket.on('pdf', function (obj) {
-      console.log("pdf")
+      //console.log("pdf")
       CHAT.frametype = 'pdf'
       CHAT.pdfurl = obj.msg
     })
     this.socket.on('select', function (obj) {
       CHAT.frametype = 'select'
-      console.log(obj.msg)
+      //console.log(obj.msg)
       CHAT.selectall = obj.msg
     })
     this.socket.on('code', function (obj) {
@@ -98,7 +98,7 @@ const CHAT = {
       CHAT.codeall = obj.msg
     })
     this.socket.on('close', function (obj) {
-      console.log("close")
+      //console.log("close")
       CHAT.frametype = 'close'
     })
     this.socket.on('page', function (obj) {
@@ -108,17 +108,17 @@ const CHAT = {
       CHAT.curpage0 = obj.msg.page
       //alert(obj.msg.pdfurl)
       //alert(obj.msg.page)
-      console.log(obj.msg.pdfurl)
-      console.log(obj.msg.page)
+      //console.log(obj.msg.pdfurl)
+      //console.log(obj.msg.page)
     })
 
   },
   init: function (username, url) {
     this.socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port)
     this.socket.on('open', function () {
-      console.log('已连接')
+      //console.log('已连接')
     })
-    console.log(username, url)
+    //console.log(username, url)
     CHAT.msgArr = []
     this.socket.emit('join', {'username': username, 'url': url})
     this.socket.on('check', function () {

@@ -542,7 +542,7 @@ export default{
       this.userInfo['job'] = this.$cookies.get('user').job
     },
     codesubmit () {
-      console.log('dasdas')
+      //console.log('dasdas')
       var data = {}
       data['username'] = this.userInfo['username']
       data['url'] = this.cururl

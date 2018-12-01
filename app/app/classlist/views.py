@@ -12,7 +12,7 @@ def list():
     Classlist = Classrooms.query.filter_by(visible = "yes").all()
     for Class in Classlist:
         if Class is None:
-            print ("No living room!")
+            #print ("No living room!")
             break
         else:
             dic = classroomManager.dict(Class)

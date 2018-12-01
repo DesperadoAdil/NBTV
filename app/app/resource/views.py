@@ -329,7 +329,7 @@ def delete_PDF():
     except Exception as err:
         print(err)
         ret['status'] = "error"
-    print(ret)
+    #print(ret)
     return json.dumps(ret, ensure_ascii = False)
 
 
@@ -398,7 +398,7 @@ def get_pdfs():
             })
 
     ret['status'] = 'success'
-    print (json.dumps(ret))
+    #print (json.dumps(ret))
     return json.dumps(ret)
 
 @resource.route('/pdf_addclass', methods = ['POST', 'GET'])

@@ -84,7 +84,7 @@ export default router
 
 
 router.beforeEach((to, from, next) => {
-  console.log("from "+from.path+" to "+to.path)
+  //console.log("from "+from.path+" to "+to.path)
   const publicPages = ['/', '/register', '/Register', '/login', '/Login']
   const privatePages = ['/user', '/list', '/mywatchinglist', '/mylivinglist']
   const developerPages = ['developer']

@@ -148,7 +148,7 @@ def noShutUp(data):
 	print ("You Can Talk!")
 	username = data['username']
 	url = data['url']
-	print (username, url)
+	#print (username, url)
 
 	classroom = Classrooms.query.filter_by(url = url).first()
 	shutuplist = json.loads(classroom.shutuplist)

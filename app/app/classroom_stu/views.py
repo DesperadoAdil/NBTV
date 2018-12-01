@@ -11,14 +11,14 @@ def urlgetvid():
     ret = {}
 
     data = request.get_data()
-    print (data)
+    #print (data)
     data = json.loads(data)
 
     url = data['url']
 
     classroom = classroomManager.search(url)
     if classroom is None:
-        print ("Urlgetvid Error: No Such Classroom")
+        #print ("Urlgetvid Error: No Such Classroom")
         ret["vid"] = ""
     else:
         ret["vid"] = str(classroom.vid);
