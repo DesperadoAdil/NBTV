@@ -57,7 +57,7 @@ class Resource_Multi_Test(BaseTestCase):
 
 		# submit an answer for this question
 		submit_data = {
-			'answer': 'A', 
+			'answer': 0, 
 			'uniqueId': uniqueId,
 			'username': 'stu1',
 			'url': '123456'
