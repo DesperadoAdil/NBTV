@@ -49,6 +49,7 @@ def on_join(data):
 
 @socketio.on('sendMsg')
 def sendMsg(data):
+	print (data)
 	type = data['type']
 	if type == "broadcast":
 		emit('broadcast', data, room = data['url'])
@@ -101,6 +102,7 @@ def refresh(data):
 
 @socketio.on('check')
 def check(data):
+	print ("check!")
 	chatingRoom[data['url']].append(data['username'])
 
 

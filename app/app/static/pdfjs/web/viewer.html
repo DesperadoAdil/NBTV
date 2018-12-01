@@ -42,41 +42,41 @@ See https://github.com/adobe-type-tools/cmap-resources
 
 <script>
 
-window.addEventListener('message', function (e) { console.log("msgrecv");
-      console.log(e.data) 
+window.addEventListener('message', function (e) { //console.log("msgrecv");
+      //console.log(e.data)
       window.parent.updatepage()   } )
 
 var paggg;
-console.log("dads")
+//console.log("dads")
 
 
       var sHref = location.search
       //console.log(document.getElementById("pageNumber").value)
       //console.log(sHref)
-      
-        
+
+
          // alert(sHref)
         paggg = sHref.split("?")[2];
-         // alert(url)             
-       
-         // alert(ddd)      
+         // alert(url)
+
+         // alert(ddd)
         if(paggg!==undefined)
         {
         	paggg = sHref.split("?")[2];
-           console.log("diff")
+           //console.log("diff")
           // document.getElementById("pageNumber").value=url;
         }else{
         	paggg = '1';
-           console.log("same")
-        }  
-                 
-      
+           //console.log("same")
+        }
+
+
 
 
 </script>
 <script src="viewer.js"></script>
 
-   
+
 
   </head>
 
@@ -385,4 +385,3 @@ console.log("dads")
     <div id="printContainer"></div>
   </body>
 </html>
-

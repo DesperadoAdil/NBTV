@@ -496,14 +496,14 @@
 
           <div class="talk-nav">
             <div class="talk-title">
-              <Dropdown @click.native="CHAT.list(userInfo.username, cururl)" trigger="click">
+              <Dropdown @click.native="$CHAT.emit('list', {'username': userInfo.username, 'url': cururl})" trigger="click">
                 <a href="javascript:void(0)">
                   聊天对象
                   <Icon type="ios-arrow-down"></Icon>
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem @click.native="CHAT.socket.emit('refresh', {'url':cururl})">刷新</DropdownItem>
-                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)" :key="student.username">{{ student }}</DropdownItem>
+                  <DropdownItem @click.native="$CHAT.emit('refresh', {'url':cururl})">刷新</DropdownItem>
+                  <DropdownItem v-for="student in studentlist" @click.native="talkTo(student)" :key="student.username">{{ student }}</DropdownItem>
                   <DropdownItem divided @click.native="talkTo('all')">all</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -513,12 +513,12 @@
 
 
           <div class="content" id="content-id">
-            <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
-              <div v-if="CHAT.msgArr[index].toUser === username && username !== userInfo.username">
+            <div v-for="(msgObj, index) in msgArr" :key="msgObj.msg">
+              <div v-if="msgArr[index].toUser === username && username !== userInfo.username">
 
 
                 <div class="talk-space self-talk"
-                     v-if="CHAT.msgArr[index].fromUser === userInfo.username">
+                     v-if="msgArr[index].fromUser === userInfo.username">
                   <div class="talk-content">
                     <div class="talk-self-name">{{ msgObj.fromUser }}</div>
                     <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
@@ -559,7 +559,7 @@
                 </div>
               </div>
 
-              <div v-else-if="CHAT.msgArr[index].toUser === userInfo.username && username !== userInfo.username">
+              <div v-else-if="msgArr[index].toUser === userInfo.username && username !== userInfo.username">
                 <div  class="talk-space user-talk">
                   <div class="talk-content">
                     <div v-if="username === 'all'">
@@ -572,7 +572,7 @@
                       </Poptip>
                       <div v-else class="talk-user-name">[私信]：{{ msgObj.fromUser }}</div>
                     </div>
-                    <div v-else-if="CHAT.msgArr[index].fromUser === username">
+                    <div v-else-if="msgArr[index].fromUser === username">
                       <Poptip v-if="msgObj.fromUser !== '[系统]'" trigger="hover" content="content" placement="right-start">
                         <div class="talk-user-name">{{ msgObj.fromUser }}</div>
                         <div class="api" slot="content">
@@ -619,7 +619,6 @@
 import axios from 'axios'
 import {setSWFIsReady} from '../../static/js/livingrtmp.js'
 import {RtmpStreamer} from '../../static/js/livingrtmp.js'
-import CHAT from '../client'
 import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
 import PrismEditor from 'vue-prism-editor'
@@ -670,11 +669,26 @@ export default{
       chatingtop: 60 + 'px',
       chatinghei: 710 + 'px',
       msgTypeInfo: '语音',
-      socket: null,
       msgType: 'text',
       talkType: 'broadcast',
       msg: '',
-      CHAT,
+      msgArr: [],
+      curpage0:'1',
+      frametype: 'close',
+      pdfurl: '/static/pdf/1-1.pdf',
+      codeall: {
+        uniqueId: '',
+        statement: 'B-Tree',
+        language: 'cpp',
+        example: 'cout << "hello world" << endl;'
+      },
+      selectall: {
+        uniqueId: '1',
+        statement: 'choice 02',
+        optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
+        answer: 'A'
+      },
+      //this.$CHAT,
       username: 'all',
       isUploading: false,
       recorder: new Recorder({
@@ -691,6 +705,7 @@ export default{
       selected: {},
       shutUpModal: false,
       shutuplist: [],
+      studentlist: [],
       /**
        * 以上为聊天室使用，请勿改动
        */
@@ -1032,7 +1047,59 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
-    CHAT.message(this.userInfo.username)
+    var _this = this
+    this.$CHAT.on('message', function (msg) {
+      var date = new Date()
+      var time = date.getHours() + ':' + date.getMinutes()
+      var obj = {
+        type: 'broadcast',
+        msgType: 'text',
+        url: _this.cururl,
+        time: time,
+        msg: msg,
+        toUser: 'all',
+        fromUser: '[系统]'
+      }
+      _this.msgArr.push(obj)
+      //console.log('CHAT.msgArr(system)', obj)
+    })
+    this.$CHAT.on('whisper', function (obj) {
+      _this.msgArr.push(obj)
+      //console.log('CHAT.msgArr(whisper)', obj)
+    })
+    this.$CHAT.on('broadcast', function (obj) {
+      _this.msgArr.push(obj)
+      //console.log('CHAT.msgArr(broadcast)', obj)
+    })
+    this.$CHAT.on('list', function (obj) {
+      _this.studentlist = obj
+    })
+    this.$CHAT.on('pdf', function (obj) {
+      //console.log("pdf")
+      _this.frametype = 'pdf'
+      _this.pdfurl = obj.msg
+    })
+    this.$CHAT.on('select', function (obj) {
+      _this.frametype = 'select'
+      //console.log(obj.msg)
+      _this.selectall = obj.msg
+    })
+    this.$CHAT.on('code', function (obj) {
+      _this.frametype = 'code'
+      _this.codeall = obj.msg
+    })
+    this.$CHAT.on('close', function (obj) {
+      //console.log("close")
+      _this.frametype = 'close'
+    })
+    this.$CHAT.on('page', function (obj) {
+      _this.frametype = 'pdf'
+      _this.pdfurl=obj.msg.pdfurl
+      _this.curpage0 = obj.msg.page
+      //console.log(obj.msg.pdfurl)
+      //console.log(obj.msg.page)
+    })
+
     this.findIfShutUp()
     /**
      * 以上为聊天室使用，请勿改动
@@ -1095,7 +1162,7 @@ export default{
         toUser: 'stu',
         fromUser: this.userInfo.username
       }
-      CHAT.submit(obj)
+      this.$CHAT.emit('sendMsg', obj)
     },
     // ADD METHODS
     // PDF
@@ -1335,7 +1402,7 @@ export default{
             toUser: 'stu',
             fromUser: this.userInfo.username
           }
-          CHAT.submit(obj)
+          this.$CHAT.emit('sendMsg', obj)
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -1544,7 +1611,7 @@ export default{
             toUser: 'stu',
             fromUser: this.userInfo.username
           }
-          CHAT.submit(obj)
+          this.$CHAT.emit('sendMsg', obj)
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -1755,7 +1822,7 @@ export default{
             toUser: 'stu',
             fromUser: this.userInfo.username
           }
-          CHAT.submit(obj)
+          this.$CHAT.emit('sendMsg', obj)
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')
@@ -1815,7 +1882,16 @@ export default{
      * 以下为聊天室使用，请勿改动
      */
     chatingRoomInit () {
-      this.socket = CHAT.init(this.userInfo.username, this.cururl)
+      var _this = this
+      this.$CHAT.on('open', function () {
+        console.log('已连接聊天室')
+      })
+      //console.log(this.userInfo.username, this.cururl)
+      this.msgArr = []
+      this.$CHAT.emit('join', {'username': this.userInfo.username, 'url': this.cururl})
+      this.$CHAT.on('check', function () {
+        _this.$CHAT.emit('check', {'username': _this.userInfo.username, 'url': _this.cururl})
+      })
     },
     submit () {
       var date = new Date()
@@ -1833,7 +1909,7 @@ export default{
           fromUser: this.userInfo.username
         }
         this.msg = ''
-        CHAT.submit(obj)
+        this.$CHAT.emit('sendMsg', obj)
       } else if (this.msgType === 'audio') {
         obj = {
           type: this.talkType,
@@ -1845,7 +1921,7 @@ export default{
           fromUser: this.userInfo.username
         }
         // console.log(obj)
-        CHAT.submit(obj)
+        this.$CHAT.emit('sendMsg', obj)
       } else if (this.msgType === 'img') {
         var blob = new Blob([document.querySelector('input[type=file]').files[0]], { type: 'image/png' })
         obj = {
@@ -1858,7 +1934,7 @@ export default{
           fromUser: this.userInfo.username
         }
         // console.log(obj)
-        CHAT.submit(obj)
+        this.$CHAT.emit('sendMsg', obj)
         this.msgType = 'text'
       }
     },
@@ -1877,7 +1953,7 @@ export default{
         fromUser: this.userInfo.username
       }
       // console.log(obj)
-      CHAT.submit(obj)
+      this.$CHAT.emit('sendMsg', obj)
     },
     chooseImg () {
       this.msgType = 'img'
@@ -1937,7 +2013,8 @@ export default{
         fromUser: this.userInfo.username
       }
       // console.log(m)
-      CHAT.shutUp(obj)
+      this.$CHAT.emit('shutup', obj)
+      console.log('shut up')
     },
     blackList (m) {
       var obj = {
@@ -1946,7 +2023,8 @@ export default{
         fromUser: this.userInfo.username
       }
       // console.log(m)
-      CHAT.blackList(obj)
+      this.$CHAT.emit('blacklist', obj)
+      //console.log('black list')
     },
     findIfShutUp () {
       axios.post('/api/classroom/shutuplist', {'url': this.cururl}).then((resp) => {
@@ -1959,7 +2037,7 @@ export default{
       this.findIfShutUp()
     },
     noShutUp (student) {
-      CHAT.youCanTalk(student, this.cururl)
+      this.$CHAT.emit('noShutUp', {'username': student, 'url': this.cururl})
       var index = this.shutuplist.indexOf(student)
       this.shutuplist.splice(index, 1)
     },
@@ -2098,7 +2176,7 @@ export default{
             toUser: 'stu',
             fromUser: this.userInfo.username
           }
-          CHAT.submit(obj)
+          this.$CHAT.emit('sendMsg', obj)
         },
         onCancel: () => {
           this.$Message.info('Clicked cancel')

@@ -15,6 +15,7 @@ import 'prismjs'
 import 'prismjs/themes/prism.css'
 import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
+import io from 'socket.io-client'
 
 Vue.use(VueCodemirror)
 Vue.component('vue-headful', VueHeadful)
@@ -24,6 +25,8 @@ Vue.use(RTMP)
 Vue.use(AudioRecorder)
 Vue.use(VueHighlightJS)
 Vue.config.productionTip = false
+
+Vue.prototype.$CHAT = io.connect(location.protocol + '//' + document.domain + ':' + location.port)
 
 new Vue({
   el: '#app',

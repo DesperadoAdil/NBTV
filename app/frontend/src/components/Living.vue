@@ -1,6 +1,6 @@
 <template>
   <div id="living" class="tealivingmain">
-    <div  id="mainlivingcard" class="cardtealiving11" :style="{display:CHAT.frametype === 'close'?'block':'none'}">
+    <div  id="mainlivingcard" class="cardtealiving11" :style="{display:frametype === 'close'?'block':'none'}">
       <!--<div id="mainlivingcard" class="cardtealiving11" :style="{display:mainlivingcarddisplay?'block':'none'}">-->
       <div class="topveido">
         <!--<h3>教室信息显示部分（待修改）</h3>-->
@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <div  id="littlelivingcard" class="cardtealittleliving11" :style="{display:CHAT.frametype !== 'close'?'block':'none'}">
+    <div  id="littlelivingcard" class="cardtealittleliving11" :style="{display:frametype !== 'close'?'block':'none'}">
       <!--<div id="littlelivingcard" class="cardtealittleliving11" :style="{display:littlelivingcarddisplay?'block':'none'}">-->
       <!--<div class="topveido">-->
         <!--<h3>教室信息显示部分（待修改）</h3>-->
@@ -23,18 +23,18 @@
     </div>
 
     <!--<div id="mainpdfcard" class="cardtealivingpdf11" :style="{display:mainpdfcarddisplay?'block':'none'}">-->
-    <div  id="mainpdfcard" class="cardtealivingpdf11" :style="{display:CHAT.frametype === 'pdf'?'block':'none'}">
-      <iframe id="displayPdfIframe" class="pdfframe" :src="'/static/pdfjs/web/viewer.html?file='+CHAT.pdfurl+'?'+CHAT.curpage0"/>
+    <div  id="mainpdfcard" class="cardtealivingpdf11" :style="{display:frametype === 'pdf'?'block':'none'}">
+      <iframe id="displayPdfIframe" class="pdfframe" :src="'/static/pdfjs/web/viewer.html?file='+pdfurl+'?'+curpage0"/>
     </div>
 
     <!--<div id="maincodecard" class="cardtealivingcdode00" :style="{display:maincodecarddisplay?'block':'none'}">-->
-    <div  id="maincodecard" class="cardtealivingcdode00"  :style="{display:CHAT.frametype === 'code'?'block':'none'}">
+    <div  id="maincodecard" class="cardtealivingcdode00"  :style="{display:frametype === 'code'?'block':'none'}">
       <Form label-position="left">
         <FormItem  >
-          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px">问题描述: {{CHAT.codeall.statement}}</p>
+          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px">问题描述: {{codeall.statement}}</p>
         </FormItem>
         <FormItem >
-          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px">编程语言：{{CHAT.codeall.language}}</p>
+          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px">编程语言：{{codeall.language}}</p>
         </FormItem>
         <FormItem>
 
@@ -53,14 +53,14 @@
     </div>
 
     <!--<div id="mainselectcard" class="celeardtealivingselect00" :style="{display:mainselectcarddisplay?'block':'none'}">-->
-    <div  id="mainselectcard" class="cardtealivingselect00" :style="{display:CHAT.frametype === 'select'?'block':'none'}">
+    <div  id="mainselectcard" class="cardtealivingselect00" :style="{display:frametype === 'select'?'block':'none'}">
       <Form>
         <FormItem >
-          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px">题目：{{CHAT.selectall.statement}}</p>
+          <p style="word-break:break-all;float:left;text-align: left;font-size: 20px">题目：{{selectall.statement}}</p>
         </FormItem>
         <FormItem >
           <RadioGroup  style="float:left" v-model="stuans" vertical>
-            <Radio v-for="(item, index) in CHAT.selectall.optionList"  :key="index" v-bind:label="index" style="font-size: 15px;float:left">
+            <Radio v-for="(item, index) in selectall.optionList"  :key="index" v-bind:label="index" style="font-size: 15px;float:left">
               <span style="font-size: 20px">{{String.fromCharCode(65+index)+" : "+item}}</span>
               <br/>
             </Radio>
@@ -71,19 +71,19 @@
     </div>
 
     <!--=========这是赵汉卿负责的聊天室部分，请勿改动================-->
-    <div id="chatingRoom2" :style="{height:CHAT.frametype === 'close'? 650+'px':400+'px',top:CHAT.frametype === 'close'? 150+'px':350+'px'}">
+    <div id="chatingRoom2" :style="{height:frametype === 'close'? 650+'px':400+'px',top:frametype === 'close'? 150+'px':350+'px'}">
       <div class="talk-contents">
         <div class="talk-inner">
           <div class="talk-nav">
             <div class="talk-title">
-              <Dropdown @click.native="CHAT.list(userInfo.username, cururl)" trigger="click">
+              <Dropdown @click.native="$CHAT.emit('list', {'username': userInfo.username, 'url': cururl})" trigger="click">
                 <a href="javascript:void(0)">
                   聊天对象
                   <Icon type="ios-arrow-down"></Icon>
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem @click.native="CHAT.socket.emit('refresh', {'url':cururl})">刷新</DropdownItem>
-                  <DropdownItem v-for="student in CHAT.studentlist" @click.native="talkTo(student)" :key="student.username">{{ student }}</DropdownItem>
+                  <DropdownItem @click.native="$CHAT.emit('refresh', {'url':cururl})">刷新</DropdownItem>
+                  <DropdownItem v-for="student in studentlist" @click.native="talkTo(student)" :key="student.username">{{ student }}</DropdownItem>
                   <DropdownItem divided @click.native="talkTo('all')">all</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -91,10 +91,10 @@
             </div>
           </div>
           <div class="content">
-            <div v-for="(msgObj, index) in CHAT.msgArr" :key="msgObj.msg">
-              <div v-if="CHAT.msgArr[index].toUser === username && username !== userInfo.username">
+            <div v-for="(msgObj, index) in msgArr" :key="msgObj.msg">
+              <div v-if="msgArr[index].toUser === username && username !== userInfo.username">
                 <div class="talk-space self-talk"
-                  v-if="CHAT.msgArr[index].fromUser === userInfo.username">
+                  v-if="msgArr[index].fromUser === userInfo.username">
                   <div class="talk-content">
                     <div class="talk-self-name">{{ msgObj.fromUser }}</div>
                     <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-self">{{ msgObj.msg }}</div>
@@ -125,13 +125,13 @@
                   </div>
                 </div>
               </div>
-              <div v-else-if="CHAT.msgArr[index].toUser === userInfo.username && username !== userInfo.username">
+              <div v-else-if="msgArr[index].toUser === userInfo.username && username !== userInfo.username">
                 <div  class="talk-space user-talk">
                   <div class="talk-content">
                     <div v-if="username === 'all'">
                       <div class="talk-user-name">[私信]：{{ msgObj.fromUser }}</div>
                     </div>
-                    <div v-else-if="CHAT.msgArr[index].fromUser === username">
+                    <div v-else-if="msgArr[index].fromUser === username">
                       <div class="talk-user-name">{{ msgObj.fromUser }}</div>
                     </div>
                     <div v-if="msgObj.msgType === 'text'" class="talk-word talk-word-user">{{ msgObj.msg }}</div>
@@ -169,7 +169,6 @@
 
 <script>
 import axios from 'axios'
-import CHAT from '../client'
 import { convertTimeMMSS } from '../utils'
 import Recorder from '../recorder'
 import router from '../router'
@@ -217,12 +216,28 @@ export default{
       curcode: '',
       chathei: 600 + 'px',
       chattop: 150 + 'px',
-      socket: null,
       msgType: 'text',
       msgTypeInfo: '文字',
       talkType: 'broadcast',
       msg: '',
-      CHAT,
+      msgArr: [],
+      studentlist: [],
+      curpage0:'1',
+      frametype: 'close',
+      pdfurl: '/static/pdf/1-1.pdf',
+      codeall: {
+        uniqueId: '',
+        statement: 'B-Tree',
+        language: 'cpp',
+        example: 'cout << "hello world" << endl;'
+      },
+      selectall: {
+        uniqueId: '1',
+        statement: 'choice 02',
+        optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
+        answer: 'A'
+      },
+      //$CHAT,
       username: 'all',
       isUploading: false,
       recorder: new Recorder({
@@ -239,6 +254,7 @@ export default{
       selected: {},
       silence: false,
       shutuplist: [],
+      studentlist: [],
       /**
        * 以上为聊天室使用，请勿改动
        */
@@ -292,16 +308,67 @@ export default{
     /**
      * 以下为聊天室使用，请勿改动
      */
+     var _this = this
+     this.$CHAT.on('message', function (msg) {
+       var date = new Date()
+       var time = date.getHours() + ':' + date.getMinutes()
+       var obj = {
+         type: 'broadcast',
+         msgType: 'text',
+         url: _this.cururl,
+         time: time,
+         msg: msg,
+         toUser: 'all',
+         fromUser: '[系统]'
+       }
+       _this.msgArr.push(obj)
+       //console.log('CHAT.msgArr(system)', obj)
+     })
+     this.$CHAT.on('whisper', function (obj) {
+       _this.msgArr.push(obj)
+       //console.log('CHAT.msgArr(whisper)', obj)
+     })
+     this.$CHAT.on('broadcast', function (obj) {
+       _this.msgArr.push(obj)
+       //console.log('CHAT.msgArr(broadcast)', obj)
+     })
+     this.$CHAT.on('list', function (obj) {
+       _this.studentlist = obj
+     })
+     this.$CHAT.on('pdf', function (obj) {
+       //console.log("pdf")
+       _this.frametype = 'pdf'
+       _this.pdfurl = obj.msg
+     })
+     this.$CHAT.on('select', function (obj) {
+       _this.frametype = 'select'
+       //console.log(obj.msg)
+       _this.selectall = obj.msg
+     })
+     this.$CHAT.on('code', function (obj) {
+       _this.frametype = 'code'
+       _this.codeall = obj.msg
+     })
+     this.$CHAT.on('close', function (obj) {
+       //console.log("close")
+       _this.frametype = 'close'
+     })
+     this.$CHAT.on('page', function (obj) {
+       _this.frametype = 'pdf'
+       _this.pdfurl=obj.msg.pdfurl
+       _this.curpage0 = obj.msg.page
+       //console.log(obj.msg.pdfurl)
+       //console.log(obj.msg.page)
+     })
 
-    CHAT.message(this.userInfo.username)
-    CHAT.socket.on('shutup', function () {
+    this.$CHAT.on('shutup', function () {
       this.beenShutUp()
     }.bind(this))
-    CHAT.socket.on('blacklist', function () {
+    this.$CHAT.on('blacklist', function () {
       router.push('/list')
       this.beenKickOut()
     }.bind(this))
-    CHAT.socket.on('noShutUp', function () {
+    this.$CHAT.on('noShutUp', function () {
       this.$Message.success('你现在可以说话了！')
       this.silence = false
       this.findIfShutUp()
@@ -336,7 +403,6 @@ export default{
     //    };
   },
   created: function () {
-    // this.getPageData();
     const s = document.createElement('script')
     s.type = 'text/javascript'
     s.src = 'https://player.polyv.net/livescript/liveplayer.js'
@@ -374,7 +440,7 @@ export default{
      */
 
     // for code highlight
-    this.cmOption.mode = CHAT.codeall.language
+    this.cmOption.mode = this.codeall.language
     if (this.cmOption.mode === 'cpp') {
       this.cmOption.mode = 'text/x-c++src'
     }
@@ -397,15 +463,20 @@ export default{
     }
   },
   methods: {
-    getPageData:function(){
-      this.CHAT = JSON.parse(localStorage.getItem('this.CHAT'));//使用getItem方法的前提是，你再自己需要的地方使用了setItem方法
-    },
-
     /**
      * 以下为聊天室使用，请勿改动
      */
     chatingRoomInit () {
-      this.socket = CHAT.init(this.userInfo.username, this.cururl)
+      var _this = this
+      this.$CHAT.on('open', function () {
+        console.log('已连接聊天室')
+      })
+      //console.log(this.userInfo.username, this.cururl)
+      this.msgArr = []
+      this.$CHAT.emit('join', {'username': this.userInfo.username, 'url': this.cururl})
+      this.$CHAT.on('check', function () {
+        _this.$CHAT.emit('check', {'username': _this.userInfo.username, 'url': _this.cururl})
+      })
     },
     submit () {
       if (this.silence === true || this.shutuplist.includes(this.userInfo.username)) {
@@ -427,7 +498,7 @@ export default{
           fromUser: this.userInfo.username
         }
         this.msg = ''
-        CHAT.submit(obj)
+        this.$CHAT.emit('sendMsg', obj)
       } else if (this.msgType === 'audio') {
         obj = {
           type: this.talkType,
@@ -438,7 +509,7 @@ export default{
           toUser: this.username,
           fromUser: this.userInfo.username
         }
-        CHAT.submit(obj)
+        this.$CHAT.emit('sendMsg', obj)
       } else if (this.msgType === 'img') {
         var blob = new Blob([document.querySelector('input[type=file]').files[0]], { type: 'image/png' })
         obj = {
@@ -450,7 +521,7 @@ export default{
           toUser: this.username,
           fromUser: this.userInfo.username
         }
-        CHAT.submit(obj)
+        this.$CHAT.emit('sendMsg', obj)
         this.msgType = 'text'
       }
     },
@@ -472,7 +543,7 @@ export default{
         toUser: this.username,
         fromUser: this.userInfo.username
       }
-      CHAT.submit(obj)
+      this.$CHAT.emit('sendMsg', obj)
     },
     chooseImg () {
       this.msgType = 'img'
@@ -546,7 +617,7 @@ export default{
       var data = {}
       data['username'] = this.userInfo['username']
       data['url'] = this.cururl
-      data['uniqueId'] = this.CHAT.codeall.uniqueId
+      data['uniqueId'] = this.codeall.uniqueId
       data['answer'] = this.curcode
       axios.post('/api/resource/code_submit', data).then((resp) => {
         this.$Message.success('提交成功!')
@@ -559,7 +630,7 @@ export default{
       var data = {}
       data['username'] = this.userInfo['username']
       data['url'] = this.cururl
-      data['uniqueId'] = this.CHAT.selectall.uniqueId
+      data['uniqueId'] = this.selectall.uniqueId
       data['answer'] = this.stuans
       axios.post('/api/resource/multi_submit', data).then((resp) => {
         this.$Message.success('提交成功!')

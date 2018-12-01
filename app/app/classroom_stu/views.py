@@ -23,5 +23,5 @@ def urlgetvid():
     else:
         ret["vid"] = str(classroom.vid);
 
-    print (json.dumps(ret))
+    #print (json.dumps(ret))
     return json.dumps(ret)

@@ -6766,12 +6766,12 @@ var pdfjsWebLibs;
     }
    }
    function webViewerNextPage() {
-    PDFViewerApplication.page++;    
-    window.console.log("++++")    
+    PDFViewerApplication.page++;
+    //window.console.log("++++")    
    }
    function webViewerPreviousPage() {
-    PDFViewerApplication.page--;   
-    window.console.log("----")   
+    PDFViewerApplication.page--;
+    //window.console.log("----")
    }
    function webViewerZoomIn() {
     PDFViewerApplication.zoomIn();
