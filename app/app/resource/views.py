@@ -154,9 +154,10 @@ def multi_submit():
     print('submit answer for multi')
     data = request.get_data()
     data = json.loads(data)
-
+    
+    andd = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']
     ret = {}
-    ret['status'] = multiChoiceManager.submitAnswer(data['uniqueId'], data['username'], data['url'], data['answer'])
+    ret['status'] = multiChoiceManager.submitAnswer(data['uniqueId'], data['username'], data['url'], andd[data['answer']])
     return json.dumps(ret)
 
 
