@@ -7,18 +7,16 @@ chatingRoom = {}
 
 @socketio.on('connect')
 def test_connect():
-	print ('Client connected')
 	emit('open')
 
 
 @socketio.on('disconnect')
 def test_disconnect():
-	print ('Client disconnected')
+	pass
 
 
 @socketio.on('join')
 def on_join(data):
-	print ('join!')
 	username = data['username']
 	url = data['url']
 	join_room(username)
@@ -49,7 +47,6 @@ def on_join(data):
 
 @socketio.on('sendMsg')
 def sendMsg(data):
-	print (data)
 	type = data['type']
 	if type == "broadcast":
 		emit('broadcast', data, room = data['url'])
@@ -102,13 +99,11 @@ def refresh(data):
 
 @socketio.on('check')
 def check(data):
-	print ("check!")
 	chatingRoom[data['url']].append(data['username'])
 
 
 @socketio.on('blacklist')
 def blacklist(data):
-	print ("BlackList!")
 	username = data["toUser"]
 	url = data["url"]
 
@@ -130,7 +125,6 @@ def blacklist(data):
 
 @socketio.on('shutup')
 def shutup(data):
-	print ("ShutupList!")
 	username = data["toUser"]
 	url = data["url"]
 
@@ -147,10 +141,8 @@ def shutup(data):
 
 @socketio.on('noShutUp')
 def noShutUp(data):
-	print ("You Can Talk!")
 	username = data['username']
 	url = data['url']
-	#print (username, url)
 
 	classroom = Classrooms.query.filter_by(url = url).first()
 	shutuplist = json.loads(classroom.shutuplist)

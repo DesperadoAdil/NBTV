@@ -2157,13 +2157,13 @@ export default{
           this.chatingtop = 60 + 'px'
           this.chatinghei = 710 + 'px'
           this.curvideo = true
-          const data = this.curuser
+          /*const data = this.curuser
           data['username'] = this.userInfo['username']
           data['job'] = this.userInfo['job']
           data['url'] = this.cururl
           axios.post('/api/classroom/closepdfsec', data).then((resp) => {
 
-          })
+          })*/
 
           var date = new Date()
           var time = date.getHours() + ':' + date.getMinutes()
