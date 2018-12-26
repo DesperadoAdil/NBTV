@@ -1,7 +1,10 @@
 import json
 from ..models import *
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import os
+
+utc_dt = datetime.utcnow().replace(tzinfo=timezone.utc)
+cn_dt = utc_dt.astimezone(timezone(timedelta(hours=8)))
 
 class ClassroomManager:
 	def __init__(self):
@@ -91,7 +94,7 @@ class ClassroomManager:
 				return "error: no such classroom"
 
 			if status == "open":
-				tmpClass.showtime = datetime.now()
+				tmpClass.showtime = cn_dt.now()
 				tmpClass.status = json.dumps({'type': "openliving"})
 			elif status == "close":
 				tmpClass.status = json.dumps({'type': "closeliving"})
