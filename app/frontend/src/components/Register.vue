@@ -152,7 +152,11 @@ export default {
               this.$Message.success('注册成功!')
               router.push('/login')
             } else {
-              this.$Message.error('注册失败,验证码错误或用户已存在!')
+              if (resp.data.status == 'error: teacher registration forbidden') {
+                this.$Message.error('注册失败,教师注册功能暂时关闭!')
+              } else {
+                this.$Message.error('注册失败,验证码错误或用户已存在!')
+              }
               this.msg = `Status:${resp.data.status}`
             }
           })
