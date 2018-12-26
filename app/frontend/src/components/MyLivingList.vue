@@ -37,7 +37,7 @@
 
     </Modal>
     <Row class="myLivingList-flex-container">
-      <Col span="8" v-for="(living, index) in myLivingList" :key="living.url">
+      <Col span="6" v-for="(living, index) in myLivingList" :key="living.url">
         <card class="myLivingList-flex-item" >
           <img :src="living.thumbnail" class="thumbnail" @click="directskip(living)">
           <p class="my-class-title">{{ living.title }}</p>
