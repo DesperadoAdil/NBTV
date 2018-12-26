@@ -2,9 +2,6 @@ from app import db
 from datetime import datetime, timedelta, timezone
 import json
 
-utc_dt = datetime.utcnow().replace(tzinfo=timezone.utc)
-cn_dt = utc_dt.astimezone(timezone(timedelta(hours=8)))
-
 classroom_choice = db.Table(
     'classroom_choice',
     db.Column('classroom_url', db.String(100), db.ForeignKey('classrooms.url', ondelete = "CASCADE", onupdate = "CASCADE"), nullable=False),
@@ -55,9 +52,9 @@ class Classrooms(db.Model):
     teacherlist = db.Column(db.Text, nullable=False, default = "[]")
 
     visible = db.Column(db.String(5), nullable=False, default = "yes")
-    createtime = db.Column(db.DateTime, default=cn_dt.now())
+    createtime = db.Column(db.DateTime, default=datetime.utcnow().replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8))).now())
     #开播时间
-    showtime = db.Column(db.DateTime, nullable=False, default=cn_dt.now())
+    showtime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow().replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8))).now())
     #黑名单
     blacklist = db.Column(db.Text, nullable = False, default = "[]")
     #禁言名单

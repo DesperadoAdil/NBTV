@@ -3,9 +3,6 @@ from ..models import *
 from datetime import datetime, timedelta, timezone
 import os
 
-utc_dt = datetime.utcnow().replace(tzinfo=timezone.utc)
-cn_dt = utc_dt.astimezone(timezone(timedelta(hours=8)))
-
 class ClassroomManager:
 	def __init__(self):
 		pass
@@ -94,7 +91,7 @@ class ClassroomManager:
 				return "error: no such classroom"
 
 			if status == "open":
-				tmpClass.showtime = cn_dt.now()
+				tmpClass.showtime = datetime.utcnow().replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8))).now()
 				tmpClass.status = json.dumps({'type': "openliving"})
 			elif status == "close":
 				tmpClass.status = json.dumps({'type': "closeliving"})
