@@ -74,6 +74,11 @@ def register():
     if user is not None:
         ret['status']='error: user already exist'
         return json.dumps(ret)
+    ###############
+    if job == "teacher":
+        ret['status'] = 'error: teacher registration forbidden'
+        return json.dumps(ret)
+    ###############
     ret['status'] = usermanager.insert(phonenumber, username, password, job)
     #print (json.dumps(ret))
     return json.dumps(ret)
