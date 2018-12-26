@@ -316,17 +316,15 @@ def openlive():
 	if classroom is None:
 		ret['status'] = "error: no such classroom"
 	else:
-
 		ret['streamername'] = classroom.rtmpUrl
 		ret['streamername'] = ret['streamername'].split('/')[-1]
 		vid = classroom.vid
 		response = polyvAPI.instance.openLive(vid)
 
-		classroomManager.updateShowTime(url)
+		classroomManager.updateShowTime(url, "open")
 		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
-			classroom.status = json.dumps({'type': "openliving"})
 			ret['status'] = "success"
 
 	#print (json.dumps(ret))
@@ -352,10 +350,13 @@ def closelive():
 		vid = classroom.vid
 		ret['vid'] = vid
 		response = polyvAPI.instance.closeLive(vid)
+		classroomManager.updateShowTime(url, "close")
 		if response.status != 200:
 			ret['status'] = "error: polyv error"
 		else:
 			classroom.status = json.dumps({'type': "closeliving"})
+			db.session.add(classroom)
+			db.session.commit()
 			ret['status'] = "success"
 
 	#print (json.dumps(ret))

@@ -2227,16 +2227,16 @@ export default{
             this.toopen = true
             this.opentext = '开播'
             this.openclose = 'ios-videocam-outline'
-            window.location.reload()
+
             const data = this.curuser
             data['username'] = this.userInfo['username']
             data['job'] = this.userInfo['job']
             data['url'] = this.cururl
             axios.post('/api/classroom/closeliving', data).then((resp) => {
+              window.location.reload()
             })
           },
           onCancel: () => {
-
           }
         })
       }

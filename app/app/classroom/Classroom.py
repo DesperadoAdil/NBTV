@@ -84,13 +84,19 @@ class ClassroomManager:
 			print("update classrooms: ", err)
 			return "error: url已经被占用了"
 
-	def updateShowTime(self, url):
+	def updateShowTime(self, url, status):
 		try:
 			tmpClass = Classrooms.query.filter_by(url = url).first()
 			if tmpClass is None:
 				return "error: no such classroom"
 
-			tmpClass.showtime = datetime.now()
+			if status == "open":
+				tmpClass.showtime = datetime.now()
+				tmpClass.status = json.dumps({'type': "openliving"})
+			elif status == "close":
+				tmpClass.status = json.dumps({'type': "closeliving"})
+			else:
+				return "error: unknown error"
 			db.session.add(tmpClass)
 			db.session.commit()
 			return "success"
