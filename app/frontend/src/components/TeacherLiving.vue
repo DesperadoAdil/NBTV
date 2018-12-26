@@ -170,8 +170,8 @@
       <p slot="header">
         <span>设置选择题</span>
       </p>
-      <Form ref="multi" model="sub_multi" label-width="80" style="width: 300px">
-        <FormItem label="题目描述">
+      <Form ref="multi" :model="sub_multi" :rules="rule_multi" label-width="80" style="width: 300px">
+        <FormItem label="题目描述" prop="statement">
           <Input type="textarea" v-model="sub_multi.statement" placeholder="输入你的选择题描述"></Input>
         </FormItem>
         <!-- 以下为选项的动态添加删除  -->
@@ -211,8 +211,8 @@
       <p slot="header">
         <span>设置编程题</span>
       </p>
-      <Form label-position="top">
-        <FormItem label="题目描述">
+      <Form label-position="top" :model="sub_code" :rules="rule_code">
+        <FormItem label="题目描述" prop="statement">
           <Input v-model="sub_code.statement"
                  type="textarea" rows="4"
                  placeholder="输入你的题目描述">
@@ -660,6 +660,15 @@ export default{
     stopRecord: { type: Function }
   },
   data () {
+    const validateStatementCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter your statement!'))
+      } else if (!/^[a-zA-Z\d\u4e00-\u9fa5\u3000-\u301e\ufe10-\ufe19\ufe30-\ufe44\ufe50-\ufe6b\uff01-\uffee\,\.\-\+\*\/\(\)\%\@\!]{1,300}$/.test(value)) {
+        callback(new Error('Statement unmatch or too long!'))
+      } else {
+        callback()
+      }
+    };
     return {
       /**
        * 以下为聊天室使用，请勿改动
@@ -675,18 +684,18 @@ export default{
       msgArr: [],
       curpage0:'1',
       frametype: 'close',
-      pdfurl: '/static/pdf/1-1.pdf',
+      pdfurl: '',
       codeall: {
         uniqueId: '',
-        statement: 'B-Tree',
-        language: 'cpp',
-        example: 'cout << "hello world" << endl;'
+        statement: '',
+        language: '',
+        example: ''
       },
       selectall: {
-        uniqueId: '1',
-        statement: 'choice 02',
-        optionList: ['something', 'somewhere', 'somehow', 'somewhat'],
-        answer: 'A'
+        uniqueId: '',
+        statement: '',
+        optionList: [],
+        answer: ''
       },
       //this.$CHAT,
       username: 'all',
@@ -972,6 +981,11 @@ export default{
         answer: '',
         username: ''
       },
+      rule_multi: {
+        statement: [
+          { validator: validateStatementCheck, trigger: 'blur' }
+        ]
+      },
       // CODE
       modal_code: false,
       sub_code: {
@@ -980,6 +994,11 @@ export default{
         statement: '',
         language: '',
         example: ''
+      },
+      rule_code: {
+        statement: [
+          { validator: validateStatementCheck, trigger: 'blur' }
+        ]
       },
       // CODE EDITOR
       cmOption: {
