@@ -52,9 +52,9 @@ class Classrooms(db.Model):
     teacherlist = db.Column(db.Text, nullable=False, default = "[]")
 
     visible = db.Column(db.String(5), nullable=False, default = "yes")
-    createtime = db.Column(db.DateTime, default=datetime.utcnow().replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8))).now())
+    createtime = db.Column(db.DateTime, default=datetime.now()+timedelta(hours=8))
     #开播时间
-    showtime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow().replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=8))).now())
+    showtime = db.Column(db.DateTime, nullable=False, default=datetime.now()+timedelta(hours=8))
     #黑名单
     blacklist = db.Column(db.Text, nullable = False, default = "[]")
     #禁言名单

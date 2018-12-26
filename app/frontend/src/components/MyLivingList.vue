@@ -274,6 +274,7 @@ export default {
       if (this.validate === 'yes') {
         axios.post('/api/classroom/delete_class', data).then((resp) => {
           this.getMyLivingList()
+          window.location.reload()
         })
       }
       this.deleteModal = false
