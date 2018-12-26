@@ -39,7 +39,7 @@ class ClassroomManager:
 			else:
 				imgUrl = '/static/image/test.jpg'
 
-			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = imgUrl, password = passwd, rtmpUrl = rtmpUrl, url = url, mode = mode)
+			classroomTmp = Classrooms(vid = vid, teacher = teacher, title = title, thumbnail = imgUrl, password = passwd, rtmpUrl = rtmpUrl, url = url, mode = mode, createtime = datetime.now() + timedelta(hours=8), showtime = datetime.now() + timedelta(hours=8))
 
 			db.session.add(classroomTmp)
 			db.session.commit()
