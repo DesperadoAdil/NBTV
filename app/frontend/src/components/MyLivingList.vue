@@ -14,23 +14,23 @@
       title="添加课程"
       @on-ok="addLiving()"
       @on-cancel="cancel">
-      <Form :model="newLiving" :label-width="80">
-        <FormItem label="课程名称">
+      <Form :model="newLiving" :rules="ruleInline" :label-width="80">
+        <FormItem label="课程名称" prop="title">
           <Input v-model="newLiving.title" placeholder="给自己的课程起一个好听的名字吧"></Input>
         </FormItem>
         <a href="javascript:;" class="upf">上传封面
           <input type="file" name="fileinput" id="fileinput" accept="image/gif, image/jpeg, image/png, image/jpg">
         </a>
         <output id="list"></output>
-        <FormItem label="课程URL">
+        <FormItem label="课程URL" prop="url">
           <Input v-model="newLiving.url" placeholder="课程url"></Input>
         </FormItem>
-        <FormItem label="课程Mode">
+        <FormItem label="课程Mode" prop="label">
           <Select v-model="newLiving.mode">
             <Option v-for="item in modeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="课程密码" v-if="newLiving.mode === 'protected' || newLiving.mode === 'private'" >
+        <FormItem label="课程密码" v-if="newLiving.mode === 'protected' || newLiving.mode === 'private'" prop="password">
           <Input  v-model="newLiving.class_password" placeholder="课程密码"></Input>
         </FormItem>
       </Form>
@@ -80,6 +80,33 @@
 import axios from 'axios'
 export default {
   data () {
+    const validateTitleCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter your title!'))
+      } else if (!/^[a-zA-Z\d\u4e00-\u9fa5\_]{1,20}$/.test(value)) {
+        callback(new Error('Title unmatch or too long!'))
+      } else {
+        callback()
+      }
+    };
+    const validateUrlCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter your url!'))
+      } else if (!/^[a-zA-Z\d]{1,20}$/.test(value)) {
+        callback(new Error('Url unmatch or too long!'))
+      } else {
+        callback()
+      }
+    };
+    const validatePassCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please enter the password!'))
+      } else if (!/^[a-zA-Z\d]{6,16}$/.test(value)) {
+        callback(new Error('Password unmatch or too long!'))
+      } else {
+        callback()
+      }
+    };
     return {
       modalIndex: 0,
       validate: '',
@@ -93,6 +120,17 @@ export default {
         url: '',
         class_password: '',
         mode: ''
+      },
+      ruleInline: {
+        title: [
+          { validator: validateTitleCheck, trigger: 'blur' }
+        ],
+        url: [
+          { validator: validateUrlCheck, trigger: 'blur' }
+        ],
+        password: [
+          { validator: validatePassCheck, trigger: 'blur' }
+        ]
       },
       modeList: [
         {
@@ -181,7 +219,8 @@ export default {
       formData.append('title', this.newLiving.title)
       formData.append('url', this.newLiving.url)
       formData.append('class_password', this.newLiving.class_password)
-      formData.append('mode', this.newLiving.mode)
+      if (this.newLiving.mode == '') formData.append('mode', 'public')
+      else formData.append('mode', this.newLiving.mode)
       var options = {
         url: '/api/classroom/add_class',
         data: formData,
