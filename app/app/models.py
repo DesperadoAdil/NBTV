@@ -1,5 +1,5 @@
 from app import db
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import json
 
 classroom_choice = db.Table(

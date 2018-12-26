@@ -12,7 +12,7 @@
     </h2>
 
     <Row>
-      <Col span="12" v-for="item in items" :key="item.vid">
+      <Col span="6" v-for="item in items" :key="item.vid">
         <Card class="watchcard" @click.native="skip(item)">
           <img :src="item.thumbnail" class="thumbnail" >
           <p class="title"></p>

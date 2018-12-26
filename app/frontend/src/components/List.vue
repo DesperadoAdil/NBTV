@@ -10,7 +10,7 @@
       <Button type="primary" class="listbtn" @click="audiencelist">创建时间</Button>
     </h2>
     <Row>
-      <Col span="8" v-for="item in items" :key="item.vid" v-if="item.mode !== 'private'">
+      <Col span="6" v-for="item in items" :key="item.vid" v-if="item.mode !== 'private'">
         <Card class="listcard" @click.native="skip(item)">
           <img :src="item.thumbnail" class="thumbnail">
           <p class="title">{{ item.title }} </p>
